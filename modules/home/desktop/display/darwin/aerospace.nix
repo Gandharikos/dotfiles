@@ -13,7 +13,8 @@ in
     config = mkIf (cfg.enable && cfg.type == "darwin" && cfg.default == "aerospace") {
       programs.aerospace = {
         enable = true;
-        userSettings = {
+        launchd.enable = true;
+        settings = {
           # You can use it to add commands that run after login to macOS user session.
           # 'start-at-login' needs to be 'true' for 'after-login-command' to work
           # Available commands: https://nikitabobko.github.io/AeroSpace/commands

@@ -49,15 +49,13 @@ in {
           translate = {
             enable = true;
             autoTranslate = true;
-            showChatBarButton = true;
           };
           typingIndicator.enable = true;
           youtubeAdblock.enable = true;
           # hideAttachments.enable = true;
           readAllNotificationsButton.enable = true;
-          clearURLs.enable = true;
+          clearUrLs.enable = true;
           friendsSince.enable = true;
-          moyai.enable = true;
         };
       };
     };

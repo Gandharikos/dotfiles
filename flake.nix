@@ -254,7 +254,6 @@
       url = "github:noctalia-dev/noctalia-shell";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        quickshell.follows = "quickshell";
       };
     };
 

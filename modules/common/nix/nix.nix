@@ -60,6 +60,9 @@ in {
       # let the system decide the number of max jobs
       max-jobs = "auto";
 
+      # allow building from source if a substituter is missing the requested nar
+      fallback = true;
+
       # build inside sandboxed environments
       # we only enable this on linux because it servirly breaks on darwin
       sandbox = isLinux;
