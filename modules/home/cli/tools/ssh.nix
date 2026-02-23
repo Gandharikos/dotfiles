@@ -58,7 +58,7 @@ in {
       file.".ssh/id_ed25519.pub".source = "${self}/secrets/${name}/id_ed25519.pub";
 
       persistence = {
-        "/persist${config.home.homeDirectory}".directories = [".ssh"];
+        "/persist".directories = [".ssh"];
       };
     };
 

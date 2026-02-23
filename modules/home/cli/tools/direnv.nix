@@ -25,7 +25,7 @@ in {
       config.global = {hide_env_diff = true;};
     };
 
-    home.persistence."/persist${config.home.homeDirectory}".directories = [
+    home.persistence."/persist".directories = [
       ".local/share/direnv/allow"
     ];
   };

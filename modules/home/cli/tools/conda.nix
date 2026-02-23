@@ -32,7 +32,7 @@ in {
         executable = false;
       };
 
-      persistence."/persist${config.home.homeDirectory}".directories = [
+      persistence."/persist".directories = [
         ".conda"
       ];
     };

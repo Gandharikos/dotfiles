@@ -276,26 +276,6 @@
         "type": "github"
       }
     },
-    "firefox-addons": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_2"
-      },
-      "locked": {
-        "dir": "pkgs/firefox-addons",
-        "lastModified": 1771669320,
-        "narHash": "sha256-LqmgIBpjpMQKkHKCSGJkluMVFFoBdkUhJnu+Cq+jgGc=",
-        "owner": "rycee",
-        "repo": "nur-expressions",
-        "rev": "496abb3aef244b896bf7cdd65e071cf624f16338",
-        "type": "gitlab"
-      },
-      "original": {
-        "dir": "pkgs/firefox-addons",
-        "owner": "rycee",
-        "repo": "nur-expressions",
-        "type": "gitlab"
-      }
-    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -1024,7 +1004,7 @@
     "impermanence": {
       "inputs": {
         "home-manager": "home-manager_2",
-        "nixpkgs": "nixpkgs_3"
+        "nixpkgs": "nixpkgs_2"
       },
       "locked": {
         "lastModified": 1769548169,
@@ -1353,7 +1333,7 @@
       "inputs": {
         "flake-compat": "flake-compat_4",
         "flake-parts": "flake-parts_4",
-        "nixpkgs": "nixpkgs_4"
+        "nixpkgs": "nixpkgs_3"
       },
       "locked": {
         "lastModified": 1771604425,
@@ -1553,22 +1533,6 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1744536153,
-        "narHash": "sha256-awS2zRgF4uTwrOKwwiJcByDzDOdo3Q1rPZbiHQg/N38=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "18dd725c29603f582cf1900e0d25f9f1063dbf11",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixpkgs-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_3": {
-      "locked": {
         "lastModified": 1768564909,
         "narHash": "sha256-Kell/SpJYVkHWMvnhqJz/8DqQg2b6PguxVWOuadbHCc=",
         "owner": "nixos",
@@ -1583,7 +1547,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_4": {
+    "nixpkgs_3": {
       "locked": {
         "lastModified": 1770617025,
         "narHash": "sha256-1jZvgZoAagZZB6NwGRv2T2ezPy+X6EFDsJm+YSlsvEs=",
@@ -1599,7 +1563,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_5": {
+    "nixpkgs_4": {
       "locked": {
         "lastModified": 1771369470,
         "narHash": "sha256-0NBlEBKkN3lufyvFegY4TYv5mCNHbi5OmBDrzihbBMQ=",
@@ -1615,7 +1579,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_6": {
+    "nixpkgs_5": {
       "locked": {
         "lastModified": 1767116409,
         "narHash": "sha256-tdHyrSL/0C0BaqArOPtWZBWWabXXIxVUirIFRUKGb74=",
@@ -1713,7 +1677,7 @@
     },
     "programs-sqlite": {
       "inputs": {
-        "nixpkgs": "nixpkgs_6",
+        "nixpkgs": "nixpkgs_5",
         "utils": "utils_2"
       },
       "locked": {
@@ -1803,7 +1767,6 @@
         "devshell": "devshell",
         "disko": "disko",
         "emacs-overlay": "emacs-overlay",
-        "firefox-addons": "firefox-addons",
         "flake-compat": "flake-compat_2",
         "flake-hosts": "flake-hosts",
         "flake-parts": "flake-parts",
@@ -1824,7 +1787,7 @@
         "nixcord": "nixcord",
         "nixos-anywhere": "nixos-anywhere",
         "nixos-generators": "nixos-generators",
-        "nixpkgs": "nixpkgs_5",
+        "nixpkgs": "nixpkgs_4",
         "noctalia": "noctalia",
         "nvidia-patch": "nvidia-patch",
         "pre-commit-hooks": "pre-commit-hooks",

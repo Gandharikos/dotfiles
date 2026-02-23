@@ -24,7 +24,7 @@ in {
       source = lib.my.relativeToConfig "wezterm";
     };
 
-    home.persistence."/persist${config.home.homeDirectory}".directories = [
+    home.persistence."/persist".directories = [
       ".cache/wezterm"
       ".local/share/wezterm"
     ];

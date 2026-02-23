@@ -156,7 +156,7 @@ in {
     home = {
       inherit shellAliases;
 
-      persistence."/persist${config.home.homeDirectory}".directories = [
+      persistence."/persist".directories = [
         ".cache/fastfetch"
       ];
     };

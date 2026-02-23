@@ -126,7 +126,7 @@ in {
       };
     })
     (mkIf isLinux {
-      home.persistence."/persist${homeDirectory}".directories = [
+      home.persistence."/persist".directories = [
         ".local/share/atuin"
       ];
       systemd.user.services.atuin-auto-login = mkIf cfg.autoLogin {

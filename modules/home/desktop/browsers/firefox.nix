@@ -6,7 +6,6 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.home) homeDirectory;
   cfg = config.my.desktop.apps.firefox;
 in {
   options.my.desktop.apps.firefox = {
@@ -78,23 +77,6 @@ in {
 
       profiles.default = {
         isDefault = true;
-
-        extensions.packages = with pkgs.firefox-addons; [
-          ublock-origin
-          enhancer-for-youtube
-          sponsorblock
-          youtube-nonstop
-          youtube-high-definition
-
-          darkreader
-          onetab
-          search-by-image
-          to-google-translate
-
-          languagetool # LanguageTool Grammar Checker
-
-          zotero-connector
-        ];
 
         userContent =
           # css
@@ -282,8 +264,7 @@ in {
       };
     };
 
-    home.persistence."/persist${homeDirectory}" = {
-      allowOther = true;
+    home.persistence."/persist" = {
       directories = [
         ".mozilla/firefox"
         ".cache/mozilla/firefox"

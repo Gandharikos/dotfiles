@@ -60,7 +60,7 @@ in {
       then withUWSM' pkgs zenPkg "zen"
       else (getExe' zenPkg "zen");
     home.persistence = {
-      "/persist${config.home.homeDirectory}".directories = [".zen" ".cache/zen"];
+      "/persist".directories = [".zen" ".cache/zen"];
     };
   };
 }

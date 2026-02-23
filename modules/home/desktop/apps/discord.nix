@@ -6,7 +6,6 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  inherit (config.home) homeDirectory;
   cfg = config.my.desktop.apps.discord;
 in {
   imports = [
@@ -60,8 +59,7 @@ in {
       };
     };
 
-    home.persistence."/persist${homeDirectory}" = {
-      allowOther = true;
+    home.persistence."/persist" = {
       directories = [
         ".config/Discord"
         ".config/discord"

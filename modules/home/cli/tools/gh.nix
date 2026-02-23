@@ -54,7 +54,7 @@ in {
       };
     };
 
-    home.persistence."/persist${config.home.homeDirectory}".files = [
+    home.persistence."/persist".files = [
       ".config/gh/hosts.yml"
       ".config/gh-copilot/config.yml"
       ".local/state/gh-config/state.yml"

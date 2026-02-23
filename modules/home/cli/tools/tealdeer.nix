@@ -25,7 +25,7 @@ in {
         };
       };
     };
-    home.persistence."/persist${config.home.homeDirectory}".directories = [
+    home.persistence."/persist".directories = [
       ".cache/tealdeer"
     ];
   };

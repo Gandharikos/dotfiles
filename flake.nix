@@ -48,8 +48,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-
     # a flake-parts module to config nix flakes devshell
     devshell = {
       url = "github:numtide/devshell";

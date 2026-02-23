@@ -6,7 +6,6 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  inherit (config.home) homeDirectory;
   cfg = config.my.desktop.apps.cloudflare-warp;
 in {
   options.my.desktop.apps.cloudflare-warp = {
@@ -40,9 +39,8 @@ in {
 
     home = {
       packages = with pkgs; [cloudflare-warp];
-      persistence."/persist${homeDirectory}" = {
+      persistence."/persist" = {
         directories = [".local/share/warp"];
-        allowOther = true;
       };
     };
   };

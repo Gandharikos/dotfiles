@@ -125,8 +125,7 @@ in {
         ];
       };
 
-      home.persistence."/persist${homeDirectory}" = {
-        allowOther = true;
+      home.persistence."/persist" = {
         directories = [".cache/spotify-player"];
       };
 

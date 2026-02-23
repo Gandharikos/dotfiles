@@ -7,7 +7,6 @@
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   cfg = config.my.desktop.apps.vlc;
-  inherit (config.home) homeDirectory;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
 in {
   options.my.desktop.apps.vlc = {
@@ -22,8 +21,7 @@ in {
     home = {
       packages = with pkgs; [vlc];
 
-      persistence."/persist${homeDirectory}" = {
-        allowOther = true;
+      persistence."/persist" = {
         directories = [".config/vlc"];
       };
     };

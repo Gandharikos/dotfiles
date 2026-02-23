@@ -7,7 +7,6 @@
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   cfg = config.my.desktop.apps.obs;
-  inherit (config.home) homeDirectory;
   # inherit (pkgs.stdenv.hostPlatform) isLinux;
 in {
   options.my.desktop.apps.obs = {
@@ -34,8 +33,7 @@ in {
       ];
     };
 
-    home.persistence."/persist${homeDirectory}" = {
-      allowOther = true;
+    home.persistence."/persist" = {
       directories = [
         {
           directory = ".config/obs-studio";

@@ -98,15 +98,15 @@ in {
       publicShare = "${home}/Public/Share";
       templates = "${home}/Public/Templates";
       extraConfig = {
-        XDG_SCREENSHOTS_DIR = "${config.xdg.userDirs.pictures}/Screenshots";
-        XDG_DEV_DIR = "${home}/Dev";
-        XDG_MISC_DIR = "''${home}/Misc";
-        XDG_WALLPAPERS_DIR = "${config.xdg.userDirs.pictures}/Wallpapers";
-        XDG_NOTES_DIR = "${config.xdg.userDirs.documents}/Notes";
-        XDG_REPOS_DIR = "${home}/Dev/Repos";
-        XDG_PROJECTS_DIR = "${home}/Dev/Projects";
-        XDG_WORKSPACES_DIR = "${home}/Dev/Workspaces";
-        XDG_SECRET_DIR = "${home}/.secrets";
+        SCREENSHOTS = "${config.xdg.userDirs.pictures}/Screenshots";
+        DEV = "${home}/Dev";
+        MISC = "''${home}/Misc";
+        WALLPAPERS = "${config.xdg.userDirs.pictures}/Wallpapers";
+        NOTES = "${config.xdg.userDirs.documents}/Notes";
+        REPOS = "${home}/Dev/Repos";
+        PROJECTS = "${home}/Dev/Projects";
+        WORKSPACES = "${home}/Dev/Workspaces";
+        SECRET = "${home}/.secrets";
       };
     };
 

@@ -1,5 +1,4 @@
 {
-  inputs,
   lib,
   config,
   pkgs,
@@ -10,15 +9,11 @@
 in
   if pkgs.stdenv.hostPlatform.isLinux
   then {
-    imports = [
-      inputs.impermanence.homeManagerModules.impermanence
-    ];
-
     config = {
       home.persistence =
         if persist
         then {
-          "/persist${config.home.homeDirectory}" = {
+          "/persist" = {
             directories = [
               ".local/bin"
               ".cache/nix"
@@ -34,7 +29,6 @@ in
               "Dev"
               "Misc"
             ];
-            allowOther = true;
           };
         }
         else mkForce {};

@@ -35,7 +35,7 @@ in {
       rules = builtins.readFile (lib.my.getFile "modules/home/cli/ai/common/base.md");
     };
 
-    home.persistence."/persist${config.home.homeDirectory}".directories = [
+    home.persistence."/persist".directories = [
       ".config/opencode"
     ];
   };
