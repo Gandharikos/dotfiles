@@ -27,7 +27,6 @@ in {
           fcitx5-fluent
           fcitx5-gtk
           fcitx5-mozc
-          fcitx5-pinyin-moegirl
           fcitx5-pinyin-zhwiki
           libsForQt5.fcitx5-qt
           (fcitx5-rime.override {
@@ -35,7 +34,6 @@ in {
               rime-data
               # /run/current-system/sw/share/rime-data/
               rime-ice
-              rime-moegirl
               rime-zhwiki
             ];
           })
