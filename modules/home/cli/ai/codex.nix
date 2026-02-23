@@ -1,4 +1,5 @@
 {
+  self,
   config,
   lib,
   ...
@@ -6,6 +7,8 @@
   cfg = config.my.codex;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
+  inherit (config.home) homeDirectory;
+  inherit (config.my) name;
 in {
   options.my.codex = {
     enable = mkEnableOption "codex";
@@ -14,6 +17,13 @@ in {
   config = mkIf cfg.enable {
     programs.codex = {
       enable = true;
+    };
+
+    sops.secrets."codex-auth" = {
+      sopsFile = "${self}/secrets/${name}/codex-auth";
+      path = "${homeDirectory}/.codex/auth.json";
+      mode = "0400";
+      format = "binary";
     };
 
     home.persistence."/persist".directories = [
