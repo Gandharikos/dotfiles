@@ -64,7 +64,7 @@
   networking.nameservers = [
     "198.18.0.2"
   ];
-  networking.tcpcrypt.enable = false;
+  networking.tcpcrypt.enable = lib.mkForce false;
 
   hm.my = {
     browser = {

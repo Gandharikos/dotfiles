@@ -29,7 +29,7 @@ in {
     networking.wireless = {
       # wpa_supplicant
       enable = cfg == "wpa_supplicant";
-      userControlled.enable = true;
+      userControlled = true;
       allowAuxiliaryImperativeNetworks = true;
 
       extraConfig = ''
