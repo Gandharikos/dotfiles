@@ -5,15 +5,6 @@
   ];
 
   my = {
-    browser = {
-      default = "chrome";
-      desktopId = "google-chrome.desktop";
-    };
-    desktop.apps = {
-      chrome.enable = true;
-      firefox.enable = lib.mkForce false;
-      zen.enable = lib.mkForce false;
-    };
     boot = {
       secureBoot = false;
       tmpOnTmpfs = false;
@@ -67,6 +58,18 @@
     keyboard = {
       layout = "qwerty";
       kanata.enable = true;
+    };
+  };
+
+  hm.my = {
+    browser = {
+      default = "google-chrome";
+      desktopId = "google-chrome.desktop";
+    };
+    desktop.apps = {
+      chrome.enable = true;
+      firefox.enable = lib.mkForce false;
+      zen.enable = lib.mkForce false;
     };
   };
 }

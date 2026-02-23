@@ -19,7 +19,7 @@ in {
       default = mkOption {
         type = nullOr (enum [
           "zen"
-          "chrome"
+          "google-chrome"
           "firefox"
         ]);
         default =
