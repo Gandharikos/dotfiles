@@ -23,7 +23,8 @@ in {
   };
 
   config = mkIf cfg.enable {
-    my.desktop.apps.firefox.enable = true;
+    my.desktop.apps.firefox.enable = lib.mkDefault true;
+    my.browser.desktopId = "org.mozilla.com.zen.browser.desktop";
     programs.zen-browser = {
       enable = true;
       nativeMessagingHosts = [pkgs.firefoxpwa];

@@ -28,6 +28,11 @@ in {
           else null;
         description = "The browser to use";
       };
+      desktopId = mkOption {
+        type = str;
+        default = "${browser.default}.desktop";
+        description = "Desktop entry id used for XDG mime associations.";
+      };
       exec = mkOption {
         type = str;
         default =

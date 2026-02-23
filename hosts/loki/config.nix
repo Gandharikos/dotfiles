@@ -1,10 +1,19 @@
-{
+{lib, ...}: {
   imports = [
     ./hardware-configuration.nix
     (import ../common/disko/luks-btrfs-tmpfs.nix {})
   ];
 
   my = {
+    browser = {
+      default = "chrome";
+      desktopId = "google-chrome.desktop";
+    };
+    desktop.apps = {
+      chrome.enable = true;
+      firefox.enable = lib.mkForce false;
+      zen.enable = lib.mkForce false;
+    };
     boot = {
       secureBoot = false;
       tmpOnTmpfs = false;

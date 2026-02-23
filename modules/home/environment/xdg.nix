@@ -66,7 +66,7 @@
     ]))
     // (lib.genAttrs media (_: ["mpv.desktop"]))
     // (lib.genAttrs images (_: ["viewnior.desktop"]))
-    // (lib.genAttrs browser (_: ["${my.browser.default}.desktop"]))
+    // (lib.genAttrs browser (_: ["${my.browser.desktopId}"]))
     // {
       "application/pdf" = ["org.pwmt.zathura.desktop"];
       "x-scheme-handler/spotify" = ["spotify.desktop"];
