@@ -47,5 +47,9 @@
       hasTPM = true;
       hasHidpi = true;
     };
+    keyboard = {
+      layout = "qwerty";
+      kanata.enable = true;
+    };
   };
 }
