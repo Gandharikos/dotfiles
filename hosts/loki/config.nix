@@ -61,16 +61,21 @@
     };
   };
 
-  networking.nameservers = [
-    "198.18.0.2"
-  ];
-  networking.tcpcrypt.enable = lib.mkForce false;
+  # for surge
+  networking = {
+    nameservers = lib. mkForce [
+      "198.18.0.2"
+    ];
+    enableIPv6 = lib.mkForce false;
+    tcpcrypt.enable = lib.mkForce false;
+  };
 
   hm.my = {
     browser = {
       default = "google-chrome";
       desktopId = "google-chrome.desktop";
     };
+    terminal.size = 13;
     desktop.apps = {
       chrome.enable = true;
       firefox.enable = lib.mkForce false;
