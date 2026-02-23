@@ -68,6 +68,6 @@
   ret  _    7    8    9    _    _    lbrc  S-9 S-0 rbrc
   _    _    4    5    6    _    left down up   right eql _    _
   _    _    1    2    3    0    _    S-- S-, S-. bksl _
-  _    _    _              _              _    _
+  _    _    _              _              _
 )
 ;; vim: ft=lisp
