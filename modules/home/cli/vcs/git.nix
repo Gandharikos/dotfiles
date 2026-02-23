@@ -65,7 +65,7 @@ in {
           core.editor = "nvim";
           init.defaultBranch = "main";
           credential.helper = "store";
-          github.user = "huwqchn";
+          github.user = "Gandharikos";
           push.autoSetupRemote = true;
           pull.rebase = true;
           rebase = {
