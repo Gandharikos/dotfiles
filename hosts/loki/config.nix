@@ -61,6 +61,11 @@
     };
   };
 
+  networking.nameservers = [
+    "198.18.0.2"
+  ];
+  networking.tcpcrypt.enable = false;
+
   hm.my = {
     browser = {
       default = "google-chrome";
