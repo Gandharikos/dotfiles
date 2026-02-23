@@ -18,6 +18,7 @@ in
               ".local/bin"
               ".cache/nix"
               ".cache/pre-commit"
+              ".config/sops"
               ".dotfiles"
               ".docker"
               ".secrets"

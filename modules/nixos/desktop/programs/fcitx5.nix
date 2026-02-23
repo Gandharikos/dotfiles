@@ -58,8 +58,7 @@ in {
           };
           globalOptions = {
             "Hotkey/TriggerKeys" = {
-              "0" = "";
-              # "0" = "Control+space";
+              "0" = "Control+F12";
             };
             "Hotkey/AltTriggerKeys" = {
               "0" = "";
