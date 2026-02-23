@@ -33,7 +33,6 @@ in {
       kanata = {
         serviceConfig = {
           ProgramArguments = [
-            "sudo"
             kanata'
             "--cfg"
             (toString cfg.configFile)
