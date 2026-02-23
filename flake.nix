@@ -200,11 +200,6 @@
       };
     };
 
-    nvim-treesitter-main = {
-      url = "github:iofq/nvim-treesitter-main";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-ai-tools = {
       url = "github:numtide/nix-ai-tools";
       inputs = {

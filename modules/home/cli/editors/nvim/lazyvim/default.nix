@@ -113,7 +113,7 @@ in {
           # treesitter.lua #
           ##################
 
-          nvim-treesitter
+          nvim-treesitter.withAllGrammars
           nvim-treesitter-textobjects
           nvim-ts-autotag
 
@@ -258,7 +258,7 @@ in {
 
       plugins = with pkgs.vimPlugins; [lazy-nvim];
 
-      extraLuaConfig = let
+      initLua = let
         mkEntryFromDrv = drv:
           if lib.isDerivation drv
           then {

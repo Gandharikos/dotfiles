@@ -24,8 +24,8 @@ in {
   config = mkIf cfg.enable {
     programs.nixcord = {
       enable = true;
-      discord.enable = false;
-      vesktop.enable = true;
+      discord.enable = true;
+      vesktop.enable = false;
       config = {
         useQuickCss = true;
         plugins = {

@@ -3,6 +3,8 @@
   stdenv,
   fetchFromGitHub,
   pnpm_9,
+  pnpmConfigHook,
+  fetchPnpmDeps,
   nodejs,
   nix-update-script,
   ...
@@ -19,14 +21,16 @@ stdenv.mkDerivation (finalAttrs: {
   };
 
   nativeBuildInputs = [
-    pnpm_9.configHook
+    pnpmConfigHook
+    pnpm_9
     nodejs
   ];
 
-  pnpmDeps = pnpm_9.fetchDeps {
+  pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
     hash = "sha256-aiSZS6FEs7kqGXxC9Tx6Rngv3qrPMi5gOuh5Z3/oZyc=";
     fetcherVersion = 1;
+    pnpm = pnpm_9;
   };
 
   buildPhase = ''

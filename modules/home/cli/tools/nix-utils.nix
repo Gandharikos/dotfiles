@@ -20,7 +20,7 @@ in {
     # ======== Nix Development Tools ========
     home.packages = with pkgs; [
       nixd # Nix LSP
-      nixfmt-rfc-style # RFC style formatter
+      nixfmt # RFC style formatter
       nvd # Nix differ
       nix-diff # Another differ
       nix-output-monitor # Better nix build output

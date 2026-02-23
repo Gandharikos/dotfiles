@@ -1,9 +1,5 @@
 _: _final: prev: {
-  vimPlugins = prev.vimPlugins.extend (f: p: {
-    nvim-treesitter = p.nvim-treesitter.withAllGrammars;
-    nvim-treesitter-textobjects =
-      p.nvim-treesitter-textobjects.overrideAttrs {dependencies = [f.nvim-treesitter];};
-
+  vimPlugins = prev.vimPlugins.extend (_f: _p: {
     # nvim-tree-preview = pkgs.vimUtils.buildVimPlugin {
     #   name = "nvim-tree-preview";
     #   src = pkgs.fetchFromGitHub {

@@ -15,6 +15,6 @@
     };
 
     # we add howbrew to the PATH so we can execute all the apps it installs
-    systemPath = [config.homebrew.brewPrefix];
+    systemPath = [config.homebrew.prefix];
   };
 }
