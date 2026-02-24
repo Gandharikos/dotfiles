@@ -8,7 +8,8 @@
 in {
   config = mkIf cfg.enable {
     services.sing-box = {
-      enable = true;
+      # Disabled as per user request.
+      enable = false;
     };
   };
 }
