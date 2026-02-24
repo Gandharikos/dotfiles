@@ -2,13 +2,14 @@
   config,
   pkgs,
   lib,
+  aiCommon,
   ...
 }: let
   cfg = config.my.claude-code;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   hooks = lib.my.importDir ./hooks {inherit pkgs;};
-  sharedAiTools = import (lib.my.getFile "modules/home/cli/ai/common/shared.nix") {inherit lib;};
+  sharedAiTools = aiCommon;
 in {
   options.my.claude-code = {
     enable = mkEnableOption "claude-code";

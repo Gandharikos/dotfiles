@@ -3,10 +3,11 @@
   config,
   pkgs,
   lib,
+  aiCommon,
   ...
 }: let
   inherit (lib) mkIf mkEnableOption;
-  sharedAiTools = import (lib.my.getFile "modules/home/cli/ai/common/shared.nix") {inherit lib;};
+  sharedAiTools = aiCommon;
 
   cfg = config.my.opencode;
 in {

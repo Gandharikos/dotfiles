@@ -2,6 +2,7 @@
   self,
   config,
   lib,
+  aiCommon,
   ...
 }: let
   cfg = config.my.codex;
@@ -17,6 +18,8 @@ in {
   config = mkIf cfg.enable {
     programs.codex = {
       enable = true;
+      custom-instructions = aiCommon.codex.customInstructions;
+      inherit (aiCommon.codex) skills;
     };
 
     sops.secrets."codex-auth" = {
