@@ -10,9 +10,8 @@
   _class,
   ...
 }: let
-  inherit (config.networking) hostName;
   extraSpecialArgs = {
-    inherit self self' inputs inputs' pkgs pkgs' lib hostName;
+    inherit self self' inputs inputs' pkgs pkgs' lib;
     osClass = _class;
   };
   inherit (config) my;

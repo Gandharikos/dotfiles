@@ -4,10 +4,11 @@
   lib,
   pkgs,
   config,
-  hostName,
+  osConfig,
   ...
 }: let
   inherit (config.my) name;
+  inherit (osConfig.networking) hostName;
 in {
   config = {
     programs.opencode.settings.lsp = {
