@@ -1,4 +1,5 @@
 {
+  self,
   inputs,
   config,
   lib,
@@ -8,19 +9,21 @@
   cfg = config.my.gemini-cli;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (lib.meta) getExe';
-  cat' = getExe' pkgs.coreutils "cat";
-  cloudProjectPath = config.sops.secrets.google_cloud_project.path;
-  apiKeyPath = config.sops.secrets.gemini_api_key.path;
-
-  tokenExportShell = ''
-    if [ -f ${cloudProjectPath} ]; then
-      export GOOGLE_CLOUD_PROJECT="$(${cat'} ${cloudProjectPath})"
-    fi
-    if [ -f ${apiKeyPath} ]; then
-      export GEMINI_API_KEY="$(${cat'} ${apiKeyPath})"
-    fi
-  '';
+  inherit (config.home) homeDirectory;
+  inherit (config.my) name;
+  # inherit (lib.meta) getExe';
+  # cat' = getExe' pkgs.coreutils "cat";
+  # cloudProjectPath = config.sops.secrets.google_cloud_project.path;
+  # apiKeyPath = config.sops.secrets.gemini_api_key.path;
+  #
+  # tokenExportShell = ''
+  #   if [ -f ${cloudProjectPath} ]; then
+  #     export GOOGLE_CLOUD_PROJECT="$(${cat'} ${cloudProjectPath})"
+  #   fi
+  #   if [ -f ${apiKeyPath} ]; then
+  #     export GEMINI_API_KEY="$(${cat'} ${apiKeyPath})"
+  #   fi
+  # '';
   sharedAiTools = import (lib.my.getFile "modules/home/cli/ai/common/shared.nix") {inherit lib;};
 in {
   options.my.gemini-cli = {
@@ -29,16 +32,16 @@ in {
 
   config = mkIf cfg.enable {
     programs = {
-      bash.initExtra = tokenExportShell;
-      fish.shellInit = ''
-        if test -f ${cloudProjectPath}
-          set -x GOOGLE_CLOUD_PROJECT (${cat'} ${cloudProjectPath})
-        end
-        if test -f ${apiKeyPath}
-          set -x GEMINI_API_KEY (${cat'} ${apiKeyPath})
-        end
-      '';
-      zsh.initContent = tokenExportShell;
+      # bash.initExtra = tokenExportShell;
+      # fish.shellInit = ''
+      #   if test -f ${cloudProjectPath}
+      #     set -x GOOGLE_CLOUD_PROJECT (${cat'} ${cloudProjectPath})
+      #   end
+      #   if test -f ${apiKeyPath}
+      #     set -x GEMINI_API_KEY (${cat'} ${apiKeyPath})
+      #   end
+      # '';
+      # zsh.initContent = tokenExportShell;
       gemini-cli = {
         enable = true;
         package = inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.gemini-cli;
@@ -49,8 +52,8 @@ in {
             preferredEditor = "nvim";
           };
           tools.autlAccept = false;
+          security.auth.selectedType = "oauth-personal";
         };
-        defaultModel = "gemini-2.5-pro";
         context = {
           GEMINI = lib.my.getFile "modules/home/cli/ai/common/base.md";
         };
@@ -96,8 +99,18 @@ in {
     };
 
     sops.secrets = {
-      google_cloud_project = {};
-      gemini_api_key = {};
+      "gemini-oauth_creds" = {
+        sopsFile = "${self}/secrets/${name}/gemini-oauth_creds";
+        path = "${homeDirectory}/.gemini/oauth_creds.json";
+        mode = "0400";
+        format = "binary";
+      };
+      "gemini-google_accounts" = {
+        sopsFile = "${self}/secrets/${name}/gemini-google_accounts";
+        path = "${homeDirectory}/.gemini/google_accounts.json";
+        mode = "0400";
+        format = "binary";
+      };
     };
   };
 }
