@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  system,
   ...
 }: let
   inherit (lib.options) mkOption;
@@ -9,7 +10,7 @@
   inherit (lib.meta) getExe;
   inherit (lib.my) withUWSM isHyprland;
   inherit (lib.types) enum nullOr str;
-  inherit (lib.my) ldTernary scanPaths;
+  inherit (lib.my) scanPaths;
   inherit (config.my) browser;
 in {
   imports = scanPaths ./.;
@@ -23,8 +24,8 @@ in {
           "firefox"
         ]);
         default =
-          if config.my.desktop.enable
-          then ldTernary pkgs "zen" null
+          if config.my.desktop.enable && system == "nixos"
+          then "zen"
           else null;
         description = "The browser to use";
       };

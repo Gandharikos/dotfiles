@@ -40,7 +40,10 @@ in {
   config = mkIf (cfg.enable && config.networking.networkmanager.enable) {
     # Add the dispatcher script to handle the logic.
     networking.networkmanager.dispatcherScripts = [
-      proxy-toggle-script
+      {
+        source = proxy-toggle-script;
+        type = "basic";
+      }
     ];
   };
 }

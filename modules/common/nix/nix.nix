@@ -2,15 +2,18 @@
   inputs,
   lib,
   pkgs,
+  _class,
   ...
 }: let
   inherit (lib.attrsets) filterAttrs attrValues mapAttrs;
   inherit (lib.modules) mkForce;
   inherit (lib.types) isType;
-  inherit (lib.my) ldTernary;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   flakeInputs = filterAttrs (name: value: (isType "flake" value) && (name != "self")) inputs;
-  sudoers = ldTernary pkgs "@wheel" "@admin";
+  sudoers =
+    if (_class == "nixos")
+    then "@wheel"
+    else "@admin";
 in {
   # Auto upgrade nix package and the daemon service.
   # services.nix-daemon.enable = true;
@@ -28,9 +31,10 @@ in {
         nixpkgs = mkForce {flake = inputs.nixpkgs;};
       };
     # We love legacy support (for now)
-    nixPath = ldTernary pkgs (attrValues (mapAttrs (k: v: "${k}=flake:${v.outPath}") flakeInputs)) (
-      mkForce (mapAttrs (_: v: v.outPath) flakeInputs)
-    );
+    nixPath =
+      if (_class == "nixos")
+      then attrValues (mapAttrs (k: v: "${k}=flake:${v.outPath}") flakeInputs)
+      else mkForce (mapAttrs (_: v: v.outPath) flakeInputs);
     optimise.automatic = true;
     gc = {
       automatic = true;

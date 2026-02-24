@@ -1,12 +1,11 @@
 {
   lib,
   config,
-  pkgs,
+  system,
   ...
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (lib.my) ldTernary;
   inherit (config.my) desktop;
   cfg = config.my.services.wluma;
 in {
@@ -14,7 +13,10 @@ in {
     enable =
       mkEnableOption "wluma"
       // {
-        default = ldTernary pkgs desktop.enable false;
+        default =
+          if system == "nixos"
+          then desktop.enable
+          else false;
       };
   };
 

@@ -7,10 +7,14 @@
   pkgs',
   lib,
   config,
+  _class,
   ...
 }: let
   inherit (config.networking) hostName;
-  extraSpecialArgs = {inherit self self' inputs inputs' pkgs pkgs' lib hostName;};
+  extraSpecialArgs = {
+    inherit self self' inputs inputs' pkgs pkgs' lib hostName;
+    system = _class;
+  };
   inherit (config) my;
 in {
   imports = [

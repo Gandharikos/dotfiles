@@ -1,13 +1,11 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }: let
   inherit (config.my) name;
   cfgUser = config.users.users."${config.my.name}";
   ifTheyExist = groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
-  group = lib.my.ldTernary pkgs "users" "admin";
 in {
   users = {
     # Don't allow mutation of users outside the config.
@@ -32,7 +30,7 @@ in {
       "${name}" = {
         # we have to use initialHashedPassword here when using tmpfs for /
         inherit (config.my) initialHashedPassword;
-        inherit group;
+        grput = "users";
         # set isNormalUser to true to create a home directory
         isNormalUser = true;
         extraGroups =

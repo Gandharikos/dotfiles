@@ -19,10 +19,10 @@
     chown mihomo:mihomo ${configFile}
   '';
 in {
-  # Declare the secret key required from the default sops file.
-  sops.secrets.mihomo_subUrl = {};
-
   config = mkIf cfg.enable {
+    # Declare the secret key required from the default sops file.
+    sops.secrets.mihomo_subUrl = {};
+
     # https://wiki.metacubex.one/config
     # https://nixos.wiki/wiki/Mihomo
     services.mihomo = {
