@@ -10,7 +10,6 @@ in {
     wayland.windowManager.hyprland.settings = {
       animations = {
         enabled = true;
-        first_launch_animation = true;
 
         # name, x0, y0, x1, y1
         # x0 and x1 are control animation speed
@@ -42,7 +41,7 @@ in {
           "workspaces,1,8.8,overshot,slidefade"
           "specialWorkspace, 1, 3, fluent_decel, slidevert"
           "border,1,5,linear"
-          "borderangle,1,15,linear,once"
+          "borderangle,1,60,linear,loop"
         ];
       };
     };

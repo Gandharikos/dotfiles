@@ -27,6 +27,7 @@ in {
     my.browser.desktopId = "org.mozilla.com.zen.browser.desktop";
     programs.zen-browser = {
       enable = true;
+      suppressXdgMigrationWarning = true;
       nativeMessagingHosts = [pkgs.firefoxpwa];
       inherit (config.programs.firefox) policies;
       profiles.default = {
@@ -61,7 +62,7 @@ in {
       then withUWSM' pkgs zenPkg "zen"
       else (getExe' zenPkg "zen");
     home.persistence = {
-      "/persist".directories = [".zen" ".cache/zen"];
+      "/persist".directories = [".config/zen" ".cache/zen"];
     };
   };
 }

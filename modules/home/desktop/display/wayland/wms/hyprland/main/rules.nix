@@ -21,10 +21,10 @@ in {
 
         blurred = lib.concatLists [lowopacity highopacity];
       in [
-        "blur, ${toRegex blurred}"
-        "xray 1, ${toRegex ["bar"]}"
-        "ignorealpha 0.5, ${toRegex (highopacity ++ ["music"])}"
-        "ignorealpha 0.2, ${toRegex lowopacity}"
+        "match:namespace ${toRegex blurred}, blur on"
+        "match:namespace ${toRegex ["bar"]}, xray 1"
+        "match:namespace ${toRegex (highopacity ++ ["music"])}, ignore_alpha 0.5"
+        "match:namespace ${toRegex lowopacity}, ignore_alpha 0.2"
       ];
 
       # windowrule = [
@@ -43,39 +43,41 @@ in {
       # "fullscreen, title:wlogout"
       # ];
 
-      windowrulev2 = [
+      windowrule = [
         # 1Password
-        "float, title:^(1Password)$"
+        "match:title ^(1Password)$, float on"
+        # remove borders on floating windows
+        "match:float 1, border_size 0"
 
         # allow tearing in games
-        "immediate, class:^(osu!|cs2)$"
+        "match:class ^(osu!|cs2)$, immediate on"
         # start spotify in ws9
-        "workspace 9 silent, title:^(Spotify( Premium)?)$"
+        "match:title ^(Spotify( Premium)?)$, workspace 9 silent"
 
         # make Firefox PiP window floating and sticky
-        "float, title:^(Picture-in-Picture)$"
-        "pin, title:^(Picture-in-Picture)$"
+        "match:title ^(Picture-in-Picture)$, float on"
+        "match:title ^(Picture-in-Picture)$, pin on"
 
         # idle inhibit while watching videos
-        "idleinhibit focus, class:^(mpv|.+exe|celluloid)$"
-        "idleinhibit focus, class:^(firefox)$, title:^(.*YouTube.*)$"
-        "idleinhibit fullscreen, class:^(firefox)$"
+        "match:class ^(mpv|.+exe|celluloid)$, idle_inhibit focus"
+        "match:class ^(firefox)$, match:title ^(.*YouTube.*)$, idle_inhibit focus"
+        "match:class ^(firefox)$, idle_inhibit fullscreen"
 
-        "dimaround, class:^(gcr-prompter)$"
-        "dimaround, class:^(xdg-desktop-portal-gtk)$"
-        "dimaround, class:^(polkit-gnome-authentication-agent-1)$"
+        "match:class ^(gcr-prompter)$, dim_around on"
+        "match:class ^(xdg-desktop-portal-gtk)$, dim_around on"
+        "match:class ^(polkit-gnome-authentication-agent-1)$, dim_around on"
 
         # fix xwayland apps
-        "rounding 0, xwayland:1"
-        "center, class:^(.*jetbrains.*)$, title:^(Confirm Exit|Open Project|win424|win201|splash)$"
-        "size 640 400, class:^(.*jetbrains.*)$, title:^(splash)$"
+        "match:xwayland 1, rounding 0"
+        "match:class ^(.*jetbrains.*)$, match:title ^(Confirm Exit|Open Project|win424|win201|splash)$, center on"
+        "match:class ^(.*jetbrains.*)$, match:title ^(splash)$, size 640 400"
 
         # opacity rules
-        "opacity 0.85 0.85,class:^(kitty)$"
-        "opacity 0.85 0.85,class:^(Alacritty)$"
-        "opacity 0.85 0.85,class:^(wezterm)$"
-        "opacity 0.70 0.70,class:^(ghostty)$"
-        "opacity 0.70 0.70,class:^(Spotify)$"
+        "match:class ^(kitty)$, opacity 0.85 0.85"
+        "match:class ^(Alacritty)$, opacity 0.85 0.85"
+        "match:class ^(wezterm)$, opacity 0.85 0.85"
+        "match:class ^(ghostty)$, opacity 0.70 0.70"
+        "match:class ^(Spotify)$, opacity 0.70 0.70"
       ];
     };
   };

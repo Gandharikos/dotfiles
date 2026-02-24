@@ -62,11 +62,11 @@ in {
                 inherit (pkgs.stdenv.cc.cc) lib;
 
                 inherit
-                  (pkgs.xorg)
-                  libXcursor
-                  libXi
-                  libXinerama
-                  libXScrnSaver
+                  (pkgs)
+                  libxcursor
+                  libxi
+                  libxinerama
+                  libxss
                   ;
               };
           }

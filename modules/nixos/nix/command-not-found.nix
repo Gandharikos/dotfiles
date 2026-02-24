@@ -5,6 +5,6 @@
 }: {
   programs.command-not-found = {
     enable = true;
-    dbPath = inputs.programs-sqlite.packages.${pkgs.system}.programs-sqlite;
+    dbPath = inputs.programs-sqlite.packages.${pkgs.stdenv.hostPlatform.system}.programs-sqlite;
   };
 }

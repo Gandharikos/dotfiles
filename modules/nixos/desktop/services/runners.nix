@@ -49,7 +49,7 @@ in {
           ;
 
         inherit (pkgs.stdenv.cc) cc;
-        inherit (pkgs.xorg) libX11;
+        inherit (pkgs) libx11;
       };
     };
   };

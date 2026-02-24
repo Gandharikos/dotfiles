@@ -24,18 +24,6 @@ in {
         null;
       description = "The desktop shell to use";
     };
-    bar = mkOption {
-      type = nullOr (enum ["waybar"]);
-      default =
-        ldTernary pkgs
-        (
-          if desktop.enable
-          then "waybar"
-          else null
-        )
-        null;
-      description = "The bar to use";
-    };
     lock = mkOption {
       type = nullOr (enum ["hyprlock"]);
       default =
@@ -72,11 +60,6 @@ in {
         null;
       description = "The idle screen to use";
     };
-    launcher = mkOption {
-      type = nullOr (enum []);
-      default = null;
-      description = "The launcher to use";
-    };
     shot = mkOption {
       type = nullOr (enum ["hyprshot" "grimblast"]);
       default =
@@ -88,18 +71,6 @@ in {
         )
         null;
       description = "The screenshot tool to use";
-    };
-    powermenu = mkOption {
-      type = nullOr (enum ["wlogout"]);
-      default =
-        ldTernary pkgs
-        (
-          if desktop.enable
-          then "wlogout"
-          else null
-        )
-        null;
-      description = "The powermenu to use";
     };
     notification = mkOption {
       type = nullOr (enum ["avizo"]);

@@ -25,9 +25,11 @@ in {
 
       # touchpad gestures
       gestures = {
-        workspace_swipe = true;
         workspace_swipe_forever = true;
       };
+      gesture = [
+        "3, horizontal, workspace"
+      ];
 
       cursor = {
         no_hardware_cursors = true;

@@ -9,7 +9,7 @@
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkMerge mkIf;
   # inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (pkgs.stdenv) system;
+  inherit (pkgs.stdenv.hostPlatform) system;
   inherit (config.home) homeDirectory;
   inherit (config.my) name;
   cfg = config.my.desktop.apps.spotify;
