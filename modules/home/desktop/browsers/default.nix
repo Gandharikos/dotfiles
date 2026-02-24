@@ -2,7 +2,7 @@
   lib,
   pkgs,
   config,
-  system,
+  osClass,
   ...
 }: let
   inherit (lib.options) mkOption;
@@ -24,7 +24,7 @@ in {
           "firefox"
         ]);
         default =
-          if config.my.desktop.enable && system == "nixos"
+          if config.my.desktop.enable && osClass == "nixos"
           then "zen"
           else null;
         description = "The browser to use";

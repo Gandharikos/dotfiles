@@ -1,7 +1,7 @@
 {
   lib,
   config,
-  system,
+  osClass,
   ...
 }: let
   inherit (lib.options) mkEnableOption;
@@ -14,7 +14,7 @@ in {
       mkEnableOption "wluma"
       // {
         default =
-          if system == "nixos"
+          if osClass == "nixos"
           then desktop.enable
           else false;
       };

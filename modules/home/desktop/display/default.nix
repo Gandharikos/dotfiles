@@ -1,7 +1,7 @@
 {
   lib,
   config,
-  system,
+  osClass,
   ...
 }: let
   inherit (lib.my) scanPaths;
@@ -15,7 +15,7 @@ in {
     shell = mkOption {
       type = nullOr (enum ["DankMaterialShell" "NoctaliaShell" "CaelestiaShell"]);
       default =
-        if system == "nixos" && desktop.enable
+        if osClass == "nixos" && desktop.enable
         then "DankMaterialShell"
         else null;
       description = "The desktop shell to use";
@@ -23,7 +23,7 @@ in {
     lock = mkOption {
       type = nullOr (enum ["hyprlock"]);
       default =
-        if system == "nixos" && desktop.enable
+        if osClass == "nixos" && desktop.enable
         then "hyprlock"
         else null;
       description = "The lock screen to use";
@@ -31,7 +31,7 @@ in {
     wallEngine = mkOption {
       type = nullOr (enum ["hyprpaper"]);
       default =
-        if system == "nixos" && desktop.enable
+        if osClass == "nixos" && desktop.enable
         then "hyprpaper"
         else null;
       description = "The wallpaper engine to use";
@@ -39,7 +39,7 @@ in {
     idle = mkOption {
       type = nullOr (enum ["hypridle"]);
       default =
-        if system == "nixos" && desktop.enable
+        if osClass == "nixos" && desktop.enable
         then "hypridle"
         else null;
       description = "The idle screen to use";
@@ -47,7 +47,7 @@ in {
     shot = mkOption {
       type = nullOr (enum ["hyprshot" "grimblast"]);
       default =
-        if system == "nixos" && desktop.enable
+        if osClass == "nixos" && desktop.enable
         then "grimblast"
         else null;
       description = "The screenshot tool to use";
@@ -55,7 +55,7 @@ in {
     notification = mkOption {
       type = nullOr (enum ["avizo"]);
       default =
-        if system == "nixos" && desktop.enable
+        if osClass == "nixos" && desktop.enable
         then "avizo"
         else null;
       description = "The notification daemon to use";

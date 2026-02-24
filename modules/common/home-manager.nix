@@ -13,7 +13,7 @@
   inherit (config.networking) hostName;
   extraSpecialArgs = {
     inherit self self' inputs inputs' pkgs pkgs' lib hostName;
-    system = _class;
+    osClass = _class;
   };
   inherit (config) my;
 in {
@@ -44,7 +44,6 @@ in {
     inherit extraSpecialArgs;
     backupFileExtension = "backup";
     useGlobalPkgs = true;
-    # FIXME: this is not work
     useUserPackages = true;
   };
 }
