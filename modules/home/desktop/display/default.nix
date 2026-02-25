@@ -44,14 +44,6 @@ in {
         else null;
       description = "The screenshot tool to use";
     };
-    notification = mkOption {
-      type = nullOr (enum ["avizo"]);
-      default =
-        if osClass == "nixos" && desktop.enable
-        then "avizo"
-        else null;
-      description = "The notification daemon to use";
-    };
     general = {
       workspace = {
         number = mkOption {

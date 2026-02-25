@@ -46,14 +46,6 @@
       hasPrinter = false;
       hasTPM = true;
       hasHidpi = true;
-      monitors = [
-        {
-          name = "eDP-1";
-          resolution = "preferred";
-          position = "auto";
-          scale = 2.0;
-        }
-      ];
     };
     keyboard = {
       layout = "qwerty";

@@ -26,5 +26,12 @@ in {
       enableAudioWavelength = true; # Audio visualizer (cava)
       enableCalendarEvents = true; # Calendar integration (khal)
     };
+
+    home.persistence."/persist".directories = [
+      ".config/DankMaterialShell"
+      ".local/state/DankMaterialShell"
+      ".cache/DankMaterialShell"
+      ".config/quickshell"
+    ];
   };
 }

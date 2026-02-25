@@ -6,7 +6,7 @@
   inherit (lib.modules) mkIf;
   inherit (lib.lists) optionals;
   inherit (lib.strings) concatStringsSep;
-  inherit (config.my.machine) monitors;
+  inherit (config.my.machine) monitors hasHidpi;
   cfg = config.my.desktop.hyprland;
   mkMonitors = ms:
     builtins.map (
@@ -18,11 +18,15 @@
     ms;
   monitorsCfg = mkMonitors monitors;
   hasMonitor = builtins.length monitors > 0;
+  defaultMonitor =
+    if hasHidpi
+    then ",highres,auto,2"
+    else ",preferred,auto,1";
 in {
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland.settings = {
       monitor =
-        [",preferred,auto,1"]
+        [defaultMonitor]
         ++ (optionals hasMonitor monitorsCfg);
     };
   };
