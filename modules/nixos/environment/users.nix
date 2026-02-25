@@ -30,7 +30,7 @@ in {
       "${name}" = {
         # we have to use initialHashedPassword here when using tmpfs for /
         inherit (config.my) initialHashedPassword;
-        grput = "users";
+        group = "users";
         # set isNormalUser to true to create a home directory
         isNormalUser = true;
         extraGroups =

@@ -27,22 +27,6 @@ in {
         "match:namespace ${toRegex lowopacity}, ignore_alpha 0.2"
       ];
 
-      # windowrule = [
-      # "float, confirm"
-      # "float, file_progress"
-      # "float, dialog"
-      # "float, pavucontrol"
-      # "float, nm-connection-editor"
-      # "float, blueman-manager"
-      # "size 40% 40%, blueman-manager"
-      # "move 59% 30, blueman-manager"
-      # "float, blueman-manager"
-      # "float, cpupower-gui"
-      # "fullscreen, wlogout"
-      # "float, title:wlogout"
-      # "fullscreen, title:wlogout"
-      # ];
-
       windowrule = [
         # 1Password
         "match:title ^(1Password)$, float on"
