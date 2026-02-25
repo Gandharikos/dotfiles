@@ -12,14 +12,6 @@ in {
   imports = scanPaths ./.;
 
   options.my.desktop = {
-    shell = mkOption {
-      type = nullOr (enum ["DankMaterialShell" "NoctaliaShell" "CaelestiaShell"]);
-      default =
-        if osClass == "nixos" && desktop.enable
-        then "DankMaterialShell"
-        else null;
-      description = "The desktop shell to use";
-    };
     lock = mkOption {
       type = nullOr (enum ["hyprlock"]);
       default =
