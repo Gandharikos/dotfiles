@@ -21,6 +21,7 @@
         # package creation helpers
         nurl
         nix-init
+        inputs'.quickshell.packages.default
       ];
       commands = [
         {

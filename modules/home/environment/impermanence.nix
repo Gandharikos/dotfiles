@@ -19,6 +19,7 @@ in
               ".cache/nix"
               ".cache/pre-commit"
               ".config/sops"
+              ".config/quickshell"
               ".dotfiles"
               ".docker"
               ".secrets"
