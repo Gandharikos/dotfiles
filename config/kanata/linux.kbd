@@ -59,7 +59,7 @@
 
 (deflayer tab_layer
   _    C-f12    _    _    _    _    _    @amp @astr min @plus
-  _    print _    _    _    _    _    @dolr @pct @circ kp*  _    _
+  _    _ _    _    _    _    _    @dolr @pct @circ kp*  _    _
   _ _    _    _    _    _    _    @exlm @at @hash _    _
   _    _    _              bspc        _
 )
