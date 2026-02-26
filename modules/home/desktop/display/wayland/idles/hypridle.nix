@@ -1,10 +1,13 @@
 {
   lib,
+  config,
   pkgs,
+  inputs,
   ...
 }: let
   inherit (lib.meta) getExe getExe';
-  inherit (lib.my) runOnce;
+  inherit (lib.my) runOnce withUWSM' isWayland;
+  inherit (lib.modules) mkIf;
 
   suspendScript = pkgs.writeShellScript "suspend-script" ''
     # check if any player has statutes "Playing"
@@ -21,13 +24,34 @@
   loginctl' = getExe' pkgs.systemd "loginctl";
   brightnessctl' = getExe pkgs.brightnessctl;
   hyprctl' = getExe' pkgs.hyprland "hyprctl";
+  niri' = getExe' pkgs.niri "niri";
 
   # timeout after which DPMS kicks in
   timeout = 300;
 
-  inherit (lib.modules) mkIf;
-  # enable = config.my.desktop.idle == "hypridle" && isWayland config;
-  enable = false;
+  inherit (config.my) desktop;
+  enable = desktop.idle == "hypridle" && isWayland config;
+  dms = withUWSM' pkgs inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default "dms";
+  dms_lock = "${dms} ipc call lock lock";
+  lock_cmd =
+    if desktop.lock == "hyprlock"
+    then runOnce pkgs "hyprlock" # avoid starting multiple hyprlock instances
+    else if desktop.lock == "dms"
+    then dms_lock
+    else null;
+  # to avoid having to press a key twice to turn on the display
+  screen_on_cmd =
+    if desktop.default == "hyprland"
+    then "${hyprctl'} dispatch dpms on"
+    else if desktop.default == "niri"
+    then "${niri'} msg action power-on-monitors"
+    else null;
+  screen_off_cmd =
+    if desktop.default == "hyprland"
+    then "${hyprctl'} dispatch dpms off"
+    else if desktop.default == "niri"
+    then "${niri'} msg action power-off-monitors"
+    else null;
 in {
   config = mkIf enable {
     services.hypridle = {
@@ -35,14 +59,12 @@ in {
 
       settings = {
         general = {
-          # avoid starting multiple hyprlock instances
-          lock_cmd = runOnce pkgs "hyprlock";
+          inherit lock_cmd;
 
           # lock before suspend
           before_sleep_cmd = "${loginctl'} lock-session";
 
-          # to avoid having to press a key twice to turn on the display
-          after_sleep_cmd = "${hyprctl'} dispatch dpms on";
+          after_sleep_cmd = screen_on_cmd;
         };
 
         listener = [
@@ -57,7 +79,7 @@ in {
 
           # turn off keyboard backlight, comment out this section if you dont have a keyboard backlight.
           {
-            timeout = 150;
+            timeout = timeout / 2;
             # turn off keyboard backlight.
             on-timeout = "${brightnessctl'} -sd dell::kbd_backlight set 0";
             # turn on keyboard backlight.
@@ -65,16 +87,16 @@ in {
           }
           {
             # 5min
-            timeout = 300;
+            inherit timeout;
             # lock screen when timeout has passed
             on-timeout = "${loginctl'} lock-session";
           }
           {
             inherit timeout;
             # screen off when timeout has passed
-            on-timeout = "${hyprctl'} dispatch dpms off";
+            on-timeout = screen_off_cmd;
             # screen on when activity is detected after timeout has fired.
-            on-resume = "${hyprctl'} dispatch dpms on";
+            on-resume = screen_on_cmd;
           }
           {
             timeout = timeout + 10;

@@ -6,8 +6,10 @@
   ...
 }: let
   inherit (lib.modules) mkIf mkForce;
+  inherit (lib.lists) optionals;
   inherit (lib.my) isWayland withUWSM';
-  enable = config.my.desktop.polkit == "hyprpolkit" && isWayland config;
+
+  enable = isWayland config;
 
   dms = withUWSM' pkgs inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default "dms";
   dms' = cmd: "${dms} ipc call ${cmd}";
@@ -40,16 +42,19 @@ in {
         notifications = dms' "notifications toggle";
         settings = dms' "settings toggle";
         lock = dms' "lock toggle";
-      in [
-        "$mod, space, Toggle App Launcher, exec, ${spotlight}"
-        "$mod, V, Toggle Clipboard History, exec, ${clipboard}"
-        "$mod, Tab, Toggle Overview, exec, ${overview}"
-        "$mod, Escape, Toggle System Monitor, exec, ${monitor}"
-        "$mod, X, Toggle Power Menu, exec, ${powermenu}"
-        "ALT, Comma, Toggle Settings, exec, ${settings}"
-        "$mod, Apostrophe, Toggle Notifications, exec, ${notifications}"
-        "SUPER CTRL, L, Toggle Lock, exec, ${lock}"
-      ];
+      in
+        [
+          "$mod, space, Toggle App Launcher, exec, ${spotlight}"
+          "$mod, V, Toggle Clipboard History, exec, ${clipboard}"
+          "$mod, Tab, Toggle Overview, exec, ${overview}"
+          "$mod, Escape, Toggle System Monitor, exec, ${monitor}"
+          "$mod, X, Toggle Power Menu, exec, ${powermenu}"
+          "ALT, Comma, Toggle Settings, exec, ${settings}"
+          "$mod, Apostrophe, Toggle Notifications, exec, ${notifications}"
+        ]
+        ++ optionals (config.my.desktop.lock == "dms") [
+          "SUPER ALT, L, Toggle Lock, exec, ${lock}"
+        ];
       binddl = mkForce (let
         mpris_playpause = dms' "mpris playPause";
         mpris_next = dms' "mpris next";

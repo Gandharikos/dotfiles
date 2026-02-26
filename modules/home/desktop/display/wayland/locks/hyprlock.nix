@@ -7,13 +7,12 @@
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkOption;
   inherit (lib.types) nullOr str;
-  inherit (lib.my) runOnce;
+  inherit (lib.my) runOnce isWayland;
   inherit (config.my.theme) wallpaper avatar;
   hyprlock' = runOnce pkgs "hyprlock";
   font_family = "SFProDisplay Nerd Font Bold";
   cfg = config.my.desktop.hyprlock;
-  # enable = config.my.desktop.lock == "hyprlock" && isWayland config;
-  enable = false;
+  enable = config.my.desktop.lock == "hyprlock" && isWayland config;
 in {
   options.my.desktop.hyprlock = {
     colors = {
@@ -91,11 +90,8 @@ in {
 
   config = mkIf enable {
     wayland.windowManager.hyprland.settings = {
-      # exec-once = [
-      #   "hyprlock"
-      # ];
       bindd = [
-        "$mod, L, Lock Screen, exec, ${hyprlock'}"
+        "SUPER ALT, L, Lock Screen, exec, ${hyprlock'}"
       ];
     };
     programs.hyprlock = {

@@ -12,6 +12,22 @@ in {
   imports = scanPaths ./.;
 
   options.my.desktop = {
+    lock = mkOption {
+      type = nullOr (enum ["hyprlock" "dms"]);
+      default =
+        if osClass == "nixos" && desktop.enable
+        then "dms"
+        else null;
+      description = "The lock screen to use";
+    };
+    idle = mkOption {
+      type = nullOr (enum ["hypridle"]);
+      default =
+        if osClass == "nixos" && desktop.enable
+        then "hypridle"
+        else null;
+      description = "The idle tool to use";
+    };
     shot = mkOption {
       type = nullOr (enum ["hyprshot" "grimblast" "dms"]);
       default =

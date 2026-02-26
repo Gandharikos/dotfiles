@@ -13,11 +13,7 @@
   # systemctl' = getExe' pkgs.systemd "systemctl";
 in {
   options.my.desktop.hyprland.shade = {
-    enable =
-      mkEnableOption "hyprshade"
-      // {
-        default = cfg.enable;
-      };
+    enable = mkEnableOption "hyprshade";
   };
 
   config = mkIf cfg.shade.enable {
