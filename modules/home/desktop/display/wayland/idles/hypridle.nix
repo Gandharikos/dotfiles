@@ -1,11 +1,10 @@
 {
-  config,
   lib,
   pkgs,
   ...
 }: let
   inherit (lib.meta) getExe getExe';
-  inherit (lib.my) runOnce isWayland;
+  inherit (lib.my) runOnce;
 
   suspendScript = pkgs.writeShellScript "suspend-script" ''
     # check if any player has statutes "Playing"
@@ -27,7 +26,8 @@
   timeout = 300;
 
   inherit (lib.modules) mkIf;
-  enable = config.my.desktop.idle == "hypridle" && isWayland config;
+  # enable = config.my.desktop.idle == "hypridle" && isWayland config;
+  enable = false;
 in {
   config = mkIf enable {
     services.hypridle = {

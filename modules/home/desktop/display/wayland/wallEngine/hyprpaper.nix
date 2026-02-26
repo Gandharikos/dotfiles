@@ -4,9 +4,10 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
-  inherit (lib.my) isWayland;
+  # inherit (lib.my) isWayland;
   inherit (config.my.theme) wallpaper;
-  enable = config.my.desktop.wallEngine == "hyprpaper" && isWayland config;
+  # enable = config.my.desktop.wallEngine == "hyprpaper" && isWayland config;
+  enable = false;
 in {
   config = mkIf enable {
     services.hyprpaper = {
