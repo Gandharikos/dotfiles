@@ -6,7 +6,7 @@
   ...
 }: let
   inherit (lib.meta) getExe getExe';
-  inherit (lib.my) runOnce withUWSM' isWayland;
+  inherit (lib.my) runOnce isWayland isHyprland;
   inherit (lib.modules) mkIf;
 
   suspendScript = pkgs.writeShellScript "suspend-script" ''
@@ -31,11 +31,18 @@
 
   inherit (config.my) desktop;
   enable = desktop.idle == "hypridle" && isWayland config;
-  dms = withUWSM' pkgs inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default "dms";
+  dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  dms =
+    if isHyprland config
+    then "${getExe pkgs.uwsm} app -- ${getExe' dmsPkg "dms"}"
+    else getExe' dmsPkg "dms";
   dms_lock = "${dms} ipc call lock lock";
   lock_cmd =
     if desktop.lock == "hyprlock"
-    then runOnce pkgs "hyprlock" # avoid starting multiple hyprlock instances
+    then
+      if isHyprland config
+      then runOnce pkgs "hyprlock" # avoid starting multiple hyprlock instances
+      else getExe pkgs.hyprlock
     else if desktop.lock == "dms"
     then dms_lock
     else null;

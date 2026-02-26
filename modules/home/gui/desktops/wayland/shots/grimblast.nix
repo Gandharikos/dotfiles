@@ -10,11 +10,11 @@
   grimblast' = runOnce pkgs "grimblast";
   satty' = runOnce pkgs "satty";
   enable = config.my.desktop.shot == "grimblast" && isWayland config;
-  uwsm = getExe pkgs.uwsm;
+  cfgNiri = config.my.desktop.niri;
   bash = getExe pkgs.bash;
   grimblast = getExe pkgs.grimblast;
   satty = getExe pkgs.satty;
-  niriSpawn = command: {action.spawn = [uwsm "app" "--" bash "-lc" command];};
+  niriSpawn = command: {action.spawn = [bash "-lc" command];};
 in {
   config = mkIf enable {
     wayland.windowManager.hyprland.settings = {
@@ -39,7 +39,7 @@ in {
       ];
     };
 
-    programs.niri.settings = {
+    programs.niri.settings = mkIf cfgNiri.enable {
       environment = {
         GRIMBLAST_HIDE_CURSOR = "0";
         GRIMBLAST_NO_CURSOR = "0";

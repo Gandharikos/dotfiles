@@ -8,16 +8,24 @@
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.attrsets) optionalAttrs;
   inherit (lib.lists) optionals;
-  inherit (lib.my) isWayland withUWSM';
+  inherit (lib.meta) getExe';
+  inherit (lib.my) isWayland isHyprland;
 
   enable = isWayland config;
   inherit (config.my) desktop;
 
-  dms = withUWSM' pkgs inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default "dms";
+  dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  uwsm = getExe' pkgs.uwsm "uwsm";
+  dmsExe = getExe' dmsPkg "dms";
+  dmsCmd =
+    if isHyprland config
+    then [uwsm "app" "--" dmsExe]
+    else [dmsExe];
+  dmsCmdStr = builtins.concatStringsSep " " dmsCmd;
   dms' = args:
     if builtins.isList args
-    then [dms "ipc" "call"] ++ args
-    else "${dms} ipc call ${args}";
+    then dmsCmd ++ ["ipc" "call"] ++ args
+    else "${dmsCmdStr} ipc call ${args}";
 
   modKey =
     if desktop.general.keybind.modifier == "SUPER"

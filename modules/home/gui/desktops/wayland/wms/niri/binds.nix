@@ -9,7 +9,7 @@
   inherit (lib.meta) getExe getExe';
   inherit (lib.modules) mkIf;
   inherit (lib.trivial) mod;
-  inherit (config.my) desktop terminal browser;
+  inherit (config.my) desktop terminal browser fileManager;
   inherit (config.xdg.userDirs.extraConfig) SCREENSHOTS;
 
   cfg = config.my.desktop.niri;
@@ -134,6 +134,10 @@ in
             "${modKey}+B" = {
               repeat = false;
               action.spawn = browser.exec;
+            };
+            "${modKey}+${E}" = {
+              repeat = false;
+              action.spawn = fileManager.exec;
             };
             "${modKey}+Tab".action.toggle-overview = [];
             "${modKey}+Q".action.close-window = [];
