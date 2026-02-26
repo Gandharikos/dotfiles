@@ -21,6 +21,7 @@ in {
       };
   };
   config = mkIf cfg.enable {
+    my.desktop.shot = "dms";
     programs.niri = {
       enable = true;
       settings = {
