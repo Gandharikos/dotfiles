@@ -14,7 +14,7 @@ in {
       plugins = with pkgs.hyprlandPlugins; [hyprscroller];
       settings = {
         general.layout = "scroller";
-        bind = ["$mod SHIFT, S, scroller:toggleoverview, toggle"];
+        bindd = ["$mod SHIFT, S, Toggle Scroller Overview, scroller:toggleoverview, toggle"];
       };
     };
   };

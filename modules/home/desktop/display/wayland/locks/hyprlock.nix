@@ -93,8 +93,8 @@ in {
       # exec-once = [
       #   "hyprlock"
       # ];
-      bind = [
-        "$mod, L, exec, ${hyprlock'}"
+      bindd = [
+        "$mod, L, Lock Screen, exec, ${hyprlock'}"
       ];
     };
     programs.hyprlock = {

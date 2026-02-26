@@ -28,14 +28,14 @@ in
         settings = {
           "$mod" = mod;
           # keybindings
-          bind =
+          bindd =
             [
               # command
-              "$mod SHIFT, Escape, exit,"
-              "$mod, Q, killactive," # close the active window
-              "$mod SHIFT, Q, forcekillactive," # kill the active windwo
-              "$mod, B, exec, ${browser.exec}"
-              "$mod, return, exec, ${terminal.exec}"
+              "$mod SHIFT, Escape, Exit Hyprland, exit,"
+              "$mod, Q, Close Window, killactive," # close the active window
+              "$mod SHIFT, Q, Force Close Window, forcekillactive," # kill the active windwo
+              "$mod, B, Launch Browser, exec, ${browser.exec}"
+              "$mod, return, Launch Terminal, exec, ${terminal.exec}"
 
               # "$mod, space, exec, ags -t launcher"
               # "$mod SHIFT, R, exec, ags -q; ags"
@@ -48,63 +48,63 @@ in
               # ",XF86PowerOff, exec, ags -t powermenu"
               # "$mod, U, exec, XDG_CURRENT_DESKTOP=GNOME gnome-control-center"
 
-              "$mod, J, togglesplit,"
-              "$mod, Z, alterzorder, top"
-              "$mod SHIFT, Z, alterzorder, bottom"
-              "$mod SHIFT, F, togglefloating,"
-              "$mod, F, fullscreen, 0"
-              "$mod, M, fullscreen, 1"
-              "$mod, P, pseudo,"
-              "$mod SHIFT, P, pin,"
+              "$mod, J, Toggle Split, togglesplit,"
+              "$mod, Z, Bring to Top, alterzorder, top"
+              "$mod SHIFT, Z, Send to Bottom, alterzorder, bottom"
+              "$mod SHIFT, F, Toggle Floating, togglefloating,"
+              "$mod, F, Fullscreen (Mode 0), fullscreen, 0"
+              "$mod, M, Fullscreen (Mode 1), fullscreen, 1"
+              "$mod, P, Toggle Pseudotile, pseudo,"
+              "$mod SHIFT, P, Toggle Pin, pin,"
               # group
-              "$mod, G, togglegroup,"
-              "$mod SHIFT, G, changegroupactive, f"
+              "$mod, G, Toggle Group, togglegroup,"
+              "$mod SHIFT, G, Next Group Window, changegroupactive, f"
               # move group
-              "$mod SHIFT CONTROL, ${h}, movewindoworgroUP, l"
-              "$mod SHIFT CONTROL, ${j}, movewindoworgroUP, d"
-              "$mod SHIFT CONTROL, ${k}, movewindoworgroUP, u"
-              "$mod SHIFT CONTROL, ${l}, movewindoworgroUP, r"
+              "$mod SHIFT CONTROL, ${h}, Move Group Window Left, movewindoworgroUP, l"
+              "$mod SHIFT CONTROL, ${j}, Move Group Window Down, movewindoworgroUP, d"
+              "$mod SHIFT CONTROL, ${k}, Move Group Window Up, movewindoworgroUP, u"
+              "$mod SHIFT CONTROL, ${l}, Move Group Window Right, movewindoworgroUP, r"
               # move focus
-              "$mod, ${h}, movefocus, l"
-              "$mod, ${j}, movefocus, d"
-              "$mod, ${k}, movefocus, u"
-              "$mod, ${l}, movefocus, r"
+              "$mod, ${h}, Focus Left, movefocus, l"
+              "$mod, ${j}, Focus Down, movefocus, d"
+              "$mod, ${k}, Focus Up, movefocus, u"
+              "$mod, ${l}, Focus Right, movefocus, r"
               # move window
-              "$mod SHIFT, ${h}, movewindow, l"
-              "$mod SHIFT, ${j}, movewindow, d"
-              "$mod SHIFT, ${k}, movewindow, u"
-              "$mod SHIFT, ${l}, movewindow, r"
+              "$mod SHIFT, ${h}, Move Window Left, movewindow, l"
+              "$mod SHIFT, ${j}, Move Window Down, movewindow, d"
+              "$mod SHIFT, ${k}, Move Window Up, movewindow, u"
+              "$mod SHIFT, ${l}, Move Window Right, movewindow, r"
 
               # special workspace
-              "$mod SHIFT, grave, togglespecialworkspace"
-              "$mod, grave, movetoworkspace, special"
-              "$mod CTRL, grave, movetoworkspacesilent, special"
+              "$mod SHIFT, grave, Toggle Special Workspace, togglespecialworkspace"
+              "$mod, grave, Move to Special Workspace, movetoworkspace, special"
+              "$mod CTRL, grave, Move to Special Workspace (Silent), movetoworkspacesilent, special"
               # monitors
-              "$mod, comma, focusmonitor, l"
-              "$mod, period, focusmonitor, r"
-              "$mod SHIFT, comma, movecurrentworkspacetomonitor, l"
-              "$mod SHIFT, period, movecurrentworkspacetomonitor, r"
+              "$mod, comma, Focus Monitor Left, focusmonitor, l"
+              "$mod, period, Focus Monitor Right, focusmonitor, r"
+              "$mod SHIFT, comma, Move Workspace to Monitor Left, movecurrentworkspacetomonitor, l"
+              "$mod SHIFT, period, Move Workspace to Monitor Right, movecurrentworkspacetomonitor, r"
               # workspace
-              "$mod, W, workspace, empty" # move to the first empty workspace
+              "$mod, W, Focus Empty Workspace, workspace, empty" # move to the first empty workspace
               # "$mod, tab, workspace, m+1"
               # "$mod SHIFT, tab, workspace, m-1"
               # send focused workspace to left/right monitor
-              "$mod ALT, bracketleft, movecurrentworkspacetomonitor, l"
-              "$mod ALT, bracketright, movecurrentworkspacetomonitor, r"
+              "$mod ALT, bracketleft, Move Workspace to Monitor Left, movecurrentworkspacetomonitor, l"
+              "$mod ALT, bracketright, Move Workspace to Monitor Right, movecurrentworkspacetomonitor, r"
               # send focused workspace to left/right space silent
-              "$mod CTRL, bracketleft, movetoworkspacesilent, -1"
-              "$mod CTRL, bracketright, movetoworkspacesilent, +1"
+              "$mod CTRL, bracketleft, Move Window to Previous Workspace (Silent), movetoworkspacesilent, -1"
+              "$mod CTRL, bracketright, Move Window to Next Workspace (Silent), movetoworkspacesilent, +1"
 
               # Workspace control
-              "$mod, D, focusworkspaceoncurrentmonitor, name:D" # desktop only
-              "$mod, backspace, focusworkspaceoncurrentmonitor, previous"
+              "$mod, D, Focus Workspace D, focusworkspaceoncurrentmonitor, name:D" # desktop only
+              "$mod, backspace, Focus Previous Workspace, focusworkspaceoncurrentmonitor, previous"
 
-              "$mod, mouse_down, focusworkspaceoncurrentmonitor, -1"
-              "$mod, mouse_up, focusworkspaceoncurrentmonitor, +1"
+              "$mod, mouse_down, Previous Workspace, focusworkspaceoncurrentmonitor, -1"
+              "$mod, mouse_up, Next Workspace, focusworkspaceoncurrentmonitor, +1"
               # utility
               # select area to perform OCR on
-              "$mod, H, exec, ${wl-ocr}"
-              ", XF86Favorites, exec, ${wl-ocr}"
+              "$mod, S, OCR Selection, exec, ${wl-ocr}"
+              ", XF86Favorites, OCR Selection, exec, ${wl-ocr}"
             ]
             ++ (mkHyprMoveTo ["focusworkspaceoncurrentmonitor" "movetoworkspacesilent"] num)
             ++ (optionals (!hyprsplit_enabled)
@@ -112,68 +112,68 @@ in
                 ["workspace" "movetoworkspace" "movetoworkspacesilent"]
                 num))
             ++ (optionals (!cfg.switch.enable) [
-              "ALT, tab, cyclenext,"
-              "ALT SHIFT, tab, bringactivetotop,"
+              "ALT, tab, Cycle Next Window, cyclenext,"
+              "ALT SHIFT, tab, Bring Active to Top, bringactivetotop,"
             ])
             ++ (optionals (!cfg.nome.enable) [
-              "$mod, mouse_down, workspace, e+1"
-              "$mod, mouse_up, workspace, e-1"
-              "$mod, bracketleft, workspace, e+1"
-              "$mod, bracketright, workspace, e-1"
-              "$mod SHIFT, bracketleft, movetoworkspace, -1"
-              "$mod SHIFT, bracketright, movetoworkspace, +1"
+              "$mod, mouse_down, Next Workspace, workspace, e+1"
+              "$mod, mouse_up, Previous Workspace, workspace, e-1"
+              "$mod, bracketleft, Next Workspace, workspace, e+1"
+              "$mod, bracketright, Previous Workspace, workspace, e-1"
+              "$mod SHIFT, bracketleft, Move Window to Previous Workspace, movetoworkspace, -1"
+              "$mod SHIFT, bracketright, Move Window to Next Workspace, movetoworkspace, +1"
             ]);
 
           # Bind: mouse binds
-          bindm = [
+          binddm = [
             # Move/resize windows with mainMod + LMB/RMB and dragging
-            "$mod, mouse:272, movewindow"
-            "$mod ALT, mouse:272, resizewindow"
+            "$mod, mouse:272, Move Window, movewindow"
+            "$mod ALT, mouse:272, Resize Window, resizewindow"
           ];
 
           # Bind: repeat while holding
-          binde = [
+          bindde = [
             # Window split ratio
-            "$mod, Minus, splitratio, -0.1"
-            "$mod, Equal, splitratio, 0.1"
-            "$mod, Semicolon, splitratio, -0.1"
-            "$mod, Apostrophe, splitratio, 0.1"
+            "$mod, Minus, Decrease Split Ratio, splitratio, -0.1"
+            "$mod, Equal, Increase Split Ratio, splitratio, 0.1"
+            "$mod, Semicolon, Decrease Split Ratio, splitratio, -0.1"
+            "$mod, Apostrophe, Increase Split Ratio, splitratio, 0.1"
             # resizing the active window
-            "$mod CTRL, ${h}, resizeactive, 10 0"
-            "$mod CTRL, ${j}, resizeactive, 0 10"
-            "$mod CTRL, ${k}, resizeactive, 0 -10"
-            "$mod CTRL, ${l}, resizeactive, -10 0"
+            "$mod CTRL, ${h}, Resize Window Left, resizeactive, 10 0"
+            "$mod CTRL, ${j}, Resize Window Down, resizeactive, 0 10"
+            "$mod CTRL, ${k}, Resize Window Up, resizeactive, 0 -10"
+            "$mod CTRL, ${l}, Resize Window Right, resizeactive, -10 0"
           ];
 
           # Bind: locked binds
-          bindl = [
+          binddl = [
             # media controls
-            ", XF86AudioPlay, exec, ${playerctl'} play"
-            ", XF86AudioPrev, exec, ${playerctl'} previous"
-            ", XF86AudioNext, exec, ${playerctl'} next"
-            ", XF86AudioPause, exec, ${playerctl'} pause"
+            ", XF86AudioPlay, Play, exec, ${playerctl'} play"
+            ", XF86AudioPrev, Previous Track, exec, ${playerctl'} previous"
+            ", XF86AudioNext, Next Track, exec, ${playerctl'} next"
+            ", XF86AudioPause, Pause, exec, ${playerctl'} pause"
 
             # volume
-            ", XF86AudioMute, exec, ${wpctl'} set-mute @DEFAULT_AUDIO_SINK@ toggle"
-            ", XF86AudioMicMute, exec, ${wpctl'} set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+            ", XF86AudioMute, Mute Audio, exec, ${wpctl'} set-mute @DEFAULT_AUDIO_SINK@ toggle"
+            ", XF86AudioMicMute, Mute Microphone, exec, ${wpctl'} set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
 
             # misc
-            ", XF86Messenger, togglespecialworkspace"
+            ", XF86Messenger, Toggle Special Workspace, togglespecialworkspace"
           ];
 
           # Bind: locked and repeat
-          bindel = [
+          binddel = [
             # volume
-            ", XF86AudioRaiseVolume, exec, ${wpctl'} set-volume -l '1.0' @DEFAULT_AUDIO_SINK@ 6%+"
-            ", XF86AudioLowerVolume, exec, ${wpctl'} set-volume -l '1.0' @DEFAULT_AUDIO_SINK@ 6%-"
-            "ALT, XF86AudioRaiseVolume, exec, ${wpctl'} set-volume -l '1.0' @DEFAULT_AUDIO_SOURCE@ 6%+"
-            "ALT, XF86AudioLowerVolume, exec, ${wpctl'} set-volume -l '1.0' @DEFAULT_AUDIO_SOURCE@ 6%-"
+            ", XF86AudioRaiseVolume, Volume Up, exec, ${wpctl'} set-volume -l '1.0' @DEFAULT_AUDIO_SINK@ 6%+"
+            ", XF86AudioLowerVolume, Volume Down, exec, ${wpctl'} set-volume -l '1.0' @DEFAULT_AUDIO_SINK@ 6%-"
+            "ALT, XF86AudioRaiseVolume, Mic Volume Up, exec, ${wpctl'} set-volume -l '1.0' @DEFAULT_AUDIO_SOURCE@ 6%+"
+            "ALT, XF86AudioLowerVolume, Mic Volume Down, exec, ${wpctl'} set-volume -l '1.0' @DEFAULT_AUDIO_SOURCE@ 6%-"
 
             # backlight
-            ", XF86MonBrightnessUp, exec, ${brightnessctl'} --exponent s 5%+"
-            ", XF86MonBrightnessDown, exec, ${brightnessctl'} --exponent s 5%-"
-            ", XF86KbdBrightnessUp, exec, ${brightnessctl'} --device='*::kbd_backlight' s 10%+"
-            ", XF86KbdBrightnessDown, exec, ${brightnessctl'} --device='*::kbd_backlight' s 10%-"
+            ", XF86MonBrightnessUp, Brightness Up, exec, ${brightnessctl'} --exponent s 5%+"
+            ", XF86MonBrightnessDown, Brightness Down, exec, ${brightnessctl'} --exponent s 5%-"
+            ", XF86KbdBrightnessUp, Keyboard Brightness Up, exec, ${brightnessctl'} --device='*::kbd_backlight' s 10%+"
+            ", XF86KbdBrightnessDown, Keyboard Brightness Down, exec, ${brightnessctl'} --device='*::kbd_backlight' s 10%-"
           ];
         };
         extraConfig = ''

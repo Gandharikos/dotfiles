@@ -16,22 +16,22 @@ in {
     # ];
     wayland.windowManager.hyprland = {
       settings = {
-        bind = [
+        bindd = [
           # region
-          ", Print, exec, ${grimblast'} --notify copysave area - | ${satty'} --filename -"
-          "$mod, K, exec, ${grimblast'} --notify copysave area - | ${satty'} --filename -"
+          ", Print, Screenshot Region, exec, ${grimblast'} --notify copysave area - | ${satty'} --filename -"
+          "$mod, K, Screenshot Region, exec, ${grimblast'} --notify copysave area - | ${satty'} --filename -"
 
           # current window
-          "SHIFT, Print, exec, ${grimblast'} --notify copysave active - | ${satty'} --filename -"
-          "$mod SHIFT, K, exec, ${grimblast'} --notify copysave active - | ${satty'} --filename -"
+          "SHIFT, Print, Screenshot Window, exec, ${grimblast'} --notify copysave active - | ${satty'} --filename -"
+          "$mod SHIFT, K, Screenshot Window, exec, ${grimblast'} --notify copysave active - | ${satty'} --filename -"
 
           # current screen
-          "CTRL, Print, exec, ${grimblast'} --notify --cursor copysave output - | ${satty'} --filename -"
-          "$mod CTRL, K, exec, ${grimblast'} --notify --cursor copysave output - | ${satty'} --filename -"
+          "CTRL, Print, Screenshot Output, exec, ${grimblast'} --notify --cursor copysave output - | ${satty'} --filename -"
+          "$mod CTRL, K, Screenshot Output, exec, ${grimblast'} --notify --cursor copysave output - | ${satty'} --filename -"
 
           # all screens
-          "ALT, Print, exec, ${grimblast'} --notify --cursor copysave screen - | ${satty'} --filename -"
-          "$mod ALT, K, exec, ${grimblast'} --notify --cursor copysave screen - | ${satty'} --filename -"
+          "ALT, Print, Screenshot All Screens, exec, ${grimblast'} --notify --cursor copysave screen - | ${satty'} --filename -"
+          "$mod ALT, K, Screenshot All Screens, exec, ${grimblast'} --notify --cursor copysave screen - | ${satty'} --filename -"
         ];
         env = [
           # can fix high cpu loads on some machines

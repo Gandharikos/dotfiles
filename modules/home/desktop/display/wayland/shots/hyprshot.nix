@@ -17,18 +17,18 @@ in {
 
     wayland.windowManager.hyprland = {
       settings = {
-        bind = [
+        bindd = [
           # region
-          ", Print, exec, ${hyprshot'} --mode region --raw | ${satty'} --filename -"
-          "$mod, K, exec, ${hyprshot'} --mode region --raw | ${satty'} --filename -"
+          ", Print, Screenshot Region, exec, ${hyprshot'} --mode region --raw | ${satty'} --filename -"
+          "$mod, K, Screenshot Region, exec, ${hyprshot'} --mode region --raw | ${satty'} --filename -"
 
           # current window
-          "SHIFT, Print, exec, ${hyprshot'} --mode window --raw | ${satty'} --filename -"
-          "$mod SHIFT, K, exec, ${hyprshot'} --mode window --raw | ${satty'} --filename -"
+          "SHIFT, Print, Screenshot Window, exec, ${hyprshot'} --mode window --raw | ${satty'} --filename -"
+          "$mod SHIFT, K, Screenshot Window, exec, ${hyprshot'} --mode window --raw | ${satty'} --filename -"
 
           # current screen
-          "CTRL, Print, exec, ${hyprshot'} --mode output --raw | ${satty'} --filename -"
-          "$mod CTRL, K, exec, ${hyprshot'} --mode output --raw | ${satty'} --filename -"
+          "CTRL, Print, Screenshot Output, exec, ${hyprshot'} --mode output --raw | ${satty'} --filename -"
+          "$mod CTRL, K, Screenshot Output, exec, ${hyprshot'} --mode output --raw | ${satty'} --filename -"
         ];
       };
     };

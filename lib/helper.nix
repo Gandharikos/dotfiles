@@ -20,38 +20,81 @@
     lib.concatStringsSep ", " [
       cmd.modifier
       key
+      (
+        if cmd ? description
+        then
+          (
+            if builtins.isFunction cmd.description
+            then cmd.description workspaceNum
+            else cmd.description
+          )
+        else cmd.action
+      )
       cmd.action
       workspaceNum
     ];
 
-  mkHyprWorkspaces = actions: n:
+  mkHyprWorkspaceDescription = action: workspaceNum: let
+    is_split = lib.strings.hasPrefix "split:" action;
+    action' =
+      if is_split
+      then lib.strings.removePrefix "split:" action
+      else action;
+    prefix =
+      if is_split
+      then "Split: "
+      else "";
+  in
+    if action' == "workspace"
+    then "${prefix}Switch to workspace ${workspaceNum}"
+    else if action' == "focusworkspaceoncurrentmonitor"
+    then "${prefix}Focus workspace ${workspaceNum} (current monitor)"
+    else if action' == "movetoworkspace"
+    then "${prefix}Move window to workspace ${workspaceNum}"
+    else if action' == "movetoworkspacesilent"
+    then "${prefix}Move window to workspace ${workspaceNum} (silent)"
+    else "${prefix}${action'} ${workspaceNum}";
+
+  mkHyprWorkspaces = actions: n: let
+    action0 = builtins.elemAt actions 0;
+    action1 = builtins.elemAt actions 1;
+    action2 = builtins.elemAt actions 2;
+  in
     mkWorkspaces [
       # Define the command definitions for workspace bindings
       {
         modifier = "$mod";
-        action = builtins.elemAt actions 0;
+        action = action0;
+        description = mkHyprWorkspaceDescription action0;
       }
       {
         modifier = "$mod SHIFT";
-        action = builtins.elemAt actions 1;
+        action = action1;
+        description = mkHyprWorkspaceDescription action1;
       }
       {
         modifier = "$mod CTRL";
-        action = builtins.elemAt actions 2;
+        action = action2;
+        description = mkHyprWorkspaceDescription action2;
       }
     ]
     hyprlandFormat
     n;
 
-  mkHyprMoveTo = actions: n:
+  mkHyprMoveTo = actions: n: let
+    action0 = builtins.elemAt actions 0;
+    action1 = builtins.elemAt actions 1;
+  in
     mkWorkspaces [
       {
         modifier = "$mod";
-        action = builtins.elemAt actions 0;
+        action = action0;
+        description = mkHyprWorkspaceDescription action0;
       }
       {
         modifier = "$mod SHIFT";
-        action = builtins.elemAt actions 1;
+        action = action1;
+        description = mkHyprWorkspaceDescription action1;
       }
     ]
     hyprlandFormat

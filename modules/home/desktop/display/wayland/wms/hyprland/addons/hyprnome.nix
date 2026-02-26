@@ -22,13 +22,13 @@ in {
       hyprnome
     ];
 
-    wayland.windowManager.hyprland .settings.bind = mkAfter [
-      "$mod, mouse_down, exec, ${hyprnome'} --previous"
-      "$mod, mouse_up, exec, ${hyprnome'}"
-      "$mod, bracketleft, exec, ${hyprnome'} --previous"
-      "$mod, bracketright, exec, ${hyprnome'}"
-      "$mod SHIFT, bracketleft, exec, ${hyprnome'} --previous --move"
-      "$mod SHIFT, bracketright, exec, ${hyprnome'} --move"
+    wayland.windowManager.hyprland .settings.bindd = mkAfter [
+      "$mod, mouse_down, Previous Workspace, exec, ${hyprnome'} --previous"
+      "$mod, mouse_up, Next Workspace, exec, ${hyprnome'}"
+      "$mod, bracketleft, Previous Workspace, exec, ${hyprnome'} --previous"
+      "$mod, bracketright, Next Workspace, exec, ${hyprnome'}"
+      "$mod SHIFT, bracketleft, Move Window to Previous Workspace, exec, ${hyprnome'} --previous --move"
+      "$mod SHIFT, bracketright, Move Window to Next Workspace, exec, ${hyprnome'} --move"
     ];
   };
 }

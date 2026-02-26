@@ -14,8 +14,8 @@ in {
       plugins = with pkgs.hyprlandPlugins; [hyprexpo];
 
       settings = {
-        bind = [
-          "$mod, GRAVE, hyprexpo:expo, toggle"
+        bindd = [
+          "$mod, GRAVE, Toggle Expo, hyprexpo:expo, toggle"
         ];
         plugin.hyprexpo = {
           rows = 3;

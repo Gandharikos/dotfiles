@@ -15,9 +15,9 @@ in {
       plugins = with pkgs.hyprlandPlugins; [hyprspace];
 
       settings = {
-        bind = mkAfter [
-          "$mainMod, TAB, overview:toggle"
-          "$mainMod SHIFT, TAB, overview:toggle, all"
+        bindd = mkAfter [
+          "$mainMod, TAB, Toggle Overview, overview:toggle"
+          "$mainMod SHIFT, TAB, Toggle Overview (All), overview:toggle, all"
         ];
         plugin.overview = {
           # layout

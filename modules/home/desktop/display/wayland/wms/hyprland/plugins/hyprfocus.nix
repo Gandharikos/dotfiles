@@ -14,7 +14,7 @@ in {
       plugins = with pkgs.hyprlandPlugins; [hyprfocus];
 
       settings = {
-        bind = ["$mod SHIFT, SPACE, animatefocused"];
+        bindd = ["$mod SHIFT, SPACE, Animate Focus, animatefocused"];
         plugin.hyprfocus = {
           enabled = "yes";
           keyboard_focus_animation = "shrink";
