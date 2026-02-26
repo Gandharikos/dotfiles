@@ -6,13 +6,11 @@
   ...
 }: let
   inherit (lib.modules) mkIf mkForce;
-  inherit (lib.my) isWayland;
-  inherit (lib.meta) getExe getExe';
+  inherit (lib.my) isWayland withUWSM';
   enable = config.my.desktop.polkit == "hyprpolkit" && isWayland config;
 
-  uwsm = "${getExe pkgs.uwsm} app --";
-  dms = getExe' inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default "dms";
-  dms' = cmd: "${uwsm} ${dms} ipc call ${cmd}";
+  dms = withUWSM' pkgs inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default "dms";
+  dms' = cmd: "${dms} ipc call ${cmd}";
 in {
   imports = [
     inputs.dms.homeModules.dank-material-shell
@@ -40,7 +38,7 @@ in {
         monitor = dms' "processlist toggle";
         powermenu = dms' "powermenu toggle";
         notifications = dms' "notifications toggle";
-        # settings = dms' "settings toggle";
+        settings = dms' "settings toggle";
         lock = dms' "lock toggle";
       in [
         "$mod, space, Toggle App Launcher, exec, ${spotlight}"
@@ -48,9 +46,9 @@ in {
         "$mod, Tab, Toggle Overview, exec, ${overview}"
         "$mod, Escape, Toggle System Monitor, exec, ${monitor}"
         "$mod, X, Toggle Power Menu, exec, ${powermenu}"
-        # "$mod, comma, Toggle Settings, exec, ${settings}"
-        "SUPER, Apostrophe, Toggle Notifications, exec, ${notifications}"
-        "SUPER ALT, L, Toggle Lock, exec, ${lock}"
+        "ALT, Comma, Toggle Settings, exec, ${settings}"
+        "$mod, Apostrophe, Toggle Notifications, exec, ${notifications}"
+        "SUPER CTRL, L, Toggle Lock, exec, ${lock}"
       ];
       binddl = mkForce (let
         mpris_playpause = dms' "mpris playPause";
