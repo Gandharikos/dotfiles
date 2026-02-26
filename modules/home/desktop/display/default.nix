@@ -13,7 +13,7 @@ in {
 
   options.my.desktop = {
     shot = mkOption {
-      type = nullOr (enum ["hyprshot" "grimblast"]);
+      type = nullOr (enum ["hyprshot" "grimblast" "dms"]);
       default =
         if osClass == "nixos" && desktop.enable
         then "grimblast"
