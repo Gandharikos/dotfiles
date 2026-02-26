@@ -22,7 +22,13 @@ in {
       };
 
     type = mkOption {
-      type = nullOr (enum ["wayland" "xorg" "darwin"]);
+      type = nullOr (enum (
+        if isLinux
+        then ["wayland" "xorg"]
+        else if isDarwin
+        then ["darwin"]
+        else []
+      ));
       default =
         if !my.desktop.enable
         then null
@@ -68,18 +74,6 @@ in {
     {
       assertion = my.desktop.enable -> my.desktop.type != null;
       message = "You can't use desktop.enable without desktop.type";
-    }
-    {
-      assertion = my.desktop.type == "xorg" -> isLinux;
-      message = "You can't use xorg on non-linux system";
-    }
-    {
-      assertion = my.desktop.type == "wayland" -> isLinux;
-      message = "You can't use wayland on non-linux system";
-    }
-    {
-      assertion = my.desktop.type == "darwin" -> isDarwin;
-      message = "You can't use darwin desktop environment on non-darwin system";
     }
   ];
 }
