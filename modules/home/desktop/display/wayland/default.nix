@@ -26,7 +26,6 @@ in {
       wl-clipboard-rs
       wl-screenrec
       wlr-randr
-      waypaper # GUI for wallpaper engine
       ffmpeg
       glib
       gnome-console
