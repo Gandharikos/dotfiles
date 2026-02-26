@@ -6,87 +6,188 @@
   ...
 }: let
   inherit (lib.modules) mkIf mkForce;
+  inherit (lib.attrsets) optionalAttrs;
   inherit (lib.lists) optionals;
   inherit (lib.my) isWayland withUWSM';
 
   enable = isWayland config;
+  inherit (config.my) desktop;
 
   dms = withUWSM' pkgs inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default "dms";
-  dms' = cmd: "${dms} ipc call ${cmd}";
-in {
-  imports = [
-    inputs.dms.homeModules.dank-material-shell
-  ];
-  config = mkIf enable {
-    programs.dank-material-shell = {
-      enable = true;
+  dms' = args:
+    if builtins.isList args
+    then [dms "ipc" "call"] ++ args
+    else "${dms} ipc call ${args}";
 
-      systemd = {
+  modKey =
+    if desktop.general.keybind.modifier == "SUPER"
+    then "Mod"
+    else if desktop.general.keybind.modifier == "CTRL"
+    then "Ctrl"
+    else "Alt";
+in
+  with config.my.keyboard.keys; {
+    imports = [
+      inputs.dms.homeModules.dank-material-shell
+    ];
+    config = mkIf enable {
+      programs.dank-material-shell = {
         enable = true;
-        restartIfChanged = true;
+
+        systemd = {
+          enable = true;
+          restartIfChanged = true;
+        };
+
+        enableSystemMonitoring = true; # System monitoring widgets (dgop)
+        enableDynamicTheming = true; # Wallpaper-based theming (matugen)
+        enableVPN = true; # VPN management widget
+        enableAudioWavelength = true; # Audio visualizer (cava)
+        enableCalendarEvents = true; # Calendar integration (khal)
+      };
+      wayland.windowManager.hyprland.settings = {
+        bindd = let
+          spotlight = dms' "spotlight toggle";
+          clipboard = dms' "clipboard toggle";
+          overview = dms' "hypr toggleOverview";
+          monitor = dms' "processlist toggle";
+          powermenu = dms' "powermenu toggle";
+          control_center = dms' "control-center toggle";
+          notepad = dms' "notepad toggle";
+          notifications = dms' "notifications toggle";
+          dnd = dms' "notifications toggleDoNotDisturb";
+          settings = dms' "settings toggle";
+          theme_toggle = dms' "theme toggle";
+          night_toggle = dms' "night toggle";
+          inhibit = dms' "inhibit toggle";
+          lock = dms' "lock toggle";
+        in
+          [
+            "$mod, space, Toggle App Launcher, exec, ${spotlight}"
+            "$mod, V, Toggle Clipboard History, exec, ${clipboard}"
+            "$mod, Tab, Toggle Overview, exec, ${overview}"
+            "$mod, Escape, Toggle System Monitor, exec, ${monitor}"
+            "$mod, X, Toggle Power Menu, exec, ${powermenu}"
+            "$mod, C, Toggle Control Center, exec, ${control_center}"
+            "$mod, ${N}, Toggle Notepad, exec, ${notepad}"
+            "$mod SHIFT, D, Toggle Do Not Disturb, exec, ${dnd}"
+            "$mod SHIFT, T, Toggle Theme Mode, exec, ${theme_toggle}"
+            "$mod SHIFT, ${N}, Toggle Night Mode, exec, ${night_toggle}"
+            "$mod, ${I}, Toggle Inhibit, exec, ${inhibit}"
+            "ALT, Comma, Toggle Settings, exec, ${settings}"
+            "$mod, Apostrophe, Toggle Notifications, exec, ${notifications}"
+          ]
+          ++ optionals (config.my.desktop.lock == "dms") [
+            "SUPER ALT, L, Toggle Lock, exec, ${lock}"
+          ];
+        binddl = mkForce (let
+          mpris_playpause = dms' "mpris playPause";
+          mpris_next = dms' "mpris next";
+          mpris_prev = dms' "mpris previous";
+          audio_mute = dms' "audio mute";
+          audio_micmute = dms' "audio micmute";
+        in [
+          ", XF86AudioPlay, Play/Pause, exec, ${mpris_playpause}"
+          ", XF86AudioPause, Play/Pause, exec, ${mpris_playpause}"
+          ", XF86AudioNext, Skip to Next Track, exec, ${mpris_next}"
+          ", XF86AudioPrev, Return to Previous Track, exec, ${mpris_prev}"
+          ", XF86AudioMute, Mute/Unmute Volume, exec, ${audio_mute}"
+          ", XF86AudioMicMute, Mute/Unmute Microphone, exec, ${audio_micmute}"
+        ]);
+        binddel = mkForce (let
+          increment_volume = dms' "audio increment 2";
+          decrement_volume = dms' "audio decrement 2";
+          brightness_up = dms' "brightness increment 5 \"amdgpu_bl2\"";
+          brightness_down = dms' "brightness decrement 5 \"amdgpu_bl2\"";
+        in [
+          ", XF86AudioRaiseVolume, Increase Volume, exec, ${increment_volume}"
+          ", XF86AudioLowerVolume, Decrease Volume, exec, ${decrement_volume}"
+          ", XF86MonBrightnessUp, Increase Brightness, exec, ${brightness_up}"
+          ", XF86MonBrightnessDown, Decrease Brightness, exec, ${brightness_down}"
+        ]);
+      };
+      programs.niri.settings = {
+        binds = let
+          spawn = args: {action.spawn = dms' args;};
+          screenshotBinds = optionalAttrs (desktop.shot == "dms") {
+            "Print" = spawn ["niri" "screenshot"];
+            "Shift+Print" = spawn ["niri" "screenshotWindow"];
+            "Ctrl+Print" = spawn ["niri" "screenshotScreen"];
+            "${modKey}+Print" = spawn ["niri" "screenshot"];
+          };
+          xf86Binds = {
+            "XF86AudioPlay" = {
+              allow-when-locked = true;
+              action.spawn = dms' ["mpris" "playPause"];
+            };
+            "XF86AudioPause" = {
+              allow-when-locked = true;
+              action.spawn = dms' ["mpris" "playPause"];
+            };
+            "XF86AudioNext" = {
+              allow-when-locked = true;
+              action.spawn = dms' ["mpris" "next"];
+            };
+            "XF86AudioPrev" = {
+              allow-when-locked = true;
+              action.spawn = dms' ["mpris" "previous"];
+            };
+            "XF86AudioMute" = {
+              allow-when-locked = true;
+              action.spawn = dms' ["audio" "mute"];
+            };
+            "XF86AudioMicMute" = {
+              allow-when-locked = true;
+              action.spawn = dms' ["audio" "micmute"];
+            };
+            "XF86AudioRaiseVolume" = {
+              allow-when-locked = true;
+              repeat = true;
+              action.spawn = dms' ["audio" "increment" "2"];
+            };
+            "XF86AudioLowerVolume" = {
+              allow-when-locked = true;
+              repeat = true;
+              action.spawn = dms' ["audio" "decrement" "2"];
+            };
+            "XF86MonBrightnessUp" = {
+              allow-when-locked = true;
+              repeat = true;
+              action.spawn = dms' ["brightness" "increment" "5" "amdgpu_bl2"];
+            };
+            "XF86MonBrightnessDown" = {
+              allow-when-locked = true;
+              repeat = true;
+              action.spawn = dms' ["brightness" "decrement" "5" "amdgpu_bl2"];
+            };
+          };
+        in
+          {
+            "${modKey}+Space" = spawn ["spotlight" "toggle"];
+            "${modKey}+V" = spawn ["clipboard" "toggle"];
+            "${modKey}+Escape" = spawn ["processlist" "toggle"];
+            "${modKey}+X" = spawn ["powermenu" "toggle"];
+            "${modKey}+C" = spawn ["control-center" "toggle"];
+            "${modKey}+${N}" = spawn ["notepad" "toggle"];
+            "${modKey}+Shift+D" = spawn ["notifications" "toggleDoNotDisturb"];
+            "${modKey}+Shift+T" = spawn ["theme" "toggle"];
+            "${modKey}+Shift+${N}" = spawn ["night" "toggle"];
+            "${modKey}+${N}" = spawn ["inhibit" "toggle"];
+            "Alt+Comma" = spawn ["settings" "toggle"];
+            "${modKey}+Apostrophe" = spawn ["notifications" "toggle"];
+          }
+          // optionalAttrs (desktop.lock == "dms") {
+            "${modKey}+Alt+L".action.spawn = dms' ["lock" "toggle"];
+          }
+          // screenshotBinds
+          // xf86Binds;
       };
 
-      enableSystemMonitoring = true; # System monitoring widgets (dgop)
-      enableDynamicTheming = true; # Wallpaper-based theming (matugen)
-      enableVPN = true; # VPN management widget
-      enableAudioWavelength = true; # Audio visualizer (cava)
-      enableCalendarEvents = true; # Calendar integration (khal)
+      home.persistence."/persist".directories = [
+        ".config/DankMaterialShell"
+        ".local/state/DankMaterialShell"
+        ".cache/DankMaterialShell"
+        ".config/quickshell"
+      ];
     };
-    wayland.windowManager.hyprland.settings = {
-      bindd = let
-        spotlight = dms' "spotlight toggle";
-        clipboard = dms' "clipboard toggle";
-        overview = dms' "hypr toggleOverview";
-        monitor = dms' "processlist toggle";
-        powermenu = dms' "powermenu toggle";
-        notifications = dms' "notifications toggle";
-        settings = dms' "settings toggle";
-        lock = dms' "lock toggle";
-      in
-        [
-          "$mod, space, Toggle App Launcher, exec, ${spotlight}"
-          "$mod, V, Toggle Clipboard History, exec, ${clipboard}"
-          "$mod, Tab, Toggle Overview, exec, ${overview}"
-          "$mod, Escape, Toggle System Monitor, exec, ${monitor}"
-          "$mod, X, Toggle Power Menu, exec, ${powermenu}"
-          "ALT, Comma, Toggle Settings, exec, ${settings}"
-          "$mod, Apostrophe, Toggle Notifications, exec, ${notifications}"
-        ]
-        ++ optionals (config.my.desktop.lock == "dms") [
-          "SUPER ALT, L, Toggle Lock, exec, ${lock}"
-        ];
-      binddl = mkForce (let
-        mpris_playpause = dms' "mpris playPause";
-        mpris_next = dms' "mpris next";
-        mpris_prev = dms' "mpris previous";
-        audio_mute = dms' "audio mute";
-        audio_micmute = dms' "audio micmute";
-      in [
-        ", XF86AudioPlay, Play/Pause, exec, ${mpris_playpause}"
-        ", XF86AudioPause, Play/Pause, exec, ${mpris_playpause}"
-        ", XF86AudioNext, Skip to Next Track, exec, ${mpris_next}"
-        ", XF86AudioPrev, Return to Previous Track, exec, ${mpris_prev}"
-        ", XF86AudioMute, Mute/Unmute Volume, exec, ${audio_mute}"
-        ", XF86AudioMicMute, Mute/Unmute Microphone, exec, ${audio_micmute}"
-      ]);
-      binddel = mkForce (let
-        increment_volume = dms' "audio increment 2";
-        decrement_volume = dms' "audio decrement 2";
-        brightness_up = dms' "brightness increment 5 \"amdgpu_bl2\"";
-        brightness_down = dms' "brightness decrement 5 \"amdgpu_bl2\"";
-      in [
-        ", XF86AudioRaiseVolume, Increase Volume, exec, ${increment_volume}"
-        ", XF86AudioLowerVolume, Decrease Volume, exec, ${decrement_volume}"
-        ", XF86MonBrightnessUp, Increase Brightness, exec, ${brightness_up}"
-        ", XF86MonBrightnessDown, Decrease Brightness, exec, ${brightness_down}"
-      ]);
-    };
-
-    home.persistence."/persist".directories = [
-      ".config/DankMaterialShell"
-      ".local/state/DankMaterialShell"
-      ".cache/DankMaterialShell"
-      ".config/quickshell"
-    ];
-  };
-}
+  }

@@ -1,0 +1,76 @@
+{
+  lib,
+  config,
+  ...
+}: let
+  inherit (lib.modules) mkIf singleton;
+  cfg = config.my.desktop.niri;
+in {
+  config = mkIf cfg.enable {
+    programs.niri.settings = {
+      layer-rules = [
+        {
+          matches = singleton {namespace = "^wallpaper$";};
+          place-within-backdrop = true;
+        }
+      ];
+      window-rules = [
+        {
+          matches = [{}];
+          opacity = 0.85;
+          open-maximized = false;
+          default-column-width = {
+            proportion = 1.0 / 2.0;
+          };
+          geometry-corner-radius = {
+            top-left = 12.0;
+            top-right = 12.0;
+            bottom-left = 12.0;
+            bottom-right = 12.0;
+          };
+          clip-to-geometry = true;
+          draw-border-with-background = false;
+        }
+        {
+          matches = singleton {title = "^(1Password)$";};
+          open-floating = true;
+        }
+        {
+          matches = singleton {title = "^(Picture-in-Picture)$";};
+          open-floating = true;
+        }
+        {
+          matches = singleton {title = "^(Spotify( Premium)?)$";};
+          open-on-workspace = "9";
+        }
+        {
+          matches = singleton {is-floating = true;};
+          border.enable = false;
+        }
+        {
+          matches = singleton {app-id = "kitty";};
+          opacity = 0.85;
+        }
+        {
+          matches = singleton {app-id = "Alacritty";};
+          opacity = 0.85;
+        }
+        {
+          matches = singleton {app-id = "wezterm";};
+          opacity = 0.85;
+        }
+        {
+          matches = singleton {app-id = "ghostty";};
+          opacity = 0.7;
+        }
+        {
+          matches = [
+            {app-id = "Spotify";}
+            {title = "^(Spotify( Premium)?)$";}
+          ];
+          opacity = 0.7;
+        }
+      ];
+    };
+  };
+}

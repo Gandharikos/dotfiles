@@ -55,7 +55,6 @@
       hasBluetooth = true;
       hasPrinter = false;
       hasTPM = true;
-      hasHidpi = true;
       ethernetDevices = ["wlp2s0"]; # ymir wifi device
     };
   };

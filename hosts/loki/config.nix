@@ -45,7 +45,14 @@
       hasBluetooth = true;
       hasPrinter = false;
       hasTPM = true;
-      hasHidpi = true;
+      monitors = [
+        {
+          name = "eDP-1";
+          resolution = "3840x2160@60";
+          position = "0x0";
+          scale = 2.0;
+        }
+      ];
     };
     keyboard = {
       layout = "qwerty";

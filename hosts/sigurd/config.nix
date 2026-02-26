@@ -45,7 +45,6 @@
       hasBluetooth = true;
       hasPrinter = false;
       hasTPM = true;
-      hasHidpi = true;
     };
   };
 }

@@ -9,10 +9,12 @@
 in {
   imports = scanPaths ./.;
   options.my.desktop.polkit = mkOption {
-    type = enum ["pantheon" "hyprpolkit"];
+    type = enum ["pantheon" "hyprpolkit" "mate"];
     default =
       if isHyprland config
       then "hyprpolkit"
+      else if config.my.desktop.default == "niri"
+      then "mate"
       else "pantheon";
     description = ''
       The policy kit agent to use for authentication.

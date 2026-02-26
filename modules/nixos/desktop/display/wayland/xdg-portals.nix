@@ -11,15 +11,20 @@
   portal =
     if cfg.default == "hyprland"
     then "hyprland"
+    else if cfg.default == "niri"
+    then "gnome"
     else "wlr";
+  extraPortals =
+    if cfg.default == "niri"
+    then [pkgs.xdg-desktop-portal-gnome]
+    else [pkgs.xdg-desktop-portal-wlr];
+  wlrEnable = cfg.default != "niri";
   enable = isWayland config;
 in {
   config = mkIf enable {
     xdg.portal = {
       enable = true;
-      extraPortals = with pkgs; [
-        xdg-desktop-portal-wlr
-      ];
+      inherit extraPortals;
       config.common = {
         default = "*";
 
@@ -29,7 +34,7 @@ in {
         "org.freedesktop.impl.portal.Screenshot" = ["${portal}"];
       };
       wlr = {
-        enable = mkDefault enable;
+        enable = mkDefault wlrEnable;
         settings = {
           screencast = {
             max_fps = 60;

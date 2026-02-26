@@ -103,7 +103,7 @@ in
               "$mod, mouse_up, Next Workspace, focusworkspaceoncurrentmonitor, +1"
               # utility
               # select area to perform OCR on
-              "$mod, S, OCR Selection, exec, ${wl-ocr}"
+              "$mod, Print, OCR Selection, exec, ${wl-ocr}"
               ", XF86Favorites, OCR Selection, exec, ${wl-ocr}"
             ]
             ++ (mkHyprMoveTo ["focusworkspaceoncurrentmonitor" "movetoworkspacesilent"] num)

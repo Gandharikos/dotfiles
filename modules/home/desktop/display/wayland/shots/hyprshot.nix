@@ -20,15 +20,12 @@ in {
         bindd = [
           # region
           ", Print, Screenshot Region, exec, ${hyprshot'} --mode region --raw | ${satty'} --filename -"
-          "$mod, K, Screenshot Region, exec, ${hyprshot'} --mode region --raw | ${satty'} --filename -"
 
           # current window
           "SHIFT, Print, Screenshot Window, exec, ${hyprshot'} --mode window --raw | ${satty'} --filename -"
-          "$mod SHIFT, K, Screenshot Window, exec, ${hyprshot'} --mode window --raw | ${satty'} --filename -"
 
           # current screen
           "CTRL, Print, Screenshot Output, exec, ${hyprshot'} --mode output --raw | ${satty'} --filename -"
-          "$mod CTRL, K, Screenshot Output, exec, ${hyprshot'} --mode output --raw | ${satty'} --filename -"
         ];
       };
     };

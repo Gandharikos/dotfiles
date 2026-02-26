@@ -1,5 +1,5 @@
 {lib, ...}: let
-  inherit (lib.options) mkOption mkEnableOption;
+  inherit (lib.options) mkOption;
   inherit (lib.types) enum nullOr;
   inherit (lib.my) scanPaths;
 in {
@@ -35,6 +35,5 @@ in {
       default = null;
       description = "The CPU of the system";
     };
-    hasHidpi = mkEnableOption "hidpi";
   };
 }

@@ -177,6 +177,12 @@
       };
     };
 
+    # niri
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # this grub theme is cool
     dedsec-grub-theme = {
       url = "gitlab:VandalByte/dedsec-grub-theme";

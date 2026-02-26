@@ -19,6 +19,8 @@ in {
       mkEnableOption "Enable Hyprland"
       // {
         default = isHyprland config;
+        internal = true;
+        readOnly = true;
       };
     plugins = {
       enable = mkEnableOption "Enable Hyprland plugins";

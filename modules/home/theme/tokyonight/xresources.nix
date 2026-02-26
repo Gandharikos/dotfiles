@@ -7,9 +7,10 @@
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (config.my.theme.colorscheme) palette;
-  inherit (config.my.machine) hasHidpi;
+  inherit (config.my.machine) monitors;
   cfg = config.my.theme.tokyonight;
   # set dpi for 4k monitor
+  hasHidpi = builtins.any (m: (m.scale or 1.0) > 1.0) monitors;
   dpi =
     if hasHidpi
     then 192

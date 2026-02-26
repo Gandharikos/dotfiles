@@ -19,7 +19,6 @@ in {
         cpu = null;
         hasTPM = false;
         hasSound = false;
-        hasHidpi = false;
       };
       boot = {
         loader = "none";

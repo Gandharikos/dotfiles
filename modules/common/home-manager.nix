@@ -27,7 +27,7 @@ in {
 
       # We do not inherit `my` directly from `config` because NixOS declares options that should not flow into home-manager.
       machine = {
-        inherit (my.machine) type gpu cpu monitors hasHidpi;
+        inherit (my.machine) type gpu cpu monitors;
       };
       desktop = {
         inherit (my.desktop) enable type default exec;
