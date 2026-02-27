@@ -4,9 +4,9 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
-  inherit (lib.meta) getExe;
   cfg = config.my.keyboard.kanata;
-  kanata' = getExe cfg.package;
+  # Use a stable executable path so launchd/TCC rules do not break across nix store hash changes.
+  kanataBin = "/run/current-system/sw/bin/kanata";
 in {
   config = mkIf cfg.enable {
     # Install required packages
@@ -33,7 +33,7 @@ in {
       kanata = {
         serviceConfig = {
           ProgramArguments = [
-            kanata'
+            kanataBin
             "--cfg"
             (toString cfg.configFile)
           ];
@@ -48,5 +48,11 @@ in {
         };
       };
     };
+
+    # karabiner_grabber and kanata cannot reliably grab the same keyboard devices at once.
+    # system.activationScripts.kanata-disable-karabiner-grabber.text = ''
+    #   launchctl bootout system/org.pqrs.service.daemon.karabiner_grabber >/dev/null 2>&1 || true
+    #   launchctl disable system/org.pqrs.service.daemon.karabiner_grabber >/dev/null 2>&1 || true
+    # '';
   };
 }
