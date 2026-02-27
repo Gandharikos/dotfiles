@@ -29,35 +29,45 @@ in {
   };
 
   config = mkIf cfg.enable {
+    # ... other dependencies ...
     services.btrbk.instances.btrbk = {
-      # How often this btrbk instance is started. See systemd.time(7) for more information about the format.
-      onCalendar = "Tue,Thu,Sat *-*-* 3:45:20";
+      # Trigger snapshots every half hour, providing an extremely powerful "time machine" capability.
+      onCalendar = "*:00,30";
+
       settings = {
-        # how to prune local snapshots:
-        # 1. keep daily snapshots for xx days
-        snapshot_preserve = "9d";
-        # 2. keep all snapshots for 2 days, no matter how frequently you (or your cron job) run btrbk
-        snapshot_preserve_min = "2d";
+        timestamp_format = "long-iso";
+        preserve_day_of_week = "monday";
+        preserve_hour_of_day = "23";
 
-        # hot to prune remote incremental baqckups:
-        # keep daily backups for 9 days, weekly backups for 4 weeks, and monthly backups for 2 months
-        target_preserve = "9d 4w 2m";
-        target_preserve_min = "no";
+        # Retain all newly created snapshots for at least 6 hours regardless of other rules
+        # (a lifesaver for accidental file deletions).
+        snapshot_preserve_min = "6h";
 
-        snapshot_dir = "/.snapshots"; # Where to store snapshots (must be on the same volume as the subvolumes)
+        # -----------------------------------------------------------------
+        # Core Routing: Tell Btrbk where to find data and where to store snapshots
+        # -----------------------------------------------------------------
 
-        volume = {
-          "/btr_pool" = {
-            subvolume = {
-              "@persist" = {
-                snapshot_create = "always";
-              };
-            };
+        # Your disko config mounts the Btrfs top-level root (subvolid=5) at /btr_pool
+        volume."/btr_pool" = {
+          # Elegant design: Use your @snapshots subvolume as the snapshot storage directory.
+          # Since it's a relative path, Btrbk will automatically write snapshots to /btr_pool/@snapshots/.
+          # And because you mounted @snapshots to /.snapshots, they are readily accessible in your system!
+          snapshot_dir = "@snapshots";
 
-            # backup to a remote server or a local directory
-            # its prune policy is defined by `target_preserve` and `target_preserve_min`
-            # target = "/.snapshots";
+          # [Primary Protection Target]: @persist contains all your user data and system state.
+          # Policy: Keep 48 hours of half-hourly snapshots + 7 days of daily snapshots + 4 weeks of weekly snapshots.
+          subvolume."@persist" = {
+            snapshot_preserve = "48h 7d 4w";
           };
+
+          # [Secondary Protection Target]: @log (Optional)
+          # Policy: Retain the last 48 hours and 7 days of logs for troubleshooting.
+          # No need to keep them for a whole month to save space.
+          subvolume."@log" = {
+            snapshot_preserve = "48h 7d";
+          };
+
+          # ⚠️ WARNING: Absolutely do NOT include @nix, @tmp, and @swap here!
         };
       };
     };
