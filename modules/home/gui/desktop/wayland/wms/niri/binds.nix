@@ -1,5 +1,4 @@
 {
-  inputs,
   lib,
   config,
   pkgs,
@@ -112,8 +111,6 @@
     else {};
 in
   with config.my.keyboard.keys; {
-    imports = [inputs.niri.homeModules.niri];
-
     config = mkIf cfg.enable {
       programs.niri.settings = {
         screenshot-path = screenshotPath;

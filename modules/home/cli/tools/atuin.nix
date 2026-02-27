@@ -36,7 +36,6 @@
 in {
   options.my.atuin = {
     enable = mkEnableOption "atuin";
-    autoLogin = mkEnableOption "atuin auto login";
     enableDesktop =
       mkEnableOption "atuin desktop"
       // {
@@ -44,6 +43,7 @@ in {
         readOnly = true;
         default = config.my.desktop.enable;
       };
+    autoLogin = mkEnableOption "atuin auto login";
   };
 
   config = mkIf cfg.enable (mkMerge [
