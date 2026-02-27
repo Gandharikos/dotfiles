@@ -76,7 +76,7 @@ in {
 
   config = {
     boot = {
-      consoleLogLevel = 3;
+      consoleLogLevel = mkDefault 3;
 
       # we set the kernel to be defaulted to the one set by our settings
       # we happen to default this to the latest kernel sooo:

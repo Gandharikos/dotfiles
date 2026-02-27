@@ -9,7 +9,11 @@
   inherit (lib.types) str;
 in {
   options.my.security.auditd = {
-    enable = mkEnableOption "Enable auditd";
+    enable =
+      mkEnableOption "Enable auditd"
+      // {
+        default = config.my.security.enable;
+      };
 
     autoPrune = {
       enable =
