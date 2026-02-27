@@ -70,10 +70,7 @@
   };
 
   hm.my = {
-    browser = {
-      default = "google-chrome";
-      desktopId = "google-chrome.desktop";
-    };
+    browser.default = "google-chrome";
     terminal.size = 13;
     desktop.apps = {
       chrome.enable = true;

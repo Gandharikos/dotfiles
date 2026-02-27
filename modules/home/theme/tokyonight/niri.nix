@@ -20,7 +20,6 @@ in {
         urgent.color = palette.red;
       };
       focus-ring = {
-        active.color = palette.blue;
         active.gradient = {
           from = palette.blue;
           to = palette.magenta;

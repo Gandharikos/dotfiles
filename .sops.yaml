@@ -7,6 +7,7 @@ keys:
   - &tyr age1ezm8h5js9rl3s23d3xp9ngsapd5anxn7lh8gcd4pafd4ck0alu5qju0lt8
   - &ymir age1f64lg3datsj9l5gq6ca2kuczzg9l2upu0ukavk3ykry5z59c4qnqtsdpgc
   - &sigurd age1m8f0m489vql2p7l4a80ehjh0ae4zgwcnjzv8ngjrsg957yjlcyrq35nvv8
+  - &loki age1tgkc0ntq7407avss38tsewdur0rc339r5wesatmgp5wn2ya4e9kq4pslme
   # PGP key (requires Yubikey)
   - &johnson E23E274D412D4C761A871B1E776C7FC245E58F55
 
@@ -20,6 +21,7 @@ creation_rules:
           - *tyr
           - *ymir
           - *sigurd
+          - *loki
         pgp:
           - *johnson
   # User-specific secrets: only user keys needed
@@ -39,5 +41,6 @@ creation_rules:
           - *tyr
           - *ymir
           - *sigurd
+          - *loki
         pgp:
           - *johnson

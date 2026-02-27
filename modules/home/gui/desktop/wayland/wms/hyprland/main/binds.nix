@@ -36,7 +36,7 @@ in
               "$mod SHIFT, Q, Force Close Window, forcekillactive," # kill the active windwo
               "$mod, B, Launch Browser, exec, ${browser.exec}"
               "$mod, return, Launch Terminal, exec, ${terminal.exec}"
-              "$mod, ${E}, Launch File Manager, exce, ${fileManager.exec}"
+              "$mod, ${E}, Launch File Manager, exec, ${fileManager.exec}"
 
               # "$mod, space, exec, ags -t launcher"
               # "$mod SHIFT, R, exec, ags -q; ags"

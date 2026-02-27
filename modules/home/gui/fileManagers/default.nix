@@ -30,8 +30,6 @@ in {
       };
       desktopId = mkOption {
         type = str;
-        internal = true;
-        readOnly = true;
         default = "${fileManager.default}.desktop";
         description = "Desktop entry id used for XDG mime associations.";
       };

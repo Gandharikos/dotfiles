@@ -180,7 +180,7 @@ in
             "${modKey}+Shift+D" = spawn ["notifications" "toggleDoNotDisturb"];
             "${modKey}+Shift+T" = spawn ["theme" "toggle"];
             "${modKey}+Shift+${N}" = spawn ["night" "toggle"];
-            "${modKey}+${N}" = spawn ["inhibit" "toggle"];
+            "${modKey}+${I}" = spawn ["inhibit" "toggle"];
             "Alt+Comma" = spawn ["settings" "toggle"];
             "${modKey}+Apostrophe" = spawn ["notifications" "toggle"];
           }
