@@ -50,6 +50,9 @@ in {
 
         # enables the nix3 commands, a requirement for flakes
         "nix-command"
+
+        # enables cgroups
+        "cgroups"
       ];
       # users or groups that are allowed ot do anything with the Nix daemon
       allowed-users = [sudoers];
