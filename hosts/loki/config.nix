@@ -9,8 +9,7 @@
       secureBoot = false;
       tmpOnTmpfs = false;
       enableKernelTweaks = true;
-      # TODO: diable for debugging
-      plymouth.enable = false;
+      plymouth.enable = true;
 
       initrd = {
         enableTweaks = true;
