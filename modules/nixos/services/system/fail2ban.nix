@@ -68,7 +68,6 @@ in {
           port    = http,https
           filter  = authelia
           backend = systemd
-          # journalmatch 必须写在 Jail 这里！
           journalmatch = _SYSTEMD_UNIT=authelia-main.service + _COMM=authelia
         '';
       };
