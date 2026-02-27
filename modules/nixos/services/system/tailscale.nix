@@ -13,7 +13,7 @@
   cfg = config.my.tailscale;
   isWorkstation = config.my.machine.type == "workstation";
 in {
-  options.my.tailscale = {
+  options.my.services.tailscale = {
     enable = mkEnableOption "Enable Tailscale";
     defaultFlags = mkOption {
       type = listOf str;

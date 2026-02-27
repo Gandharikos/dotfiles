@@ -29,7 +29,7 @@ in {
 
     wifi = {
       # this can be iwd or wpa_supplicant, use wpa_s until iwd support is stable
-      inherit (config.my.networking) backend;
+      backend = "iwd";
 
       # The below is disabled as my uni hated me for it
       # macAddress = "random"; # use a random mac address on every boot, this can scew with static ip
