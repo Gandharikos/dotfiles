@@ -61,10 +61,14 @@ in {
           setLoginUid = true;
         };
 
-        sudo = {
+        doas = {
           inherit ttyAudit;
           setLoginUid = true;
         };
+        # sudo = {
+        #   inherit ttyAudit;
+        #   setLoginUid = true;
+        # };
       };
     };
   };
