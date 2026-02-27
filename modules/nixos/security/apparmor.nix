@@ -7,7 +7,6 @@
   cfg = config.my.security.apparmor;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (lib.meta) getExe;
 in {
   options.my.security.apparmor = {
     enable =
@@ -37,7 +36,7 @@ in {
       enableCache = true;
 
       # kill process that are not confined but have apparmor profiles enabled
-      killUnconfinedConfinables = true;
+      killUnconfinedConfinables = false;
 
       # packages to be added to AppArmor's include path
       packages = with pkgs; [
@@ -51,24 +50,6 @@ in {
           state = "disable";
           profile = ''
             profile default_deny /** { }
-          '';
-        };
-
-        "sudo" = {
-          state = "disable";
-          profile = ''
-            ${getExe pkgs.sudo} {
-              file /** rwlkUx,
-            }
-          '';
-        };
-
-        "nix" = {
-          state = "disable";
-          profile = ''
-            ${getExe config.nix.package} {
-              unconfined,
-            }
           '';
         };
       };

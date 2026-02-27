@@ -9,7 +9,6 @@
   inherit (lib.types) listOf str;
 
   inherit (builtins) concatStringsSep;
-
   cfg = config.my.services.earlyoom;
 in {
   options.my.services.earlyoom = {
@@ -93,9 +92,9 @@ in {
         in [
           "-g"
           "--avoid"
-          "'^(${avoid})$'" # things that we want to avoid killing
+          "^(${avoid})$" # things that we want to avoid killing
           "--prefer"
-          "'^(${prefer})$'" # things we want to remove fast
+          "^(${prefer})$" # things we want to remove fast
         ];
 
         # we should ideally write the logs into a designated log file; or even better, to the journal
