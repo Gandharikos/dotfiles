@@ -8,7 +8,7 @@
   cfg = config.my.services.fail2ban;
 in {
   options.my.services.fail2ban = {
-    enable = mkEnableOption "jellyfin";
+    enable = mkEnableOption "fail2ban";
   };
   config = mkIf cfg.enable {
     services.fail2ban = {
