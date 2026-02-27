@@ -42,7 +42,13 @@ in {
         # Enable Nvidia support for Podman if the Nvidia drivers are found
         # in the list of xserver.videoDrivers.
         enableNvidia = builtins.any (driver: driver == "nvidia") config.my.machine.gpu;
+      };
 
+      containers.containersConf.settings = {
+        engine.runtime = "crun";
+      };
+
+      podman = {
         # Prune images and containers periodically
         autoPrune = {
           enable = true;

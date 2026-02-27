@@ -114,6 +114,9 @@ in {
       # ~/.nix-profile -> $XDG_DATA_HOME/nix/profile
       # ~/.nix-channels -> $XDG_DATA_HOME/nix/channels
       use-xdg-base-directories = true;
+
+      # Enable cgroups for more robust process isolation and resource management during builds
+      use-cgroups = true;
     };
   };
 }
