@@ -48,8 +48,8 @@
       monitors = [
         {
           name = "eDP-1";
-          resolution = "3840x2160@60";
-          position = "0x0";
+          resolution = "preferred";
+          position = "auto";
           scale = 2.0;
         }
       ];
