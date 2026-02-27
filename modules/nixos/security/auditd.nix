@@ -6,129 +6,84 @@
   cfg = config.my.security.auditd;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.modules) mkIf;
-  inherit (lib.types) int str;
+  inherit (lib.types) str;
 in {
   options.my.security.auditd = {
-    enable =
-      mkEnableOption "Enable auditd"
-      // {
-        default = config.my.security.enable;
-      };
+    enable = mkEnableOption "Enable auditd";
+
     autoPrune = {
       enable =
-        mkEnableOption "Enable auto-pruning of audit logs"
+        mkEnableOption "Enable auto-pruning of audit logs via logrotate"
         // {
-          default = cfg.enable;
+          default = true;
         };
-
-      size = mkOption {
-        type = int;
-        default = 524288000; # ~500 megabytes
-        description = "The maximum size of the audit log in bytes";
-      };
 
       dates = mkOption {
         type = str;
         default = "daily";
         example = "weekly";
-        description = "How often the audit log should be pruned";
+        description = "How often the audit log should be rotated";
       };
+
+      # Note: The byte-based 'size' option from your previous config has been removed.
+      # In standard enterprise practices, rotating by days (daily) and keeping the last 7 days,
+      # combined with compression, prevents disk exhaustion and makes log tracing much more organized.
     };
   };
 
   config = mkIf cfg.enable {
     security = {
-      # system audit
+      # Enable the system audit daemon
       auditd.enable = true;
 
       audit = {
         enable = true;
-        backlogLimit = 8192;
+        # [Optimization] Increase the backlog limit to a robust 65536 to prevent log dropping under high system load
+        backlogLimit = 65536;
         failureMode = "printk";
         rules = [
-          "-a exit,always -F arch=b64 -F euid=0 -S execve"
-          "-a exit,always -F arch=b32 -F euid=0 -S execve"
-          "-a exit,always -F arch=b64 -F euid=0 -S execveat"
-          "-a exit,always -F arch=b32 -F euid=0 -S execveat"
+          # Monitor the execution of all programs (the most fundamental and critical audit)
+          "-a exit,always -F arch=b64 -S execve"
+          "-a exit,always -F arch=b32 -S execve"
 
-          # Protect logfile
-          "-w /var/log/audit/ -k auditlog"
+          # Protect the audit log itself (prevent attackers from destroying evidence)
+          "-w /var/log/audit -p wa -k auditlog"
 
-          # Log program executions
-          "-a exit,always -F arch=b64 -S execve -F key=progexec"
+          #  Monitor core identity and permission files (flag immediately upon modification)
+          "-w /etc/passwd -p wa -k identity"
+          "-w /etc/shadow -p wa -k identity"
+          "-w /etc/group -p wa -k identity"
+          "-w /etc/sudoers -p wa -k sudo_changes"
 
-          # Home path access/modification
-          "-a always,exit -F arch=b64 -F dir=/home -F perm=war -F key=homeaccess"
+          # Monitor kernel privilege escalation and illegal injection
+          "-a always,exit -F arch=b64 -S ptrace -k injection"
+          "-a always,exit -F arch=b32 -S ptrace -k injection"
+          "-a always,exit -F arch=b64 -S init_module -S delete_module -k modules"
+          "-a always,exit -F arch=b32 -S init_module -S delete_module -k modules"
 
-          # Kexec attempts
-          "-a always,exit -F arch=b64 -S kexec_load -F key=KEXEC"
-          "-a always,exit -F arch=b32 -S sys_kexec_load -k KEXEC"
-
-          # Unauthorized file access
-          "-a always,exit -F arch=b64 -S open,creat -F exit=-EACCES -k access"
-          "-a always,exit -F arch=b64 -S open,creat -F exit=-EPERM -k access"
-          "-a always,exit -F arch=b32 -S open,creat -F exit=-EACCES -k access"
-          "-a always,exit -F arch=b32 -S open,creat -F exit=-EPERM -k access"
-          "-a always,exit -F arch=b64 -S openat -F exit=-EACCES -k access"
-          "-a always,exit -F arch=b64 -S openat -F exit=-EPERM -k access"
-          "-a always,exit -F arch=b32 -S openat -F exit=-EACCES -k access"
-          "-a always,exit -F arch=b32 -S openat -F exit=-EPERM -k access"
-          "-a always,exit -F arch=b64 -S open_by_handle_at -F exit=-EACCES -k access"
-          "-a always,exit -F arch=b64 -S open_by_handle_at -F exit=-EPERM -k access"
-          "-a always,exit -F arch=b32 -S open_by_handle_at -F exit=-EACCES -k access"
-          "-a always,exit -F arch=b32 -S open_by_handle_at -F exit=-EPERM -k access"
-
-          # Failed modification of important mountpoints or files
-          "-a always,exit -F arch=b64 -S open -F dir=/etc -F success=0 -F key=unauthedfileaccess"
-          "-a always,exit -F arch=b64 -S open -F dir=/bin -F success=0 -F key=unauthedfileaccess"
-          "-a always,exit -F arch=b64 -S open -F dir=/var -F success=0 -F key=unauthedfileaccess"
-          "-a always,exit -F arch=b64 -S open -F dir=/home -F success=0 -F key=unauthedfileaccess"
-          "-a always,exit -F arch=b64 -S open -F dir=/srv -F success=0 -F key=unauthedfileaccess"
-          "-a always,exit -F arch=b64 -S open -F dir=/boot -F success=0 -F key=unauthedfileaccess"
-          "-a always,exit -F arch=b64 -S open -F dir=/nix -F success=0 -F key=unauthedfileaccess"
-
-          # File deletions by system users
-          "-a always,exit -F arch=b64 -S rmdir -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=-1 -F key=delete"
-
-          # Root command executions
-          "-a always,exit -F arch=b64 -F euid=0 -F auid>=1000 -F auid!=-1 -S execve -F key=rootcmd"
-
-          # Shared memory access
-          "-a exit,never -F arch=b32 -F dir=/dev/shm -k sharedmemaccess"
-          "-a exit,never -F arch=b64 -F dir=/dev/shm -k sharedmemaccess"
+          # Retain the essence of your original config: monitor kexec (prevent kernel hot-swap escapes)
+          "-a always,exit -F arch=b64 -S kexec_load -k KEXEC"
+          "-a always,exit -F arch=b32 -S kexec_load -k KEXEC"
         ];
       };
     };
 
-    # the audit log can grow quite large, so we can automatically prune it
-    systemd = mkIf cfg.autoPrune.enable {
-      # a systemd timer to clean /var/log/audit.log daily
-      # this can probably be weekly, but daily means we get to clean it every 2-3 days instead of once a week
-      timers."clean-audit-log" = {
-        description = "Periodically clean audit log";
-        wantedBy = ["timers.target"];
-        timerConfig = {
-          OnCalendar = cfg.autoPrune.dates;
-          Persistent = true;
-        };
-      };
-
-      # clean audit log if it's more than 524,288,000 bytes, which is roughly 500 megabytes
-      # it can grow MASSIVE in size if left unchecked
-      services."clean-audit-log" = {
-        script = ''
-          set -eu
-          if [[ $(stat -c "%s" /var/log/audit/audit.log) -gt ${toString cfg.autoPrune.size} ]]; then
-            echo "Clearing Audit Log";
-            rm -rvf /var/log/audit/audit.log;
-            echo "Done!"
-          fi
+    # [Core Best Practice] Utilize logrotate for log lifecycle management
+    services.logrotate = mkIf cfg.autoPrune.enable {
+      enable = true;
+      settings.audit = {
+        files = "/var/log/audit/*.log";
+        frequency = cfg.autoPrune.dates; # Rotate daily by default
+        rotate = 7; # Keep the last 7 rotated logs
+        compress = true; # Auto-compress (saves massive amounts of space)
+        delaycompress = true; # Delay compression by one day to prevent compressing while auditd is still writing
+        missingok = true; # Do not error out if the log file is missing
+        notifempty = true; # Do not rotate if the log is empty
+        create = "0640 root root"; # Extremely strict permissions for the newly created log file
+        postrotate = ''
+          # After rotation, gently notify the auditd process to reopen its file descriptors
+          /bin/kill -HUP `cat /var/run/auditd.pid 2> /dev/null` 2> /dev/null || true
         '';
-
-        serviceConfig = {
-          Type = "oneshot";
-          User = "root";
-        };
       };
     };
   };
