@@ -13,8 +13,8 @@
       plymouth.enable = false;
 
       initrd = {
-        enableTweaks = false;
-        optimizeCompressor = false;
+        enableTweaks = true;
+        optimizeCompressor = true;
       };
 
       fs = [
