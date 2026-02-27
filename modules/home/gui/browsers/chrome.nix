@@ -21,7 +21,10 @@ in {
       packages = with pkgs; [google-chrome];
 
       persistence = {
-        "/persist".directories = [".config/google-chrome"];
+        "/persist".directories = [
+          ".config/google-chrome"
+          ".cache/google-chrome"
+        ];
       };
     };
   };

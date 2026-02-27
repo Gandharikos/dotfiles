@@ -51,7 +51,7 @@ in
         enableDynamicTheming = true; # Wallpaper-based theming (matugen)
         enableVPN = true; # VPN management widget
         enableAudioWavelength = true; # Audio visualizer (cava)
-        enableCalendarEvents = true; # Calendar integration (khal)
+        enableCalendarEvents = false; # Calendar integration (khal)
       };
       wayland.windowManager.hyprland.settings = {
         bindd = let
