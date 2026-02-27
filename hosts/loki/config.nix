@@ -36,6 +36,7 @@
     };
     virtual.enable = true;
     persistence.enable = true;
+    networking.enableIPV6 = false;
     machine = {
       type = "laptop";
       cpu = "intel";
@@ -64,7 +65,6 @@
     nameservers = lib. mkForce [
       "198.18.0.2"
     ];
-    enableIPv6 = lib.mkForce false;
     tcpcrypt.enable = lib.mkForce false;
   };
 

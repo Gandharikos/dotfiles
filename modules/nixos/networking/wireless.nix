@@ -3,13 +3,14 @@
   config,
   ...
 }: let
-  cfg = config.my.networking.wirelessBackend;
+  cfg = config.my.networking;
   inherit (lib.options) mkOption;
   inherit (lib.types) enum;
+  inherit (lib.modules) mkIf;
 in {
   options.my.networking = {
     # use wpa_supplicant or iwd, use wpa_supplicant until iwd is stable
-    wirelessBackend = mkOption {
+    backend = mkOption {
       type = enum [
         "wpa_supplicant"
         "iwd"
@@ -25,34 +26,11 @@ in {
   config = {
     # enable wireless database, it helps keeping wifi speedy
     hardware.wirelessRegulatoryDatabase = true;
-
-    networking.wireless = {
-      # wpa_supplicant
-      enable = cfg == "wpa_supplicant";
-      userControlled = true;
-      allowAuxiliaryImperativeNetworks = true;
-
-      extraConfig = ''
-        update_config=1
-      '';
-
-      # iwd
-      iwd = {
-        enable = cfg == "iwd";
-
-        settings = {
-          Settings.AutoConnect = true;
-
-          General = {
-            EnableNetworkConfiguration = true;
-            RoamRetryInterval = 15;
-          };
-
-          Network = {
-            EnableIPv6 = true;
-            RoutePriorityOffset = 300;
-          };
-        };
+    networking.wireless.iwd = mkIf (cfg.backend == "iwd") {
+      enable = true;
+      settings = {
+        General.RoamRetryInterval = 15;
+        Network.EnableIpv6 = cfg.enableIPV6;
       };
     };
   };

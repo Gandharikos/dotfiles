@@ -5,8 +5,17 @@
 }: let
   inherit (lib) mkIf mkDefault mkForce;
   isWSL = config.my.machine.type == "wsl";
+  inherit (lib.options) mkEnableOption;
+  cfg = config.my.networking;
 in {
   imports = lib.my.scanPaths ./.;
+  options.my.networking = {
+    enableIPV6 =
+      mkEnableOption "Enable IPv6 supprot"
+      // {
+        default = true;
+      };
+  };
   networking = {
     # generate a host ID by hashing the hostname
     hostId = builtins.substring 0 8 (builtins.hashString "md5" config.networking.hostName);
@@ -31,6 +40,6 @@ in {
       "9.9.9.9"
     ];
 
-    enableIPv6 = true;
+    inherit (cfg) enableIPV6;
   };
 }
