@@ -1,5 +1,4 @@
 {
-  inputs,
   config,
   pkgs,
   lib,
@@ -21,7 +20,7 @@ in {
     programs.opencode = {
       enable = true;
 
-      package = inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.opencode;
+      package = pkgs.llm-agents.opencode;
 
       settings = {
         theme = "opencode";

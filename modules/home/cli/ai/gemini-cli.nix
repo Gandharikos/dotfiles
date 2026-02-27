@@ -1,9 +1,9 @@
 {
   self,
-  inputs,
   config,
   lib,
   pkgs,
+  osClass,
   aiCommon,
   ...
 }: let
@@ -45,7 +45,11 @@ in {
       # zsh.initContent = tokenExportShell;
       gemini-cli = {
         enable = true;
-        package = inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.gemini-cli;
+        # build error on darwin
+        package =
+          if (osClass == "nixos")
+          then pkgs.llm-agents.gemini-cli
+          else pkgs.gemini-cli;
         settings = {
           ui.theme = "Default";
           general = {

@@ -18,6 +18,7 @@ in {
   config = mkIf cfg.enable {
     programs.claude-code = {
       enable = true;
+      package = pkgs.llm-agents.claude-code;
       mcpServers = {
         github = {
           type = "stdio";

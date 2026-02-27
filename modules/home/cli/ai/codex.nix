@@ -2,6 +2,7 @@
   self,
   config,
   lib,
+  pkgs,
   aiCommon,
   ...
 }: let
@@ -18,6 +19,7 @@ in {
   config = mkIf cfg.enable {
     programs.codex = {
       enable = true;
+      package = pkgs.llm-agents.codex;
       custom-instructions = aiCommon.codex.customInstructions;
       inherit (aiCommon.codex) skills;
     };

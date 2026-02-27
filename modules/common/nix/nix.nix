@@ -6,7 +6,7 @@
   ...
 }: let
   inherit (lib.attrsets) filterAttrs attrValues mapAttrs;
-  inherit (lib.modules) mkForce;
+  inherit (lib.modules) mkForce mkIf;
   inherit (lib.types) isType;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   flakeInputs = filterAttrs (name: value: (isType "flake" value) && (name != "self")) inputs;
@@ -119,7 +119,7 @@ in {
       use-xdg-base-directories = true;
 
       # Enable cgroups for more robust process isolation and resource management during builds
-      use-cgroups = true;
+      use-cgroups = mkIf isLinux true;
     };
   };
 }

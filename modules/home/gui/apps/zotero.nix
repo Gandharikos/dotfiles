@@ -9,11 +9,7 @@
   cfg = config.my.desktop.apps.zotero;
 in {
   options.my.desktop.apps.zotero = {
-    enable =
-      mkEnableOption "Zotero"
-      // {
-        default = config.my.desktop.enable;
-      };
+    enable = mkEnableOption "Zotero";
   };
 
   config = mkIf cfg.enable {
