@@ -54,6 +54,8 @@ in {
       ClientAliveInterval = 60;
       IgnoreRhosts = "yes";
       MaxAuthTries = 3;
+
+      AllowUsers = [config.my.name];
     };
     openFirewall = true;
     hostKeys = [
