@@ -20,7 +20,6 @@ in {
     tmpfiles.settings."10-oomd-root" = {
       # Enables storing of the kernel log (including stack trace) into pstore upon a panic or crash.
       "/sys/module/kernel/parameters/crash_kexec_post_notifiers".w = {
-        age = "-";
         argument = "Y";
       };
 
