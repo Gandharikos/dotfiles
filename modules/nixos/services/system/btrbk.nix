@@ -3,7 +3,7 @@
   lib,
   ...
 }: let
-  cfg = config.my.btrbk;
+  cfg = config.my.services.btrbk;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in {
@@ -24,7 +24,7 @@ in {
   #
   # ==================================================================
 
-  options.my.btrbk = {
+  options.my.services.btrbk = {
     enable = mkEnableOption "btrbk";
   };
 

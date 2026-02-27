@@ -18,7 +18,11 @@ in {
   };
 
   config = mkIf cfg.enable {
-    services.jellyfin.enable = true;
+    services.jellyfin = {
+      enable = true;
+      group = "media";
+      openFirewall = true;
+    };
 
     networking.firewall = {
       allowedTCPPorts = [cfg.port];

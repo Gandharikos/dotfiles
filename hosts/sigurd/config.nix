@@ -28,11 +28,11 @@
       ];
     };
     video.enable = true;
-    btrbk.enable = true;
-    zram.enable = true;
     game.enable = true;
     security.enable = true;
     services = {
+      btrbk.enable = true;
+      zram.enable = true;
       printing.enable = true;
     };
     virtual.enable = true;

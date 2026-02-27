@@ -27,9 +27,9 @@
       ];
     };
     video.enable = true;
-    btrbk.enable = true;
-    zram.enable = true;
     services = {
+      btrbk.enable = true;
+      zram.enable = true;
       printing.enable = true;
       # samba.enable = true;
     };
