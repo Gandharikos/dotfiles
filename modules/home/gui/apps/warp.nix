@@ -12,10 +12,10 @@ in {
     enable =
       mkEnableOption "Cloudflare Warp"
       // {
-        default =
-          config.my.desktop.enable
-          && config.my.machine.type == "laptop"
-          && pkgs.stdenv.hostPlatform.isLinux;
+        default = false;
+        # config.my.desktop.enable
+        # && config.my.machine.type == "laptop"
+        # && pkgs.stdenv.hostPlatform.isLinux;
       };
   };
 
