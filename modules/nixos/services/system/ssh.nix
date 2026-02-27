@@ -10,11 +10,25 @@ in {
     enable = true;
     startWhenNeeded = true;
 
+    allowSFTP = true;
+
+    banner = ''
+      Welcome to ${config.networking.hostName} @ ${config.my.stateVersion}!
+    '';
+
     settings = {
       # allow root login to remote deployments
-      PermitRootLogin = "yes";
-      # PasswordAuthentication = false;
+      PermitRootLogin = "no";
+
+      # only allow key based logins and not password
+      PasswordAuthentication = false;
       KbdInteractiveAuthentication = false;
+      AuthenticationMethods = "publickey";
+      PubkeyAuthentication = "yes";
+      ChallengeResponseAuthentication = "no";
+      UsePAM = false;
+      UseDns = false;
+      X11Forwarding = false;
 
       # Use key exchange algorithms recommended by `nixpkgs#ssh-audit`
       KexAlgorithms = [
@@ -38,16 +52,18 @@ in {
       # kick out inactive sessions
       ClientAliveCountMax = 5;
       ClientAliveInterval = 60;
+      IgnoreRhosts = "yes";
+      MaxAuthTries = 3;
     };
     openFirewall = true;
-    # the port(s) openssh daemon should listen on
-    ports = [22];
     hostKeys = [
       {
+        bits = 4096;
         path = "${optionalString persist "/persist"}/etc/ssh/ssh_host_ed25519_key";
         type = "ed25519";
       }
       {
+        bits = 4096;
         path = "${optionalString persist "/persist"}/etc/ssh/ssh_host_rsa_key";
         type = "rsa";
       }
