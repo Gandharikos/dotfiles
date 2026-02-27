@@ -30,7 +30,6 @@
     video.enable = true;
     btrbk.enable = true;
     zram.enable = true;
-    security.enable = false;
     services = {
       printing.enable = true;
       # samba.enable = true;
@@ -71,7 +70,7 @@
 
   hm.my = {
     browser.default = "google-chrome";
-    terminal.size = 13;
+    terminal.size = 12;
     desktop.apps = {
       chrome.enable = true;
       firefox.enable = lib.mkForce false;
