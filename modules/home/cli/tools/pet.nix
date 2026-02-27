@@ -27,6 +27,11 @@ in {
           description = "Show services which listen to any TCP port";
           tag = ["cmd" "networking" "system"];
         }
+        {
+          command = "journalctl -b -p err --no-pager";
+          description = "Show boot errors from the current boot";
+          tag = ["cmd" "system" "logs"];
+        }
       ];
     };
   };

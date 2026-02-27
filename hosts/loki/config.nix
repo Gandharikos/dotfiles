@@ -36,7 +36,7 @@
     };
     virtual.enable = true;
     persistence.enable = true;
-    networking.enableIPV6 = false;
+    networking.enableIPv6 = false;
     machine = {
       type = "laptop";
       cpu = "intel";

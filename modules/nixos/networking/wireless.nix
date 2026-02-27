@@ -30,7 +30,7 @@ in {
       enable = true;
       settings = {
         General.RoamRetryInterval = 15;
-        Network.EnableIpv6 = cfg.enableIPV6;
+        Network.EnableIpv6 = cfg.enableIPv6;
       };
     };
   };
