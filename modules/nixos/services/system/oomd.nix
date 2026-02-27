@@ -17,16 +17,15 @@ in {
 
     services.nix-daemon.serviceConfig.OOMDScoreAdjust = mkDefault 350;
 
-    tmpfiles.settings."10-oomd-root".w = {
+    tmpfiles.settings."10-oomd-root" = {
       # Enables storing of the kernel log (including stack trace) into pstore upon a panic or crash.
-      "/sys/module/kernel/parameters/crash_kexec_post_notifiers" = {
+      "/sys/module/kernel/parameters/crash_kexec_post_notifiers".w = {
         age = "-";
         argument = "Y";
       };
 
       # Enables storing of the kernel log upon a normal shutdown (shutdown, reboot, halt).
-      "/sys/module/printk/parameters/always_kmsg_dump" = {
-        age = "-";
+      "/sys/module/printk/parameters/always_kmsg_dump".w = {
         argument = "N";
       };
     };
