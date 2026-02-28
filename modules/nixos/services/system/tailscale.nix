@@ -10,7 +10,7 @@
   inherit (lib.types) bool listOf str;
   inherit (lib.lists) optionals;
   inherit (config.services) tailscale;
-  cfg = config.my.tailscale;
+  cfg = config.my.services.tailscale;
   isWorkstation = config.my.machine.type == "workstation";
 in {
   options.my.services.tailscale = {

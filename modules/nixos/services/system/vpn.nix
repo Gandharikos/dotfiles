@@ -8,7 +8,7 @@
   inherit (lib.options) mkEnableOption;
   cfg = config.my.services.vpn;
 in {
-  options.my.services.ssh = {
+  options.my.services.vpn = {
     enable =
       mkEnableOption "VPN"
       // {
