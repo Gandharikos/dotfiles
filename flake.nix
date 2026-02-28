@@ -148,6 +148,7 @@
     # remote deploy tool
     deploy-rs.url = "github:serokell/deploy-rs";
 
+    # secrets
     sops = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -204,8 +205,17 @@
       };
     };
 
+    # AI tools
     llm-agents = {
       url = "github:numtide/llm-agents.nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        treefmt-nix.follows = "treefmt";
+      };
+    };
+
+    ethereum = {
+      url = "github:nix-community/ethereum.nix";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         treefmt-nix.follows = "treefmt";
@@ -239,6 +249,7 @@
       flake = false;
     };
 
+    # UI shell
     quickshell = {
       url = "github:outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
