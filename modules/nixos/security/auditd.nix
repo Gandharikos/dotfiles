@@ -53,11 +53,12 @@ in {
           # Protect the audit log itself (prevent attackers from destroying evidence)
           "-w /var/log/audit -p wa -k auditlog"
 
-          #  Monitor core identity and permission files (flag immediately upon modification)
+          # Monitor core identity and privilege escalation policy files
           "-w /etc/passwd -p wa -k identity"
           "-w /etc/shadow -p wa -k identity"
           "-w /etc/group -p wa -k identity"
           "-w /etc/sudoers -p wa -k sudo_changes"
+          "-w /etc/doas.conf -p wa -k doas_changes"
 
           # Monitor kernel privilege escalation and illegal injection
           "-a always,exit -F arch=b64 -S ptrace -k injection"
