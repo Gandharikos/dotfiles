@@ -12,7 +12,4 @@ in {
   };
 
   programs.nano.enable = false;
-
-  # this can allow us to save some storage space
-  fonts.fontDir.decompressFonts = true;
 }

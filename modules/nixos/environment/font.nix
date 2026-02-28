@@ -12,7 +12,11 @@ in {
     fonts = {
       # use fonts specified by user rather than default ones
       enableDefaultPackages = false;
-      fontDir.enable = true;
+      fontDir = {
+        enable = true;
+        # this can allow us to save some storage space
+        decompressFonts = true;
+      };
 
       # user defined fonts
       # the reason there's Noto Color Emoji everywhere is to override DejaVu's
