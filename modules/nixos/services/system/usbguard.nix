@@ -6,9 +6,9 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.security.usbguard;
+  cfg = config.my.services.usbguard;
 in {
-  options.my.security.usbguard = {
+  options.my.services.usbguard = {
     enable =
       mkEnableOption "Enable USBGuard"
       // {

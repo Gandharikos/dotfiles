@@ -1,5 +1,6 @@
 {
   lib,
+  # pkgs,
   config,
   ...
 }: let
@@ -8,6 +9,16 @@
   inherit (lib.strings) optionalString;
   persist = config.my.persistence.enable;
   cfg = config.my.services.ssh;
+  sudoCfg = config.my.security.sudo;
+  privilegeEscalationPamServices =
+    if sudoCfg.backend == "doas"
+    then {
+      doas.rssh = true;
+    }
+    else {
+      sudo.rssh = true;
+      sudo-i.rssh = true;
+    };
 in {
   options.my.services.ssh = {
     enable =
@@ -18,6 +29,7 @@ in {
   };
 
   config = mkIf cfg.enable {
+    # environment.systemPackages = [pkgs.ghossty.terminfo];
     services.openssh = {
       enable = true;
       startWhenNeeded = true;
@@ -87,7 +99,7 @@ in {
     # yubikey login / sudo
     security.pam = {
       rssh.enable = true;
-      services.sudo.rssh = true;
+      services = privilegeEscalationPamServices;
     };
   };
 }

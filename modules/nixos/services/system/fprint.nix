@@ -6,9 +6,9 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.my.security.fprint;
+  cfg = config.my.services.fprint;
 in {
-  options.my.security.fprint = {
+  options.my.services.fprint = {
     enable =
       mkEnableOption "Enable fingerprint login"
       // {

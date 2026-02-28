@@ -46,10 +46,10 @@ in {
           SDL2
           vulkan-loader
           gdk-pixbuf
+          libx11
           ;
 
         inherit (pkgs.stdenv.cc) cc;
-        inherit (pkgs) libx11;
       };
     };
   };
