@@ -6,12 +6,12 @@
   cfg = config.my.services.calibre;
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption mkOption;
-  inherit (lib.types) int;
+  inherit (lib.types) port;
 in {
   options.my.services.calibre = {
     enable = mkEnableOption "calibre";
     port = mkOption {
-      type = int;
+      type = port;
       default = 8080;
       description = "The port to listen on";
     };
