@@ -24,6 +24,7 @@ in {
   config = mkIf enable {
     xdg.portal = {
       enable = true;
+      xdgOpenUsePortal = true;
       inherit extraPortals;
       config.common = {
         default = "*";
@@ -32,6 +33,7 @@ in {
         # https://github.com/flameshot-org/flameshot/issues/3363#issuecomment-1753771427
         "org.freedesktop.impl.portal.Screencast" = ["${portal}"];
         "org.freedesktop.impl.portal.Screenshot" = ["${portal}"];
+        "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
       };
       wlr = {
         enable = mkDefault wlrEnable;
