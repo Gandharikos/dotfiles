@@ -32,6 +32,26 @@ in {
           description = "Show boot errors from the current boot";
           tag = ["cmd" "system" "logs"];
         }
+        {
+          command = "sops --in-place set secrets/services/default.yaml '[\"my_key\"]' '\"my-secret-value\"'";
+          description = "Set a string secret in secrets/services/default.yaml directly";
+          tag = ["cmd" "sops" "secrets"];
+        }
+        {
+          command = "printf '%s' '\"my-secret-value\"' | sops --in-place set --value-stdin secrets/services/default.yaml '[\"my_key\"]'";
+          description = "Set a string secret in secrets/services/default.yaml from stdin";
+          tag = ["cmd" "sops" "secrets"];
+        }
+        {
+          command = "jq -Rn --arg v \"$SECRET\" '$v' | sops --in-place set --value-stdin secrets/services/default.yaml '[\"my_key\"]'";
+          description = "Set a string secret from the SECRET environment variable";
+          tag = ["cmd" "sops" "secrets"];
+        }
+        {
+          command = "jq -nc --arg token \"$TOKEN\" --arg url \"$URL\" '{ token: $token, url: $url }' | sops --in-place set --value-stdin secrets/services/default.yaml '[\"mihomo\"]'";
+          description = "Set a nested object secret in secrets/services/default.yaml";
+          tag = ["cmd" "sops" "secrets"];
+        }
       ];
     };
   };

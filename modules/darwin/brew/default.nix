@@ -99,6 +99,7 @@
       # for development
       "qt@5"
       "openssh"
+      "tailscale"
     ];
 
     # `brew install --cask`
