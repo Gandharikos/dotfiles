@@ -7,7 +7,6 @@
   inherit
     (lib.modules)
     mkIf
-    mkForce
     mkMerge
     mkDefault
     mkOverride
@@ -90,21 +89,6 @@ in {
       # whether to enable support for Linux MD RAID arrays
       # as of 23.11>, this throws a warning if neither MAILADDR nor PROGRAM are set
       swraid.enable = mkDefault false;
-
-      # shared config between bootloaders
-      # they are set unless system.boot.loader != none
-      loader = {
-        # if set to 0, space needs to be held to get the boot menu to appear
-        timeout = mkForce 2;
-
-        # copy boot files to /boot so that /nix/store is not required to boot
-        # it takes up more space but it makes my messups a bit safer
-        generationsDir.copyKernels = true;
-
-        # we need to allow installation to modify EFI variables
-        efi.canTouchEfiVariables = true;
-      };
-
       # increase the map count, this is important for applications that require a lot of memory mappings
       # such as games and emulators
       kernel.sysctl."vm.max_map_count" = 2147483642;
@@ -216,10 +200,12 @@ in {
           # lower the udev log level to show only errors or worse
           "rd.udev.log_level=3"
 
-          # disable systemd status messages
-          # rd prefix means systemd-udev will be used instead of initrd
-          "systemd.show_status=auto"
-          "rd.systemd.show_status=auto"
+          # disable systemd status messages in both initrd and the real root
+          "systemd.show_status=false"
+          "rd.systemd.show_status=false"
+
+          # disable the cursor in vt to get a black screen during intermissions
+          "vt.global_cursor_default=0"
         ];
     };
   };

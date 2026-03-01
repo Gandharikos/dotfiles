@@ -41,11 +41,7 @@ in {
       consoleLogLevel = 0;
       initrd.verbose = false;
       kernelParams = [
-        "quiet"
-        "udev.log_level=3"
         "boot.shell_on_fail"
-        "rd.systemd.show_status=false"
-        "rd.udev.log_level=3"
       ];
     };
 
