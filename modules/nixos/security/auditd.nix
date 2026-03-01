@@ -68,22 +68,19 @@ in {
     };
 
     # [Core Best Practice] Utilize logrotate for log lifecycle management
-    services.logrotate = mkIf cfg.autoPrune.enable {
-      enable = true;
-      settings.audit = {
-        files = "/var/log/audit/*.log";
-        frequency = cfg.autoPrune.dates; # Rotate daily by default
-        rotate = 7; # Keep the last 7 rotated logs
-        compress = true; # Auto-compress (saves massive amounts of space)
-        delaycompress = true; # Delay compression by one day to prevent compressing while auditd is still writing
-        missingok = true; # Do not error out if the log file is missing
-        notifempty = true; # Do not rotate if the log is empty
-        create = "0640 root root"; # Extremely strict permissions for the newly created log file
-        postrotate = ''
-          # After rotation, gently notify the auditd process to reopen its file descriptors
-          /bin/kill -HUP `cat /var/run/auditd.pid 2> /dev/null` 2> /dev/null || true
-        '';
-      };
+    services.logrotate.settings.audit = mkIf cfg.autoPrune.enable {
+      files = "/var/log/audit/*.log";
+      frequency = cfg.autoPrune.dates; # Rotate daily by default
+      rotate = 7; # Keep the last 7 rotated logs
+      compress = true; # Auto-compress (saves massive amounts of space)
+      delaycompress = true; # Delay compression by one day to prevent compressing while auditd is still writing
+      missingok = true; # Do not error out if the log file is missing
+      notifempty = true; # Do not rotate if the log is empty
+      create = "0640 root root"; # Extremely strict permissions for the newly created log file
+      postrotate = ''
+        # After rotation, gently notify the auditd process to reopen its file descriptors
+        /bin/kill -HUP `cat /var/run/auditd.pid 2> /dev/null` 2> /dev/null || true
+      '';
     };
   };
 }

@@ -8,24 +8,27 @@
   isGui = config.my.desktop.enable;
   # isServer = config.my.machine.machine == "server";
 in {
-  environment.systemPackages = optionals isGui [
-    pkgs.networkmanagerapplet
-  ];
-
   networking.networkmanager = {
     enable = true;
-    plugins = optionals isGui [pkgs.networkmanager-openvpn];
+    plugins = with pkgs; optionals isGui [networkmanager-openvpn];
     dns = "systemd-resolved";
-    unmanaged = [
-      "interface-name:tailscale*"
-      "interface-name:br-*"
-      "interface-name:rndis*"
-      "interface-name:docker*"
-      "interface-name:virbr*"
-      "interface-name:vboxnet*"
-      "interface-name:waydroid*"
-      "type:bridge"
-    ];
+    unmanaged =
+      [
+        "interface-name:br-*"
+        "interface-name:rndis*"
+      ]
+      ++ optionals config.my.services.tailscale.enable ["interface-name:tailscale*"]
+      ++ optionals config.my.virtual.podman.enable [
+        "interface-name:docker*"
+        "interface-name:podman*"
+        "interface-name:cni-podman*"
+      ]
+      ++ optionals config.my.virtual.kvm.enable [
+        "interface-name:virbr*"
+      ]
+      ++ optionals config.my.virtual.waydroid.enable [
+        "interface-name:waydroid*"
+      ];
 
     wifi = {
       # this can be iwd or wpa_supplicant, use wpa_s until iwd support is stable
