@@ -61,6 +61,8 @@ in {
             name = config.my.fullName;
           };
 
+          safe.directory = ["${config.my.home}/.dotfiles"];
+
           color.ui = "auto";
           core.editor = "nvim";
           init.defaultBranch = "main";
