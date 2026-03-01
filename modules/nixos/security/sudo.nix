@@ -5,7 +5,8 @@
   ...
 }: let
   cfg = config.my.security.sudo;
-  inherit (lib) getExe' map;
+  inherit (lib) map;
+  inherit (lib.meta) getExe';
   inherit
     (lib.modules)
     mkAfter
@@ -15,6 +16,7 @@
     mkMerge
     ;
   inherit (lib.options) mkOption;
+  inherit (lib.lists) singleton;
   inherit
     (lib.types)
     bool
@@ -135,46 +137,46 @@ in {
     }
 
     (mkIf (cfg.backend == "sudo-rs") {
-      security.sudo-rs = {
-        inherit (cfg) wheelNeedsPassword execWheelOnly;
-        extraConfig = ''
-          Defaults !lecture
-          Defaults pwfeedback
-          Defaults env_keep += "EDITOR PATH DISPLAY"
-          Defaults timestamp_timeout = 300
-        '';
-        extraRules = mkAfter [
-          {
-            groups = ["wheel"];
-            commands = sudoCommands;
-          }
-        ];
+      security = {
+        sudo-rs = {
+          inherit (cfg) wheelNeedsPassword execWheelOnly;
+          extraConfig = ''
+            Defaults !lecture
+            Defaults pwfeedback
+            Defaults env_keep += "EDITOR PATH DISPLAY"
+            Defaults timestamp_timeout = 300
+          '';
+          extraRules = mkAfter [
+            {
+              groups = ["wheel"];
+              commands = sudoCommands;
+            }
+          ];
+        };
+        audit.rules = singleton "-w /etc/sudoers -p wa -k sudo_changes";
       };
     })
 
     (mkIf (cfg.backend == "doas") {
-      security.doas = {
-        inherit (cfg) wheelNeedsPassword;
-        extraRules = mkAfter (
-          [
-            {
-              groups = ["wheel"];
-              noPass = false;
-              persist = true;
-              keepEnv = true;
-            }
-          ]
-          ++ doasCommands
-        );
+      security = {
+        doas = {
+          inherit (cfg) wheelNeedsPassword;
+          extraRules = mkAfter (
+            [
+              {
+                groups = ["wheel"];
+                noPass = false;
+                persist = true;
+                keepEnv = true;
+              }
+            ]
+            ++ doasCommands
+          );
+        };
+        audit.rules = singleton "-w /etc/doas.conf -p wa -k doas_changes";
       };
-      environment.shellAliases.sudo = mkDefault "doas";
-    })
 
-    (mkIf config.security.audit.enable {
-      security.audit.rules = mkMerge [
-        (mkIf (cfg.backend == "sudo-rs") ["-w /etc/sudoers -p wa -k sudo_changes"])
-        (mkIf (cfg.backend == "doas") ["-w /etc/doas.conf -p wa -k doas_changes"])
-      ];
+      environment.shellAliases.sudo = mkDefault "doas";
     })
   ];
 }
