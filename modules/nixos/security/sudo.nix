@@ -16,7 +16,6 @@
     mkMerge
     ;
   inherit (lib.options) mkOption;
-  inherit (lib.lists) singleton;
   inherit
     (lib.types)
     bool
@@ -137,43 +136,37 @@ in {
     }
 
     (mkIf (cfg.backend == "sudo-rs") {
-      security = {
-        sudo-rs = {
-          inherit (cfg) wheelNeedsPassword execWheelOnly;
-          extraConfig = ''
-            Defaults !lecture
-            Defaults pwfeedback
-            Defaults env_keep += "EDITOR PATH DISPLAY"
-            Defaults timestamp_timeout = 300
-          '';
-          extraRules = mkAfter [
-            {
-              groups = ["wheel"];
-              commands = sudoCommands;
-            }
-          ];
-        };
-        audit.rules = singleton "-w /etc/sudoers -p wa -k sudo_changes";
+      security.sudo-rs = {
+        inherit (cfg) wheelNeedsPassword execWheelOnly;
+        extraConfig = ''
+          Defaults !lecture
+          Defaults pwfeedback
+          Defaults env_keep += "EDITOR PATH DISPLAY"
+          Defaults timestamp_timeout = 300
+        '';
+        extraRules = mkAfter [
+          {
+            groups = ["wheel"];
+            commands = sudoCommands;
+          }
+        ];
       };
     })
 
     (mkIf (cfg.backend == "doas") {
-      security = {
-        doas = {
-          inherit (cfg) wheelNeedsPassword;
-          extraRules = mkAfter (
-            [
-              {
-                groups = ["wheel"];
-                noPass = false;
-                persist = true;
-                keepEnv = true;
-              }
-            ]
-            ++ doasCommands
-          );
-        };
-        audit.rules = singleton "-w /etc/doas.conf -p wa -k doas_changes";
+      security.doas = {
+        inherit (cfg) wheelNeedsPassword;
+        extraRules = mkAfter (
+          [
+            {
+              groups = ["wheel"];
+              noPass = false;
+              persist = true;
+              keepEnv = true;
+            }
+          ]
+          ++ doasCommands
+        );
       };
 
       environment.shellAliases.sudo = mkDefault "doas";
