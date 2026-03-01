@@ -169,5 +169,12 @@ in {
       };
       environment.shellAliases.sudo = mkDefault "doas";
     })
+
+    (mkIf config.security.audit.enable {
+      security.audit.rules = mkMerge [
+        (mkIf (cfg.backend == "sudo-rs") ["-w /etc/sudoers -p wa -k sudo_changes"])
+        (mkIf (cfg.backend == "doas") ["-w /etc/doas.conf -p wa -k doas_changes"])
+      ];
+    })
   ];
 }

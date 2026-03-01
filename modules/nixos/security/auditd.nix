@@ -57,8 +57,6 @@ in {
           "-w /etc/passwd -p wa -k identity"
           "-w /etc/shadow -p wa -k identity"
           "-w /etc/group -p wa -k identity"
-          "-w /etc/sudoers -p wa -k sudo_changes"
-          "-w /etc/doas.conf -p wa -k doas_changes"
 
           # Monitor kernel privilege escalation and illegal injection
           "-a always,exit -F arch=b64 -S ptrace -k injection"

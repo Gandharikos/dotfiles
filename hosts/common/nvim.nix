@@ -1,19 +1,10 @@
 {
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
   my = {
     neovim = {
       enable = true;
       lazyvim = {
         enable = true;
         custom.enable = true;
-
-        extraPlugins = lib.optionals (config.programs.dank-material-shell.enable or false) [
-          pkgs.vimPlugins.base16-nvim
-        ];
 
         # ai
         windsurf.enable = true;
