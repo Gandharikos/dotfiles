@@ -10,84 +10,90 @@
   inherit (lib.types) bool listOf str;
   inherit (lib.lists) optionals;
   inherit (config.services) tailscale;
+
   cfg = config.my.services.tailscale;
   isWorkstation = config.my.machine.type == "workstation";
 in {
   options.my.services.tailscale = {
     enable = mkEnableOption "Enable Tailscale";
+
     defaultFlags = mkOption {
       type = listOf str;
       default = ["--ssh"];
-      description = ''
-        A list of command-line flags that will be passed to the Tailscale daemon on startup
-        using the {option}`config.services.tailscale.extraUpFlags`.
-        If `isServer` is set to true, the server-specific values will be appended to the list
-        defined in this option.
-      '';
+      description = "Default command-line flags passed to the Tailscale daemon.";
     };
+
+    # Fix: Added the previously missing option used in the config block
+    advertiseExitNode = mkOption {
+      type = bool;
+      default = cfg.isServer; # Default to true if it's a server, but can be manually overridden
+      description = "Advertise this machine as a Tailscale exit node.";
+    };
+
     isClient = mkOption {
       type = bool;
-      default = cfg.enable;
-      example = true;
-      description = ''
-        Whether the target host should utilize Tailscale client features";
-        This option is mutually exclusive with {option}`tailscale.isServer` as they both
-        configure Taiscale, but with different flags
-      '';
+      default = cfg.enable && !cfg.isServer;
+      description = "Whether the target host should utilize Tailscale client features.";
     };
 
     isServer = mkOption {
       type = bool;
-      default = !cfg.isClient;
-      example = true;
-      description = ''
-        Whether the target host should utilize Tailscale server features.
-        This option is mutually exclusive with {option}`tailscale.isClient` as they both
-        configure Taiscale, but with different flags
-      '';
+      default = false; # Disabled by default; must be explicitly enabled in host-specific configs
+      description = "Whether the target host should utilize Tailscale server features.";
     };
   };
+
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; lib.optionals isWorkstation [trayscale];
 
     networking.firewall = {
-      # always allow traffic from your Tailscale network
+      # Always allow all traffic from the Tailscale virtual interface
       trustedInterfaces = ["${tailscale.interfaceName}"];
-      checkReversePath = "loose";
 
-      # allow the Tailscale UDP port through the firewall
-      allowedUDPPorts = [tailscale.port];
+      # Loose reverse path filtering is strictly required for Exit Nodes and Subnet Routers
+      checkReversePath = "loose";
     };
 
     services.tailscale = {
       enable = true;
+
+      # Setting this to true automatically handles opening the required UDP ports
+      openFirewall = true;
+
+      # Apply specific flags based on the logical role (Server vs Client)
       extraUpFlags =
         cfg.defaultFlags
         ++ optionals cfg.advertiseExitNode [
           "--advertise-exit-node"
+        ]
+        ++ optionals cfg.isServer [
+          # Additional server-specific flags (e.g., subnet routing) can be appended here
           "--operator=${my.name}"
+        ]
+        ++ optionals cfg.isClient [
+          # Clients typically need to accept routes pushed by the Tailscale server/subnet routers
+          "--accept-routes"
         ];
+
+      # Modern NixOS prefers declarative state management via extraSetFlags over extraUpFlags
       extraSetFlags =
         cfg.defaultFlags
         ++ optionals cfg.advertiseExitNode [
           "--advertise-exit-node"
-          "--operator=${my.name}"
         ];
-      # Enable caddy to acquire certificates from the tailscale daemon
+
+      # Graceful integration with Caddy to acquire certificates from the tailscale daemon
       # - https://tailscale.com/blog/caddy
-      permitCertUid = mkIf my.caddy.enable "caddy";
-      openFirewall = true;
+      permitCertUid = mkIf (config.my.caddy.enable or false) "caddy";
+
       useRoutingFeatures = mkDefault "both";
     };
 
-    # server can't be client and client be server
     assertions = [
-      (mkIf (cfg.isClient == cfg.isServer) {
-        assertion = false;
-        message = ''
-          You have enabled both client and server features of the Tailscale service. Unless you are providing your own UpFlags, this is probably not what you want.
-        '';
-      })
+      {
+        assertion = !(cfg.isClient && cfg.isServer);
+        message = "Tailscale service cannot act as both client and server strictly at the same time in this module's logic.";
+      }
     ];
   };
 }
