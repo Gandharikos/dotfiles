@@ -48,7 +48,6 @@ in {
         rules = [
           # Monitor the execution of all programs (the most fundamental and critical audit)
           "-a exit,always -F arch=b64 -S execve"
-          "-a exit,always -F arch=b32 -S execve"
 
           # Protect the audit log itself (prevent attackers from destroying evidence)
           "-w /var/log/audit -p wa -k auditlog"
@@ -60,13 +59,10 @@ in {
 
           # Monitor kernel privilege escalation and illegal injection
           "-a always,exit -F arch=b64 -S ptrace -k injection"
-          "-a always,exit -F arch=b32 -S ptrace -k injection"
           "-a always,exit -F arch=b64 -S init_module -S delete_module -k modules"
-          "-a always,exit -F arch=b32 -S init_module -S delete_module -k modules"
 
           # Retain the essence of your original config: monitor kexec (prevent kernel hot-swap escapes)
           "-a always,exit -F arch=b64 -S kexec_load -k KEXEC"
-          "-a always,exit -F arch=b32 -S kexec_load -k KEXEC"
         ];
       };
     };
