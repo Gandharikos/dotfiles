@@ -12,6 +12,7 @@
   isServer = type == "server";
 in {
   config = mkMerge [
+    {time.hardwareClockInLocalTime = true;}
     (mkIf isServer {
       time.timeZone = mkForce "UTC";
     })
