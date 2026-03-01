@@ -15,16 +15,6 @@
         enableTweaks = true;
         optimizeCompressor = true;
       };
-
-      fs = [
-        "ext4"
-        "btrfs"
-        "xfs"
-        "ntfs"
-        "fat"
-        "vfat"
-        "exfat"
-      ];
     };
     video.enable = true;
     services = {
