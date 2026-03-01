@@ -3,10 +3,18 @@
   config,
   ...
 }: let
+  inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkDefault mkIf;
-  cfg = config.my.services.earlyoom;
+  cfg = config.my.services.oomd;
 in {
-  config = mkIf (!cfg.enable) {
+  options.my.services.oomd = {
+    enable =
+      mkEnableOption "oomd"
+      // {
+        default = !config.my.services.earlyoom.enable;
+      };
+  };
+  config = mkIf cfg.enable {
     systemd = {
       # systemd OOMd
       # Fedora enables these options by default. See the 10-oomd-* files here:

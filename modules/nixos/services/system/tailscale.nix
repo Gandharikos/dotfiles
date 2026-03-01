@@ -5,53 +5,69 @@
   ...
 }: let
   inherit (config) my;
-  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.modules) mkIf mkDefault mkBefore;
   inherit (lib.options) mkOption mkEnableOption;
-  inherit (lib.types) bool listOf str;
+  inherit (lib.types) enum listOf str;
   inherit (lib.lists) optionals;
-  inherit (config.services) tailscale;
+  inherit (lib.strings) concatStringsSep;
 
   cfg = config.my.services.tailscale;
-  isWorkstation = config.my.machine.type == "workstation";
+  isClient = cfg.role == "client";
+  isSubnetRouter = builtins.elem cfg.role ["subnet-router" "router-exit-node"];
+  isExitNode = builtins.elem cfg.role ["exit-node" "router-exit-node"];
+  isRoutingServer = isSubnetRouter || isExitNode;
+  advertiseRoutesFlag = optionals (isSubnetRouter && cfg.advertiseRoutes != []) [
+    "--advertise-routes=${concatStringsSep "," cfg.advertiseRoutes}"
+  ];
 in {
   options.my.services.tailscale = {
-    enable = mkEnableOption "Enable Tailscale";
+    enable =
+      mkEnableOption "Enable Tailscale"
+      // {
+        default = true;
+      };
+
+    autoConnect = mkEnableOption "Automatically connect to Tailscale";
 
     defaultFlags = mkOption {
       type = listOf str;
       default = ["--ssh"];
-      description = "Default command-line flags passed to the Tailscale daemon.";
+      description = "Default command-line flags passed to Tailscale before role-specific flags.";
     };
 
-    # Fix: Added the previously missing option used in the config block
-    advertiseExitNode = mkOption {
-      type = bool;
-      default = cfg.isServer; # Default to true if it's a server, but can be manually overridden
-      description = "Advertise this machine as a Tailscale exit node.";
+    role = mkOption {
+      type = enum [
+        "client"
+        "subnet-router"
+        "exit-node"
+        "router-exit-node"
+      ];
+      default = "client";
+      description = ''
+        High-level Tailscale role for this host.
+        `subnet-router` and `router-exit-node` require `advertiseRoutes` to be set.
+      '';
     };
 
-    isClient = mkOption {
-      type = bool;
-      default = cfg.enable && !cfg.isServer;
-      description = "Whether the target host should utilize Tailscale client features.";
-    };
-
-    isServer = mkOption {
-      type = bool;
-      default = false; # Disabled by default; must be explicitly enabled in host-specific configs
-      description = "Whether the target host should utilize Tailscale server features.";
+    advertiseRoutes = mkOption {
+      type = listOf str;
+      default = [];
+      example = ["192.168.1.0/24" "10.0.0.0/24"];
+      description = ''
+        Subnets advertised by Tailscale when the role includes subnet routing.
+      '';
     };
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; lib.optionals isWorkstation [trayscale];
+    sops.secrets = mkIf cfg.autoConnect {
+      tailscale_authKey = {};
+    };
 
+    environment.systemPackages = with pkgs; [tailscale];
     networking.firewall = {
       # Always allow all traffic from the Tailscale virtual interface
-      trustedInterfaces = ["${tailscale.interfaceName}"];
-
-      # Loose reverse path filtering is strictly required for Exit Nodes and Subnet Routers
-      checkReversePath = "loose";
+      trustedInterfaces = ["${config.services.tailscale.interfaceName}"];
     };
 
     services.tailscale = {
@@ -60,39 +76,62 @@ in {
       # Setting this to true automatically handles opening the required UDP ports
       openFirewall = true;
 
-      # Apply specific flags based on the logical role (Server vs Client)
+      authKeyFile = mkIf cfg.autoConnect config.sops.secrets.tailscale_authKey.path;
+
+      # Apply role-specific Tailscale behavior declaratively.
       extraUpFlags =
         cfg.defaultFlags
-        ++ optionals cfg.advertiseExitNode [
+        ++ optionals isClient [
+          "--accept-routes"
+        ]
+        ++ optionals isExitNode [
           "--advertise-exit-node"
         ]
-        ++ optionals cfg.isServer [
-          # Additional server-specific flags (e.g., subnet routing) can be appended here
+        ++ advertiseRoutesFlag
+        ++ optionals isRoutingServer [
           "--operator=${my.name}"
-        ]
-        ++ optionals cfg.isClient [
-          # Clients typically need to accept routes pushed by the Tailscale server/subnet routers
-          "--accept-routes"
         ];
 
       # Modern NixOS prefers declarative state management via extraSetFlags over extraUpFlags
       extraSetFlags =
         cfg.defaultFlags
-        ++ optionals cfg.advertiseExitNode [
+        ++ optionals isClient [
+          "--accept-routes"
+        ]
+        ++ optionals isExitNode [
           "--advertise-exit-node"
+        ]
+        ++ advertiseRoutesFlag
+        ++ optionals isRoutingServer [
+          "--operator=${my.name}"
         ];
 
       # Graceful integration with Caddy to acquire certificates from the tailscale daemon
       # - https://tailscale.com/blog/caddy
-      permitCertUid = mkIf (config.my.caddy.enable or false) "caddy";
+      permitCertUid = "root";
 
-      useRoutingFeatures = mkDefault "both";
+      useRoutingFeatures = mkDefault (
+        if isClient
+        then "client"
+        else "server"
+      );
+    };
+
+    systemd = {
+      network.wait-online.ignoredInterfaces = ["${config.services.tailscale.interfaceName}"];
+      services = {
+        tailscaled.serviceConfig.Environment = mkBefore ["TS_NO_LOGS_NO_SUPPORT=true"];
+        tailscaled-autoconnect = mkIf cfg.autoConnect {
+          after = ["sops-nix.service"];
+          wants = ["sops-nix.service"];
+        };
+      };
     };
 
     assertions = [
       {
-        assertion = !(cfg.isClient && cfg.isServer);
-        message = "Tailscale service cannot act as both client and server strictly at the same time in this module's logic.";
+        assertion = !isSubnetRouter || cfg.advertiseRoutes != [];
+        message = "Tailscale roles `subnet-router` and `router-exit-node` require `my.services.tailscale.advertiseRoutes` to be non-empty.";
       }
     ];
   };
