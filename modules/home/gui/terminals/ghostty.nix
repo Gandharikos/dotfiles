@@ -2,15 +2,26 @@
   pkgs,
   config,
   lib,
-  inputs,
   ...
 }: let
-  inherit (config.lib.file) mkOutOfStoreSymlink;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (config.my) terminal;
   cfg = config.my.desktop.apps.ghostty;
+  ghostty-shaders = pkgs.stdenv.mkDerivation {
+    name = "ghostty-shaders";
+    src = pkgs.fetchFromGitHub {
+      owner = "0xhckr";
+      repo = "ghostty-shaders";
+      rev = "aa6121ba2ddd5251ac75b92729c758fe41256e55";
+      hash = "sha256-2AeIjV59d/a+JdEbcPT1dLfUVdegRYIyFLI55daZ0LI=";
+    };
+    installPhase = ''
+      mkdir -p $out
+      mv *.glsl $out
+    '';
+  };
 in {
   options.my.desktop.apps.ghostty = {
     enable =
@@ -21,8 +32,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    xdg.configFile."ghostty/shadders".source =
-      mkOutOfStoreSymlink (lib.my.relativeToConfig "ghostty/shaders");
+    xdg.configFile."ghostty/shaders".source = ghostty-shaders;
 
     programs.ghostty = with config.my.keyboard.keys; {
       enable = true;
@@ -65,7 +75,8 @@ in {
         macos-option-as-alt = "left";
         macos-window-shadow = true;
         # shader
-        custom-shader = "${inputs.ghostty-shaders}/bloom025.glsl";
+        custom-shader = "shaders/underwater.glsl";
+        custom-shader-animation = true;
         # other
         copy-on-select = "clipboard";
         # shell-integration-features = "cursor,sudo,no-title,ssh-env";

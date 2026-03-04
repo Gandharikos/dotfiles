@@ -243,12 +243,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Shaders for ghostty terminal
-    ghostty-shaders = {
-      url = "github:hackr-sh/ghostty-shaders";
-      flake = false;
-    };
-
     # UI shell
     quickshell = {
       url = "github:outfoxxed/quickshell";
