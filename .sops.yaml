@@ -31,6 +31,11 @@ creation_rules:
           - *johnson_age
         pgp:
           - *johnson
+  # Core secrets: only pgp keys needed
+  - path_regex: ^(\./)?secrets/core/.*
+    key_groups:
+      - pgp:
+          - *johnson
   # Default secrets: all keys for backward compatibility
   - path_regex: ^(\./)?secrets/(?:[^/]+/)*[^/]+(?:\.(?:ya?ml|json|ini|env))?$
     key_groups:

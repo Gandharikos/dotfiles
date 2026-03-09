@@ -148,6 +148,16 @@ add program:
   rm -rf config/{{program}}/
   mv "$HOME/.config/{{program}}" config/
 
+# Decrypt core secrets using PGP (requires Yubikey)
+[group('secret')]
+decrypt host=`uname -n`:
+  mkdir -p ~/.ssh
+  sops -d --extract '["data"]' secrets/core/id_ed25519.yaml > ~/.ssh/id_ed25519
+  chmod 600 ~/.ssh/id_ed25519
+  sudo mkdir -p /etc/ssh
+  sops -d --extract '["data"]' secrets/core/{{host}}.yaml | sudo tee /etc/ssh/ssh_host_ed25519_key > /dev/null
+  sudo chmod 600 /etc/ssh/ssh_host_ed25519_key
+
 [group('misc')]
 ssh-init:
   sudo ssh-keygen -A

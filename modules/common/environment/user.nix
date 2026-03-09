@@ -33,7 +33,7 @@ in {
     # Public Keys that can be used to login to all hosts;
     openssh.authorizedKeys.keys =
       forEach
-      (listFilesRecursive "${self}/secrets/${name}/keys")
+      (listFilesRecursive "${self}/secrets/core/keys")
       (key: builtins.readFile key);
   };
 }

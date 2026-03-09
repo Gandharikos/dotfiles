@@ -6,7 +6,6 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
-  inherit (config.my) name;
   inherit (config.home) homeDirectory;
   cfg = config.my.security;
 in {
@@ -55,18 +54,11 @@ in {
         connect
       ];
 
-      file.".ssh/id_ed25519.pub".source = "${self}/secrets/${name}/id_ed25519.pub";
+      file.".ssh/id_ed25519.pub".source = "${self}/secrets/core/id_ed25519.pub";
 
       persistence = {
         "/persist".directories = [".ssh"];
       };
-    };
-
-    sops.secrets.id_johnson = {
-      sopsFile = "${self}/secrets/${name}/id_ed25519";
-      path = "${homeDirectory}/.ssh/id_ed25519";
-      mode = "0400";
-      format = "binary";
     };
   };
 }

@@ -17,8 +17,8 @@ in {
   # User-level SOPS configuration using SSH key
   sops = {
     defaultSopsFile = "${self}/secrets/${name}/default.yaml";
-    # Use persisted age key so secrets decrypt before SSH keys exist
-    age.keyFile = "${optionalString persist "/persist"}${home}/.config/sops/age/keys.txt";
+    # Use persisted ssh key so secrets decrypt before SSH keys exist
+    age.sshKeyPaths = ["${optionalString persist "/persist"}${home}/.ssh/id_ed25519"];
     # Keep GPG support for Yubikey when available
     # gnupg.home = "${home}/.gnupg";
   };
