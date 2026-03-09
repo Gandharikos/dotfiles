@@ -100,6 +100,8 @@
       "qt@5"
       "openssh"
       "tailscale"
+      # deep clearn and optimize your mac
+      "mole"
     ];
 
     # `brew install --cask`

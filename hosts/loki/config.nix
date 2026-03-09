@@ -26,7 +26,6 @@
     };
     virtual.enable = true;
     persistence.enable = true;
-    security.auditd.enable = false;
     networking.enableIPv6 = false;
     machine = {
       type = "laptop";
