@@ -23,9 +23,9 @@ in {
         "interface-name:podman*"
         "interface-name:cni-podman*"
       ]
-      ++ optionals config.my.virtual.kvm.enable [
-        "interface-name:virbr*"
-      ]
+      # ++ optionals config.my.virtual.kvm.enable [
+      #   "interface-name:virbr*"
+      # ]
       ++ optionals config.my.virtual.waydroid.enable [
         "interface-name:waydroid*"
       ];

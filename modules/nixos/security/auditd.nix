@@ -48,8 +48,6 @@ in {
         rules = [
           # Monitor the execution of all programs (the most fundamental and critical audit)
           "-a exit,always -F arch=b64 -S execve"
-          # Protect the audit log itself (prevent attackers from destroying evidence)
-          "-w /var/log/audit -p wa -k auditlog"
         ];
       };
     };
