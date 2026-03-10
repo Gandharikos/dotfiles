@@ -6,13 +6,13 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.desktop.apps.vscode;
+  cfg = config.my.gui.editors.vscode;
 in {
-  options.my.desktop.apps.vscode = {
+  options.my.gui.editors.vscode = {
     enable =
       mkEnableOption "Visual Studio Code"
       // {
-        default = config.my.desktop.enable;
+        default = config.my.gui.enable;
       };
   };
 

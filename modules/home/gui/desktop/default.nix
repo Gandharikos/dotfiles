@@ -7,11 +7,11 @@
   inherit (lib.my) scanPaths;
   inherit (lib.options) mkOption;
   inherit (lib.types) int enum nullOr;
-  inherit (config.my) desktop;
+  inherit (config.my.gui) desktop;
 in {
   imports = scanPaths ./.;
 
-  options.my.desktop = {
+  options.my.gui.desktop = {
     lock = mkOption {
       type = nullOr (enum ["hyprlock" "dms"]);
       default =

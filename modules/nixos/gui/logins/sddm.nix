@@ -5,7 +5,7 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
-  cfg = config.my.desktop.login;
+  cfg = config.my.gui.desktop.login;
 in {
   config = mkIf (cfg == "sddm") {
     services.displayManager.sddm = {

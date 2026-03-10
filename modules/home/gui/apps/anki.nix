@@ -5,13 +5,13 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.my.desktop.apps.anki;
+  cfg = config.my.gui.apps.anki;
 in {
-  options.my.desktop.apps.anki = {
+  options.my.gui.apps.anki = {
     enable =
       mkEnableOption "anki"
       // {
-        default = config.my.desktop.enable;
+        default = config.my.gui.enable;
       };
   };
 

@@ -8,13 +8,13 @@
   inherit (lib.options) mkEnableOption;
   inherit (lib.lists) optionals;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  cfg = config.my.desktop.apps.mpv;
+  cfg = config.my.gui.apps.mpv;
 in {
-  options.my.desktop.apps.mpv = {
+  options.my.gui.apps.mpv = {
     enable =
       mkEnableOption "support for mpv"
       // {
-        default = config.my.desktop.enable;
+        default = config.my.gui.enable;
       };
   };
 

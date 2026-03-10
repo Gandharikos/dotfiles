@@ -4,7 +4,7 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
-  inherit (config.my) desktop;
+  inherit (config.my.gui) desktop;
   isLaptop = config.my.machine.type == "laptop";
 in {
   config = mkIf isLaptop {

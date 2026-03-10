@@ -9,7 +9,7 @@
   inherit (config.my.theme.colorscheme) palette;
 
   cfg = config.my.theme.tokyonight;
-  enable = cfg.enable && config.my.desktop.enable && isLinux;
+  enable = cfg.enable && config.my.gui.enable && isLinux;
 in {
   config = mkIf enable {
     programs.niri.settings.layout = {

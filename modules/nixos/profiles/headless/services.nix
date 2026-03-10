@@ -4,7 +4,7 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
-  isHeadless = !config.my.desktop.enable;
+  isHeadless = !config.my.gui.enable;
 in {
   config = mkIf isHeadless {
     # a headless system should not mount any removable media

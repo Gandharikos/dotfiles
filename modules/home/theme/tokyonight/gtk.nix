@@ -7,7 +7,7 @@
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   cfg = config.my.theme.tokyonight;
-  enable = cfg.enable && config.my.desktop.enable && isLinux;
+  enable = cfg.enable && config.my.gui.enable && isLinux;
   # preferDark =
   #   if cfg.style == "day"
   #   then 0

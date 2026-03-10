@@ -12,7 +12,7 @@ in {
     enable =
       mkEnableOption "Enable Emacs"
       // {
-        default = config.my.desktop.enable;
+        default = config.my.gui.enable;
       };
   };
 

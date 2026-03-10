@@ -9,12 +9,12 @@
   inherit (lib.types) listOf enum;
   inherit (lib.modules) mkIf;
   inherit (lib.my) scanPaths isHyprland;
-  inherit (config.my) desktop;
+  inherit (config.my.gui) desktop;
   cfg = desktop.hyprland;
 in {
   imports = scanPaths ./.;
 
-  options.my.desktop.hyprland = {
+  options.my.gui.desktop.hyprland = {
     enable =
       mkEnableOption "Enable Hyprland"
       // {

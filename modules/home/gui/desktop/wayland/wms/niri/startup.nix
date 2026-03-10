@@ -7,7 +7,7 @@
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe' getExe;
   inherit (config) gtk;
-  cfg = config.my.desktop.niri;
+  cfg = config.my.gui.desktop.niri;
 
   gsettings = getExe' pkgs.glib "gsettings";
   gnomeSchema = "org.gnome.desktop.interface";

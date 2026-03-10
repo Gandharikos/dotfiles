@@ -6,14 +6,14 @@
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (config.my) name;
-  cfg = config.my.desktop._1password;
+  cfg = config.my.gui.system._1password;
   isPersist = config.my.persistence.enable;
 in {
-  options.my.desktop._1password = {
+  options.my.gui.system._1password = {
     enable =
       mkEnableOption "1Password"
       // {
-        default = config.my.desktop.enable;
+        default = config.my.gui.enable;
       };
   };
 

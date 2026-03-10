@@ -6,10 +6,10 @@
 }: let
   inherit (lib.lists) optional;
   inherit (lib.my) isWayland;
-  cfg = config.my.desktop.wine;
+  cfg = config.my.gui.system.wine;
   isWayland' = isWayland config;
 in {
-  options.my.desktop.wine = lib.my.mkProgram pkgs "wine" {
+  options.my.gui.system.wine = lib.my.mkProgram pkgs "wine" {
     enable.default = config.my.game.enable;
     package.default =
       if isWayland'

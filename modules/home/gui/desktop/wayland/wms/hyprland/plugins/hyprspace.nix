@@ -6,7 +6,7 @@
 }: let
   inherit (lib.modules) mkIf mkAfter;
   inherit (lib.lists) elem;
-  inherit (config.my.desktop.hyprland) plugins;
+  inherit (config.my.gui.desktop.hyprland) plugins;
   enable = plugins.enable && elem "hyprspace" plugins.list;
   hyprland_settings = config.wayland.windowManager.hyprland.settings;
 in {

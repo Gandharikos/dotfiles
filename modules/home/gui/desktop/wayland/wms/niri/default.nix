@@ -7,11 +7,11 @@
   inherit (lib.my) scanPaths isWayland;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.my) desktop;
+  inherit (config.my.gui) desktop;
   cfg = desktop.niri;
 in {
   imports = [inputs.niri.homeModules.niri] ++ scanPaths ./.;
-  options.my.desktop.niri = {
+  options.my.gui.desktop.niri = {
     enable =
       mkEnableOption "Enable Niri"
       // {
@@ -21,7 +21,7 @@ in {
       };
   };
   config = mkIf cfg.enable {
-    my.desktop.shot = "dms";
+    my.gui.desktop.shot = "dms";
     programs.niri = {
       enable = true;
       settings = {

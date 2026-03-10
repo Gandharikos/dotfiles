@@ -18,7 +18,7 @@ in {
       withUWSM = true;
     };
 
-    my.desktop.exec = "${uwsm'} start hyprland-uwsm.desktop";
+    my.gui.desktop.exec = "${uwsm'} start hyprland-uwsm.desktop";
 
     xdg.portal = {
       enable = true;

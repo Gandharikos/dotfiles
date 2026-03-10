@@ -10,10 +10,10 @@
   inherit (config.my.theme.colorscheme) palette;
 
   cfg = config.my.theme.tokyonight;
-  enable = cfg.enable && config.my.desktop.enable && isLinux;
+  enable = cfg.enable && config.my.gui.enable && isLinux;
 in {
   config = mkIf enable {
-    my.desktop.hyprlock.colors = {
+    my.gui.desktop.hyprlock.colors = {
       background = rgba palette.bg 0.8;
       input_field = {
         outer = rgba palette.bg 0.8;

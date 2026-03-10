@@ -23,7 +23,7 @@ in {
           "nemo"
         ]);
         default =
-          if config.my.desktop.enable && osClass == "nixos"
+          if config.my.gui.enable && osClass == "nixos"
           then "cosmic-files"
           else null;
         description = "The file manager to use";

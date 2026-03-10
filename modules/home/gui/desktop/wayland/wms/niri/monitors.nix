@@ -6,7 +6,7 @@
   inherit (lib.modules) mkIf;
   inherit (lib.attrsets) optionalAttrs;
   inherit (config.my.machine) monitors;
-  cfg = config.my.desktop.niri;
+  cfg = config.my.gui.desktop.niri;
 
   isResolution = value: builtins.match "^[0-9]+x[0-9]+(@[0-9.]+)?$" value != null;
   isPosition = value: builtins.match "^([0-9]+)x([0-9]+)$" value != null;

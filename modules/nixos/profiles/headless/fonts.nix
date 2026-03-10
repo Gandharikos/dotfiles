@@ -5,7 +5,7 @@
 }: let
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.attrsets) mapAttrs;
-  isHeadless = !config.my.desktop.enable;
+  isHeadless = !config.my.gui.enable;
 in {
   config = mkIf isHeadless {
     # we don't need fonts on a server

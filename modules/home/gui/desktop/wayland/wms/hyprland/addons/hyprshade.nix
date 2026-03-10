@@ -8,11 +8,11 @@
   inherit (lib.modules) mkIf;
   inherit (lib.my) toggle;
   # inherit (lib.meta) getExe';
-  cfg = config.my.desktop.hyprland;
+  cfg = config.my.gui.desktop.hyprland;
   hyprshade' = toggle pkgs "hyprshade";
   # systemctl' = getExe' pkgs.systemd "systemctl";
 in {
-  options.my.desktop.hyprland.shade = {
+  options.my.gui.desktop.hyprland.shade = {
     enable = mkEnableOption "hyprshade";
   };
 

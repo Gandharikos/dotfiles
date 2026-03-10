@@ -29,8 +29,11 @@ in {
       machine = {
         inherit (my.machine) type gpu cpu monitors;
       };
-      desktop = {
-        inherit (my.desktop) enable type default exec;
+      gui = {
+        inherit (my.gui) enable;
+        desktop = {
+          inherit (my.gui.desktop) type default exec;
+        };
       };
 
       security = {

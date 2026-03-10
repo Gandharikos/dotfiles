@@ -6,9 +6,9 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.my.desktop.apps.telegram;
+  cfg = config.my.gui.apps.telegram;
 in {
-  options.my.desktop.apps.telegram = {
+  options.my.gui.apps.telegram = {
     enable =
       mkEnableOption "Telegram";
   };

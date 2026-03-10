@@ -36,7 +36,7 @@ in {
         enablePattern = "*";
       };
       fprintAuth = config.services.fprintd.enable;
-      enableGnomeKeyring = mkDefault config.my.desktop.enable;
+      enableGnomeKeyring = mkDefault config.my.gui.enable;
       gnupg = {
         enable = true;
         noAutostart = true;

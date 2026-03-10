@@ -9,8 +9,8 @@
   inherit (lib.my) runOnce isWayland;
   grimblast' = runOnce pkgs "grimblast";
   satty' = runOnce pkgs "satty";
-  enable = config.my.desktop.shot == "grimblast" && isWayland config;
-  cfgNiri = config.my.desktop.niri;
+  enable = config.my.gui.desktop.shot == "grimblast" && isWayland config;
+  cfgNiri = config.my.gui.desktop.niri;
   bash = getExe pkgs.bash;
   grimblast = getExe pkgs.grimblast;
   satty = getExe pkgs.satty;

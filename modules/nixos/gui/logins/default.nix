@@ -6,11 +6,11 @@
   inherit (lib.options) mkOption;
   inherit (lib.types) nullOr enum;
   inherit (lib.my) scanPaths;
-  cfg = config.my.desktop;
+  cfg = config.my.gui.desktop;
 in {
   imports = scanPaths ./.;
 
-  options.my.desktop.login = mkOption {
+  options.my.gui.desktop.login = mkOption {
     type = nullOr (enum [
       "greetd"
       "sddm"

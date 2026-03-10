@@ -7,13 +7,13 @@
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  cfg = config.my.desktop.apps.veracrypt;
+  cfg = config.my.gui.apps.veracrypt;
 in {
-  options.my.desktop.apps.veracrypt = {
+  options.my.gui.apps.veracrypt = {
     enable =
       mkEnableOption "Veracrypt"
       // {
-        default = config.my.desktop.enable && isLinux;
+        default = config.my.gui.enable && isLinux;
       };
   };
 

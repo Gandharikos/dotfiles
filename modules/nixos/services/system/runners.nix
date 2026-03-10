@@ -5,7 +5,7 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
-  inherit (config.my) desktop;
+  inherit (config.my.gui) desktop;
 in {
   config = mkIf desktop.enable {
     environment.systemPackages = [pkgs.appimage-run];

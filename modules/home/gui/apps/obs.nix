@@ -6,10 +6,10 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.my.desktop.apps.obs;
+  cfg = config.my.gui.apps.obs;
   # inherit (pkgs.stdenv.hostPlatform) isLinux;
 in {
-  options.my.desktop.apps.obs = {
+  options.my.gui.apps.obs = {
     enable =
       mkEnableOption "OBS"
       // {

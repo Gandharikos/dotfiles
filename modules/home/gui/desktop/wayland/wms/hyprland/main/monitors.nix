@@ -7,7 +7,7 @@
   inherit (lib.lists) optionals;
   inherit (lib.strings) concatStringsSep;
   inherit (config.my.machine) monitors;
-  cfg = config.my.desktop.hyprland;
+  cfg = config.my.gui.desktop.hyprland;
   mkMonitors = ms:
     builtins.map (
       m: let

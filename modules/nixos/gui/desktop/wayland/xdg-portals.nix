@@ -7,7 +7,7 @@
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.my) isWayland;
-  cfg = config.my.desktop;
+  cfg = config.my.gui.desktop;
   portal =
     if cfg.default == "hyprland"
     then "hyprland"

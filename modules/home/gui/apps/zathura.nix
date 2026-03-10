@@ -5,13 +5,13 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.my.desktop.apps.zathura;
+  cfg = config.my.gui.apps.zathura;
 in {
-  options.my.desktop.apps.zathura = {
+  options.my.gui.apps.zathura = {
     enable =
       mkEnableOption "Zathura"
       // {
-        default = config.my.desktop.enable;
+        default = config.my.gui.enable;
       };
   };
 

@@ -7,7 +7,7 @@
   inherit (lib.modules) mkIf;
   inherit (config.my.theme) cursor;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  enable = cursor != null && config.my.desktop.enable && isLinux;
+  enable = cursor != null && config.my.gui.enable && isLinux;
 in {
   config = mkIf enable {
     # If your theme for mouse cursor, icons or windows don't load correctly,

@@ -11,10 +11,10 @@
   inherit (config.my.theme) wallpaper avatar;
   hyprlock' = runOnce pkgs "hyprlock";
   font_family = "SFProDisplay Nerd Font Bold";
-  cfg = config.my.desktop.hyprlock;
-  enable = config.my.desktop.lock == "hyprlock" && isWayland config;
+  cfg = config.my.gui.desktop.hyprlock;
+  enable = config.my.gui.desktop.lock == "hyprlock" && isWayland config;
 in {
-  options.my.desktop.hyprlock = {
+  options.my.gui.desktop.hyprlock = {
     colors = {
       background = mkOption {
         type = nullOr str;

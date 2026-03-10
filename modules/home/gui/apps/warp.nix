@@ -6,14 +6,14 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.my.desktop.apps.cloudflare-warp;
+  cfg = config.my.gui.apps.cloudflare-warp;
 in {
-  options.my.desktop.apps.cloudflare-warp = {
+  options.my.gui.apps.cloudflare-warp = {
     enable =
       mkEnableOption "Cloudflare Warp"
       // {
         default = false;
-        # config.my.desktop.enable
+        # config.my.gui.enable
         # && config.my.machine.type == "laptop"
         # && pkgs.stdenv.hostPlatform.isLinux;
       };

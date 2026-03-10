@@ -1,5 +1,5 @@
 {config, ...}: let
-  cfg = config.my.desktop.login;
+  cfg = config.my.gui.desktop.login;
 in {
   services.displayManager.cosmic-greeter.enable = cfg == "cosmic-greeter";
 }

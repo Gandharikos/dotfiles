@@ -6,7 +6,7 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe getExe';
-  cfg = config.my.desktop.hyprland;
+  cfg = config.my.gui.desktop.hyprland;
   hyprpicker' = getExe pkgs.hyprpicker;
   wl-copy' = getExe' pkgs.wl-clipboard-rs "wl-copy";
   notify-send' = getExe' pkgs.libnotify "notify-send";

@@ -12,7 +12,7 @@ in {
     enable =
       mkEnableOption "VPN"
       // {
-        default = config.my.desktop.enable;
+        default = config.my.gui.enable;
       };
   };
   config = mkIf cfg.enable {

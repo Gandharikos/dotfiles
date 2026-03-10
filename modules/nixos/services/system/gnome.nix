@@ -5,7 +5,7 @@
   ...
 }: let
   inherit (lib) mkIf mkForce;
-  inherit (config.my) desktop;
+  inherit (config.my.gui) desktop;
 in {
   config = mkIf desktop.enable {
     services = {

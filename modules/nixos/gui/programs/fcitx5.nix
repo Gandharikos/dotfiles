@@ -8,13 +8,13 @@
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.my) isWayland;
   isWayland' = isWayland config;
-  cfg = config.my.desktop.fcitx5;
+  cfg = config.my.gui.system.fcitx5;
 in {
-  options.my.desktop.fcitx5 = {
+  options.my.gui.system.fcitx5 = {
     enable =
       mkEnableOption "Enable fcitx5 input method"
       // {
-        default = config.my.desktop.enable;
+        default = config.my.gui.enable;
       };
   };
 

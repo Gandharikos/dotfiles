@@ -6,13 +6,13 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.desktop.apps.warp;
+  cfg = config.my.gui.terminals.warp;
 in {
-  options.my.desktop.apps.warp = {
+  options.my.gui.terminals.warp = {
     enable =
       mkEnableOption "warp"
       // {
-        default = config.my.terminal.default == "warp";
+        default = config.my.gui.terminal.default == "warp";
       };
   };
 

@@ -6,13 +6,13 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.my.desktop.apps.obsidian;
+  cfg = config.my.gui.apps.obsidian;
 in {
-  options.my.desktop.apps.obsidian = {
+  options.my.gui.apps.obsidian = {
     enable =
       mkEnableOption "Obsidian"
       // {
-        default = config.my.desktop.enable;
+        default = config.my.gui.enable;
       };
   };
 

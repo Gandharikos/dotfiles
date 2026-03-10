@@ -38,18 +38,18 @@ in {
         enable = false;
         auditd.enable = true;
       };
-      desktop.enable = mkDefault false;
+      gui.desktop.enable = mkDefault false;
       virtual = {
         enable = mkForce false;
-        docker.enable = config.my.desktop.enable;
+        docker.enable = config.my.gui.enable;
       };
       persistence.enable = mkForce false;
       # TODO: so many things rely on yubikey, so It should enable no WSL too
       yubikey.enable = mkForce false;
     };
     hm.my = {
-      desktop.enable = mkDefault false;
-      terminal.default = null;
+      gui.desktop.enable = mkDefault false;
+      gui.terminal.default = null;
       browser.default = null;
       fastfetch.startOnLogin = mkDefault false;
     };
@@ -69,7 +69,7 @@ in {
       };
 
       # enable integration with Docker Desktop (needed to be installed)
-      docker-desktop.enable = config.my.desktop.enable;
+      docker-desktop.enable = config.my.gui.enable;
     };
     networking = {
       networkmanager.enable = mkForce false;

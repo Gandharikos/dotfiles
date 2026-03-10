@@ -5,7 +5,7 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
-  cfg = config.my.desktop.polkit;
+  cfg = config.my.gui.desktop.polkit;
 in {
   config = mkIf (cfg == "hyprpolkit") {
     systemd.user.services."polkit-hyprpolkitagent" = {

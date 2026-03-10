@@ -12,27 +12,27 @@
   inherit (pkgs.stdenv.hostPlatform) system;
   inherit (config.home) homeDirectory;
   inherit (config.my) name;
-  cfg = config.my.desktop.apps.spotify;
+  cfg = config.my.gui.apps.spotify;
 in {
   imports = [
     inputs.spicetify-nix.homeManagerModules.default
   ];
 
-  options.my.desktop.apps.spotify = {
+  options.my.gui.apps.spotify = {
     enable =
       mkEnableOption "Spotify"
       // {
-        default = config.my.desktop.enable;
+        default = config.my.gui.enable;
       };
     spotify-player.enable =
       mkEnableOption "Spotify Player TUI"
       // {
-        default = config.my.desktop.apps.spotify.enable;
+        default = config.my.gui.apps.spotify.enable;
       };
     spicetify.enable =
       mkEnableOption "Spicetify"
       // {
-        default = config.my.desktop.apps.spotify.enable;
+        default = config.my.gui.apps.spotify.enable;
       };
   };
 

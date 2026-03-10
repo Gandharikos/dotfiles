@@ -6,9 +6,9 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.my.desktop.apps.zotero;
+  cfg = config.my.gui.apps.zotero;
 in {
-  options.my.desktop.apps.zotero = {
+  options.my.gui.apps.zotero = {
     enable = mkEnableOption "Zotero";
   };
 

@@ -6,9 +6,9 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.desktop.apps.chrome;
+  cfg = config.my.gui.browsers.chrome;
 in {
-  options.my.desktop.apps.chrome = {
+  options.my.gui.browsers.chrome = {
     enable =
       mkEnableOption "chrome"
       // {

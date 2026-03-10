@@ -5,7 +5,7 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.my) vec2;
-  cfg = config.my.desktop.hyprland;
+  cfg = config.my.gui.desktop.hyprland;
 in {
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland.settings = {

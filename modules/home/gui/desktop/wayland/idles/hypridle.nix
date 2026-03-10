@@ -29,7 +29,7 @@
   # timeout after which DPMS kicks in
   timeout = 300;
 
-  inherit (config.my) desktop;
+  inherit (config.my.gui) desktop;
   enable = desktop.idle == "hypridle" && isWayland config;
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
   dms =

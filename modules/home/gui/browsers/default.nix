@@ -24,7 +24,7 @@ in {
           "firefox"
         ]);
         default =
-          if config.my.desktop.enable && osClass == "nixos"
+          if config.my.gui.enable && osClass == "nixos"
           then "zen"
           else null;
         description = "The browser to use";

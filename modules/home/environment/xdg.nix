@@ -117,7 +117,7 @@ in {
     #   ls -l /run/current-system/sw/share/applications/
     # the user-level desktop entries can be list by command(user ryan):
     #  ls /etc/profiles/per-user/ryan/share/applications/
-    mimeApps = mkIf (my.desktop.enable && isLinux) {
+    mimeApps = mkIf (my.gui.enable && isLinux) {
       enable = true;
       # let `xdg-open` to open the url with the correct application.
       defaultApplications = associations;

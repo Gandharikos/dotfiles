@@ -5,7 +5,7 @@
   ...
 }: let
   inherit (lib.lists) optionals;
-  isGui = config.my.desktop.enable;
+  isGui = config.my.gui.enable;
   # isServer = config.my.machine.machine == "server";
 in {
   networking.networkmanager = {

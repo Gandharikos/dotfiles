@@ -8,7 +8,7 @@
   inherit (lib.lists) elem optionals;
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe getExe';
-  inherit (config.my) desktop terminal browser fileManager;
+  inherit (config.my.gui) desktop terminal browser fileManager;
   cfg = desktop.hyprland;
   num = desktop.general.workspace.number;
   mod = desktop.general.keybind.modifier;

@@ -8,12 +8,12 @@
   inherit (lib.types) enum;
 in {
   imports = scanPaths ./.;
-  options.my.desktop.polkit = mkOption {
+  options.my.gui.desktop.polkit = mkOption {
     type = enum ["pantheon" "hyprpolkit" "mate"];
     default =
       if isHyprland config
       then "hyprpolkit"
-      else if config.my.desktop.default == "niri"
+      else if config.my.gui.desktop.default == "niri"
       then "mate"
       else "pantheon";
     description = ''

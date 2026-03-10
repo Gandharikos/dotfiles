@@ -7,10 +7,10 @@
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkAfter;
   inherit (lib.my) withUWSM;
-  cfg = config.my.desktop.hyprland;
+  cfg = config.my.gui.desktop.hyprland;
   hyprnome' = withUWSM pkgs "hyprnome";
 in {
-  options.my.desktop.hyprland.nome = {
+  options.my.gui.desktop.hyprland.nome = {
     enable =
       mkEnableOption "hyprnome"
       // {

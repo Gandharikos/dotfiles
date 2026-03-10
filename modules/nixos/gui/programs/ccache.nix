@@ -7,7 +7,7 @@
   inherit (lib.lists) singleton optionals;
   inherit (lib.trivial) const;
 
-  inherit (config.my) desktop;
+  inherit (config.my.gui) desktop;
   cfg = config.programs.ccache;
 in {
   config = mkIf desktop.enable {

@@ -12,7 +12,7 @@ in {
   imports = scanPaths ./.;
 
   config = mkIf isHeadless {
-    my.desktop.enable = mkForce false;
-    hm.my.desktop.enable = mkForce false;
+    my.gui.enable = mkForce false;
+    hm.my.gui.enable = mkForce false;
   };
 }

@@ -4,7 +4,7 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
-  isHeadless = !config.my.desktop.enable;
+  isHeadless = !config.my.gui.enable;
 in {
   config = mkIf isHeadless {
     # https://github.com/numtide/srvos/blob/main/nixos/server/default.nix

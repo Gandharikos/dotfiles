@@ -9,14 +9,16 @@
   inherit (lib.types) enum nullOr str int float;
   inherit (lib.meta) getExe;
   inherit (lib.my) withUWSM isHyprland;
-  inherit (config.my) terminal;
+  inherit (config.my.gui) terminal;
 in {
   imports = lib.my.scanPaths ./.;
-  options.my.terminal = {
+
+  options.my.gui.terminal = {
     name = mkOption {
       type = nullOr str;
       default = null;
     };
+
     default = mkOption {
       type = nullOr (enum [
         "wzeterm"
@@ -25,11 +27,12 @@ in {
         "warp"
       ]);
       default =
-        if config.my.desktop.enable
+        if config.my.gui.enable
         then "ghostty"
         else null;
       description = "The terminal to use";
     };
+
     exec = mkOption {
       type = str;
       default =
@@ -38,9 +41,10 @@ in {
         else getExe (builtins.getAttr terminal.default pkgs);
       description = ''
         The command to use for the terminal. This is used by the
-        `my.terminal` module to determine which command to run.
+        `my.gui.terminal` module to determine which command to run.
       '';
     };
+
     size = mkOption {
       type = int;
       default =
@@ -49,35 +53,39 @@ in {
         else 12;
       description = ''
         The font size to use for the terminal. This is used by the
-        `my.terminal` module to determine which font size to use.
+        `my.gui.terminal` module to determine which font size to use.
       '';
     };
+
     font = mkOption {
       type = str;
       default = "JetBrainsMono Nerd Font Mono";
       description = ''
         The font to use for the terminal. This is used by the
-        `my.terminal` module to determine which font to use.
+        `my.gui.terminal` module to determine which font to use.
       '';
     };
+
     padding = mkOption {
       type = int;
       default = 5;
       description = ''
         The padding to use for the terminal. This is used by the
-        `my.terminal` module to determine which padding to use.
+        `my.gui.terminal` module to determine which padding to use.
       '';
     };
+
     opacity = mkOption {
       type = float;
       default = 0.95;
       description = ''
         The opacity to use for the terminal. This is used by the
-        `my.terminal` module to determine which opacity to use.
+        `my.gui.terminal` module to determine which opacity to use.
       '';
     };
   };
 
+  # Set TERMINAL environment variable when a terminal is configured
   config = mkIf (terminal.default != null) {
     home.sessionVariables = {TERMINAL = "${terminal.default}";};
   };

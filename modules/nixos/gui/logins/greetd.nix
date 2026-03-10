@@ -11,9 +11,9 @@
   inherit (config.my) name desktop;
   inherit (desktop) autologin exec;
   persist = config.my.persistence.enable;
-  cfg = config.my.desktop.login;
+  cfg = config.my.gui.desktop.login;
 in {
-  options.my.desktop.autologin =
+  options.my.gui.desktop.autologin =
     mkEnableOption ''
       Whether to enable passwordless login. This is generally useful on systems with
       FDE (Full Disk Encryption) enabled. It is a security risk for systems without FDE.

@@ -11,7 +11,7 @@
   inherit (colorscheme) palette;
   cfg = tokyonight;
   colorName = "${capitalize default}-${capitalize cfg.style}";
-  enable = cfg.enable && config.my.desktop.enable && isLinux;
+  enable = cfg.enable && config.my.gui.enable && isLinux;
   variant = "modern";
   cursorName = "Bibata-${capitalize variant}-${colorName}-Hyprcursor";
   cursorPackage = pkgs.my.bibata-hyprcursor.override {

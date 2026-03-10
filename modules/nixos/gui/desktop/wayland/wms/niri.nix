@@ -7,7 +7,7 @@
   inherit (lib.meta) getExe';
   inherit (lib.modules) mkIf;
   inherit (lib.my) isWayland;
-  enable = isWayland config && config.my.desktop.default == "niri";
+  enable = isWayland config && config.my.gui.desktop.default == "niri";
   niriPkg = config.programs.niri.package or pkgs.niri;
   niriSession = getExe' niriPkg "niri-session";
 in {
@@ -16,6 +16,6 @@ in {
     services.displayManager.defaultSession = "niri";
 
     # Ensure login uses niri-session so env vars and portals are set up correctly.
-    my.desktop.exec = niriSession;
+    my.gui.desktop.exec = niriSession;
   };
 }

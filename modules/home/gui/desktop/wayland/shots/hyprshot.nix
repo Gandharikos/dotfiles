@@ -9,8 +9,8 @@
   inherit (lib.my) runOnce isWayland;
   hyprshot' = runOnce pkgs "hyprshot";
   satty' = runOnce pkgs "satty";
-  enable = config.my.desktop.shot == "hyprshot" && isWayland config;
-  cfgNiri = config.my.desktop.niri;
+  enable = config.my.gui.desktop.shot == "hyprshot" && isWayland config;
+  cfgNiri = config.my.gui.desktop.niri;
   bash = getExe pkgs.bash;
   hyprshot = getExe pkgs.hyprshot;
   satty = getExe pkgs.satty;

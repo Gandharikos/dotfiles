@@ -41,7 +41,7 @@ in {
       // {
         internal = true;
         readOnly = true;
-        default = config.my.desktop.enable;
+        default = config.my.gui.enable;
       };
     autoLogin = mkEnableOption "atuin auto login";
   };

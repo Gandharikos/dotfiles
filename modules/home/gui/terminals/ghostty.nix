@@ -7,8 +7,8 @@
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.my) terminal;
-  cfg = config.my.desktop.apps.ghostty;
+  inherit (config.my.gui) terminal;
+  cfg = config.my.gui.terminals.ghostty;
   ghostty-shaders = pkgs.stdenv.mkDerivation {
     name = "ghostty-shaders";
     src = pkgs.fetchFromGitHub {
@@ -23,7 +23,7 @@
     '';
   };
 in {
-  options.my.desktop.apps.ghostty = {
+  options.my.gui.terminals.ghostty = {
     enable =
       mkEnableOption "ghostty"
       // {

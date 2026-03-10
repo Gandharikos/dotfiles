@@ -10,7 +10,7 @@
   inherit (config) gtk;
   gsettings = getExe' pkgs.glib "gsettings";
   gnomeSchema = "org.gnome.desktop.interface";
-  cfg = config.my.desktop.hyprland;
+  cfg = config.my.gui.desktop.hyprland;
   wl-paste' = withUWSM' pkgs pkgs.wl-clipboard "wl-paste";
   wl-clip-persist' = withUWSM pkgs "wl-clip-persist";
   cliphist' = getExe pkgs.cliphist;

@@ -5,7 +5,7 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.my) mkAerospaceWorkspaces;
-  cfg = config.my.desktop;
+  cfg = config.my.gui.desktop;
   inherit (cfg.general.workspace) number;
   hyper = "cmd-alt-ctrl";
 in

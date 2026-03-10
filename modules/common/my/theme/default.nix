@@ -49,7 +49,7 @@ in {
     avatar = mkOption {
       type = nullOr (coercedTo package toString path);
       default =
-        if my.desktop.enable
+        if my.gui.enable
         then (relativeToConfig "avatars/pain.png")
         else null;
       description = "The avatar of the user";
@@ -60,7 +60,7 @@ in {
       default =
         if isDarwin
         then null
-        else if my.desktop.enable
+        else if my.gui.enable
         then ./nix.png
         # pkgs.fetchurl {
         #   url = "https://github.com/huwqchn/wallpapers/blob/main/unorganized/nix.png";

@@ -12,7 +12,7 @@
   inherit (lib.my) isWayland isHyprland;
 
   enable = isWayland config;
-  inherit (config.my) desktop;
+  inherit (config.my.gui) desktop;
 
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
   uwsm = getExe' pkgs.uwsm "uwsm";
@@ -88,7 +88,7 @@ in
             "ALT, Comma, Toggle Settings, exec, ${settings}"
             "$mod, Apostrophe, Toggle Notifications, exec, ${notifications}"
           ]
-          ++ optionals (config.my.desktop.lock == "dms") [
+          ++ optionals (config.my.gui.desktop.lock == "dms") [
             "SUPER ALT, L, Toggle Lock, exec, ${lock}"
           ];
         binddl = mkForce (let

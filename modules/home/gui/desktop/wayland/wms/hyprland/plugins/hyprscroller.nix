@@ -6,7 +6,7 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) elem;
-  inherit (config.my.desktop.hyprland) plugins;
+  inherit (config.my.gui.desktop.hyprland) plugins;
   enable = plugins.enable && elem "hyprscroller" plugins.list;
 in {
   config = mkIf enable {

@@ -5,7 +5,7 @@
   ...
 }: let
   inherit (lib.options) mkOption mkEnableOption;
-  inherit (lib.types) enum nullOr str;
+  inherit (lib.types) enum nullOr str bool;
   inherit (pkgs.stdenv.hostPlatform) isLinux isDarwin;
   inherit (lib.meta) getExe;
   inherit (config) my;
@@ -14,12 +14,22 @@
   xorgChoices = ["i3" "bspwm" "awesome"];
   darwinChoices = ["aerospace"];
 in {
-  options.my.desktop = {
-    enable =
-      mkEnableOption "Desktop"
-      // {
-        default = true;
-      };
+  # Top-level GUI enable option
+  options.my.gui.enable =
+    mkEnableOption "GUI"
+    // {
+      default = true;
+    };
+
+  # Desktop configuration options
+  options.my.gui.desktop = {
+    enable = mkOption {
+      type = bool;
+      internal = true;
+      readOnly = true;
+      default = my.gui.enable;
+      description = "Internal option that mirrors my.gui.enable";
+    };
 
     type = mkOption {
       type = nullOr (enum (
@@ -30,7 +40,7 @@ in {
         else []
       ));
       default =
-        if !my.desktop.enable
+        if !my.gui.enable
         then null
         else if isLinux
         then "wayland"
@@ -40,18 +50,18 @@ in {
 
     default = mkOption {
       type = nullOr (enum (
-        if my.desktop.type == "wayland"
+        if my.gui.desktop.type == "wayland"
         then waylandChoices
-        else if my.desktop.type == "xorg"
+        else if my.gui.desktop.type == "xorg"
         then xorgChoices
         else darwinChoices
       ));
       default =
-        if !my.desktop.enable
+        if !my.gui.enable
         then null
-        else if my.desktop.type == "wayland"
+        else if my.gui.desktop.type == "wayland"
         then "hyprland"
-        else if my.desktop.type == "xorg"
+        else if my.gui.desktop.type == "xorg"
         then "i3"
         else "aerospace";
       description = "The default window manager limited by desktop.type";
@@ -59,21 +69,22 @@ in {
 
     exec = mkOption {
       type = str;
-      default = getExe (builtins.getAttr my.desktop.default pkgs);
+      default = getExe (builtins.getAttr my.gui.desktop.default pkgs);
       description = ''
         The command to use for logging in. This is used by the
-        `my.desktop.exec` module to determine which command to run.
+        `my.gui.desktop.exec` module to determine which command to run.
       '';
     };
   };
+
   config.assertions = [
     {
-      assertion = my.desktop.type != null -> my.desktop.enable;
-      message = "You can't use desktop.type without desktop.enable";
+      assertion = my.gui.desktop.type != null -> my.gui.enable;
+      message = "You can't use gui.desktop.type without gui.enable";
     }
     {
-      assertion = my.desktop.enable -> my.desktop.type != null;
-      message = "You can't use desktop.enable without desktop.type";
+      assertion = my.gui.enable -> my.gui.desktop.type != null;
+      message = "You can't use gui.enable without gui.desktop.type";
     }
   ];
 }

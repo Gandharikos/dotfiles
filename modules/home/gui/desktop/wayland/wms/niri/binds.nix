@@ -8,10 +8,10 @@
   inherit (lib.meta) getExe getExe';
   inherit (lib.modules) mkIf;
   inherit (lib.trivial) mod;
-  inherit (config.my) desktop terminal browser fileManager;
+  inherit (config.my.gui) desktop terminal browser fileManager;
   inherit (config.xdg.userDirs.extraConfig) SCREENSHOTS;
 
-  cfg = config.my.desktop.niri;
+  cfg = config.my.gui.desktop.niri;
 
   modKey =
     if desktop.general.keybind.modifier == "SUPER"

@@ -15,7 +15,7 @@ in {
     enable =
       mkEnableOption "earlyoom"
       // {
-        default = config.my.desktop.enable;
+        default = config.my.gui.enable;
       };
     avoid = mkOption {
       type = listOf str;

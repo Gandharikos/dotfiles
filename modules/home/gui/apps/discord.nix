@@ -6,17 +6,17 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.my.desktop.apps.discord;
+  cfg = config.my.gui.apps.discord;
 in {
   imports = [
     inputs.nixcord.homeModules.nixcord
   ];
 
-  options.my.desktop.apps.discord = {
+  options.my.gui.apps.discord = {
     enable =
       mkEnableOption "Discord"
       // {
-        default = config.my.desktop.enable;
+        default = config.my.gui.enable;
       };
   };
 

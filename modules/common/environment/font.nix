@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  cfg = config.my.desktop;
+  cfg = config.my.gui.desktop;
   inherit (lib.modules) mkIf;
 in {
   config = mkIf cfg.enable {

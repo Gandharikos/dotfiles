@@ -7,10 +7,10 @@
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkAfter;
   inherit (lib.my) withUWSM;
-  cfg = config.my.desktop.hyprland;
+  cfg = config.my.gui.desktop.hyprland;
   hyprshell' = withUWSM pkgs "hyprshell";
 in {
-  options.my.desktop.hyprland.switch = {
+  options.my.gui.desktop.hyprland.switch = {
     enable =
       mkEnableOption "hyprswitch"
       // {

@@ -5,10 +5,10 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.my) terminal;
-  cfg = config.my.desktop.apps.kitty;
+  inherit (config.my.gui) terminal;
+  cfg = config.my.gui.terminals.kitty;
 in {
-  options.my.desktop.apps.kitty = {
+  options.my.gui.terminals.kitty = {
     enable =
       mkEnableOption "kitty"
       // {

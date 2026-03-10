@@ -6,9 +6,9 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.desktop.apps.firefox;
+  cfg = config.my.gui.browsers.firefox;
 in {
-  options.my.desktop.apps.firefox = {
+  options.my.gui.browsers.firefox = {
     enable =
       mkEnableOption "firefox"
       // {
