@@ -5,8 +5,8 @@
   ...
 }: let
   inherit (lib.options) mkOption mkEnableOption;
-  inherit (lib.types) enum nullOr str bool;
-  inherit (pkgs.stdenv.hostPlatform) isLinux isDarwin;
+  inherit (lib.types) enum str bool;
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (lib.meta) getExe;
   inherit (config) my;
 
@@ -32,34 +32,28 @@ in {
     };
 
     type = mkOption {
-      type = nullOr (enum (
+      type = enum (
         if isLinux
         then ["wayland" "xorg"]
-        else if isDarwin
-        then ["darwin"]
-        else []
-      ));
+        else ["darwin"]
+      );
       default =
-        if !my.gui.enable
-        then null
-        else if isLinux
+        if isLinux
         then "wayland"
         else "darwin";
       description = "The desktop environment type to use";
     };
 
     default = mkOption {
-      type = nullOr (enum (
+      type = enum (
         if my.gui.desktop.type == "wayland"
         then waylandChoices
         else if my.gui.desktop.type == "xorg"
         then xorgChoices
         else darwinChoices
-      ));
+      );
       default =
-        if !my.gui.enable
-        then null
-        else if my.gui.desktop.type == "wayland"
+        if my.gui.desktop.type == "wayland"
         then "hyprland"
         else if my.gui.desktop.type == "xorg"
         then "i3"
@@ -76,15 +70,4 @@ in {
       '';
     };
   };
-
-  config.assertions = [
-    {
-      assertion = my.gui.desktop.type != null -> my.gui.enable;
-      message = "You can't use gui.desktop.type without gui.enable";
-    }
-    {
-      assertion = my.gui.enable -> my.gui.desktop.type != null;
-      message = "You can't use gui.enable without gui.desktop.type";
-    }
-  ];
 }
