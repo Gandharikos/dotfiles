@@ -113,7 +113,7 @@
       "rustdesk" # remote desktop client
       # "iina" # video player
       "raycast" # search
-      "stats" # beautiful system monitor
+      # "stats" # beautiful system monitor
       "eudic" # dictionary
       # "spotify" # music
       "1password" # password manager
@@ -122,8 +122,8 @@
       "obs" # stream / recoding software
       "ghostty" # terminal
       # "obsidian" # note-taking
-      "miniforge" # Miniconda's community-driven distribution
-      "tencent-lemon" # clean tool
+      # "miniforge" # Miniconda's community-driven distribution
+      # "tencent-lemon" # clean tool
       "surge" # proxy tool
       "keycastr" # show keystrokes on screen
       # "obs" # stream / recoding software
