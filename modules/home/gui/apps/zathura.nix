@@ -16,7 +16,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    programs.zathura = {
+    programs.zathura = with config.my.keyboard.keys; {
       enable = true;
       options = {
         # when selection text with mouse, copy to clipboard
@@ -36,64 +36,77 @@ in {
         zoom-step = 3;
       };
       mappings = {
-        "[normal] n" = "scroll left";
-        "[normal] o" = "scroll right";
-        "[normal] e" = "scroll down";
-        "[normal] i" = "scroll up";
-        "[normal] <C-e>" = "bisect backward";
-        "[normal] <C-i>" = "bisect forward";
-        "[normal] <A-n>" = "scroll half-left";
-        "[normal] <A-o>" = "scroll half-right";
-        "[normal] <A-e>" = "scroll half-down";
-        "[normal] <A-i>" = "scroll half-up";
-        "[normal] j" = "jumplist forward";
-        "[normal] J" = "jumplist backward";
-        "[normal] E" = "navigate next";
-        "[normal] I" = "navigate previous";
+        # Navigation (hjkl style)
+        "[normal] ${h}" = "scroll left";
+        "[normal] ${l}" = "scroll right";
+        "[normal] ${j}" = "scroll down";
+        "[normal] ${k}" = "scroll up";
+        "[normal] <C-${j}>" = "bisect backward";
+        "[normal] <C-${k}>" = "bisect forward";
+        "[normal] <A-${h}>" = "scroll half-left";
+        "[normal] <A-${l}>" = "scroll half-right";
+        "[normal] <A-${j}>" = "scroll half-down";
+        "[normal] <A-${k}>" = "scroll half-up";
+
+        # Jumplist (e for forward, E for backward in QWERTY)
+        "[normal] ${e}" = "jumplist forward";
+        "[normal] ${E}" = "jumplist backward";
+
+        # Navigate pages (i/I for next/prev in QWERTY)
+        "[normal] ${J}" = "navigate next";
+        "[normal] ${K}" = "navigate previous";
+
+        # Other commands
         "[normal] b" = "toggle_statusbar";
         "[normal] <Tab>" = "toggle_index";
-        "[normal] h" = "focus_inputbar";
-        "[normal] k" = "search forward";
-        "[normal] K" = "search backward";
+        "[normal] ${i}" = "focus_inputbar";
+        "[normal] ${n}" = "search forward";
+        "[normal] ${N}" = "search backward";
         "[normal] <C-->" = "zoom out";
         "[normal] <C-=>" = "zoom in";
         "[normal] <C-p>" = "toggle_presentation";
         "[normal] <C-f>" = "toggle_fullscreen";
+
+        # Fullscreen mode
         "[fullscreen] q" = "toggle_fullscreen";
-        "[fullscreen] n" = "scroll";
-        "[fullscreen] o" = "scroll";
-        "[fullscreen] e" = "scroll";
-        "[fullscreen] i" = "scroll";
-        "[fullscreen] <C-e>" = "bisect";
-        "[fullscreen] <C-i>" = "bisect";
-        "[fullscreen] <A-n>" = "scroll";
-        "[fullscreen] <A-o>" = "scroll";
-        "[fullscreen] <A-e>" = "scroll";
-        "[fullscreen] <A-i>" = "scroll";
-        "[fullscreen] j" = "jumplist";
-        "[fullscreen] J" = "jumplist";
-        "[fullscreen] E" = "navigate";
-        "[fullscreen] I" = "navigate";
+        "[fullscreen] ${h}" = "scroll";
+        "[fullscreen] ${l}" = "scroll";
+        "[fullscreen] ${j}" = "scroll";
+        "[fullscreen] ${k}" = "scroll";
+        "[fullscreen] <C-${j}>" = "bisect";
+        "[fullscreen] <C-${k}>" = "bisect";
+        "[fullscreen] <A-${h}>" = "scroll";
+        "[fullscreen] <A-${l}>" = "scroll";
+        "[fullscreen] <A-${j}>" = "scroll";
+        "[fullscreen] <A-${k}>" = "scroll";
+        "[fullscreen] ${e}" = "jumplist";
+        "[fullscreen] ${E}" = "jumplist";
+        "[fullscreen] ${J}" = "navigate";
+        "[fullscreen] ${K}" = "navigate";
         "[fullscreen] b" = "toggle_statusbar";
         "[fullscreen] <Tab>" = "toggle_index";
-        "[fullscreen] h" = "focus_inputbar";
-        "[fullscreen] k" = "search";
-        "[fullscreen] K" = "search";
+        "[fullscreen] ${i}" = "focus_inputbar";
+        "[fullscreen] ${n}" = "search";
+        "[fullscreen] ${N}" = "search";
         "[fullscreen] <C-->" = "zoom";
         "[fullscreen] <C-=>" = "zoom";
         "[fullscreen] <C-p>" = "toggle_presentation";
         "[fullscreen] <C-f>" = "toggle_fullscreen";
+
+        # Presentation mode
         "[presentation] q" = "toggle_presentation";
-        "[presentation] e" = "navigate";
-        "[presentation] i" = "navigate";
+        "[presentation] ${j}" = "navigate";
+        "[presentation] ${k}" = "navigate";
+
+        # Index mode
         "[index] q" = "toggle_index";
         "[index] <Tab>" = "toggle_index";
-        "[index] e" = "navigate_index";
-        "[index] i" = "navigate_index";
-        "[index] n" = "navigate_index";
-        "[index] o" = "navigate_index";
-        "[index] O" = "navigate_index";
-        "[index] N" = "navigate_index";
+        "[index] ${j}" = "navigate_index";
+        "[index] ${k}" = "navigate_index";
+        "[index] ${h}" = "navigate_index";
+        "[index] ${l}" = "navigate_index";
+        "[index] ${L}" = "navigate_index";
+        "[index] ${H}" = "navigate_index";
         "[index] <Space>" = "navigate_index";
         "[index] <Return>" = "navigate_index";
       };
