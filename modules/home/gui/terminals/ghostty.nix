@@ -4,8 +4,9 @@
   lib,
   ...
 }: let
-  inherit (lib.options) mkEnableOption;
+  inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.modules) mkIf;
+  inherit (lib.types) str bool;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (config.my.gui) terminal;
   cfg = config.my.gui.terminals.ghostty;
@@ -29,6 +30,19 @@ in {
       // {
         default = terminal.default == "ghostty";
       };
+
+    enableShader = mkOption {
+      type = bool;
+      default = true;
+      description = "Enable custom shader for ghostty terminal";
+    };
+
+    shader = mkOption {
+      type = str;
+      default = "cursor_blaze.glsl";
+      description = "Shader file to use from ~/.config/ghostty/shaders";
+      example = "underwater.glsl";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -75,8 +89,8 @@ in {
         macos-option-as-alt = "left";
         macos-window-shadow = true;
         # shader
-        custom-shader = "shaders/underwater.glsl";
-        custom-shader-animation = true;
+        custom-shader = mkIf cfg.enableShader "shaders/${cfg.shader}";
+        custom-shader-animation = cfg.enableShader;
         # other
         copy-on-select = "clipboard";
         # shell-integration-features = "cursor,sudo,no-title,ssh-env";
