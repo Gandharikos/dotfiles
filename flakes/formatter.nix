@@ -14,13 +14,20 @@
         yamlfmt.enable = true;
         shfmt.enable = true;
         shellcheck.enable = true;
+        actionlint.enable = true;
+        keep-sorted.enable = true;
+        taplo.enable = true;
       };
 
       settings = {
+        on-unmatched = "info";
+        tree-root-file = "flake.nix";
+
         global.excludes = [
           "LICENSE"
           # unsupported extensions
           "*.{gif,png,jpg,svg,tape,mts,lock,mod,sum,toml,env,envrc,gitignore,age,pub}"
+          "secrets/*"
         ];
         formatter = {
           deadnix = {priority = 1;};
@@ -43,6 +50,22 @@
           shfmt = {
             includes = ["*.envrc" "*.zshrc"];
             excludes = ["gdb/*" "zsh/*"];
+          };
+          actionlint = {
+            includes = [
+              ".github/workflows/*.yml"
+              ".github/workflows/*.yaml"
+            ];
+          };
+          keep-sorted = {
+            includes = ["*"];
+          };
+          taplo = {
+            options = ["format"];
+            includes = ["*.toml"];
+          };
+          yamlfmt = {
+            includes = ["*.yml" "*.yaml"];
           };
         };
       };
