@@ -7,10 +7,10 @@
   inherit (lib.lists) singleton optionals;
   inherit (lib.trivial) const;
 
-  inherit (config.my.gui) desktop;
+  inherit (config.my) gui;
   cfg = config.programs.ccache;
 in {
-  config = mkIf desktop.enable {
+  config = mkIf gui.enable {
     programs.ccache = {
       enable = true;
       cacheDir = "/var/cache/sccache";
