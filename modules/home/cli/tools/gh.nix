@@ -56,8 +56,8 @@ in {
 
     home.persistence."/persist".files = [
       ".config/gh/hosts.yml"
-      ".config/gh-copilot/config.yml"
-      ".local/state/gh-config/state.yml"
+      # ".config/gh-copilot/config.yml"
+      # ".local/state/gh-config/state.yml"
     ];
   };
 }
