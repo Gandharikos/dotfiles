@@ -1,5 +1,5 @@
 set shell := ["bash", "-c"]
-rebuild := if os() == "macos" { "sudo darwin-rebuild" } else { "nixos-rebuild" }
+rebuild := if os() == "macos" { "sudo darwin-rebuild" } else { "sudo nixos-rebuild" }
 build_config := if os() == "macos" { "darwinConfigurations" } else { "nixosConfigurations" }
 
 # List all the just commands
@@ -157,6 +157,36 @@ decrypt host=`uname -n`:
   sudo mkdir -p /etc/ssh
   sops -d --extract '["data"]' secrets/core/{{host}}.yaml | sudo tee /etc/ssh/ssh_host_ed25519_key > /dev/null
   sudo chmod 600 /etc/ssh/ssh_host_ed25519_key
+
+# Decrypt and copy keys to a remote host
+[group('secret')]
+init-remote host ip:
+  @mkdir -p /tmp/keys-{{host}}
+  sops -d --extract '["data"]' secrets/core/id_ed25519.yaml > /tmp/keys-{{host}}/id_ed25519
+  cp secrets/core/id_ed25519.pub /tmp/keys-{{host}}/id_ed25519.pub
+  sops -d --extract '["data"]' secrets/core/{{host}}.yaml > /tmp/keys-{{host}}/ssh_host_ed25519_key
+  cp secrets/core/{{host}}.pub /tmp/keys-{{host}}/ssh_host_ed25519_key.pub
+  chmod 600 /tmp/keys-{{host}}/id_ed25519 /tmp/keys-{{host}}/ssh_host_ed25519_key
+  ssh johnson@{{ip}} "mkdir -p ~/.ssh && chmod 700 ~/.ssh"
+  scp /tmp/keys-{{host}}/id_ed25519 /tmp/keys-{{host}}/id_ed25519.pub johnson@{{ip}}:~/.ssh/
+  scp /tmp/keys-{{host}}/ssh_host_ed25519_key /tmp/keys-{{host}}/ssh_host_ed25519_key.pub johnson@{{ip}}:~/
+  ssh -t johnson@{{ip}} "sudo mkdir -p /etc/ssh /persist/etc/ssh && \
+    sudo cp ~/ssh_host_ed25519_key /etc/ssh/ssh_host_ed25519_key && \
+    sudo cp ~/ssh_host_ed25519_key.pub /etc/ssh/ssh_host_ed25519_key.pub && \
+    sudo cp ~/ssh_host_ed25519_key /persist/etc/ssh/ssh_host_ed25519_key && \
+    sudo cp ~/ssh_host_ed25519_key.pub /persist/etc/ssh/ssh_host_ed25519_key.pub && \
+    sudo chmod 600 /etc/ssh/ssh_host_ed25519_key /persist/etc/ssh/ssh_host_ed25519_key && \
+    sudo chmod 644 /etc/ssh/ssh_host_ed25519_key.pub /persist/etc/ssh/ssh_host_ed25519_key.pub && \
+    rm ~/ssh_host_ed25519_key*"
+  # initialize nix profile directory for home-manager
+  ssh -t johnson@{{ip}} "sudo mkdir -p /nix/var/nix/profiles/per-user/johnson /persist/nix/var/nix/profiles/per-user/johnson && \
+    sudo chown johnson:users /nix/var/nix/profiles/per-user/johnson /persist/nix/var/nix/profiles/per-user/johnson && \
+    sudo chmod 755 /nix/var/nix/profiles/per-user/johnson /persist/nix/var/nix/profiles/per-user/johnson"
+  # user ssh key persistence
+  ssh johnson@{{ip}} "mkdir -p ~/.ssh /persist/home/johnson/.ssh && chmod 700 ~/.ssh /persist/home/johnson/.ssh"
+  scp /tmp/keys-{{host}}/id_ed25519 /tmp/keys-{{host}}/id_ed25519.pub johnson@{{ip}}:~/.ssh/
+  ssh johnson@{{ip}} "cp ~/.ssh/id_ed25519* /persist/home/johnson/.ssh/ && chmod 600 ~/.ssh/id_ed25519 /persist/home/johnson/.ssh/id_ed25519"
+  @rm -rf /tmp/keys-{{host}}
 
 [group('misc')]
 ssh-init:

@@ -27,6 +27,7 @@
     virtual.enable = true;
     persistence.enable = true;
     networking.enableIPv6 = false;
+    security.auditd.enable = false;
     machine = {
       type = "laptop";
       cpu = "intel";

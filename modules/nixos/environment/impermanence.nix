@@ -55,12 +55,12 @@ in {
         "/etc/nixos"
         "/etc/nix"
         "/etc/NetworkManager/system-connections"
-        "/etc/adjtime"
         "/var/db/sudo"
         # maybe we need more fine-grained
         "/var/lib"
       ];
       files = [
+        # Keep machine-id management out of impermanence file binds.
         "/etc/machine-id"
         # "/etc/ssh/ssh_host_ed25519_key"
         # "/etc/ssh/ssh_host_ed25519_key.pub"
@@ -68,6 +68,12 @@ in {
         # "/etc/ssh/ssh_host_rsa_key.pub"
       ];
     };
+
+    # Will activate home-manager profiles for each user upon login
+    # This is useful when using ephemeral installations
+    environment.loginShellInit = ''
+      [ -d "$HOME/.nix-profile" ] || /nix/var/nix/profiles/per-user/$USER/home-manager/activate &> /dev/null
+    '';
 
     system.activationScripts = {
       # NOTE: we use nixos-anywhere with copy-host-keys arg
@@ -133,11 +139,32 @@ in {
     };
 
     # for some reason *this* is what makes networkmanager not get screwed completely instead of the impermanence module
-    systemd.tmpfiles.rules = [
-      "L /var/lib/NetworkManager/secret_key - - - - /persist/var/lib/NetworkManager/secret_key"
-      "L /var/lib/NetworkManager/seen-bssids - - - - /persist/var/lib/NetworkManager/seen-bssids"
-      "L /var/lib/NetworkManager/timestamps - - - - /persist/var/lib/NetworkManager/timestamps"
-    ];
+    systemd.tmpfiles.rules =
+      [
+        "L /var/lib/NetworkManager/secret_key - - - - /persist/var/lib/NetworkManager/secret_key"
+        "L /var/lib/NetworkManager/seen-bssids - - - - /persist/var/lib/NetworkManager/seen-bssids"
+        "L /var/lib/NetworkManager/timestamps - - - - /persist/var/lib/NetworkManager/timestamps"
+      ]
+      ++ lib.concatMap (
+        user:
+          lib.optionals user.createHome [
+            # Keep parent directories writable for user-level Home Manager links.
+            "d ${user.home}/.config 0755 ${user.name} ${user.group} - -"
+            "d ${user.home}/.cache 0755 ${user.name} ${user.group} - -"
+            "d ${user.home}/.local 0755 ${user.name} ${user.group} - -"
+            "d ${user.home}/.local/state 0755 ${user.name} ${user.group} - -"
+            "d ${user.home}/.local/state/nix 0755 ${user.name} ${user.group} - -"
+            "d ${user.home}/.local/share 0755 ${user.name} ${user.group} - -"
+            "d ${user.home}/.local/share/direnv 0755 ${user.name} ${user.group} - -"
+            "z ${user.home}/.config 0755 ${user.name} ${user.group} - -"
+            "z ${user.home}/.cache 0755 ${user.name} ${user.group} - -"
+            "z ${user.home}/.local 0755 ${user.name} ${user.group} - -"
+            "z ${user.home}/.local/state 0755 ${user.name} ${user.group} - -"
+            "z ${user.home}/.local/state/nix 0755 ${user.name} ${user.group} - -"
+            "z ${user.home}/.local/share 0755 ${user.name} ${user.group} - -"
+            "z ${user.home}/.local/share/direnv 0755 ${user.name} ${user.group} - -"
+          ]
+      ) (attrValues config.users.users);
 
     environment.systemPackages = [
       # `sudo ncdu -x /`

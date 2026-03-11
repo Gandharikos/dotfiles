@@ -17,12 +17,15 @@ in
             directories = [
               # keep-sorted start
               ".cache/nix"
+              ".cache/nixpkgs-review"
               ".cache/pre-commit"
               ".config/sops"
               ".docker"
               ".dotfiles"
               ".local/bin"
               ".local/share/nix"
+              ".local/state/home-manager"
+              ".local/state/nix/profiles"
               ".secrets"
               "Desktop"
               "Dev"
