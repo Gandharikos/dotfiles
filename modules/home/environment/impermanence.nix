@@ -22,6 +22,7 @@ in
               ".docker"
               ".dotfiles"
               ".local/bin"
+              ".local/share/nix"
               ".secrets"
               "Desktop"
               "Dev"
