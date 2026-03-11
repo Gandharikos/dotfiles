@@ -11,6 +11,7 @@ in {
 
   config = mkIf (isWayland config) {
     home.packages = with pkgs; [
+      # keep-sorted start
       grim
       slurp
       tesseract5
@@ -36,6 +37,7 @@ in {
       gnome-shell-extensions
       gnome-maps
       gnome-characters
+      # keep-sorted end
     ];
   };
 }

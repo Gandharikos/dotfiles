@@ -1,38 +1,24 @@
-{
-  lib,
-  config,
-  osClass,
-  ...
-}: let
+{lib, ...}: let
   inherit (lib.my) scanPaths;
   inherit (lib.options) mkOption;
-  inherit (lib.types) int enum nullOr;
+  inherit (lib.types) int enum;
 in {
   imports = scanPaths ./.;
 
   options.my.gui.desktop = {
     lock = mkOption {
-      type = nullOr (enum ["hyprlock" "dms"]);
-      default =
-        if osClass == "nixos" && config.my.gui.enable
-        then "dms"
-        else null;
+      type = enum ["hyprlock" "dms"];
+      default = "dms";
       description = "The lock screen to use";
     };
     idle = mkOption {
-      type = nullOr (enum ["hypridle"]);
-      default =
-        if osClass == "nixos" && config.my.gui.enable
-        then "hypridle"
-        else null;
+      type = enum ["hypridle"];
+      default = "hypridle";
       description = "The idle tool to use";
     };
     shot = mkOption {
-      type = nullOr (enum ["hyprshot" "grimblast" "dms"]);
-      default =
-        if osClass == "nixos" && config.my.gui.enable
-        then "grimblast"
-        else null;
+      type = enum ["hyprshot" "grimblast" "dms"];
+      default = "grimblast";
       description = "The screenshot tool to use";
     };
     general = {
