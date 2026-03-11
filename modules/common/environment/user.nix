@@ -32,8 +32,14 @@ in {
 
     # Public Keys that can be used to login to all hosts;
     openssh.authorizedKeys.keys =
-      forEach
-      (listFilesRecursive "${self}/secrets/core/keys")
-      (key: builtins.readFile key);
+      [
+        # Primary user key
+        (builtins.readFile "${self}/secrets/core/id_ed25519.pub")
+      ]
+      ++
+      # Additional keys from secrets/core/keys/
+      (forEach
+        (listFilesRecursive "${self}/secrets/core/keys")
+        (key: builtins.readFile key));
   };
 }
