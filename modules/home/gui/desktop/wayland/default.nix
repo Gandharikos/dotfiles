@@ -12,31 +12,31 @@ in {
   config = mkIf (isWayland config) {
     home.packages = with pkgs; [
       # keep-sorted start
+      avizo
+      brightnessctl
+      brillo
+      ffmpeg
+      glib
+      gnome-characters
+      gnome-connections
+      gnome-console
+      gnome-font-viewer
+      gnome-maps
+      gnome-photos
+      gnome-shell-extensions
+      gnome-tour
       grim
+      playerctl
       slurp
       tesseract5
       # use more uwsm wrappers
       uwsm
-      playerctl
-      avizo
-      wireplumber
-      brillo
-      brightnessctl
       wf-recorder
+      wireplumber
       wl-clip-persist
       wl-clipboard-rs
       wl-screenrec
       wlr-randr
-      ffmpeg
-      glib
-      gnome-console
-      gnome-photos
-      gnome-tour
-      gnome-connections
-      gnome-font-viewer
-      gnome-shell-extensions
-      gnome-maps
-      gnome-characters
       # keep-sorted end
     ];
   };
