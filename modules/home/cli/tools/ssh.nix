@@ -33,9 +33,6 @@ in {
           # It has the same effect as adding cli option `ssh -A user@host`
           forwardAgent = true;
         };
-        "ymir" = {
-          hostname = "192.168.5.146";
-        };
         "github.com" = {
           hostname = "github.com";
           user = "git";
