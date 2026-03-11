@@ -1,25 +1,17 @@
-{
-  lib,
-  config,
-  ...
-}: let
+{lib, ...}: let
   inherit (lib.options) mkOption;
-  inherit (lib.types) nullOr enum;
+  inherit (lib.types) enum;
   inherit (lib.my) scanPaths;
-  cfg = config.my.gui.desktop;
 in {
   imports = scanPaths ./.;
 
-  options.my.gui.desktop.login = mkOption {
-    type = nullOr (enum [
+  options.my.gui.login.default = mkOption {
+    type = enum [
       "greetd"
       "sddm"
       "cosmic-greeter"
-    ]);
-    default =
-      if cfg.enable
-      then "greetd"
-      else null;
+    ];
+    default = "greetd";
     description = "Desktop login manager";
   };
 }

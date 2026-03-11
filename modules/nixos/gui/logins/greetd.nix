@@ -8,12 +8,13 @@
   inherit (lib.meta) getExe;
   inherit (lib.strings) concatStringsSep;
   inherit (lib.options) mkEnableOption;
-  inherit (config.my) name desktop;
-  inherit (desktop) autologin exec;
+  inherit (config.my) name gui;
+  inherit (gui.desktop) exec;
+  inherit (gui.login) autologin;
   persist = config.my.persistence.enable;
-  cfg = config.my.gui.desktop.login;
+  enable = gui.login.default == "greetd" && gui.enable;
 in {
-  options.my.gui.desktop.autologin =
+  options.my.gui.login.autologin =
     mkEnableOption ''
       Whether to enable passwordless login. This is generally useful on systems with
       FDE (Full Disk Encryption) enabled. It is a security risk for systems without FDE.
@@ -22,7 +23,7 @@ in {
       default = persist;
     };
 
-  config = mkIf (cfg == "greetd") {
+  config = mkIf enable {
     services.greetd = {
       enable = true;
       restart = !autologin;

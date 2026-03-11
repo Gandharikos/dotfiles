@@ -5,9 +5,10 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
-  cfg = config.my.gui.desktop.login;
+  inherit (config.my) gui;
+  enable = gui.login.default == "sddm" && gui.enable;
 in {
-  config = mkIf (cfg == "sddm") {
+  config = mkIf enable {
     services.displayManager.sddm = {
       enable = true;
       package = pkgs.kdePackages.sddm; # allow qt6 themes to work

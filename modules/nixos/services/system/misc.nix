@@ -4,10 +4,10 @@
   pkgs,
   ...
 }: let
-  cfg = config.my.gui.desktop;
+  inherit (config.my) gui;
   inherit (lib.modules) mkIf;
 in {
-  config = mkIf cfg.enable {
+  config = mkIf gui.enable {
     services = {
       # Thumbnail support for images
       tumbler.enable = true;

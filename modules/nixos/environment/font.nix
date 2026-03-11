@@ -4,10 +4,10 @@
   lib,
   ...
 }: let
-  cfg = config.my.gui.desktop;
+  inherit (config.my) gui;
   inherit (lib.modules) mkIf;
 in {
-  config = mkIf cfg.enable {
+  config = mkIf gui.enable {
     # all fonts are linked to /nix/var/nix/profiles/system/sw/share/X11/fonts
     fonts = {
       # use fonts specified by user rather than default ones

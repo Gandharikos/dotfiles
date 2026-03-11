@@ -1,5 +1,6 @@
 {config, ...}: let
-  cfg = config.my.gui.desktop.login;
+  inherit (config.my) gui;
+  enable = gui.login.default == "cosmic-greeter" && gui.enable;
 in {
-  services.displayManager.cosmic-greeter.enable = cfg == "cosmic-greeter";
+  services.displayManager.cosmic-greeter.enable = enable;
 }
