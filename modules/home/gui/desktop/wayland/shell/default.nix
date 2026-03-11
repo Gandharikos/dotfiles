@@ -199,7 +199,10 @@ in {
       ".config/DankMaterialShell"
       ".local/state/DankMaterialShell"
       ".cache/DankMaterialShell"
-      ".config/quickshell"
+      ".config/dgop"
+      ".local/share/color-schemes"
+      ".cache/quickshell"
+      ".config/cava"
     ];
   };
 }
