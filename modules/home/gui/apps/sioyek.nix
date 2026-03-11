@@ -5,17 +5,19 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
+  inherit (config.my) gui;
   cfg = config.my.gui.apps.sioyek;
+  enable = gui.enable && cfg.enable;
 in {
   options.my.gui.apps.sioyek = {
     enable =
       mkEnableOption "Sioyek"
       // {
-        default = config.my.gui.enable;
+        default = true;
       };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf enable {
     programs.sioyek = with config.my.keyboard.keys; {
       enable = true;
       bindings = {

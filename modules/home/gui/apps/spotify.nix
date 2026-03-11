@@ -11,8 +11,9 @@
   # inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (pkgs.stdenv.hostPlatform) system;
   inherit (config.home) homeDirectory;
-  inherit (config.my) name;
+  inherit (config.my) name gui;
   cfg = config.my.gui.apps.spotify;
+  enable = gui.enable && cfg.enable;
 in {
   imports = [
     inputs.spicetify-nix.homeManagerModules.default
@@ -22,7 +23,7 @@ in {
     enable =
       mkEnableOption "Spotify"
       // {
-        default = config.my.gui.enable;
+        default = true;
       };
     spotify-player.enable =
       mkEnableOption "Spotify Player TUI"
@@ -37,7 +38,7 @@ in {
   };
 
   config = mkMerge [
-    (mkIf cfg.spicetify.enable {
+    (mkIf enable {
       programs.spicetify = let
         spicePkgs = inputs.spicetify-nix.legacyPackages.${system};
       in {
@@ -63,7 +64,7 @@ in {
         ];
       };
     })
-    (mkIf cfg.spotify-player.enable {
+    (mkIf enable {
       programs.spotify-player = {
         enable = true;
         settings = {

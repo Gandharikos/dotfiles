@@ -6,7 +6,9 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
+  inherit (config.my) gui;
   cfg = config.my.gui.apps.firefox;
+  enable = gui.enable && cfg.enable;
 in {
   options.my.gui.apps.firefox = {
     enable =
@@ -16,7 +18,7 @@ in {
       };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf enable {
     programs.firefox = {
       enable = true;
       policies = {

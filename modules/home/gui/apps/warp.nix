@@ -6,20 +6,21 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
+  inherit (config.my) gui;
   cfg = config.my.gui.apps.cloudflare-warp;
+  enable = gui.enable && cfg.enable;
 in {
   options.my.gui.apps.cloudflare-warp = {
     enable =
       mkEnableOption "Cloudflare Warp"
       // {
         default = false;
-        # config.my.gui.enable
-        # && config.my.machine.type == "laptop"
+        # config.my.machine.type == "laptop"
         # && pkgs.stdenv.hostPlatform.isLinux;
       };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf enable {
     systemd.user.services = {
       warp-taskbar = {
         Unit = {

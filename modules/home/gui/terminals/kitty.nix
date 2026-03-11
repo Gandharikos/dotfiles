@@ -5,18 +5,20 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
+  inherit (config.my) gui;
   inherit (config.my.gui) terminal;
   cfg = config.my.gui.apps.kitty;
+  enable = gui.enable && cfg.enable;
 in {
   options.my.gui.apps.kitty = {
     enable =
       mkEnableOption "kitty"
       // {
-        default = true;
+        default = terminal.default == "kitty";
       };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf enable {
     programs.kitty = with config.my.keyboard.keys; {
       enable = true;
       font = {

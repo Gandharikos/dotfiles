@@ -2,29 +2,28 @@
   lib,
   pkgs,
   config,
-  osClass,
   ...
 }: let
   inherit (lib.options) mkOption;
   inherit (lib.modules) mkIf;
-  inherit (lib.types) enum nullOr str;
+  inherit (lib.types) enum str;
   inherit (lib.meta) getExe;
   inherit (lib.my) withUWSM isHyprland;
   inherit (config.my.gui) fileManager;
+  inherit (config.my) gui;
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
+  enable = gui.enable && isLinux;
 in {
   imports = lib.my.scanPaths ./.;
 
   options.my.gui.fileManager = {
     default = mkOption {
-      type = nullOr (enum [
+      type = enum [
         "cosmic-files"
         "dolphin"
         "nemo"
-      ]);
-      default =
-        if config.my.gui.enable && osClass == "nixos"
-        then "cosmic-files"
-        else null;
+      ];
+      default = "cosmic-files";
       description = "The file manager to use";
     };
     desktopId = mkOption {
@@ -45,7 +44,7 @@ in {
     };
   };
 
-  config = mkIf (fileManager.default != null) {
+  config = mkIf enable {
     home.packages = [
       (builtins.getAttr fileManager.default pkgs)
     ];

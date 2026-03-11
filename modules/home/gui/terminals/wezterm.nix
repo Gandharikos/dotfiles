@@ -5,7 +5,9 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
+  inherit (config.my) gui;
   cfg = config.my.gui.apps.wezterm;
+  enable = gui.enable && cfg.enable;
 in {
   options.my.gui.apps.wezterm = {
     enable =
@@ -16,7 +18,7 @@ in {
   };
 
   # TODO: Setup wezterm config use nix for more flexibility
-  config = mkIf cfg.enable {
+  config = mkIf enable {
     programs.wezterm = {enable = true;};
 
     xdg.configFile."wezterm" = {

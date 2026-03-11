@@ -6,30 +6,30 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  inherit (lib.lists) optionals;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
+  inherit (config.my) gui;
   cfg = config.my.gui.apps.mpv;
+  enable = gui.enable && cfg.enable;
 in {
   options.my.gui.apps.mpv = {
     enable =
       mkEnableOption "support for mpv"
       // {
-        default = config.my.gui.enable;
+        default = isLinux;
       };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf enable {
     programs.mpv = {
-      enable = isLinux;
-      package = pkgs.mpv;
+      enable = true;
 
       defaultProfiles = ["gpu-hq"];
-      scripts = optionals isLinux (with pkgs.mpvScripts; [
+      scripts = with pkgs.mpvScripts; [
         mpris
         mpvacious
-      ]);
+      ];
     };
 
-    services.plex-mpv-shim.enable = isLinux;
+    services.plex-mpv-shim.enable = true;
   };
 }

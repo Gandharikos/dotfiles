@@ -32,13 +32,13 @@ in {
           optimizeCompressor = true;
         };
       };
+      gui.enable = mkDefault false;
       video.enable = mkForce false;
       game.enable = mkForce false;
       security = {
         enable = false;
         auditd.enable = true;
       };
-      gui.desktop.enable = mkDefault false;
       virtual = {
         enable = mkForce false;
         docker.enable = config.my.gui.enable;
@@ -48,9 +48,6 @@ in {
       yubikey.enable = mkForce false;
     };
     hm.my = {
-      gui.desktop.enable = mkDefault false;
-      gui.terminal.default = null;
-      browser.default = null;
       fastfetch.startOnLogin = mkDefault false;
     };
     wsl = {

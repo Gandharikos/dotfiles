@@ -5,7 +5,7 @@
   ...
 }: let
   inherit (lib.options) mkOption mkEnableOption;
-  inherit (lib.types) enum str bool;
+  inherit (lib.types) enum str;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (lib.meta) getExe;
   inherit (config) my;
@@ -23,14 +23,6 @@ in {
 
   # Desktop configuration options
   options.my.gui.desktop = {
-    enable = mkOption {
-      type = bool;
-      internal = true;
-      readOnly = true;
-      default = my.gui.enable;
-      description = "Internal option that mirrors my.gui.enable";
-    };
-
     type = mkOption {
       type = enum (
         if isLinux

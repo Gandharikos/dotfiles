@@ -6,10 +6,10 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.my.gui) desktop system;
+  inherit (config.my) gui;
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
   dir = "Library/Rime";
-  cfg = system.squirrel;
+  cfg = gui.system.squirrel;
   # version = "2025.04.06";
   # rime-ice = pkgs.fetchFromGitHub {
   #   owner = "iDvel";
@@ -23,11 +23,11 @@ in {
     enable =
       mkEnableOption "squirrel"
       // {
-        default = desktop.enable && isDarwin;
+        default = true;
       };
   };
 
-  config = mkIf (cfg.enable && isDarwin) {
+  config = mkIf (gui.enable && cfg.enable && isDarwin) {
     home.file = {
       ${dir} = {
         source = "${pkgs.rime-ice}/share/rime-data";

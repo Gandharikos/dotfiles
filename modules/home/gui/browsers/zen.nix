@@ -9,7 +9,9 @@
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe';
   inherit (lib.my) withUWSM' isHyprland;
+  inherit (config.my) gui;
   cfg = config.my.gui.apps.zen;
+  enable = gui.enable && cfg.enable;
   zenPkg = inputs.zen.packages.${pkgs.stdenv.hostPlatform.system}.beta;
 in {
   imports = [inputs.zen.homeModules.beta];
@@ -22,7 +24,7 @@ in {
       };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf enable {
     my.gui.apps.firefox.enable = lib.mkDefault true;
     my.gui.browser.desktopId = "org.mozilla.com.zen.browser.desktop";
     programs.zen-browser = {

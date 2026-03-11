@@ -8,8 +8,10 @@
   inherit (lib.modules) mkIf;
   inherit (lib.types) str bool;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
+  inherit (config.my) gui;
   inherit (config.my.gui) terminal;
   cfg = config.my.gui.apps.ghostty;
+  enable = gui.enable && cfg.enable;
   ghostty-shaders = pkgs.stdenv.mkDerivation {
     name = "ghostty-shaders";
     src = pkgs.fetchFromGitHub {
@@ -45,7 +47,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf enable {
     xdg.configFile."ghostty/shaders".source = ghostty-shaders;
 
     programs.ghostty = with config.my.keyboard.keys; {

@@ -5,17 +5,19 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
+  inherit (config.my) gui;
   cfg = config.my.gui.apps.zathura;
+  enable = gui.enable && cfg.enable;
 in {
   options.my.gui.apps.zathura = {
     enable =
       mkEnableOption "Zathura"
       // {
-        default = config.my.gui.enable;
+        default = true;
       };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf enable {
     programs.zathura = with config.my.keyboard.keys; {
       enable = true;
       options = {
