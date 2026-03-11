@@ -6,17 +6,19 @@
       # package = pkgs.treefmt;
       projectRootFile = "flake.nix";
       programs = {
+        # keep-sorted start
+        actionlint.enable = true;
         alejandra.enable = true;
         deadnix.enable = true;
+        keep-sorted.enable = true;
         prettier.enable = true;
+        shellcheck.enable = true;
+        shfmt.enable = true;
         statix.enable = true;
         stylua.enable = true;
-        yamlfmt.enable = true;
-        shfmt.enable = true;
-        shellcheck.enable = true;
-        actionlint.enable = true;
-        keep-sorted.enable = true;
         taplo.enable = true;
+        yamlfmt.enable = true;
+        # keep-sorted end
       };
 
       settings = {
@@ -30,11 +32,21 @@
           "secrets/*"
         ];
         formatter = {
-          deadnix = {priority = 1;};
-
-          statix = {priority = 2;};
+          # keep-sorted start block=yes newline_separated=yes
+          actionlint = {
+            includes = [
+              ".github/workflows/*.yml"
+              ".github/workflows/*.yaml"
+            ];
+          };
 
           alejandra = {priority = 3;};
+
+          deadnix = {priority = 1;};
+
+          keep-sorted = {
+            includes = ["*"];
+          };
 
           prettier = {
             settings = {
@@ -43,30 +55,28 @@
             };
             includes = ["*.{css,html,js,json,jsx,md,mdx,scss,ts,yaml}"];
           };
+
           shellcheck = {
             options = ["--external-sources" "--source-path=SCRIPTDIR"];
             excludes = ["gdb/*" "zsh/*"];
           };
+
           shfmt = {
             includes = ["*.envrc" "*.zshrc"];
             excludes = ["gdb/*" "zsh/*"];
           };
-          actionlint = {
-            includes = [
-              ".github/workflows/*.yml"
-              ".github/workflows/*.yaml"
-            ];
-          };
-          keep-sorted = {
-            includes = ["*"];
-          };
+
+          statix = {priority = 2;};
+
           taplo = {
             options = ["format"];
             includes = ["*.toml"];
           };
+
           yamlfmt = {
             includes = ["*.yml" "*.yaml"];
           };
+          # keep-sorted end
         };
       };
     };

@@ -81,60 +81,63 @@
 
     # `brew install`
     brews = [
-      "reattach-to-user-namespace" # need by tmux
-      "wget"
-      "curl"
+      # keep-sorted start
+
       "aria2" # download tool
-
-      # https://github.com/rgcr/m-cli
-      "m-cli" #  Swiss Army Knife for macOS
-
+      "curl"
+      # misc that nix do not have cache for.
+      "git-trim"
       # commands like `gsed` `gtar` are required by some tools
       "gnu-sed"
       "gnu-tar"
-      # misc that nix do not have cache for.
-      "git-trim"
-      "terraform"
-      "terraformer"
-      # for development
-      "qt@5"
-      "openssh"
-      "tailscale"
+      # https://github.com/rgcr/m-cli
+      "m-cli" #  Swiss Army Knife for macOS
       # deep clearn and optimize your mac
       "mole"
+      "openssh"
+      # for development
+      "qt@5"
+      "reattach-to-user-namespace" # need by tmux
+      "tailscale"
+      "terraform"
+      "terraformer"
+      "wget"
+      # keep-sorted end
     ];
 
     # `brew install --cask`
     casks = [
-      "squirrel-app" # input method for Chinese, rime-squirrel
-      "zen" # web browser
-      # "visual-studio-code" # editor
-      # "telegram" # IM
-      "rustdesk" # remote desktop client
-      # "iina" # video player
-      "raycast" # search
-      # "stats" # beautiful system monitor
-      "eudic" # dictionary
+      # keep-sorted start
       # "spotify" # music
       "1password" # password manager
       "1password-cli"
-      "vlc" # video player
-      "obs" # stream / recoding software
+      # "stats" # beautiful system monitor
+      "eudic" # dictionary
       "ghostty" # terminal
+      "karabiner-elements" # keyboard remap
+      "keycastr" # show keystrokes on screen
+      "obs" # stream / recoding software
+      # "obs" # stream / recoding software
+      # virtualization
+      "orbstack"
+      # "iina" # video player
+      "raycast" # search
+      # "visual-studio-code" # editor
+      # "telegram" # IM
+      "rustdesk" # remote desktop client
+      # sing-box
+      "sfm"
+      "squirrel-app" # input method for Chinese, rime-squirrel
       # "obsidian" # note-taking
       # "miniforge" # Miniconda's community-driven distribution
       # "tencent-lemon" # clean tool
       "surge" # proxy tool
-      "keycastr" # show keystrokes on screen
-      # "obs" # stream / recoding software
-      # virtualization
-      "orbstack"
+      "veracrypt" # disk encryption
+      "vlc" # video player
       # "karabiner-elements" # keyboard remap
       "yubico-authenticator" # for yubikey
-      "veracrypt" # disk encryption
-      # sing-box
-      "sfm"
-      "karabiner-elements" # keyboard remap
+      "zen" # web browser
+      # keep-sorted end
     ];
   };
 }

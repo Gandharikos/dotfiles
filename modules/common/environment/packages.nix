@@ -1,20 +1,18 @@
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
-    # editor
-    neovim
+    # keep-sorted start
+    cmake
+    coreutils
+    curl
     git
     git-lfs
-    wget
-    curl
-    just # use Justfile to simplify nix-darwin's commands
-    rsync
-    cmake
     gnumake
-    # darwin only apps
-    coreutils
-    # nix
+    just # use Justfile to simplify nix-darwin's commands
+    neovim
     nix-prefetch-git
-    # GNU core utilities (rewritten in rust)
+    rsync
     uutils-coreutils-noprefix
+    wget
+    # keep-sorted end
   ];
 }

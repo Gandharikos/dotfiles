@@ -15,20 +15,22 @@ in
         then {
           "/persist" = {
             directories = [
-              ".local/bin"
+              # keep-sorted start
               ".cache/nix"
               ".cache/pre-commit"
               ".config/sops"
-              ".dotfiles"
               ".docker"
+              ".dotfiles"
+              ".local/bin"
               ".secrets"
+              "Desktop"
+              "Dev"
               "Documents"
               "Downloads"
-              "Desktop"
               "Media"
-              "Public"
-              "Dev"
               "Misc"
+              "Public"
+              # keep-sorted end
             ];
           };
         }

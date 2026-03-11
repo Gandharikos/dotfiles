@@ -14,16 +14,7 @@
   home = config.home.homeDirectory;
   # define default applications for some url schemes.
   browser = [
-    "x-scheme-handler/about" # open `about:` url with `browser`
-    "x-scheme-handler/ftp" # open `ftp:` url with `browser`
-    "x-scheme-handler/http"
-    "x-scheme-handler/https"
-    "x-scheme-handler/unknown"
-    "text/html"
-    "text/xml"
-    "application/xml"
-    "application/xhtml+xml"
-    "application/xhtml_xml"
+    # keep-sorted start
     "application/rdf+xml"
     "application/rss+xml"
     "application/x-extension-htm"
@@ -31,24 +22,37 @@
     "application/x-extension-shtml"
     "application/x-extension-xht"
     "application/x-extension-xhtml"
+    "application/xhtml+xml"
+    "application/xhtml_xml"
+    "application/xml"
+    "text/html"
+    "text/xml"
+    "x-scheme-handler/about" # open `about:` url with `browser`
+    "x-scheme-handler/ftp" # open `ftp:` url with `browser`
+    "x-scheme-handler/http"
+    "x-scheme-handler/https"
+    "x-scheme-handler/unknown"
+    # keep-sorted end
   ];
   editor = [
+    # keep-sorted start
     "application/json"
+    "application/x-shellscript"
     "text/english"
     "text/plain"
-    "text/x-makefile"
+    "text/x-c"
+    "text/x-c++"
     "text/x-c++hdr"
     "text/x-c++src"
     "text/x-chdr"
     "text/x-csrc"
     "text/x-java"
+    "text/x-makefile"
     "text/x-moc"
     "text/x-pascal"
     "text/x-tcl"
     "text/x-tex"
-    "application/x-shellscript"
-    "text/x-c"
-    "text/x-c++"
+    # keep-sorted end
   ];
   media = [
     "video/*"
@@ -89,24 +93,28 @@ in {
       enable = true;
       createDirectories = true;
 
+      # keep-sorted start
+      desktop = "${home}/Desktop";
       documents = "${home}/Documents";
       download = "${home}/Downloads";
-      desktop = "${home}/Desktop";
-      videos = "${home}/Media/Videos";
       music = "${home}/Media/Music";
       pictures = "${home}/Media/Pictures";
       publicShare = "${home}/Public/Share";
       templates = "${home}/Public/Templates";
+      videos = "${home}/Media/Videos";
+      # keep-sorted end
       extraConfig = {
-        SCREENSHOTS = "${config.xdg.userDirs.pictures}/Screenshots";
+        # keep-sorted start
         DEV = "${home}/Dev";
         MISC = "''${home}/Misc";
-        WALLPAPERS = "${config.xdg.userDirs.pictures}/Wallpapers";
         NOTES = "${config.xdg.userDirs.documents}/Notes";
-        REPOS = "${home}/Dev/Repos";
         PROJECTS = "${home}/Dev/Projects";
-        WORKSPACES = "${home}/Dev/Workspaces";
+        REPOS = "${home}/Dev/Repos";
+        SCREENSHOTS = "${config.xdg.userDirs.pictures}/Screenshots";
         SECRET = "${home}/.secrets";
+        WALLPAPERS = "${config.xdg.userDirs.pictures}/Wallpapers";
+        WORKSPACES = "${home}/Dev/Workspaces";
+        # keep-sorted end
       };
     };
 
