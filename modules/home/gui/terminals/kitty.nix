@@ -6,9 +6,9 @@
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (config.my.gui) terminal;
-  cfg = config.my.gui.terminals.kitty;
+  cfg = config.my.gui.apps.kitty;
 in {
-  options.my.gui.terminals.kitty = {
+  options.my.gui.apps.kitty = {
     enable =
       mkEnableOption "kitty"
       // {

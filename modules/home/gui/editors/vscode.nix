@@ -6,9 +6,9 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.gui.editors.vscode;
+  cfg = config.my.gui.apps.vscode;
 in {
-  options.my.gui.editors.vscode = {
+  options.my.gui.apps.vscode = {
     enable =
       mkEnableOption "Visual Studio Code"
       // {

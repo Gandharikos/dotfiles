@@ -9,22 +9,22 @@
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe';
   inherit (lib.my) withUWSM' isHyprland;
-  cfg = config.my.gui.browsers.zen;
+  cfg = config.my.gui.apps.zen;
   zenPkg = inputs.zen.packages.${pkgs.stdenv.hostPlatform.system}.beta;
 in {
   imports = [inputs.zen.homeModules.beta];
 
-  options.my.gui.browsers.zen = {
+  options.my.gui.apps.zen = {
     enable =
       mkEnableOption "zen browser"
       // {
-        default = config.my.browser.default == "zen";
+        default = config.my.gui.browser.default == "zen";
       };
   };
 
   config = mkIf cfg.enable {
-    my.gui.browsers.firefox.enable = lib.mkDefault true;
-    my.browser.desktopId = "org.mozilla.com.zen.browser.desktop";
+    my.gui.apps.firefox.enable = lib.mkDefault true;
+    my.gui.browser.desktopId = "org.mozilla.com.zen.browser.desktop";
     programs.zen-browser = {
       enable = true;
       suppressXdgMigrationWarning = true;
@@ -57,7 +57,7 @@ in {
         };
       };
     };
-    my.browser.exec =
+    my.gui.browser.exec =
       if isHyprland config
       then withUWSM' pkgs zenPkg "zen"
       else (getExe' zenPkg "zen");

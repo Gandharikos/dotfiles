@@ -5,9 +5,9 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.gui.terminals.wezterm;
+  cfg = config.my.gui.apps.wezterm;
 in {
-  options.my.gui.terminals.wezterm = {
+  options.my.gui.apps.wezterm = {
     enable =
       mkEnableOption "wezterm"
       // {
