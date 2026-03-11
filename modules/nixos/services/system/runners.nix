@@ -5,9 +5,9 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
-  inherit (config.my.gui) desktop;
+  inherit (config.my) gui;
 in {
-  config = mkIf desktop.enable {
+  config = mkIf gui.enable {
     environment.systemPackages = [pkgs.appimage-run];
 
     # run appimages with appimage-run

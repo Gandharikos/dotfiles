@@ -5,14 +5,14 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.my.gui) desktop;
+  inherit (config.my) gui;
   cfg = config.my.services.tor;
 in {
   options.my.services.tor = {
     enable =
       mkEnableOption "Enable Tor"
       // {
-        default = desktop.enable;
+        default = gui.enable;
       };
   };
 

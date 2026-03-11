@@ -5,12 +5,13 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.my) mkAerospaceWorkspaces;
-  cfg = config.my.gui.desktop;
+  inherit (config.my) gui;
+  cfg = gui.desktop;
   inherit (cfg.general.workspace) number;
   hyper = "cmd-alt-ctrl";
 in
   with config.my.keyboard.keys; {
-    config = mkIf (cfg.enable && cfg.type == "darwin" && cfg.default == "aerospace") {
+    config = mkIf (gui.enable && cfg.type == "darwin" && cfg.default == "aerospace") {
       programs.aerospace = {
         enable = true;
         launchd.enable = true;

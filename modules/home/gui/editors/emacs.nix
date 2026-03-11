@@ -12,7 +12,7 @@ in {
     enable =
       mkEnableOption "Enable Emacs"
       // {
-        default = config.my.gui.enable;
+        default = config.my.editor == "emacs";
       };
   };
 

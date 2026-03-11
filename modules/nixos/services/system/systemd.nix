@@ -5,9 +5,9 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.attrsets) genAttrs;
-  inherit (config.my.gui) desktop;
+  inherit (config.my) gui;
 in {
-  config = mkIf desktop.enable {
+  config = mkIf gui.enable {
     systemd = {
       settings.Manager = {
         DefaultTimeoutStartSec = "15s";

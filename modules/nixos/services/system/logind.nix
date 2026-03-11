@@ -4,7 +4,6 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
-  inherit (config.my.gui) desktop;
   isLaptop = config.my.machine.type == "laptop";
 in {
   config = mkIf isLaptop {
@@ -16,7 +15,7 @@ in {
     };
 
     # https://wiki.debian.org/Suspend#Disable_suspend_and_hibernation
-    systemd.sleep.extraConfig = mkIf desktop.enable ''
+    systemd.sleep.extraConfig = mkIf config.my.gui.enable ''
       AllowSuspend=no
       AllowHibernation=no
       AllowSuspendThenHibernate=no

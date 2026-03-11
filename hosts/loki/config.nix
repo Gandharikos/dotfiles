@@ -59,9 +59,9 @@
   };
 
   hm.my = {
-    browser.default = "google-chrome";
-    terminal.size = 12;
-    desktop.apps = {
+    gui.browser.default = "google-chrome";
+    gui.terminal.size = 12;
+    gui.apps = {
       chrome.enable = true;
       firefox.enable = lib.mkForce false;
       zen.enable = lib.mkForce false;

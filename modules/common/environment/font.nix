@@ -4,10 +4,10 @@
   lib,
   ...
 }: let
-  cfg = config.my.gui.desktop;
+  inherit (config.my) gui;
   inherit (lib.modules) mkIf;
 in {
-  config = mkIf cfg.enable {
+  config = mkIf gui.enable {
     fonts = {
       packages = with pkgs; [
         # icon fonts

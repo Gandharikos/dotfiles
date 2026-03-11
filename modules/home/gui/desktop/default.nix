@@ -7,7 +7,6 @@
   inherit (lib.my) scanPaths;
   inherit (lib.options) mkOption;
   inherit (lib.types) int enum nullOr;
-  inherit (config.my.gui) desktop;
 in {
   imports = scanPaths ./.;
 
@@ -15,7 +14,7 @@ in {
     lock = mkOption {
       type = nullOr (enum ["hyprlock" "dms"]);
       default =
-        if osClass == "nixos" && desktop.enable
+        if osClass == "nixos" && config.my.gui.enable
         then "dms"
         else null;
       description = "The lock screen to use";
@@ -23,7 +22,7 @@ in {
     idle = mkOption {
       type = nullOr (enum ["hypridle"]);
       default =
-        if osClass == "nixos" && desktop.enable
+        if osClass == "nixos" && config.my.gui.enable
         then "hypridle"
         else null;
       description = "The idle tool to use";
@@ -31,7 +30,7 @@ in {
     shot = mkOption {
       type = nullOr (enum ["hyprshot" "grimblast" "dms"]);
       default =
-        if osClass == "nixos" && desktop.enable
+        if osClass == "nixos" && config.my.gui.enable
         then "grimblast"
         else null;
       description = "The screenshot tool to use";
