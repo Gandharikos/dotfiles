@@ -5,9 +5,11 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
+  inherit (config.my) gui;
   cfg = config.my.gui.desktop.polkit;
 in {
-  config = mkIf (cfg == "hyprpolkit") {
+  config = mkIf (isLinux && gui.enable && cfg == "hyprpolkit") {
     systemd.user.services."polkit-hyprpolkitagent" = {
       # It is required for GUI applications to be able to request elevated privileges.
       Unit = {

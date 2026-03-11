@@ -5,9 +5,11 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
+  inherit (config.my) gui;
   cfg = config.my.gui.desktop.polkit;
 in {
-  config = mkIf (cfg == "mate") {
+  config = mkIf (isLinux && gui.enable && cfg == "mate") {
     systemd.user.services.polkit-mate-authentication-agent-1 = {
       Unit.Description = "MATE PolicyKit agent";
 

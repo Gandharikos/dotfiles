@@ -5,9 +5,11 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
+  inherit (config.my) gui;
   cfg = config.my.gui.desktop.polkit;
 in {
-  config = mkIf (cfg == "pantheon") {
+  config = mkIf (isLinux && gui.enable && cfg == "pantheon") {
     systemd.user.services.polkit-pantheon-authentication-agent-1 = {
       Unit.Description = "Pantheon PolicyKit agent";
 
