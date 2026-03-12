@@ -1,5 +1,4 @@
 {
-  self,
   config,
   lib,
   pkgs,
@@ -10,8 +9,6 @@
   cfg = config.my.gemini-cli;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.home) homeDirectory;
-  inherit (config.my) name;
   # inherit (lib.meta) getExe';
   # cat' = getExe' pkgs.coreutils "cat";
   # cloudProjectPath = config.sops.secrets.google_cloud_project.path;
@@ -66,20 +63,6 @@ in {
         commands =
           sharedAiTools.geminiCli.commands
           // sharedAiTools.geminiCli.agents;
-      };
-    };
-    sops.secrets = {
-      "gemini-oauth_creds" = {
-        sopsFile = "${self}/secrets/${name}/gemini-oauth_creds";
-        path = "${homeDirectory}/.gemini/oauth_creds.json";
-        mode = "0400";
-        format = "binary";
-      };
-      "gemini-google_accounts" = {
-        sopsFile = "${self}/secrets/${name}/gemini-google_accounts";
-        path = "${homeDirectory}/.gemini/google_accounts.json";
-        mode = "0400";
-        format = "binary";
       };
     };
   };
