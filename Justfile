@@ -29,7 +29,7 @@ rollback host=`uname -n`:
 # Deploy the system configuration to a remote host
 [group('nix')]
 deploy host *args:
-  deploy .#{{host}} --skip-checks --remote-build --interactive-sudo true --ssh-opts=-tt {{args}}
+  deploy .#{{host}} --skip-checks --remote-build --interactive-sudo true {{args}}
 
 # Install nixos on a machine with an existing operating system
 [group('nix')]
