@@ -8,7 +8,7 @@
   pkgs,
   ...
 }: let
-  cfg = config.my.develop.r;
+  cfg = config.my.langs.r;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
 
@@ -62,7 +62,7 @@
     AER # Datasets from "Applied Econometrics with R"
   ];
 in {
-  options.my.develop.r = {
+  options.my.langs.r = {
     enable = mkEnableOption "R development environment";
     xdg.enable = mkEnableOption "R XDG environment variables";
   };

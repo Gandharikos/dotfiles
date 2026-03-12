@@ -1,7 +1,7 @@
 {lib, ...}: {
   imports = lib.my.scanPaths ./.;
 
-  options.my.develop = {
+  options.my.langs = {
     enable =
       lib.mkEnableOption "development environment"
       // {

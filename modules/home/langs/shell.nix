@@ -10,11 +10,11 @@
   pkgs,
   ...
 }: let
-  cfg = config.my.develop.shell;
+  cfg = config.my.langs.shell;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkMerge mkIf;
 in {
-  options.my.develop.shell = {
+  options.my.langs.shell = {
     enable = mkEnableOption "Shell development environment";
     xdg.enable = mkEnableOption "Shell XDG environment variables";
   };

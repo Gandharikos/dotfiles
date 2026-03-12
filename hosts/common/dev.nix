@@ -1,5 +1,5 @@
 {
-  my.develop = {
+  my.langs = {
     python = {
       enable = true;
       xdg.enable = true;

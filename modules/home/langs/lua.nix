@@ -10,11 +10,11 @@
   pkgs,
   ...
 }: let
-  cfg = config.my.develop.lua;
+  cfg = config.my.langs.lua;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkMerge mkIf;
 in {
-  options.my.develop.lua = {
+  options.my.langs.lua = {
     enable = mkEnableOption "Lua development environment";
     xdg.enable = mkEnableOption "Lua XDG environment variables";
     love2D.enable = mkEnableOption "Love2D game development";

@@ -12,12 +12,12 @@
   pkgs,
   ...
 }: let
-  cfg = config.my.develop.rust;
+  cfg = config.my.langs.rust;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkMerge mkIf;
   inherit (config) xdg;
 in {
-  options.my.develop.rust = {
+  options.my.langs.rust = {
     enable = mkEnableOption "Rust development environment";
     xdg.enable = mkEnableOption "Rust XDG environment variables";
   };

@@ -9,11 +9,11 @@
   pkgs,
   ...
 }: let
-  cfg = config.my.develop.python;
+  cfg = config.my.langs.python;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
 in {
-  options.my.develop.python = {
+  options.my.langs.python = {
     enable = mkEnableOption "Python development environment";
     xdg.enable = mkEnableOption "Python XDG environment variables";
   };

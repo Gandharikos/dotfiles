@@ -216,6 +216,34 @@ in {
             ".conda"
           ];
         })
+        (mkIf hm.langs.enable {
+          directories = [
+            "go"
+          ];
+        })
+        (mkIf hm.langs.java.enable {
+          directories = [
+            ".gradle"
+            ".m2"
+          ];
+        })
+        (mkIf hm.langs.node.enable {
+          directories = [
+            ".npm"
+          ];
+        })
+        (mkIf hm.langs.python.enable {
+          directories = [
+            ".cache/uv"
+            ".local/pipx"
+            ".local/share/uv"
+          ];
+        })
+        (mkIf hm.langs.rust.enable {
+          directories = [
+            ".cargo"
+          ];
+        })
         (mkIf hm.codex.enable {
           directories = [
             ".codex"

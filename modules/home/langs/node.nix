@@ -8,7 +8,7 @@
   pkgs,
   ...
 }: let
-  cfg = config.my.develop.node;
+  cfg = config.my.langs.node;
   nodePkg = pkgs.nodejs_latest;
   inherit (lib.modules) mkMerge mkIf;
   inherit (lib.options) mkEnableOption;
@@ -16,7 +16,7 @@
   inherit (config) xdg;
   yarn' = getExe pkgs.yarn;
 in {
-  options.my.develop.node = {
+  options.my.langs.node = {
     enable = mkEnableOption "Node.js development environment";
     xdg.enable = mkEnableOption "Node.js XDG environment variables";
   };

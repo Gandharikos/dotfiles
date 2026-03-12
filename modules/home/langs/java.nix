@@ -6,11 +6,11 @@
   config,
   ...
 }: let
-  cfg = config.my.develop.java;
+  cfg = config.my.langs.java;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkMerge mkIf;
 in {
-  options.my.develop.java = {
+  options.my.langs.java = {
     enable = mkEnableOption "java development environment";
     xdg.enable = mkEnableOption "java XDG environment variables";
   };
