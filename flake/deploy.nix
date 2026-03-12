@@ -6,9 +6,6 @@
   ...
 }: let
   inherit (config.flake-hosts) hosts;
-  hostnames = {
-    loki = "loki.local";
-  };
 
   # Keep only deployable systems based on host config flag
   deployableSystems =
@@ -19,16 +16,18 @@ in {
   flake.deploy = {
     autoRollback = true;
     magicRollback = true;
+    fastConnection = true;
 
     # then create a list of nodes that we want to deploy that we can pass to the deploy configuration
     nodes =
       builtins.mapAttrs (name: host: let
         node = self."${host.class}Configurations".${name};
       in {
-        hostname = hostnames.${name} or name;
+        # Use hostname directly - SSH config handles .local resolution
+        hostname = name;
         profiles.system = {
-          user = "root";
-          sshUser = node.config.my.name or "root";
+          user = node.config.my.name;
+          sshUser = node.config.my.name;
           path = inputs.deploy-rs.lib.${host.system}.activate.${host.class} node;
         };
       })

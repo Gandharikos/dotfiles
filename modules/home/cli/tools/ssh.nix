@@ -33,6 +33,23 @@ in {
           # It has the same effect as adding cli option `ssh -A user@host`
           forwardAgent = true;
         };
+        # NixOS hosts - map hostname to hostname.local for mDNS
+        "loki" = {
+          hostname = "loki.local";
+          forwardAgent = true;
+        };
+        "sigurd" = {
+          hostname = "sigurd.local";
+          forwardAgent = true;
+        };
+        "ymir" = {
+          hostname = "ymir.local";
+          forwardAgent = true;
+        };
+        "nidhogg" = {
+          hostname = "nidhogg.local";
+          forwardAgent = true;
+        };
         "github.com" = {
           hostname = "github.com";
           user = "git";
