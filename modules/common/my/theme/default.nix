@@ -1,13 +1,11 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }: let
   inherit (lib.my) scanPaths relativeToConfig;
   inherit (lib.options) mkOption;
   inherit (lib.types) enum str nullOr package path coercedTo attrs;
-  inherit (pkgs.stdenv.hostPlatform) isDarwin;
   inherit (config) my;
 in {
   imports = scanPaths ./.;
@@ -45,7 +43,6 @@ in {
         description = "The palette of the colorscheme";
       };
     };
-    # TODO: wallpaper engine support?
     avatar = mkOption {
       type = nullOr (coercedTo package toString path);
       default =
@@ -58,14 +55,8 @@ in {
       type = nullOr (coercedTo package toString path);
       # we don't set wallpaper on macos, because it doesn't work
       default =
-        if isDarwin
-        then null
-        else if my.gui.enable
+        if my.gui.enable
         then ./nix.png
-        # pkgs.fetchurl {
-        #   url = "https://github.com/huwqchn/wallpapers/blob/main/unorganized/nix.png";
-        #   sha256 = "11qgd9k79fhpsk7x0q3cwin8i1ycf9kcd6c3si7sdck78rdhdwl8";
-        # }
         else null;
       description = "The wallpaper of the system";
     };
