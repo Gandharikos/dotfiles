@@ -14,7 +14,7 @@
   in
     flake-parts.lib.mkFlake {inherit inputs specialArgs;} {
       systems = import systems;
-      imports = [./flakes];
+      imports = [./flake];
     };
 
   inputs = {

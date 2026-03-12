@@ -109,7 +109,7 @@ management.
 
 ```
 📁 ~/.dotfiles/
-├── 📁 flakes/          # Flake-parts modules
+├── 📁 flake/           # Flake-parts modules
 │   ├── hosts.nix       # Host definitions
 │   ├── packages.nix    # Custom packages
 │   └── devshells.nix   # Development shells
@@ -362,7 +362,7 @@ sudo journalctl -u home-manager-username.service
 
 1. Create `hosts/hostname/` directory
 2. Add `default.nix` and `config.nix`
-3. Update `flakes/hosts.nix` with new host definition
+3. Update `flake/hosts.nix` with new host definition
 4. Test build before committing
 
 ## 📖 References
