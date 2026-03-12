@@ -19,8 +19,14 @@ in {
 
   config = mkIf cfg.enable {
     preservation.enable = true;
+
     # preservation requires initrd systemd.
     boot.initrd.systemd.enable = true;
+
+    environment.systemPackages = [
+      # `sudo ncdu -x /`
+      pkgs.ncdu
+    ];
 
     fileSystems."/persist".neededForBoot = true; # required by preservation
     fileSystems."/var/log".neededForBoot = true; # required by nixos
@@ -393,7 +399,7 @@ in {
 
     system.activationScripts = {
       # NOTE: we use nixos-anywhere with copy-host-keys arg
-      # so we need copy these ssh keys to /persist on frest installs
+      # so we need copy these ssh keys to /persist on fresh installs
       persistent-ssh.text = let
         sshKeys = [
           {
@@ -435,10 +441,5 @@ in {
         fi
       '';
     };
-
-    environment.systemPackages = [
-      # `sudo ncdu -x /`
-      pkgs.ncdu
-    ];
   };
 }
