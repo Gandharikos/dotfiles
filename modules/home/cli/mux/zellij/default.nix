@@ -99,9 +99,6 @@ in {
 
     home = {
       shellAliases.z = "zellij";
-      persistence."/persist".directories = mkIf (config.home ? persistence) [
-        ".local/share/zellij"
-      ];
     };
   };
 }

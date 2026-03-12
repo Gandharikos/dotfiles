@@ -40,9 +40,6 @@ in {
 
     home = {
       packages = with pkgs; [cloudflare-warp];
-      persistence."/persist" = {
-        directories = [".local/share/warp"];
-      };
     };
   };
 }

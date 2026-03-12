@@ -265,12 +265,5 @@ in {
         };
       };
     };
-
-    home.persistence."/persist" = {
-      directories = [
-        ".mozilla/firefox"
-        ".cache/mozilla/firefox"
-      ];
-    };
   };
 }

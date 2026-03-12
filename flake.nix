@@ -99,7 +99,7 @@
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
 
     # persistent
-    impermanence.url = "github:nix-community/impermanence";
+    preservation.url = "github:nix-community/preservation";
 
     # secure boot
     lanzaboote = {

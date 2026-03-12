@@ -68,13 +68,6 @@ in {
           // sharedAiTools.geminiCli.agents;
       };
     };
-
-    home = {
-      persistence."/persist".directories = [
-        ".gemini"
-      ];
-    };
-
     sops.secrets = {
       "gemini-oauth_creds" = {
         sopsFile = "${self}/secrets/${name}/gemini-oauth_creds";

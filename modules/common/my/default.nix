@@ -8,7 +8,6 @@
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.types) enum str singleLineStr;
-  inherit (config) my;
 in {
   imports = scanPaths ./.;
 
@@ -59,9 +58,6 @@ in {
           default = true;
         };
     };
-    persistence = {
-      enable = mkEnableOption "persistence"; # must use tmpfs for /
-    };
     stateVersion = mkOption {
       internal = true;
       type = str;
@@ -69,16 +65,4 @@ in {
       description = "The version of my system";
     };
   };
-
-  config.assertions = [
-    {
-      assertion =
-        config.my.persistence.enable
-        -> (my.machine.type
-          == "workstation"
-          || my.machine.type == "laptop"
-          || my.machine.type == "desktop")
-        && isLinux;
-    }
-  ];
 }

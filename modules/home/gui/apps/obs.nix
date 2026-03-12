@@ -34,14 +34,5 @@ in {
         wlrobs
       ];
     };
-
-    home.persistence."/persist" = {
-      directories = [
-        {
-          directory = ".config/obs-studio";
-          method = "symlink";
-        }
-      ];
-    };
   };
 }

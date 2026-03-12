@@ -31,10 +31,6 @@ in {
         '';
         executable = false;
       };
-
-      persistence."/persist".directories = [
-        ".conda"
-      ];
     };
   };
 }

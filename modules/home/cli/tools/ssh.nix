@@ -69,10 +69,6 @@ in {
       ];
 
       file.".ssh/id_ed25519.pub".source = "${self}/secrets/core/id_ed25519.pub";
-
-      persistence = {
-        "/persist".directories = [".ssh"];
-      };
     };
   };
 }

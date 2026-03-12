@@ -256,10 +256,6 @@ in
 
       home = {
         inherit shellAliases;
-
-        persistence."/persist".directories = [
-          ".local/state/lazygit"
-        ];
       };
     };
   }

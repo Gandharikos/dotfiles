@@ -240,10 +240,5 @@ in {
         };
       };
     };
-
-    home.persistence."/persist".directories = [
-      ".local/share/fish"
-      ".cache/fish"
-    ];
   };
 }

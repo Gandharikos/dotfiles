@@ -83,9 +83,6 @@ in {
 
     home = {
       inherit shellAliases;
-      persistence."/persist".directories = [
-        ".tmux"
-      ];
     };
   };
 }

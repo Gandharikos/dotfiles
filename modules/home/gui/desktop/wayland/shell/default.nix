@@ -194,15 +194,5 @@ in {
           // screenshotBinds
           // xf86Binds;
     };
-
-    home.persistence."/persist".directories = [
-      ".config/DankMaterialShell"
-      ".local/state/DankMaterialShell"
-      ".cache/DankMaterialShell"
-      ".config/dgop"
-      ".local/share/color-schemes"
-      ".cache/quickshell"
-      ".config/cava"
-    ];
   };
 }

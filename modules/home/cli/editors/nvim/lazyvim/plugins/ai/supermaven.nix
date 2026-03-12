@@ -30,9 +30,5 @@ in {
       mode = "0400";
       format = "binary";
     };
-
-    home.persistence."/persist".directories = [
-      ".local/share/supermaven"
-    ];
   };
 }

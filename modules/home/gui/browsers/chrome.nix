@@ -21,13 +21,6 @@ in {
   config = mkIf enable {
     home = {
       packages = with pkgs; [google-chrome];
-
-      persistence = {
-        "/persist".directories = [
-          ".config/google-chrome"
-          ".cache/google-chrome"
-        ];
-      };
     };
   };
 }

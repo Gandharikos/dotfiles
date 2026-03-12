@@ -23,7 +23,7 @@ in {
   hm = {
     imports = [../home];
     my = {
-      inherit (my) name fullName email shell home keyboard theme persistence;
+      inherit (my) name fullName email shell home keyboard theme;
 
       # We do not inherit `my` directly from `config` because NixOS declares options that should not flow into home-manager.
       machine = {

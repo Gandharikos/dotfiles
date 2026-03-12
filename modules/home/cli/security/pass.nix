@@ -64,9 +64,5 @@ in {
         browsers = ["chrome" "chromium" "firefox"];
       };
     };
-
-    home.persistence = {
-      "/persist".directories = [".local/share/password-store"];
-    };
   };
 }

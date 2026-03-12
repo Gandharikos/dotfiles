@@ -38,10 +38,6 @@ in {
 
     home = {
       inherit shellAliases;
-
-      persistence."/persist".directories = [
-        ".cache/bat"
-      ];
     };
 
     # Custom batpipe viewers

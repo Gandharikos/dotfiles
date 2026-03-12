@@ -22,10 +22,6 @@ in {
   config = mkIf enable {
     home = {
       packages = with pkgs; [vlc];
-
-      persistence."/persist" = {
-        directories = [".config/vlc"];
-      };
     };
   };
 }

@@ -63,8 +63,5 @@ in {
       if isHyprland config
       then withUWSM' pkgs zenPkg "zen"
       else (getExe' zenPkg "zen");
-    home.persistence = {
-      "/persist".directories = [".config/zen" ".cache/zen"];
-    };
   };
 }

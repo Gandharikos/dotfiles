@@ -53,9 +53,5 @@ in {
         prompt = "enabled";
       };
     };
-
-    home.persistence."/persist".directories = [
-      ".config/gh"
-    ];
   };
 }

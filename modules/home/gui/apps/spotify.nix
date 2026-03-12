@@ -126,10 +126,6 @@ in {
         ];
       };
 
-      home.persistence."/persist" = {
-        directories = [".cache/spotify-player"];
-      };
-
       sops.secrets = {
         spotify-player = {
           sopsFile = "${self}/secrets/${name}/spotify-player";

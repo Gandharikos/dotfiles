@@ -155,10 +155,6 @@ in {
 
     home = {
       inherit shellAliases;
-
-      persistence."/persist".directories = [
-        ".cache/fastfetch"
-      ];
     };
 
     xdg.configFile."fastfetch/pngs".source =

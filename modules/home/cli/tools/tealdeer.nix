@@ -25,8 +25,5 @@ in {
         };
       };
     };
-    home.persistence."/persist".directories = [
-      ".cache/tealdeer"
-    ];
   };
 }

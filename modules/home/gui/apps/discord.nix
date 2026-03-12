@@ -60,14 +60,5 @@ in {
         };
       };
     };
-
-    home.persistence."/persist" = {
-      directories = [
-        ".config/Discord"
-        ".config/discord"
-        ".config/vesktop"
-        ".config/vencord"
-      ];
-    };
   };
 }
