@@ -69,10 +69,17 @@ in {
       ];
     };
 
-    # Will activate home-manager profiles for each user upon login
-    # This is useful when using ephemeral installations
+    # Ensure profile symlinks exist on ephemeral $HOME.
+    # Home Manager activation runs from the system service on NixOS.
     environment.loginShellInit = ''
-      [ -d "$HOME/.nix-profile" ] || /nix/var/nix/profiles/per-user/$USER/home-manager/activate &> /dev/null
+      system_profile="/etc/profiles/per-user/$USER"
+      profile_link="$HOME/.local/state/nix/profiles/profile"
+
+      if [ -e "$system_profile" ] || [ -L "$system_profile" ]; then
+        mkdir -p "$(dirname "$profile_link")"
+        [ -e "$profile_link" ] || ln -sfn "$system_profile" "$profile_link"
+        [ -e "$HOME/.nix-profile" ] || ln -sfn "$profile_link" "$HOME/.nix-profile"
+      fi
     '';
 
     system.activationScripts = {
