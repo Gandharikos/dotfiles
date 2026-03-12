@@ -21,8 +21,7 @@
       extraConfig = ''
         set -g @continuum-boot 'off'
         set -g @continuum-restore 'on'
-        # Save frequently so reboots do not race the default 15m interval.
-        set -g @continuum-save-interval '1'
+        set -g @continuum-save-interval '10'
       '';
     }
     {

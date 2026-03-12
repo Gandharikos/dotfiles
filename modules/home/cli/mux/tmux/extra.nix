@@ -194,10 +194,6 @@ in {
     bind-key -T copy-mode-vi 'C-${l}' select-pane -R
     bind-key -T copy-mode-vi 'C-\' select-pane -l
 
-    # Theme/status settings above overwrite status-right after plugin load.
-    # Re-run continuum so it can inject autosave interpolation.
-    run-shell ${pkgs.tmuxPlugins.continuum}/share/tmux-plugins/continuum/continuum.tmux
-
     ${optionalString isDarwin ''
       set-option -g default-command "${getExe' pkgs.reattach-to-user-namespace "reattach-to-user-namespace"} -l ${shell}"
     ''}
