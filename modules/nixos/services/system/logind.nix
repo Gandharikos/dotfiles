@@ -15,11 +15,11 @@ in {
     };
 
     # https://wiki.debian.org/Suspend#Disable_suspend_and_hibernation
-    systemd.sleep.extraConfig = mkIf config.my.gui.enable ''
-      AllowSuspend=no
-      AllowHibernation=no
-      AllowSuspendThenHibernate=no
-      AllowHybridSleep=no
-    '';
+    systemd.sleep.settings.Sleep = mkIf (!config.my.gui.enable) {
+      AllowSuspend = false;
+      AllowHibernation = false;
+      AllowSuspendThenHibernate = false;
+      AllowHybridSleep = false;
+    };
   };
 }
