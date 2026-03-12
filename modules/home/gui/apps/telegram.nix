@@ -11,11 +11,7 @@
   enable = gui.enable && cfg.enable;
 in {
   options.my.gui.apps.telegram = {
-    enable =
-      mkEnableOption "Telegram"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Telegram";
   };
 
   config = mkIf enable {
