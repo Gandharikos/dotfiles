@@ -52,8 +52,8 @@ in {
 
     systemd.services."update-mihomo-config" = {
       description = "Update mihomo subscription config";
-      script = updateScript;
       serviceConfig = {
+        ExecStart = updateScript;
         Type = "oneshot";
         User = "root";
       };
