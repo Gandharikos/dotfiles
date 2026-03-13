@@ -49,7 +49,7 @@ in
               # ",XF86PowerOff, exec, ags -t powermenu"
               # "$mod, U, exec, XDG_CURRENT_DESKTOP=GNOME gnome-control-center"
 
-              "$mod, J, Toggle Split, togglesplit,"
+              "$mod, J, Toggle Split, layoutmsg, togglesplit"
               "$mod, Z, Bring to Top, alterzorder, top"
               "$mod SHIFT, Z, Send to Bottom, alterzorder, bottom"
               "$mod SHIFT, F, Toggle Floating, togglefloating,"
@@ -134,11 +134,12 @@ in
 
           # Bind: repeat while holding
           bindde = [
-            # Window split ratio
-            "$mod, Minus, Decrease Split Ratio, splitratio, -0.1"
-            "$mod, Equal, Increase Split Ratio, splitratio, 0.1"
-            "$mod, Semicolon, Decrease Split Ratio, splitratio, -0.1"
-            "$mod, Apostrophe, Increase Split Ratio, splitratio, 0.1"
+            # Hyprland removed the splitratio dispatcher; use resizeactive for
+            # equivalent split adjustment on the focused tiled window.
+            "$mod, Minus, Decrease Horizontal Split, resizeactive, -20 0"
+            "$mod, Equal, Increase Horizontal Split, resizeactive, 20 0"
+            "$mod, Semicolon, Decrease Vertical Split, resizeactive, 0 -20"
+            "$mod, Apostrophe, Increase Vertical Split, resizeactive, 0 20"
             # resizing the active window
             "$mod CTRL, ${h}, Resize Window Left, resizeactive, 10 0"
             "$mod CTRL, ${j}, Resize Window Down, resizeactive, 0 10"

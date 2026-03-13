@@ -169,15 +169,6 @@
 
     # catppuccin.url = "github:catppuccin/nix";
 
-    # hyprwm
-    hyprland = {
-      url = "github:hyprwm/hyprland";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        pre-commit-hooks.follows = "pre-commit-hooks";
-      };
-    };
-
     # niri
     niri = {
       url = "github:sodiboo/niri-flake";

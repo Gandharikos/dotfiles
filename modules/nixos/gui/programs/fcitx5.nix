@@ -29,6 +29,7 @@ in {
           fcitx5-mozc
           fcitx5-pinyin-zhwiki
           libsForQt5.fcitx5-qt
+          qt6Packages.fcitx5-qt
           (fcitx5-rime.override {
             rimeDataPkgs = with pkgs; [
               rime-data

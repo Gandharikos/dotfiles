@@ -47,13 +47,12 @@ in {
       type = nullOr (coercedTo package toString path);
       default =
         if my.gui.enable
-        then (relativeToConfig "avatars/pain.png")
+        then (relativeToConfig "avatars/makima.jpg")
         else null;
       description = "The avatar of the user";
     };
     wallpaper = mkOption {
       type = nullOr (coercedTo package toString path);
-      # we don't set wallpaper on macos, because it doesn't work
       default =
         if my.gui.enable
         then ./nix.png

@@ -10,7 +10,7 @@
   inherit (lib.lists) optionals;
   inherit (lib.meta) getExe';
   inherit (lib.my) isWayland isHyprland;
-  inherit (config.my.theme) avatar wallpaper;
+  inherit (config.my.theme) wallpaper;
   inherit (config.my.keyboard) keys;
 
   enable = isWayland config;
@@ -58,15 +58,9 @@ in {
       pkgs.vimPlugins.base16-nvim
     ];
     wayland.windowManager.hyprland.settings = with keys; {
-      exec-once = let
-        avatarCmds = optionals (avatar != null) [
-          (dms' "profile setImage ${avatar}")
-        ];
-        wallpaperCmds = optionals (wallpaper != null) [
-          (dms' "wallpaper set ${wallpaper}")
-        ];
-      in
-        avatarCmds ++ wallpaperCmds;
+      exec-once = optionals (wallpaper != null) [
+        (dms' "wallpaper set ${wallpaper}")
+      ];
       bindd = let
         spotlight = dms' "spotlight toggle";
         clipboard = dms' "clipboard toggle";
