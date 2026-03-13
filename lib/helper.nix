@@ -167,12 +167,6 @@
     uwsm' = lib.getExe pkgs.uwsm;
     program' = lib.getExe' package program;
   in "${uwsm'} app -- ${program'}";
-
-  isHyprland = conf: isWayland conf && conf.my.gui.desktop.default == "hyprland";
-
-  isWayland = conf: conf.my.gui.enable && conf.my.gui.desktop.type == "wayland";
-
-  isXorg = conf: conf.my.gui.enable && conf.my.gui.desktop.type == "xorg";
 in {
-  inherit mkWorkspaces mkHyprWorkspaces mkHyprMoveTo mkAerospaceWorkspaces vec2 toggle toggle' runOnce runOnce' withUWSM withUWSM' isHyprland isWayland isXorg;
+  inherit mkWorkspaces mkHyprWorkspaces mkHyprMoveTo mkAerospaceWorkspaces vec2 toggle toggle' runOnce runOnce' withUWSM withUWSM';
 }

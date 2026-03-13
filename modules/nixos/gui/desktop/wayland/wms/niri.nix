@@ -1,21 +1,31 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }: let
-  inherit (lib.meta) getExe';
+  inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (lib.my) isWayland;
-  enable = isWayland config && config.my.gui.desktop.default == "niri";
-  niriPkg = config.programs.niri.package or pkgs.niri;
-  niriSession = getExe' niriPkg "niri-session";
+  inherit (config.my.gui) desktop;
+  cfg = desktop.niri;
 in {
-  config = mkIf enable {
-    programs.niri.enable = true;
-    services.displayManager.defaultSession = "niri";
+  options.my.gui.desktop.niri = {
+    enable =
+      mkEnableOption "Enable Niri"
+      // {
+        default = desktop.wayland.enable && desktop.default == "niri";
+        internal = true;
+        readOnly = true;
+      };
+  };
 
-    # Ensure login uses niri-session so env vars and portals are set up correctly.
-    my.gui.desktop.exec = niriSession;
+  config = mkIf cfg.enable {
+    programs.niri.enable = true;
+
+    programs.uwsm.waylandCompositors.niri = {
+      prettyName = "niri";
+      comment = "Niri compositor managed by UWSM";
+      binPath = "/run/current-system/sw/bin/niri";
+      extraArgs = ["--session"];
+    };
   };
 }

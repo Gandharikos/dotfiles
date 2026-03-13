@@ -6,8 +6,7 @@
 }: let
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf;
-  inherit (lib.my) isWayland;
-  enable = isWayland config;
+  inherit (config.my.gui.desktop.wayland) enable;
 in {
   config = mkIf enable {
     systemd.services.seatd = {

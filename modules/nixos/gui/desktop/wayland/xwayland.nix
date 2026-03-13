@@ -4,8 +4,7 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
-  inherit (lib.my) isWayland;
-  enable = isWayland config;
+  inherit (config.my.gui.desktop.wayland) enable;
 in {
   config = mkIf enable {
     programs.xwayland.enable = true;

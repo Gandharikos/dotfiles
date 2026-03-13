@@ -6,7 +6,6 @@
 }: let
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf mkDefault;
-  inherit (lib.my) isWayland;
   cfg = config.my.gui.desktop;
   portal =
     if cfg.default == "hyprland"
@@ -19,7 +18,7 @@
     then [pkgs.xdg-desktop-portal-gnome]
     else [pkgs.xdg-desktop-portal-wlr];
   wlrEnable = cfg.default != "niri";
-  enable = isWayland config;
+  inherit (cfg.wayland) enable;
 in {
   config = mkIf enable {
     xdg.portal = {

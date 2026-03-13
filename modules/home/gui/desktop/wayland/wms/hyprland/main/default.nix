@@ -6,7 +6,7 @@
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) listOf enum;
   inherit (lib.modules) mkIf;
-  inherit (lib.my) scanPaths isHyprland;
+  inherit (lib.my) scanPaths;
   inherit (config.my.gui) desktop;
   cfg = desktop.hyprland;
 in {
@@ -16,7 +16,7 @@ in {
     enable =
       mkEnableOption "Enable Hyprland"
       // {
-        default = isHyprland config;
+        default = desktop.wayland.enable && desktop.default == "hyprland";
         internal = true;
         readOnly = true;
       };

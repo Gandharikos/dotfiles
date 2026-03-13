@@ -6,10 +6,10 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe;
-  inherit (lib.my) runOnce isWayland;
+  inherit (lib.my) runOnce;
   hyprshot' = runOnce pkgs "hyprshot";
   satty' = runOnce pkgs "satty";
-  enable = config.my.gui.desktop.shot == "hyprshot" && isWayland config;
+  enable = config.my.gui.desktop.shot == "hyprshot" && config.my.gui.desktop.wayland.enable;
   cfgNiri = config.my.gui.desktop.niri;
   bash = getExe pkgs.bash;
   hyprshot = getExe pkgs.hyprshot;

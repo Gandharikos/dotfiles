@@ -4,21 +4,29 @@
   pkgs,
   ...
 }: let
+  inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkForce;
-  inherit (lib.meta) getExe;
-  inherit (lib.my) isHyprland;
-  uwsm' = getExe pkgs.uwsm;
-  enable = isHyprland config;
+  inherit (config.my.gui) desktop;
+  cfg = desktop.hyprland;
 in {
-  config = mkIf enable {
-    services.displayManager.defaultSession = "hyprland-uwsm";
+  options.my.gui.desktop.hyprland = {
+    enable =
+      mkEnableOption "Enable Hyprland"
+      // {
+        default = desktop.wayland.enable && desktop.default == "hyprland";
+        internal = true;
+        readOnly = true;
+      };
+  };
 
-    programs.hyprland = {
-      enable = true;
-      withUWSM = true;
+  config = mkIf cfg.enable {
+    programs.hyprland.enable = true;
+
+    programs.uwsm.waylandCompositors.hyprland = {
+      prettyName = "Hyprland";
+      comment = "Hyprland compositor managed by UWSM";
+      binPath = "/run/current-system/sw/bin/Hyprland";
     };
-
-    my.gui.desktop.exec = "${uwsm'} start hyprland-uwsm.desktop";
 
     xdg.portal = {
       enable = true;

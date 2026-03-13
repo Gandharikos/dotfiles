@@ -8,10 +8,10 @@
   inherit (lib.options) mkOption;
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe;
-  inherit (lib.my) withUWSM isHyprland;
+  inherit (lib.my) withUWSM;
   inherit (lib.types) enum nullOr str;
   inherit (lib.my) scanPaths;
-  inherit (config.my.gui) browser;
+  inherit (config.my.gui) browser desktop;
 in {
   imports = scanPaths ./.;
 
@@ -36,7 +36,7 @@ in {
     exec = mkOption {
       type = str;
       default =
-        if isHyprland config
+        if desktop.uwsm.enable
         then withUWSM pkgs browser.default
         else getExe (builtins.getAttr browser.default pkgs);
       description = ''

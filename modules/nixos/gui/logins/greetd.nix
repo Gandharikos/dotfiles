@@ -8,11 +8,11 @@
   inherit (lib.meta) getExe;
   inherit (lib.strings) concatStringsSep;
   inherit (lib.options) mkEnableOption;
-  inherit (config.my) name gui;
-  inherit (gui.desktop) exec;
-  inherit (gui.login) autologin;
+  inherit (config.my) name;
+  inherit (config.my.gui) desktop login;
+  inherit (desktop) exec;
+  inherit (login) autologin;
   persist = config.my.persistence.enable;
-  enable = gui.login.default == "greetd" && gui.enable;
 in {
   options.my.gui.login.autologin =
     mkEnableOption ''
@@ -23,7 +23,7 @@ in {
       default = persist;
     };
 
-  config = mkIf enable {
+  config = mkIf login.greetd.enable {
     services.greetd = {
       enable = true;
       restart = !autologin;

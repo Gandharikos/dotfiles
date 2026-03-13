@@ -6,10 +6,10 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe;
-  inherit (lib.my) runOnce isWayland;
+  inherit (lib.my) runOnce;
   grimblast' = runOnce pkgs "grimblast";
   satty' = runOnce pkgs "satty";
-  enable = config.my.gui.desktop.shot == "grimblast" && isWayland config;
+  enable = config.my.gui.desktop.shot == "grimblast" && config.my.gui.desktop.wayland.enable;
   cfgNiri = config.my.gui.desktop.niri;
   bash = getExe pkgs.bash;
   grimblast = getExe pkgs.grimblast;

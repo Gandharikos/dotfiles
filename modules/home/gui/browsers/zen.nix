@@ -8,8 +8,9 @@
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe';
-  inherit (lib.my) withUWSM' isHyprland;
+  inherit (lib.my) withUWSM';
   inherit (config.my) gui;
+  inherit (config.my.gui) desktop;
   cfg = config.my.gui.apps.zen;
   enable = gui.enable && cfg.enable;
   zenPkg = inputs.zen.packages.${pkgs.stdenv.hostPlatform.system}.beta;
@@ -60,7 +61,7 @@ in {
       };
     };
     my.gui.browser.exec =
-      if isHyprland config
+      if desktop.uwsm.enable
       then withUWSM' pkgs zenPkg "zen"
       else (getExe' zenPkg "zen");
   };

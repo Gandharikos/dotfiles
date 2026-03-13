@@ -7,12 +7,12 @@
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkOption;
   inherit (lib.types) nullOr str;
-  inherit (lib.my) runOnce isWayland;
+  inherit (lib.my) runOnce;
   inherit (config.my.theme) wallpaper avatar;
   hyprlock' = runOnce pkgs "hyprlock";
   font_family = "SFProDisplay Nerd Font Bold";
   cfg = config.my.gui.desktop.hyprlock;
-  enable = config.my.gui.desktop.lock == "hyprlock" && isWayland config;
+  enable = config.my.gui.desktop.lock == "hyprlock" && config.my.gui.desktop.wayland.enable;
 in {
   options.my.gui.desktop.hyprlock = {
     colors = {

@@ -9,18 +9,17 @@
   inherit (lib.attrsets) optionalAttrs;
   inherit (lib.lists) optionals;
   inherit (lib.meta) getExe';
-  inherit (lib.my) isWayland isHyprland;
+  inherit (config.my.gui) desktop;
   inherit (config.my.theme) wallpaper;
   inherit (config.my.keyboard) keys;
 
-  enable = isWayland config;
-  inherit (config.my.gui) desktop;
+  inherit (desktop.wayland) enable;
 
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
   uwsm = getExe' pkgs.uwsm "uwsm";
   dmsExe = getExe' dmsPkg "dms";
   dmsCmd =
-    if isHyprland config
+    if desktop.uwsm.enable
     then [uwsm "app" "--" dmsExe]
     else [dmsExe];
   dmsCmdStr = builtins.concatStringsSep " " dmsCmd;
@@ -122,6 +121,9 @@ in {
       ]);
     };
     programs.niri.settings = {
+      spawn-at-startup = optionals (wallpaper != null) [
+        {command = dms' ["wallpaper" "set" (toString wallpaper)];}
+      ];
       binds = let
         spawn = args: {action.spawn = dms' args;};
         screenshotBinds = optionalAttrs (desktop.shot == "dms") {

@@ -8,8 +8,8 @@
   inherit (lib.modules) mkIf;
   inherit (lib.types) enum nullOr str int float;
   inherit (lib.meta) getExe;
-  inherit (lib.my) withUWSM isHyprland;
-  inherit (config.my.gui) terminal;
+  inherit (lib.my) withUWSM;
+  inherit (config.my.gui) desktop terminal;
 in {
   imports = lib.my.scanPaths ./.;
 
@@ -36,7 +36,7 @@ in {
     exec = mkOption {
       type = str;
       default =
-        if isHyprland config
+        if desktop.uwsm.enable
         then withUWSM pkgs terminal.default
         else getExe (builtins.getAttr terminal.default pkgs);
       description = ''

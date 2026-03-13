@@ -5,8 +5,7 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
-  inherit (lib.my) isXorg;
-  enable = isXorg config;
+  inherit (config.my.gui.desktop.xorg) enable;
 in {
   config = mkIf enable {
     xdg.portal = {

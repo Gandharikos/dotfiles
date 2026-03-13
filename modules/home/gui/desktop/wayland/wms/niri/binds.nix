@@ -7,9 +7,9 @@
   inherit (lib.lists) foldl';
   inherit (lib.meta) getExe getExe';
   inherit (lib.modules) mkIf;
+  inherit (lib.my) withUWSM;
   inherit (lib.trivial) mod;
   inherit (config.my.gui) desktop terminal browser fileManager;
-  inherit (config.xdg.userDirs.extraConfig) SCREENSHOTS;
 
   cfg = config.my.gui.desktop.niri;
 
@@ -38,10 +38,9 @@
   playerctl = getExe pkgs.playerctl;
   wpctl = getExe' pkgs.wireplumber "wpctl";
   brightnessctl = getExe pkgs.brightnessctl;
+  bash = getExe pkgs.bash;
 
-  hyprlock = getExe pkgs.hyprlock;
-
-  screenshotPath = "${SCREENSHOTS}/screenshot-%Y%m%d-%H%M%S.png";
+  hyprlock = [bash "-lc" (withUWSM pkgs "hyprlock")];
   dmsEnabled = config.programs.dank-material-shell.enable or false;
   useDmsShot = desktop.shot == "dms" && dmsEnabled;
   screenshotBinds =
@@ -113,17 +112,12 @@ in
   with config.my.keyboard.keys; {
     config = mkIf cfg.enable {
       programs.niri.settings = {
-        screenshot-path = screenshotPath;
-
-        recent-windows = {
-          binds = {
-            "Alt+Tab".action.next-window = [];
-            "Alt+Shift+Tab".action.previous-window = [];
-          };
-        };
+        screenshot-path = desktop.general.screenshot.path;
 
         binds = foldl' lib.attrsets.recursiveUpdate {} [
           {
+            "Alt+Tab".action.next-window = [];
+            "Alt+Shift+Tab".action.previous-window = [];
             "${modKey}+Return" = {
               repeat = false;
               action.spawn = terminal.exec;

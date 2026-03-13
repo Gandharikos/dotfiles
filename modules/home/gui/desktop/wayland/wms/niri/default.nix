@@ -4,7 +4,7 @@
   config,
   ...
 }: let
-  inherit (lib.my) scanPaths isWayland;
+  inherit (lib.my) scanPaths;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (config.my.gui) desktop;
@@ -15,7 +15,7 @@ in {
     enable =
       mkEnableOption "Enable Niri"
       // {
-        default = isWayland config && desktop.default == "niri";
+        default = desktop.wayland.enable && desktop.default == "niri";
         internal = true;
         readOnly = true;
       };

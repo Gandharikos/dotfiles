@@ -8,8 +8,8 @@
   inherit (lib.modules) mkIf;
   inherit (lib.types) enum str;
   inherit (lib.meta) getExe;
-  inherit (lib.my) withUWSM isHyprland;
-  inherit (config.my.gui) fileManager;
+  inherit (lib.my) withUWSM;
+  inherit (config.my.gui) desktop fileManager;
   inherit (config.my) gui;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   enable = gui.enable && isLinux;
@@ -34,7 +34,7 @@ in {
     exec = mkOption {
       type = str;
       default =
-        if isHyprland config
+        if desktop.uwsm.enable
         then withUWSM pkgs fileManager.default
         else getExe (builtins.getAttr fileManager.default pkgs);
       description = ''

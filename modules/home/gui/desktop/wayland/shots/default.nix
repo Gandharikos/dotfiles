@@ -6,12 +6,11 @@
 }: let
   inherit (lib.meta) getExe';
   inherit (lib.modules) mkIf;
-  inherit (lib.my) isWayland;
-  inherit (config.xdg.userDirs.extraConfig) SCREENSHOTS;
   wl-copy' = getExe' pkgs.wl-clipboard-rs "wl-copy";
+  screenshotPath = config.my.gui.desktop.general.screenshot.path;
 in {
   imports = lib.my.scanPaths ./.;
-  config = mkIf (isWayland config) {
+  config = mkIf config.my.gui.desktop.wayland.enable {
     home = {
       file = {
         "${config.xdg.configHome}/satty/config.toml".text = ''
@@ -27,7 +26,7 @@ in {
           # Increase or decrease the size of the annotations
           annotation-size-factor = 1
           # Filename to use for saving action: https://docs.rs/chrono/latest/chrono/format/strftime/index.html
-          output-filename = "${SCREENSHOTS}/screenshot-%Y%m%d-%H%M%S.png"
+          output-filename = "${screenshotPath}"
           save-after-copy = false
           default-hide-toolbars = false
           # The primary highlighter: block, freehand

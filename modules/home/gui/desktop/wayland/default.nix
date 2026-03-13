@@ -5,11 +5,10 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
-  inherit (lib.my) isWayland;
 in {
   imports = lib.my.scanPaths ./.;
 
-  config = mkIf (isWayland config) {
+  config = mkIf config.my.gui.desktop.wayland.enable {
     home.packages = with pkgs; [
       # keep-sorted start
       avizo

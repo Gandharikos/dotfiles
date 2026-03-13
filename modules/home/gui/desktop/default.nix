@@ -1,7 +1,12 @@
-{lib, ...}: let
+{
+  lib,
+  config,
+  ...
+}: let
   inherit (lib.my) scanPaths;
   inherit (lib.options) mkOption;
-  inherit (lib.types) int enum;
+  inherit (lib.types) int enum str;
+  inherit (config.xdg.userDirs.extraConfig) SCREENSHOTS;
 in {
   imports = scanPaths ./.;
 
@@ -27,6 +32,13 @@ in {
           type = int;
           default = 10;
           description = "Number of workspaces";
+        };
+      };
+      screenshot = {
+        path = mkOption {
+          type = str;
+          default = "${SCREENSHOTS}/screenshot-%Y%m%d-%H%M%S.png";
+          description = "Default output path template for desktop screenshots.";
         };
       };
       keybind = {

@@ -6,8 +6,7 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkDefault;
-  inherit (lib.my) isWayland;
-  isWayland' = isWayland config;
+  waylandEnabled = config.my.gui.desktop.wayland.enable;
   cfg = config.my.gui.system.fcitx5;
 in {
   options.my.gui.system.fcitx5 = {
@@ -39,23 +38,19 @@ in {
             ];
           })
         ];
-        waylandFrontend = mkDefault isWayland';
+        waylandFrontend = mkDefault waylandEnabled;
         settings = {
           inputMethod = {
             "GroupOrder" = {
               "0" = "default";
             };
             "Groups/0" = {
-              "Name" = "default";
-              "DefaultIM" = "rime";
+              Name = "default";
+              DefaultIM = "keyboard-us";
               "Default Layout" = "us";
             };
-            "Groups/0/Items/0" = {
-              "Name" = "rime";
-            };
-            "Groups/0/Items/1" = {
-              "Name" = "keyboard-us";
-            };
+            "Groups/0/Items/0".Name = "keyboard-us";
+            "Groups/0/Items/1".Name = "rime";
           };
           globalOptions = {
             "Hotkey/TriggerKeys" = {

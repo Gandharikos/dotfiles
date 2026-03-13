@@ -3,17 +3,18 @@
   config,
   ...
 }: let
-  inherit (lib.my) scanPaths isHyprland;
+  inherit (lib.my) scanPaths;
   inherit (lib.options) mkOption;
   inherit (lib.types) enum;
+  inherit (config.my.gui) desktop;
 in {
   imports = scanPaths ./.;
   options.my.gui.desktop.polkit = mkOption {
     type = enum ["pantheon" "hyprpolkit" "mate"];
     default =
-      if isHyprland config
+      if desktop.hyprland.enable
       then "hyprpolkit"
-      else if config.my.gui.desktop.default == "niri"
+      else if desktop.default == "niri"
       then "mate"
       else "pantheon";
     description = ''
