@@ -6,11 +6,11 @@
 }: let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (lib.my) toggle;
-  # inherit (lib.meta) getExe';
+  inherit (lib.meta) getExe;
+  inherit (lib.my) uwsmApp;
   cfg = config.my.gui.desktop.hyprland;
-  hyprshade' = toggle pkgs "hyprshade";
-  # systemctl' = getExe' pkgs.systemd "systemctl";
+  hyprshade = getExe pkgs.hyprshade;
+  hyprshadeAuto = uwsmApp pkgs hyprshade ["auto"];
 in {
   options.my.gui.desktop.hyprland.shade = {
     enable = mkEnableOption "hyprshade";
@@ -23,7 +23,7 @@ in {
     # '';
 
     wayland.windowManager.hyprland.settings.exec = [
-      "${hyprshade'} auto"
+      hyprshadeAuto
     ];
 
     xdg.configFile = {

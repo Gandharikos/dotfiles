@@ -6,30 +6,59 @@
   ...
 }: let
   inherit (lib.meta) getExe getExe';
-  inherit (lib.my) runOnce withUWSM';
+  inherit (lib.my) runOnce uwsmApp uwsmScript withUWSM';
   inherit (lib.modules) mkIf;
+  inherit (lib.strings) escapeShellArgs;
 
-  suspendScript = pkgs.writeShellScript "suspend-script" ''
-    # check if any player has statutes "Playing"
-    ${getExe pkgs.playerctl} -a status | ${
-      getExe pkgs.ripgrep
-    } Playing -q
-    # only suspend if nothing is playing
-    if [ $? == 1 ]; then
-      ${getExe' pkgs.systemd "systemctl"} suspend
-    fi
-  '';
+  inherit (config.my.gui) desktop;
 
-  brillo' = getExe pkgs.brillo;
+  app = exe: args:
+    if desktop.uwsm.enable
+    then uwsmApp pkgs exe args
+    else escapeShellArgs ([exe] ++ args);
+
+  suspendScript =
+    if desktop.uwsm.enable
+    then
+      uwsmScript pkgs "suspend-script" ''
+        # check if any player has statutes "Playing"
+        ${getExe pkgs.playerctl} -a status | ${
+          getExe pkgs.ripgrep
+        } Playing -q
+        # only suspend if nothing is playing
+        if [ $? == 1 ]; then
+          ${getExe' pkgs.systemd "systemctl"} suspend
+        fi
+      ''
+    else
+      (pkgs.writeShellScript "suspend-script" ''
+        # check if any player has statutes "Playing"
+        ${getExe pkgs.playerctl} -a status | ${
+          getExe pkgs.ripgrep
+        } Playing -q
+        # only suspend if nothing is playing
+        if [ $? == 1 ]; then
+          ${getExe' pkgs.systemd "systemctl"} suspend
+        fi
+      '').outPath;
+
   loginctl' = getExe' pkgs.systemd "loginctl";
   brightnessctl' = getExe pkgs.brightnessctl;
   hyprctl' = getExe' pkgs.hyprland "hyprctl";
   niri' = getExe' pkgs.niri "niri";
+  dimScreen =
+    if desktop.uwsm.enable
+    then
+      uwsmScript pkgs "hypridle-dim-screen" ''
+        ${getExe pkgs.brillo} -O
+        ${getExe pkgs.brillo} -u 1000000 -S 10
+      ''
+    else "${getExe pkgs.brillo} -O; ${getExe pkgs.brillo} -u 1000000 -S 10";
+  restoreScreen = app (getExe pkgs.brillo) ["-I" "-u" "500000"];
 
   # timeout after which DPMS kicks in
   timeout = 300;
 
-  inherit (config.my.gui) desktop;
   enable = desktop.idle == "hypridle" && desktop.wayland.enable;
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
   dms =
@@ -49,15 +78,15 @@
   # to avoid having to press a key twice to turn on the display
   screen_on_cmd =
     if desktop.default == "hyprland"
-    then "${hyprctl'} dispatch dpms on"
+    then app hyprctl' ["dispatch" "dpms" "on"]
     else if desktop.default == "niri"
-    then "${niri'} msg action power-on-monitors"
+    then app niri' ["msg" "action" "power-on-monitors"]
     else null;
   screen_off_cmd =
     if desktop.default == "hyprland"
-    then "${hyprctl'} dispatch dpms off"
+    then app hyprctl' ["dispatch" "dpms" "off"]
     else if desktop.default == "niri"
-    then "${niri'} msg action power-off-monitors"
+    then app niri' ["msg" "action" "power-off-monitors"]
     else null;
 in {
   config = mkIf enable {
@@ -69,7 +98,7 @@ in {
           inherit lock_cmd;
 
           # lock before suspend
-          before_sleep_cmd = "${loginctl'} lock-session";
+          before_sleep_cmd = app loginctl' ["lock-session"];
 
           after_sleep_cmd = screen_on_cmd;
         };
@@ -79,24 +108,24 @@ in {
             timeout = timeout - 10;
             # save the current brightness and dim the screen over a period of
             # 1 second
-            on-timeout = "${brillo'} -O; ${brillo'} -u 1000000 -S 10";
+            on-timeout = dimScreen;
             # brighten the screen over a period of 500ms to the saved value
-            on-resume = "${brillo'} -I -u 500000";
+            on-resume = restoreScreen;
           }
 
           # turn off keyboard backlight, comment out this section if you dont have a keyboard backlight.
           {
             timeout = timeout / 2;
             # turn off keyboard backlight.
-            on-timeout = "${brightnessctl'} -sd dell::kbd_backlight set 0";
+            on-timeout = app brightnessctl' ["-sd" "dell::kbd_backlight" "set" "0"];
             # turn on keyboard backlight.
-            on-resume = "${brightnessctl'} -rd dell::kbd_backlight";
+            on-resume = app brightnessctl' ["-rd" "dell::kbd_backlight"];
           }
           {
             # 5min
             inherit timeout;
             # lock screen when timeout has passed
-            on-timeout = "${loginctl'} lock-session";
+            on-timeout = app loginctl' ["lock-session"];
           }
           {
             inherit timeout;
@@ -108,7 +137,7 @@ in {
           {
             timeout = timeout + 10;
             # suspend pc
-            on-timeout = suspendScript.outPath;
+            on-timeout = suspendScript;
           }
         ];
       };

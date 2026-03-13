@@ -6,7 +6,7 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe getExe';
-  inherit (lib.my) withUWSM withUWSM';
+  inherit (lib.my) uwsmApp withUWSM withUWSM';
   inherit (config) gtk;
   gsettings = getExe' pkgs.glib "gsettings";
   gnomeSchema = "org.gnome.desktop.interface";
@@ -18,10 +18,10 @@ in {
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland.settings = {
       exec = [
-        "${gsettings} set ${gnomeSchema} gtk-theme ${gtk.theme.name}"
-        "${gsettings} set ${gnomeSchema} icon-theme ${gtk.iconTheme.name}"
-        "${gsettings} set ${gnomeSchema} cursor-theme ${gtk.cursorTheme.name}"
-        "${gsettings} set ${gnomeSchema} gtk-font-theme ${gtk.font.name}"
+        "${uwsmApp pkgs gsettings ["set" gnomeSchema "gtk-theme" gtk.theme.name]}"
+        "${uwsmApp pkgs gsettings ["set" gnomeSchema "icon-theme" gtk.iconTheme.name]}"
+        "${uwsmApp pkgs gsettings ["set" gnomeSchema "cursor-theme" gtk.cursorTheme.name]}"
+        "${uwsmApp pkgs gsettings ["set" gnomeSchema "gtk-font-theme" gtk.font.name]}"
       ];
 
       exec-once = [

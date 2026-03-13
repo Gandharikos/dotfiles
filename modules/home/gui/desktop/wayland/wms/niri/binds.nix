@@ -7,7 +7,7 @@
   inherit (lib.lists) foldl';
   inherit (lib.meta) getExe getExe';
   inherit (lib.modules) mkIf;
-  inherit (lib.my) withUWSM;
+  inherit (lib.my) uwsmAppArgs withUWSMArgs;
   inherit (lib.trivial) mod;
   inherit (config.my.gui) desktop terminal browser fileManager;
 
@@ -38,67 +38,69 @@
   playerctl = getExe pkgs.playerctl;
   wpctl = getExe' pkgs.wireplumber "wpctl";
   brightnessctl = getExe pkgs.brightnessctl;
-  bash = getExe pkgs.bash;
+  playerctlCmd = args: uwsmAppArgs pkgs playerctl args;
+  wpctlCmd = args: uwsmAppArgs pkgs wpctl args;
+  brightnessctlCmd = args: uwsmAppArgs pkgs brightnessctl args;
 
-  hyprlock = [bash "-lc" (withUWSM pkgs "hyprlock")];
+  hyprlock = withUWSMArgs pkgs "hyprlock";
   dmsEnabled = config.programs.dank-material-shell.enable or false;
-  useDmsShot = desktop.shot == "dms" && dmsEnabled;
+  useNiriBuiltinShot = desktop.shot == "dms" && !dmsEnabled;
   screenshotBinds =
-    if useDmsShot
-    then {}
-    else {
+    if useNiriBuiltinShot
+    then {
       "Print".action.screenshot = [];
       "Shift+Print".action.screenshot-window.write-to-disk = true;
       "Ctrl+Print".action.screenshot-screen.write-to-disk = true;
       "${modKey}+Print".action.screenshot = [];
-    };
+    }
+    else {};
   xf86FallbackBinds =
     if dmsEnabled
     then {}
     else {
       "XF86AudioPlay" = {
         allow-when-locked = true;
-        action.spawn = [playerctl "play-pause"];
+        action.spawn = playerctlCmd ["play-pause"];
       };
       "XF86AudioPause" = {
         allow-when-locked = true;
-        action.spawn = [playerctl "play-pause"];
+        action.spawn = playerctlCmd ["play-pause"];
       };
       "XF86AudioNext" = {
         allow-when-locked = true;
-        action.spawn = [playerctl "next"];
+        action.spawn = playerctlCmd ["next"];
       };
       "XF86AudioPrev" = {
         allow-when-locked = true;
-        action.spawn = [playerctl "previous"];
+        action.spawn = playerctlCmd ["previous"];
       };
       "XF86AudioMute" = {
         allow-when-locked = true;
-        action.spawn = [wpctl "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
+        action.spawn = wpctlCmd ["set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
       };
       "XF86AudioMicMute" = {
         allow-when-locked = true;
-        action.spawn = [wpctl "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"];
+        action.spawn = wpctlCmd ["set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"];
       };
       "XF86AudioRaiseVolume" = {
         allow-when-locked = true;
         repeat = true;
-        action.spawn = [wpctl "set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "6%+"];
+        action.spawn = wpctlCmd ["set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "6%+"];
       };
       "XF86AudioLowerVolume" = {
         allow-when-locked = true;
         repeat = true;
-        action.spawn = [wpctl "set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "6%-"];
+        action.spawn = wpctlCmd ["set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "6%-"];
       };
       "XF86MonBrightnessUp" = {
         allow-when-locked = true;
         repeat = true;
-        action.spawn = [brightnessctl "--exponent" "s" "5%+"];
+        action.spawn = brightnessctlCmd ["--exponent" "s" "5%+"];
       };
       "XF86MonBrightnessDown" = {
         allow-when-locked = true;
         repeat = true;
-        action.spawn = [brightnessctl "--exponent" "s" "5%-"];
+        action.spawn = brightnessctlCmd ["--exponent" "s" "5%-"];
       };
     };
 
@@ -176,12 +178,12 @@ in
             "XF86KbdBrightnessUp" = {
               allow-when-locked = true;
               repeat = true;
-              action.spawn = [brightnessctl "--device=*::kbd_backlight" "s" "10%+"];
+              action.spawn = brightnessctlCmd ["--device=*::kbd_backlight" "s" "10%+"];
             };
             "XF86KbdBrightnessDown" = {
               allow-when-locked = true;
               repeat = true;
-              action.spawn = [brightnessctl "--device=*::kbd_backlight" "s" "10%-"];
+              action.spawn = brightnessctlCmd ["--device=*::kbd_backlight" "s" "10%-"];
             };
           }
           lockBinds

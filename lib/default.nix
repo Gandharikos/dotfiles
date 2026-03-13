@@ -9,7 +9,9 @@ in
         ./modules.nix
         ./hardware.nix
         ./theme.nix
-        ./helper.nix
+        ./geometry.nix
+        ./workspaces.nix
+        ./commands.nix
       ]
       arg)
   ]

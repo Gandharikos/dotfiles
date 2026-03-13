@@ -8,6 +8,7 @@
   inherit (lib.lists) elem optionals;
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe getExe';
+  inherit (lib.my) uwsmApp uwsmScript;
   inherit (config.my.gui) desktop terminal browser fileManager;
   cfg = desktop.hyprland;
   num = desktop.general.workspace.number;
@@ -16,9 +17,13 @@
   playerctl' = getExe pkgs.playerctl;
   wpctl' = getExe' pkgs.wireplumber "wpctl";
   brightnessctl' = getExe pkgs.brightnessctl;
+  playerctl = args: uwsmApp pkgs playerctl' args;
+  wpctl = args: uwsmApp pkgs wpctl' args;
+  brightnessctl = args: uwsmApp pkgs brightnessctl' args;
+  hyprctl' = getExe' pkgs.hyprland "hyprctl";
 
   lang = "eng+chi_sim+chi_tra";
-  wl-ocr = pkgs.writeShellScript "wl-ocr" ''
+  wl-ocr = uwsmScript pkgs "wl-ocr" ''
     ${getExe pkgs.grim} -g "$(${getExe pkgs.slurp})" - | ${getExe pkgs.tesseract} ${lang} - - | ${getExe' pkgs.wl-clipboard "wl-copy"}
   '';
 in
@@ -150,14 +155,14 @@ in
           # Bind: locked binds
           binddl = [
             # media controls
-            ", XF86AudioPlay, Play, exec, ${playerctl'} play"
-            ", XF86AudioPrev, Previous Track, exec, ${playerctl'} previous"
-            ", XF86AudioNext, Next Track, exec, ${playerctl'} next"
-            ", XF86AudioPause, Pause, exec, ${playerctl'} pause"
+            ", XF86AudioPlay, Play, exec, ${playerctl ["play"]}"
+            ", XF86AudioPrev, Previous Track, exec, ${playerctl ["previous"]}"
+            ", XF86AudioNext, Next Track, exec, ${playerctl ["next"]}"
+            ", XF86AudioPause, Pause, exec, ${playerctl ["pause"]}"
 
             # volume
-            ", XF86AudioMute, Mute Audio, exec, ${wpctl'} set-mute @DEFAULT_AUDIO_SINK@ toggle"
-            ", XF86AudioMicMute, Mute Microphone, exec, ${wpctl'} set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+            ", XF86AudioMute, Mute Audio, exec, ${wpctl ["set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"]}"
+            ", XF86AudioMicMute, Mute Microphone, exec, ${wpctl ["set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"]}"
 
             # misc
             ", XF86Messenger, Toggle Special Workspace, togglespecialworkspace"
@@ -166,16 +171,16 @@ in
           # Bind: locked and repeat
           binddel = [
             # volume
-            ", XF86AudioRaiseVolume, Volume Up, exec, ${wpctl'} set-volume -l '1.0' @DEFAULT_AUDIO_SINK@ 6%+"
-            ", XF86AudioLowerVolume, Volume Down, exec, ${wpctl'} set-volume -l '1.0' @DEFAULT_AUDIO_SINK@ 6%-"
-            "ALT, XF86AudioRaiseVolume, Mic Volume Up, exec, ${wpctl'} set-volume -l '1.0' @DEFAULT_AUDIO_SOURCE@ 6%+"
-            "ALT, XF86AudioLowerVolume, Mic Volume Down, exec, ${wpctl'} set-volume -l '1.0' @DEFAULT_AUDIO_SOURCE@ 6%-"
+            ", XF86AudioRaiseVolume, Volume Up, exec, ${wpctl ["set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "6%+"]}"
+            ", XF86AudioLowerVolume, Volume Down, exec, ${wpctl ["set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "6%-"]}"
+            "ALT, XF86AudioRaiseVolume, Mic Volume Up, exec, ${wpctl ["set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SOURCE@" "6%+"]}"
+            "ALT, XF86AudioLowerVolume, Mic Volume Down, exec, ${wpctl ["set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SOURCE@" "6%-"]}"
 
             # backlight
-            ", XF86MonBrightnessUp, Brightness Up, exec, ${brightnessctl'} --exponent s 5%+"
-            ", XF86MonBrightnessDown, Brightness Down, exec, ${brightnessctl'} --exponent s 5%-"
-            ", XF86KbdBrightnessUp, Keyboard Brightness Up, exec, ${brightnessctl'} --device='*::kbd_backlight' s 10%+"
-            ", XF86KbdBrightnessDown, Keyboard Brightness Down, exec, ${brightnessctl'} --device='*::kbd_backlight' s 10%-"
+            ", XF86MonBrightnessUp, Brightness Up, exec, ${brightnessctl ["--exponent" "s" "5%+"]}"
+            ", XF86MonBrightnessDown, Brightness Down, exec, ${brightnessctl ["--exponent" "s" "5%-"]}"
+            ", XF86KbdBrightnessUp, Keyboard Brightness Up, exec, ${brightnessctl ["--device=*::kbd_backlight" "s" "10%+"]}"
+            ", XF86KbdBrightnessDown, Keyboard Brightness Down, exec, ${brightnessctl ["--device=*::kbd_backlight" "s" "10%-"]}"
           ];
         };
         extraConfig = ''
@@ -206,7 +211,7 @@ in
 
           bind = , SPACE, centerwindow
 
-          bind = , escape, exec, hyprctl keyword input:follow_mouse 0
+          bind = , escape, exec, ${uwsmApp pkgs hyprctl' ["keyword" "input:follow_mouse" "0"]}
           bind=,escape,submap,reset
           submap=reset
         '';

@@ -1,21 +1,17 @@
 {lib, ...}: let
   inherit (lib.trivial) mod;
-  # Generate key bindings for a single workspace number using a list of command definitions
+
   mkWorkspaceBindings = commands: format: n: let
-    # Calculate the digit key (1-9, 0 wraps at 10)
     wsDigit = mod n 10;
     key = toString wsDigit;
   in
-    # Apply the format function to each command definition
     builtins.map (cmd: format cmd key (toString n)) commands;
 
-  # Generate bindings for workspaces 1 through n, given a list of command definitions
   mkWorkspaces = commands: format: n:
     builtins.concatLists (
       builtins.genList (i: mkWorkspaceBindings commands format (i + 1)) n
     );
 
-  # Example format function: Hyprland style
   hyprlandFormat = cmd: key: workspaceNum:
     lib.concatStringsSep ", " [
       cmd.modifier
@@ -35,13 +31,13 @@
     ];
 
   mkHyprWorkspaceDescription = action: workspaceNum: let
-    is_split = lib.strings.hasPrefix "split:" action;
+    isSplit = lib.strings.hasPrefix "split:" action;
     action' =
-      if is_split
+      if isSplit
       then lib.strings.removePrefix "split:" action
       else action;
     prefix =
-      if is_split
+      if isSplit
       then "Split: "
       else "";
   in
@@ -61,7 +57,6 @@
     action2 = builtins.elemAt actions 2;
   in
     mkWorkspaces [
-      # Define the command definitions for workspace bindings
       {
         modifier = "$mod";
         action = action0;
@@ -105,15 +100,15 @@
     value = "${cmd.action} ${workspaceNum}";
   };
 
-  mkAerospaceWorkspaces = mod: n: let
+  mkAerospaceWorkspaces = modKey: n: let
     ws =
       mkWorkspaces [
         {
-          modifier = mod;
+          modifier = modKey;
           action = "workspace";
         }
         {
-          modifier = "${mod}-shift";
+          modifier = "${modKey}-shift";
           action = "move-node-to-workspace";
         }
       ]
@@ -121,52 +116,6 @@
       n;
   in
     builtins.listToAttrs ws;
-
-  vec2 = x: y: let
-    x_str = toString x;
-    y_str = toString y;
-  in
-    lib.strings.concatStringsSep " " [x_str y_str];
-
-  getProgramName = program: builtins.baseNameOf program;
-
-  toggle = pkgs: program: let
-    program' = lib.getExe (builtins.getAttr program pkgs);
-    programName = getProgramName program';
-    uwsm' = lib.getExe pkgs.uwsm;
-    pkill' = lib.getExe' pkgs.procps "pkill";
-  in "${pkill'} -x ${programName} || ${uwsm'} app -- ${program'}";
-
-  toggle' = pkgs: package: program: let
-    program' = lib.getExe' package program;
-    programName = getProgramName program';
-    uwsm' = lib.getExe pkgs.uwsm;
-    pkill' = lib.getExe' pkgs.procps "pkill";
-  in "${pkill'} -x ${programName} || ${uwsm'} app -- ${program'}";
-
-  runOnce = pkgs: program: let
-    program' = lib.getExe (builtins.getAttr program pkgs);
-    programName = getProgramName program;
-    uwsm' = lib.getExe pkgs.uwsm;
-    pidof' = lib.getExe' pkgs.procps "pidof";
-  in "${pidof'} ${programName} > /dev/null || ${uwsm'} app -- ${program'}";
-
-  runOnce' = pkgs: package: program: let
-    program' = lib.getExe' package program;
-    programName = getProgramName program;
-    uwsm' = lib.getExe pkgs.uwsm;
-    pidof' = lib.getExe' pkgs.procps "pidof";
-  in "${pidof'} ${programName} > /dev/null || ${uwsm'} app -- ${program'}";
-
-  withUWSM = pkgs: program: let
-    uwsm' = lib.getExe pkgs.uwsm;
-    program' = lib.getExe (builtins.getAttr program pkgs);
-  in "${uwsm'} app -- ${program'}";
-
-  withUWSM' = pkgs: package: program: let
-    uwsm' = lib.getExe pkgs.uwsm;
-    program' = lib.getExe' package program;
-  in "${uwsm'} app -- ${program'}";
 in {
-  inherit mkWorkspaces mkHyprWorkspaces mkHyprMoveTo mkAerospaceWorkspaces vec2 toggle toggle' runOnce runOnce' withUWSM withUWSM';
+  inherit mkWorkspaces mkHyprWorkspaces mkHyprMoveTo mkAerospaceWorkspaces;
 }
