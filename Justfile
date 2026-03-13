@@ -1,4 +1,5 @@
 set shell := ["bash", "-c"]
+export NIX_CONFIG := "experimental-features = nix-command flakes"
 rebuild := if os() == "macos" { "sudo darwin-rebuild" } else { "sudo nixos-rebuild" }
 build_config := if os() == "macos" { "darwinConfigurations" } else { "nixosConfigurations" }
 
@@ -9,7 +10,7 @@ default:
 # Build the system configuration
 [group('nix')]
 build host=`uname -n`:
-  nix build .#{{build_config}}.{{host}}.system --extra-experimental-features "nix-command flakes" --show-trace --verbose
+  nix build .#{{build_config}}.{{host}}.system --show-trace --verbose
 
 # Rebuild specific host using nh
 [group('nix')]
