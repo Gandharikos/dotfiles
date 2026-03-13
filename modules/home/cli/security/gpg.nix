@@ -121,7 +121,7 @@ in {
     services.gpg-agent = {
       enable = true;
       enableSshSupport = true;
-      pinentryPackage =
+      pinentry.package =
         if pkgs.stdenv.hostPlatform.isDarwin
         then pkgs.pinentry-mac
         else if config.gtk.enable || config.qt.enable
