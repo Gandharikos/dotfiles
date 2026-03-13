@@ -19,13 +19,18 @@
 in {
   config = mkIf cfg.enable {
     hardware.gpgSmartcards.enable = true;
+
     environment.systemPackages = [
       pkgs.yubioath-flutter
     ];
 
-    # TODO: need to figure out how to use gpg-agent with ssh
-    # or just ues ssh-agent with yubikey?
-    # can ssh-agent works with yubikey?
+    # Yubikey required services and config. See Dr. Duh NixOS config for
+    # reference
+    services = {
+      pcscd.enable = true;
+      udev.packages = [pkgs.yubikey-personalization];
+    };
+
     programs = {
       ssh.startAgent = mkForce false;
 
@@ -34,12 +39,7 @@ in {
         enableSSHSupport = mkForce true;
       };
     };
-    # Yubikey required services and config. See Dr. Duh NixOS config for
-    # reference
-    services = {
-      pcscd.enable = true;
-      udev.packages = [pkgs.yubikey-personalization];
-    };
+
     security.pam = {
       u2f = {
         enable = true;

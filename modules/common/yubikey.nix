@@ -47,14 +47,6 @@ in {
   config = mkIf cfg.enable {
     hm.my.yubikey.touchDetector.enable = isLinux;
 
-    # TODO: need to figure out how to use gpg-agent with ssh
-    # or just ues ssh-agent with yubikey?
-    # can ssh-agent works with yubikey?
-    # programs.gnupg.agent = {
-    #   enable = true;
-    #   enableSSHSupport = true;
-    # };
-
     environment.systemPackages = with pkgs; [
       yubikey-manager # cli-based authenticator tool. accessed via `ykman`
       yubikey-personalization
