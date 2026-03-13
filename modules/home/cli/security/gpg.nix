@@ -120,7 +120,7 @@ in {
 
     services.gpg-agent = {
       enable = true;
-      enableSSHSupport = true;
+      enableSshSupport = true;
       pinentryPackage =
         if pkgs.stdenv.hostPlatform.isDarwin
         then pkgs.pinentry-mac
