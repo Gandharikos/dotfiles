@@ -165,8 +165,8 @@ management.
 just build [hostname]
 
 # Apply configuration changes
-just switch [hostname]      # Classic nixos-rebuild/darwin-rebuild
-just switch2 [hostname]     # Using nh (recommended)
+just switch [hostname]      # Using nh (recommended)
+just switch2 [hostname]     # Classic nixos-rebuild/darwin-rebuild
 
 # Deploy to remote host
 just deploy <hostname>

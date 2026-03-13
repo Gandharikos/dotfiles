@@ -7,15 +7,15 @@
   cfg = config.my.services.proxy;
   inherit (lib.modules) mkIf;
   configFile = "/var/lib/mihomo/config.yaml";
-  # Get the URL directly from the secret value.
-  # sops-nix finds this in `config.sops.defaultSopsFile`.
-  subUrl = config.sops.secrets.mihomo_subUrl;
+  # Read the subscription URL from the decrypted secret file at runtime.
+  subUrlFile = config.sops.secrets.mihomo_subUrl.path;
 
   updateScript = pkgs.writeShellScript "update-mihomo-config" ''
     #!${pkgs.runtimeShell}
     set -e
-    echo "Updating mihomo config from ${subUrl}"
-    ${pkgs.curl}/bin/curl -sfL -o ${configFile} '${subUrl}'
+    sub_url="$(${pkgs.coreutils}/bin/cat ${subUrlFile})"
+    echo "Updating mihomo config from secret source"
+    ${pkgs.curl}/bin/curl -sfL -o ${configFile} "$sub_url"
     chown mihomo:mihomo ${configFile}
   '';
 in {

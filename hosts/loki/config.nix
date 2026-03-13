@@ -52,6 +52,13 @@
   };
 
   # for surge
+  time = {
+    timeZone = lib.mkForce "Asia/Shanghai";
+    hardwareClockInLocalTime = lib.mkForce false;
+  };
+
+  services.automatic-timezoned.enable = lib.mkForce false;
+
   networking = {
     nameservers = lib. mkForce [
       "198.18.0.2"

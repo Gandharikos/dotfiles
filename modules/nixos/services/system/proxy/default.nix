@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
-  inherit (lib.my) scanPaths;
-in {
-  imports = scanPaths ./.;
+}:
+# let
+# inherit (lib.my) scanPaths;
+# in
+{
+  # imports = scanPaths ./.;
 
   options.my.services.proxy = {
     enable = lib.mkOption {

@@ -84,8 +84,6 @@ in {
           keyid-format = "0xlong";
           # Display the calculated validity of user IDs during key listings
           list-options = "show-uid-validity";
-          # Ensure the PIN prompt is always shown for Yubikey
-          no-allow-external-cache = true;
           # Do not write comment packets
           no-comments = false;
           # Disable inclusion of the version string in ASCII armored output
