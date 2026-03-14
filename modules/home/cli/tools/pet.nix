@@ -33,6 +33,11 @@ in {
           tag = ["cmd" "system" "logs"];
         }
         {
+          command = "sudo ssh-keygen -A";
+          description = "Generate any missing SSH host keys";
+          tag = ["cmd" "ssh" "system"];
+        }
+        {
           command = "sops --in-place set secrets/services/default.yaml '[\"my_key\"]' '\"my-secret-value\"'";
           description = "Set a string secret in secrets/services/default.yaml directly";
           tag = ["cmd" "sops" "secrets"];
