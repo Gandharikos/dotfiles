@@ -5,6 +5,7 @@
 }: let
   inherit (lib) mkIf mkDefault mkForce;
   isWSL = config.my.machine.type == "wsl";
+  isProxy = config.my.services.proxy.enable;
   inherit (lib.options) mkEnableOption;
   cfg = config.my.networking;
 in {
@@ -35,7 +36,7 @@ in {
       usePredictableInterfaceNames = mkDefault true;
 
       # dns
-      nameservers = mkIf (!isWSL) [
+      nameservers = mkIf (!isWSL && !isProxy) [
         "1.1.1.1"
         "1.0.0.1"
         "9.9.9.9"
