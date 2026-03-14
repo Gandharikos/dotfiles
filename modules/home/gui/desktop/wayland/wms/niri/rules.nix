@@ -3,7 +3,8 @@
   config,
   ...
 }: let
-  inherit (lib.modules) mkIf singleton;
+  inherit (lib.modules) mkIf;
+  inherit (lib.lists) singleton;
   cfg = config.my.gui.desktop.niri;
 in {
   config = mkIf cfg.enable {
