@@ -145,9 +145,6 @@
       };
     };
 
-    # remote deploy tool
-    deploy-rs.url = "github:serokell/deploy-rs";
-
     # secrets
     sops = {
       url = "github:Mic92/sops-nix";
