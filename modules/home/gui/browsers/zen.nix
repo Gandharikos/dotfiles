@@ -30,7 +30,6 @@ in {
     my.gui.browser.desktopId = "org.mozilla.com.zen.browser.desktop";
     programs.zen-browser = {
       enable = true;
-      suppressXdgMigrationWarning = true;
       nativeMessagingHosts = [pkgs.firefoxpwa];
       inherit (config.programs.firefox) policies;
       profiles.default = {
