@@ -15,7 +15,7 @@ in {
 
       Service = {
         Type = "simple";
-        ExecStart = "${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1";
+        ExecStart = "${pkgs.mate-polkit}/libexec/polkit-mate-authentication-agent-1";
         Restart = "on-failure";
         TimeoutStopSec = 10;
         RestartSec = 1;
