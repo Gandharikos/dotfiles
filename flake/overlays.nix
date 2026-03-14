@@ -45,8 +45,6 @@
         packageFunctions
     );
   };
-
-  allOverlays = (lib.attrValues dynamicOverlaysSet) ++ [myPackagesOverlay];
 in {
   flake = {
     overlays =
@@ -55,15 +53,5 @@ in {
         default = myPackagesOverlay;
         my = myPackagesOverlay;
       };
-
-    perSystem = {
-      config,
-      pkgs,
-      ...
-    }: {
-      pkgs = pkgs.extend (lib.composeManyExtensions allOverlays);
-
-      packages = config.pkgs.my;
-    };
   };
 }

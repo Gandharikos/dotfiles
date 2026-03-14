@@ -34,8 +34,26 @@ in {
       deployableSystems;
   };
 
-  perSystem = {inputs', ...}: {
-    checks = builtins.mapAttrs (__system: deployLib: deployLib.deployChecks self.deploy) inputs.deploy-rs.lib;
+  perSystem = {
+    inputs',
+    system,
+    ...
+  }: let
+    deployNodesForSystem =
+      builtins.mapAttrs
+      (name: _host: self.deploy.nodes.${name})
+      (lib.filterAttrs (_name: host: host.system == system) deployableSystems);
+  in {
+    checks =
+      if deployNodesForSystem == {}
+      then {}
+      else
+        inputs.deploy-rs.lib.${system}.deployChecks (
+          self.deploy
+          // {
+            nodes = deployNodesForSystem;
+          }
+        );
     devshells.default = {
       commands = [
         {
