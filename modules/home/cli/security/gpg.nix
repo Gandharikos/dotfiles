@@ -113,7 +113,7 @@ in {
     };
 
     home = {
-      packages = lib.optionals config.gtk.enable [pkgs.gcr] ++ lib.optional pkgs.stdenv.hostPlatform.isDarwin pkgs.pinentry-mac;
+      packages = lib.optionals config.gtk.enable [pkgs.gcr] ++ lib.optional pkgs.stdenv.hostPlatform.isDarwin pkgs.pinentry_mac;
     };
 
     services.gpg-agent = {
@@ -121,7 +121,7 @@ in {
       enableSshSupport = true;
       pinentry.package =
         if pkgs.stdenv.hostPlatform.isDarwin
-        then pkgs.pinentry-mac
+        then pkgs.pinentry_mac
         else if config.gtk.enable || config.qt.enable
         then pkgs.pinentry-qt
         else pkgs.pinentry-tty;
