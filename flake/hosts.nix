@@ -25,7 +25,6 @@
             inputs.disko.nixosModules.disko
             inputs.nixos-generators.nixosModules.all-formats
             # inputs.niri.nixosModules.niri
-            inputs.programs-sqlite.nixosModules.programs-sqlite
             inputs.sops.nixosModules.sops
           ]
           else if class == "darwin"
