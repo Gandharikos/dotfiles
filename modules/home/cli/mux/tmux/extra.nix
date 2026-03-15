@@ -125,10 +125,10 @@ in {
     bind ${h} split-window -hb -c '#{pane_current_path}'
     bind ${l} split-window -h -c '#{pane_current_path}'
     # move panes with C-a C-HJKL
-    bind ${H} swap-pane -U
-    bind ${L} swap-pane -D
-    bind ${J} swap-pane -D
-    bind ${K} swap-pane -U
+    bind ${H} swap-pane -t '{left-of}'
+    bind ${L} swap-pane -t '{right-of}'
+    bind ${J} swap-pane -t '{down-of}'
+    bind ${K} swap-pane -t '{up-of}'
     # layouts switch
     bind ${n} next-layout
     bind ${N} previous-layout
