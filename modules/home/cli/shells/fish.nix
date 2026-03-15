@@ -32,6 +32,7 @@ in {
             "colored-man-pages"
             # "fish-you-should-use"
             "bang-bang"
+            "bass"
           ]
           ++ optionals isDarwin [
             "macos"

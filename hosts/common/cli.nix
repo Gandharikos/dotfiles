@@ -52,9 +52,13 @@
       autoStart = true;
     };
 
+    navi.enable = true;
+
     nix-index.enable = true;
 
     nix-search-tv.enable = true;
+
+    nix-your-shell.enable = true;
 
     numbat.enable = true;
 
