@@ -116,6 +116,7 @@
       "ghostty" # terminal
       "karabiner-elements" # keyboard remap
       "keycastr" # show keystrokes on screen
+      "macfuse" # required by veracrypt
       "obs" # stream / recoding software
       # "obs" # stream / recoding software
       # virtualization
