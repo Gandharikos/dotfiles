@@ -280,9 +280,19 @@ in {
             ".local/state/lazygit"
           ];
         })
+        (mkIf hm.navi.enable {
+          directories = [
+            ".local/share/navi"
+          ];
+        })
         (mkIf hm.opencode.enable {
           directories = [
             ".config/opencode"
+          ];
+        })
+        (mkIf hm.pet.enable {
+          directories = [
+            ".config/pet"
           ];
         })
         (mkIf hm.security.enable {
