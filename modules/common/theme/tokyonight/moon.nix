@@ -75,7 +75,7 @@ in {
     #   sha256 = "19nmdw8jldkh5niav478qwzvsnvfr3id3a02r4lgvmmb94kqv9xw";
     # };
     my.theme = {
-      wallpaper = ./walls/Night_City_Street_Umbrella.jpg;
+      wallpaper = ./walls/tokyo-photo1.jpg;
       # I hated base16 scheme; so I made my own
       colorscheme = {
         inherit palette;

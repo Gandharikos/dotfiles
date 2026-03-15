@@ -76,7 +76,7 @@ in {
     #   sha256 = "1d7bimqagd4bf33ijvigfai9v1vca6ycii5sb0v00apwgz9wcp93";
     # };
     my.theme = {
-      wallpaper = ./walls/cafe-at-night_4k.png;
+      wallpaper = ./walls/mos-design1.jpg;
       # I hated base16 scheme, so I made my own
       colorscheme = {
         inherit palette;
