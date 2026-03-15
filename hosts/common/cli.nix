@@ -72,6 +72,8 @@
 
     tmux.enable = true;
 
+    topgrade.enable = true;
+
     typst.enable = true;
 
     yazi.enable = true;
