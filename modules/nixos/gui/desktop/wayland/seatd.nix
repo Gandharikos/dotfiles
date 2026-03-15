@@ -6,7 +6,7 @@
 }: let
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf;
-  inherit (config.my.gui.desktop.wayland) enable;
+  enable = config.my.gui.desktop.wayland.enable && !config.services.desktopManager.cosmic.enable;
 in {
   config = mkIf enable {
     systemd.services.seatd = {
