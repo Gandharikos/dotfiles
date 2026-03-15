@@ -9,10 +9,10 @@
   cfg = config.my.gui.desktop.niri;
 
   isResolution = value: builtins.match "^[0-9]+x[0-9]+(@[0-9.]+)?$" value != null;
-  isPosition = value: builtins.match "^([0-9]+)x([0-9]+)$" value != null;
+  isPosition = value: builtins.match "^(-?[0-9]+)x(-?[0-9]+)$" value != null;
   toInt = value: builtins.fromJSON value;
   parsePosition = value: let
-    match = builtins.match "^([0-9]+)x([0-9]+)$" value;
+    match = builtins.match "^(-?[0-9]+)x(-?[0-9]+)$" value;
   in {
     x = toInt (builtins.elemAt match 0);
     y = toInt (builtins.elemAt match 1);
