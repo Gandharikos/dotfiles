@@ -14,6 +14,8 @@
 
     btop.enable = true;
 
+    carapace.enable = true;
+
     claude-code.enable = true;
 
     codex.enable = true;
@@ -29,8 +31,6 @@
 
     fd.enable = true;
 
-    fuck.enable = true;
-
     fzf.enable = true;
 
     gemini-cli.enable = true;
@@ -40,6 +40,8 @@
     git.enable = true;
 
     glow.enable = true;
+
+    jjui.enable = true;
 
     jujutsu.enable = true;
 
@@ -52,9 +54,13 @@
 
     nix-index.enable = true;
 
+    nix-search-tv.enable = true;
+
     numbat.enable = true;
 
     opencode.enable = true;
+
+    pay-respects.enable = true;
 
     pet.enable = true;
 

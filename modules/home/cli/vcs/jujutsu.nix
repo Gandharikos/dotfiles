@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   cfg = config.my.jujutsu;
@@ -12,9 +13,21 @@ in {
   };
 
   config = mkIf cfg.enable {
+    home.packages = with pkgs; [
+      lazyjj
+    ];
+
     programs.jujutsu = {
       enable = true;
       settings = {
+        fetch.prune = true;
+        init.default_branch = "main";
+        push = {
+          autoSetupRemote = true;
+          default = "current";
+        };
+        rebase.auto_stash = true;
+        lfs = true;
         aliases = {
           ld = [
             "log"

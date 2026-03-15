@@ -10,7 +10,6 @@
 in {
   imports = [
     inputs.nix-index-database.homeModules.nix-index
-    {programs.nix-index-database.comma.enable = true;}
   ];
 
   options.my.nix-index = {
@@ -18,6 +17,18 @@ in {
   };
 
   config = mkIf cfg.enable {
-    programs.nix-index = {enable = true;};
+    programs = {
+      nix-index-database.comma.enable = true;
+      nix-index = {
+        enable = true;
+
+        enableBashIntegration = true;
+        enableFishIntegration = true;
+        enableZshIntegration = true;
+
+        # link nix-inde database to ~/.cache/nix-index
+        symlinkToCacheHome = true;
+      };
+    };
   };
 }
