@@ -4,7 +4,7 @@ export NIX_CONFIG := "experimental-features = nix-command flakes"
 flake := env('FLAKE', justfile_directory())
 remote_user := env('REMOTE_USER', 'johnson')
 rebuild := if os() == "macos" { "sudo darwin-rebuild" } else { "nixos-rebuild" }
-system-args := if os() == "macos" { "" } else { "--log-format internal-json --sudo --no-reexec" }
+system-args := if os() == "macos" { "" } else { "--show-trace --sudo" }
 
 [private]
 default:
