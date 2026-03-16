@@ -118,8 +118,8 @@ in
 
         binds = foldl' lib.attrsets.recursiveUpdate {} [
           {
-            "Alt+Tab".action.next-window = [];
-            "Alt+Shift+Tab".action.previous-window = [];
+            # Note: next-window and previous-window are not valid niri actions
+            # Use Mod+Tab for toggle-overview instead, or focus-window-{up,down}
             "${modKey}+Return" = {
               repeat = false;
               action.spawn = terminal.exec;
