@@ -17,8 +17,8 @@ in {
       ];
       window-rules = [
         {
+          # Default rule for all windows (no opacity = fully opaque)
           matches = [{}];
-          opacity = 0.85;
           open-maximized = false;
           default-column-width = {
             proportion = 1.0 / 2.0;

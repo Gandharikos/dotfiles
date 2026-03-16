@@ -17,8 +17,7 @@ in {
       sessionVariables = {
         XCURSOR_THEME = cursor.name;
         XCURSOR_SIZE = toString cursor.size;
-        HYPRCURSOR_THEME = cursor.name;
-        HYPRCURSOR_SIZE = toString cursor.size;
+        # HYPRCURSOR_* are automatically set by pointerCursor.hyprcursor.enable
       };
       pointerCursor = {
         inherit (cursor) name package size;
