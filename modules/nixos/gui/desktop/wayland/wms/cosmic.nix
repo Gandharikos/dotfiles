@@ -28,6 +28,6 @@ in {
       pkgs.cosmic-store
     ];
 
-    my.gui.login = "cosmic-greeter";
+    my.gui.login.default = "cosmic-greeter";
   };
 }
