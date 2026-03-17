@@ -8,7 +8,7 @@ let
   inherit (lib.my) mkAerospaceWorkspaces;
   inherit (config.my) gui;
   cfg = gui.desktop;
-  inherit (cfg.general.workspace) number;
+  inherit (cfg.workspace) number;
   hyper = "cmd-alt-ctrl";
 in
 with config.my.keyboard.keys;
