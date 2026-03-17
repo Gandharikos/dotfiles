@@ -4,26 +4,32 @@
   config,
   ...
 }: let
-  inherit (lib.my) capitalize;
   inherit (lib.modules) mkIf;
+  inherit (lib.my) capitalize;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.my.theme) default tokyonight colorscheme;
-  inherit (colorscheme) palette;
+  inherit (config.my.theme) tokyonight colorscheme;
   cfg = tokyonight;
-  colorName = "${capitalize default}-${capitalize cfg.style}";
   enable = cfg.enable && config.my.gui.enable && isLinux;
-  variant = "modern";
-  cursorName = "Bibata-${capitalize variant}-${colorName}-Hyprcursor";
-  cursorPackage = pkgs.my.bibata-hyprcursor.override {
-    inherit (palette.cursor) baseColor outlineColor watchBackgroundColor;
-    inherit variant colorName;
+  xcursorName = "Bibata-Tokyonight-${capitalize cfg.style}";
+  hyprcursorName = "${xcursorName}-Hyprcursor";
+  xcursorPackage = pkgs.my.bibata-xcursor.override {
+    cursorThemeName = xcursorName;
+    inherit (colorscheme.palette.cursor) baseColor outlineColor watchBackgroundColor;
+  };
+  hyprcursorPackage = pkgs.my.bibata-hyprcursor.override {
+    cursorThemeName = hyprcursorName;
+    inherit (colorscheme.palette.cursor) baseColor outlineColor watchBackgroundColor;
   };
 in {
   config = mkIf enable {
     my.theme.cursor = {
-      name = cursorName;
-      package = cursorPackage;
+      name = xcursorName;
+      package = xcursorPackage;
       size = 24;
+      hyprcursor = {
+        name = hyprcursorName;
+        package = hyprcursorPackage;
+      };
     };
   };
 }

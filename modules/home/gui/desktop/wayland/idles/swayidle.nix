@@ -90,6 +90,8 @@
     else null;
 in {
   config = mkIf enable {
+    home.shellAliases.caffeinate = "systemctl --user stop swayidle";
+
     services.swayidle = {
       enable = true;
 

@@ -4,31 +4,28 @@
   pkgs,
   ...
 }: let
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkMerge;
   inherit (config.my.theme) cursor;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
+  hyprlandEnabled = config.my.gui.desktop.hyprland.enable;
   enable = cursor != null && config.my.gui.enable && isLinux;
 in {
-  config = mkIf enable {
-    # If your theme for mouse cursor, icons or windows don't load correctly,
-    # try setting them with home.pointerCursor and gtk.theme,
-    # which enable a bunch of compatibility options that should make the theme load in all situations.
-    home = {
-      sessionVariables = {
-        XCURSOR_THEME = cursor.name;
-        XCURSOR_SIZE = toString cursor.size;
-        # HYPRCURSOR_* are automatically set by pointerCursor.hyprcursor.enable
-      };
-      pointerCursor = {
+  config = mkIf enable (mkMerge [
+    {
+      home.pointerCursor = {
         inherit (cursor) name package size;
         gtk.enable = true;
         x11.enable = true;
-        hyprcursor.enable = true;
       };
-    };
-    gtk.cursorTheme = {
-      inherit (cursor) name package size;
-    };
-    xdg.dataFile."icon/${cursor.name}".source = "${cursor.package}/share/icons/${cursor.name}";
-  };
+    }
+    (mkIf (hyprlandEnabled && cursor.hyprcursor != null) {
+      home = {
+        packages = [cursor.hyprcursor.package];
+        sessionVariables = {
+          HYPRCURSOR_THEME = cursor.hyprcursor.name;
+          HYPRCURSOR_SIZE = toString cursor.size;
+        };
+      };
+    })
+  ]);
 }

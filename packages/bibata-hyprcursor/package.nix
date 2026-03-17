@@ -11,12 +11,16 @@
   outlineColor ? "#FFFFFF",
   watchBackgroundColor ? "#000000",
   colorName ? "classic",
+  cursorThemeName ? null,
   ...
 }: let
   capitalize = str:
     lib.toUpper (builtins.substring 0 1 str) + (builtins.substring 1 (builtins.stringLength str - 1) str);
 
-  themeName = "Bibata-${capitalize variant}-${capitalize colorName}-Hyprcursor";
+  resolvedThemeName =
+    if cursorThemeName != null
+    then cursorThemeName
+    else "Bibata-${capitalize variant}-${capitalize colorName}-Hyprcursor";
 in
   assert builtins.elem variant ["modern" "modern-right" "original" "original-right"]
   || builtins.trace "Invalid variant ${variant}. Valid variants are: modern, modern-right, original, original-right" false;
@@ -63,7 +67,7 @@ in
         runHook preConfigure
 
         cat << EOF > manifest.hl
-        name = ${themeName}
+        name = ${resolvedThemeName}
         description = The Bibata Cursor theme packaged for hyprcursor.
         version = ${final.version}
         cursors_directory = cursors
@@ -86,7 +90,7 @@ in
         runHook preInstall
 
         mkdir -p $out/share/icons
-        cp -r theme_${themeName} $out/share/icons/${themeName}
+        cp -r theme_${resolvedThemeName} $out/share/icons/${resolvedThemeName}
 
         runHook postInstall
       '';

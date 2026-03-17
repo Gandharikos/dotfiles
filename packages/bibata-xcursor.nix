@@ -1,103 +1,74 @@
-# TODO: not test yet
 {
   lib,
   stdenvNoCC,
   fetchFromGitHub,
   clickgen,
-  cbmp,
-  variant ? "modern",
+  resvg,
+  cursorThemeName ? "Bibata-Themed",
   baseColor ? "#000000",
   outlineColor ? "#FFFFFF",
   watchBackgroundColor ? "#000000",
-  colorName ? "classic",
   ...
-}: let
-  capitalize = str:
-    lib.toUpper (builtins.substring 0 1 str)
-    + builtins.substring 1 (builtins.stringLength str - 1) str;
+}:
+stdenvNoCC.mkDerivation rec {
+  pname = "bibata-cursor-themed";
+  version = "2.0.7";
 
-  themeName = "Bibata-${capitalize variant}-${capitalize colorName}-Xcursor";
-in
-  assert builtins.elem variant ["modern" "modern-right" "original" "original-right"]
-  || lib.throw "Invalid variant ${variant}, choose one of modern, modern-right, original, original-right";
-    stdenvNoCC.mkDerivation rec {
-      pname = "bibata-xcursor";
-      version = "2.0.7";
+  src = fetchFromGitHub {
+    owner = "ful1e5";
+    repo = "Bibata_Cursor";
+    rev = "v${version}";
+    hash = "sha256-kIKidw1vditpuxO1gVuZeUPdWBzkiksO/q2R/+DUdEc=";
+  };
 
-      src = fetchFromGitHub {
-        owner = "ful1e5";
-        repo = "Bibata_Cursor";
-        rev = "v${version}";
-        sha256 = "kIKidw1vditpuxO1gVuZeUPdWBzkiksO/q2R/+DUdEc=";
-      };
+  nativeBuildInputs = [
+    clickgen
+    resvg
+  ];
 
-      nativeBuildInputs = [
-        clickgen
-        cbmp
-      ];
+  buildPhase = ''
+    runHook preBuild
 
-      phases = ["unpackPhase" "configurePhase" "buildPhase" "installPhase"];
+    shopt -s globstar
 
-      unpackPhase = ''
-        runHook preUnpack
+    tmpdir="$(mktemp -d)"
+    mkdir -p "$tmpdir/in" "$tmpdir/out"
 
-        cp $src/configs/${
-          if lib.hasSuffix "right" variant
-          then "right"
-          else "normal"
-        }/x.build.toml config.toml
+    cp ./svg/modern/**/*.svg "$tmpdir/in"
 
-        mkdir cursors
-        for cursor in $src/svg/${variant}/*; do
-          cp -r $src/svg/${variant}/$(readlink $cursor) cursors
-        done
+    sed -i \
+      -e "s/#00FF00/${baseColor}/g" \
+      -e "s/#0000FF/${outlineColor}/g" \
+      -e "s/#FF0000/${watchBackgroundColor}/g" \
+      "$tmpdir/in"/*.svg
 
-        runHook postUnpack
-      '';
+    for f in "$tmpdir/in"/*.svg; do
+      base=$(basename "$f" .svg)
+      resvg "$f" "$tmpdir/out/$base.png"
+    done
 
-      configurePhase = ''
-        runHook preConfigure
+    ctgen configs/normal/x.build.toml \
+      -p x11 \
+      -d "$tmpdir/out" \
+      -n '${cursorThemeName}' \
+      -c 'Bibata XCursor themed with Nix'
 
-        cat > render.json << EOF
-        {
-          "${themeName}": {
-            "dir": "cursors/${variant}",
-            "out": "bitmaps/${themeName}",
-            "colors": [
-              { "match": "#00FF00", "replace": "${baseColor}" },
-              { "match": "#0000FF", "replace": "${outlineColor}" },
-              { "match": "#FF0000", "replace": "${watchBackgroundColor}" }
-            ]
-          }
-        }
-        EOF
+    runHook postBuild
+  '';
 
-        runHook postConfigure
-      '';
+  installPhase = ''
+    runHook preInstall
 
-      buildPhase = ''
-        runHook preBuild
+    install -dm 0755 "$out/share/icons"
+    cp -rf themes/* "$out/share/icons/"
 
-        mkdir -p bitmaps
-        cbmp render.json
+    runHook postInstall
+  '';
 
-        ctgen config.toml \
-          -p x11 \
-          -d bitmaps/${themeName} \
-          -n "${themeName}" \
-          -c "${themeName} XCursors"
-
-        runHook postBuild
-      '';
-
-      installPhase = ''
-        runHook preInstall
-
-        mkdir -p $out/share/icons
-        cp -r themes/theme_${themeName} $out/share/icons/${themeName}
-
-        runHook postInstall
-      '';
-
-      meta.platforms = lib.platforms.linux;
-    }
+  meta = {
+    description = "Material Based Cursor Theme";
+    homepage = "https://github.com/ful1e5/Bibata_Cursor";
+    license = lib.licenses.gpl3Only;
+    platforms = lib.platforms.linux;
+  };
+}

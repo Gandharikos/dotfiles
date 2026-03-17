@@ -91,6 +91,8 @@
     else null;
 in {
   config = mkIf enable {
+    home.shellAliases.caffeinate = "systemctl --user stop hypridle";
+
     services.hypridle = {
       enable = true;
 
