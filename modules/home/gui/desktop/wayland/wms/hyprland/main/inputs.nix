@@ -4,7 +4,9 @@
   ...
 }: let
   inherit (lib.modules) mkIf;
+  inherit (lib.lists) elem optional;
   cfg = config.my.gui.desktop.hyprland;
+  hyprgrassEnabled = cfg.plugins.enable && elem "hyprgrass" cfg.plugins.list;
 in {
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland.settings = {
@@ -23,11 +25,9 @@ in {
 
       # touchpad gestures
       gestures = {
-        workspace_swipe_forever = true;
+        workspace_swipe_forever = !hyprgrassEnabled;
       };
-      gesture = [
-        "3, horizontal, workspace"
-      ];
+      gesture = optional (!hyprgrassEnabled) "3, horizontal, workspace";
 
       cursor = {
         no_hardware_cursors = true;
