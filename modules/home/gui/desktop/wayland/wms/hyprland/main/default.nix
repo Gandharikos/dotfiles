@@ -21,7 +21,11 @@ in {
         readOnly = true;
       };
     plugins = {
-      enable = mkEnableOption "Enable Hyprland plugins";
+      enable =
+        mkEnableOption "Enable Hyprland plugins"
+        // {
+          default = true;
+        };
       list = mkOption {
         default = [
           "hyprfocus"
@@ -31,7 +35,7 @@ in {
           "hyprgrass"
           "hypr-dynamic-cursors"
         ];
-        type = listOf enum [
+        type = listOf (enum [
           "hy3"
           "hyprfocus"
           "hyprsplit"
@@ -45,7 +49,7 @@ in {
           "csgo-vulkan-fix"
           "hypr-dynamic-cursors"
           "hyprwinwrap"
-        ];
+        ]);
         description = "List of Hyprland plugins to enable";
       };
     };
