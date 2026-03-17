@@ -15,14 +15,15 @@ in {
     wayland.windowManager.hyprland = {
       plugins = with pkgs.hyprlandPlugins; [hyprsplit];
       settings = {
-        bindd =
-          mkAfter [
+        bindd = mkAfter (
+          [
             "$mod, D, Swap Active Workspaces, split:swapactiveworkspaces, current + 1"
             "$mod SHIFT, G, Grab Rogue Windows, split:grabroguewindows"
           ]
           ++ (mkHyprWorkspaces
             ["split:workspace" "split:movetoworkspace" "split:movetoworkspacesilent"]
-            num_workspaces);
+            num_workspaces)
+        );
         plugin.hyprsplit = {
           inherit num_workspaces;
           persistent_workspaces = true;

@@ -22,7 +22,7 @@ in {
         };
         shake = {
           enabled = true;
-          treshold = 1.0;
+          threshold = 1.0;
         };
       };
     };
