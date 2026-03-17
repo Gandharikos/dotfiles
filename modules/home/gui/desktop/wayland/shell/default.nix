@@ -185,7 +185,7 @@ in {
             "${modKey}+V" = spawn ["clipboard" "toggle"];
             "${modKey}+Escape" = spawn ["processlist" "toggle"];
             "${modKey}+X" = spawn ["powermenu" "toggle"];
-            "${modKey}+C" = spawn ["control-center" "toggle"];
+            "${modKey}+Ctrl+C" = spawn ["control-center" "toggle"];
             "${modKey}+${N}" = spawn ["notepad" "toggle"];
             "${modKey}+Shift+D" = spawn ["notifications" "toggleDoNotDisturb"];
             "${modKey}+Shift+T" = spawn ["theme" "toggle"];
