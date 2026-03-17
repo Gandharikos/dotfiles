@@ -157,6 +157,11 @@ in
             "${modKey}+F".action.fullscreen-window = [];
             "${modKey}+Shift+F".action.toggle-window-floating = [];
             "${modKey}+M".action.maximize-column = [];
+            "${modKey}+C".action.center-column = [];
+            "${modKey}+R".action.switch-preset-column-width = [];
+            "${modKey}+Shift+R".action.switch-preset-window-height = [];
+            "${modKey}+Minus".action.set-column-width = "-10%";
+            "${modKey}+Equal".action.set-column-width = "+10%";
 
             # Monitor focus / move workspace.
             "${modKey}+Comma".action.focus-monitor-left = [];
