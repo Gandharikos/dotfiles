@@ -8,7 +8,7 @@
 let
   inherit (lib.lists) optionals;
   inherit (lib.meta) getExe getExe';
-  inherit (lib.my) uwsmApp uwsmScript withUWSM';
+  inherit (lib.my) uwsmApp uwsmScript;
   inherit (lib.modules) mkIf;
   inherit (lib.strings) escapeShellArgs;
 
@@ -59,8 +59,28 @@ let
 
   enable = desktop.idle.default == "swayidle" && desktop.wayland.enable;
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  dms = if desktop.uwsm.enable then withUWSM' pkgs dmsPkg "dms" else getExe' dmsPkg "dms";
-  dmsLock = "${dms} ipc call lock lock";
+  dms = getExe' dmsPkg "dms";
+  noctaliaQsPkg = inputs.noctalia-qs.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  qs' = getExe' noctaliaQsPkg "qs";
+  shellLock =
+    if desktop.shell.default == "noctalia-shell" then
+      app qs' [
+        "-c"
+        "noctalia-shell"
+        "ipc"
+        "call"
+        "lockScreen"
+        "lock"
+      ]
+    else if desktop.shell.default == "dms" then
+      app dms [
+        "ipc"
+        "call"
+        "lock"
+        "lock"
+      ]
+    else
+      app loginctl' [ "lock-session" ];
   screenOnCmd =
     if desktop.default == "hyprland" then
       app hyprctl' [
@@ -101,7 +121,7 @@ in
 
       events = {
         before-sleep = app loginctl' [ "lock-session" ];
-        lock = dmsLock;
+        lock = shellLock;
       }
       // lib.optionalAttrs (screenOnCmd != null) {
         after-resume = screenOnCmd;

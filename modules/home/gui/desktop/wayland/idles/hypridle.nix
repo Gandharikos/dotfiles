@@ -8,7 +8,7 @@
 let
   inherit (lib.lists) optionals;
   inherit (lib.meta) getExe getExe';
-  inherit (lib.my) uwsmApp uwsmScript withUWSM';
+  inherit (lib.my) uwsmApp uwsmScript;
   inherit (lib.modules) mkIf;
   inherit (lib.strings) escapeShellArgs;
 
@@ -60,8 +60,28 @@ let
 
   enable = desktop.idle.default == "hypridle" && desktop.wayland.enable;
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  dms = if desktop.uwsm.enable then withUWSM' pkgs dmsPkg "dms" else getExe' dmsPkg "dms";
-  dms_lock = "${dms} ipc call lock lock";
+  dms = getExe' dmsPkg "dms";
+  noctaliaQsPkg = inputs.noctalia-qs.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  qs' = getExe' noctaliaQsPkg "qs";
+  lock_cmd =
+    if desktop.shell.default == "noctalia-shell" then
+      app qs' [
+        "-c"
+        "noctalia-shell"
+        "ipc"
+        "call"
+        "lockScreen"
+        "lock"
+      ]
+    else if desktop.shell.default == "dms" then
+      app dms [
+        "ipc"
+        "call"
+        "lock"
+        "lock"
+      ]
+    else
+      app loginctl' [ "lock-session" ];
   # to avoid having to press a key twice to turn on the display
   screen_on_cmd =
     if desktop.default == "hyprland" then
@@ -103,7 +123,7 @@ in
 
       settings = {
         general = {
-          lock_cmd = dms_lock;
+          inherit lock_cmd;
 
           # lock before suspend
           before_sleep_cmd = app loginctl' [ "lock-session" ];
