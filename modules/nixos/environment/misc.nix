@@ -11,5 +11,14 @@ in {
     defaultPackages = mkForce [];
   };
 
-  programs.nano.enable = false;
+  programs = {
+    # this is on by default. but i don't use nano
+    nano.enable = false;
+
+    less = {
+      # enabled by default to be the pageer, but i don't use it
+      enable = mkForce false;
+      lessopen = null;
+    };
+  };
 }

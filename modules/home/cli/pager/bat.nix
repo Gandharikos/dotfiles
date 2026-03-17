@@ -26,7 +26,7 @@ in {
     # a cat(1) clone with syntax highlighting and Git integration.
     programs.bat = {
       enable = true;
-      config = {pager = "less -RF";};
+      config = {inherit (config.my) pager;};
       extraPackages = with pkgs.bat-extras; [
         batdiff
         batman

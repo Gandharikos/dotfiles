@@ -8,6 +8,7 @@
   inherit (lib.types) str;
   inherit (lib.meta) getExe;
   less' = getExe pkgs.less;
+  bat' = getExe pkgs.bat;
 in {
   imports = lib.my.scanPaths ./.;
   options.my = {
@@ -18,7 +19,7 @@ in {
     };
     manpager = mkOption {
       type = str;
-      default = "sh -c 'col --no-backspaces --spaces | bat --plain --language=man'";
+      default = "sh -c 'col --no-backspaces --spaces | ${bat'} --plain --language=man'";
       description = "The manpages to use";
     };
   };
