@@ -54,7 +54,7 @@ in
               # ",XF86PowerOff, exec, ags -t powermenu"
               # "$mod, U, exec, XDG_CURRENT_DESKTOP=GNOME gnome-control-center"
 
-              "$mod, J, Toggle Split, layoutmsg, togglesplit"
+              "$mod, S, Toggle Split, layoutmsg, togglesplit"
               "$mod, Z, Bring to Top, alterzorder, top"
               "$mod SHIFT, Z, Send to Bottom, alterzorder, bottom"
               "$mod SHIFT, F, Toggle Floating, togglefloating,"
