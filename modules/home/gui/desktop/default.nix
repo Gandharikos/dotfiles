@@ -2,7 +2,7 @@
 let
   inherit (lib.my) scanPaths;
   inherit (lib.options) mkOption;
-  inherit (lib.types) int enum;
+  inherit (lib.types) int;
 in
 {
   imports = scanPaths ./.;
@@ -14,15 +14,6 @@ in
         default = 10;
         description = "Number of workspaces";
       };
-    };
-    mainKey = mkOption {
-      type = enum [
-        "SUPER"
-        "CTRL"
-        "ALT"
-      ];
-      default = "SUPER";
-      description = "Main modifier key for desktop keybinds.";
     };
   };
 }
