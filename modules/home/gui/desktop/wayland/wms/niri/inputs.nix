@@ -8,11 +8,8 @@
 in {
   config = mkIf cfg.enable {
     programs.niri.settings.input = {
+      workspace-auto-back-and-forth = true;
       keyboard = {
-        xkb = {
-          layout = "us";
-          options = "ctrl:nocaps";
-        };
         repeat-rate = 25;
         repeat-delay = 200;
       };
@@ -29,9 +26,11 @@ in {
       touchpad = {
         tap = true;
         dwt = true;
+        drag = false;
         accel-speed = 0.2;
         accel-profile = "adaptive";
         natural-scroll = true;
+        scroll-method = "two-finger";
         click-method = "clickfinger";
       };
     };

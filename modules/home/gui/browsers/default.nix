@@ -8,10 +8,21 @@
   inherit (lib.options) mkOption;
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe;
-  inherit (lib.my) withUWSM;
-  inherit (lib.types) enum nullOr str;
+  inherit (lib.strings) escapeShellArgs hasInfix;
+  inherit (lib.my) withUWSMArgs;
+  inherit (lib.types) enum nullOr str listOf coercedTo;
   inherit (lib.my) scanPaths;
   inherit (config.my.gui) browser desktop;
+  commandType = coercedTo str (
+    value:
+      if hasInfix " " value
+      then
+        throw ''
+          `my.gui.browser.command` accepts either an argv list or a single
+          program path. Use a list for commands with arguments.
+        ''
+      else [value]
+  ) (listOf str);
 in {
   imports = scanPaths ./.;
 
@@ -33,15 +44,29 @@ in {
       default = "${browser.default}.desktop";
       description = "Desktop entry id used for XDG mime associations.";
     };
+    command = mkOption {
+      type = commandType;
+      default =
+        if browser.default == null
+        then []
+        else if desktop.uwsm.enable
+        then withUWSMArgs pkgs browser.default
+        else [getExe (builtins.getAttr browser.default pkgs)];
+      description = ''
+        The argv form of the browser command. This is used by
+        compositors like Niri that expect a program and its arguments
+        as a list instead of a shell string.
+      '';
+    };
+
     exec = mkOption {
       type = str;
-      default =
-        if desktop.uwsm.enable
-        then withUWSM pkgs browser.default
-        else getExe (builtins.getAttr browser.default pkgs);
+      default = escapeShellArgs browser.command;
+      internal = true;
+      readOnly = true;
       description = ''
-        The command to use for the browser. This is used by the
-        `my.browser` module to determine which command to run.
+        The shell-escaped browser command derived from
+        `my.gui.browser.command`.
       '';
     };
   };

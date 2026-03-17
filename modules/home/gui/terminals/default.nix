@@ -6,10 +6,21 @@
 }: let
   inherit (lib.options) mkOption;
   inherit (lib.modules) mkIf;
-  inherit (lib.types) enum nullOr str int float;
+  inherit (lib.types) enum nullOr str int float listOf coercedTo;
   inherit (lib.meta) getExe;
-  inherit (lib.my) withUWSM;
+  inherit (lib.strings) escapeShellArgs hasInfix;
+  inherit (lib.my) withUWSMArgs;
   inherit (config.my.gui) desktop terminal;
+  commandType = coercedTo str (
+    value:
+      if hasInfix " " value
+      then
+        throw ''
+          `my.gui.terminal.command` accepts either an argv list or a single
+          program path. Use a list for commands with arguments.
+        ''
+      else [value]
+  ) (listOf str);
 in {
   imports = lib.my.scanPaths ./.;
 
@@ -33,15 +44,29 @@ in {
       description = "The terminal to use";
     };
 
+    command = mkOption {
+      type = commandType;
+      default =
+        if terminal.default == null
+        then []
+        else if desktop.uwsm.enable
+        then withUWSMArgs pkgs terminal.default
+        else [getExe (builtins.getAttr terminal.default pkgs)];
+      description = ''
+        The argv form of the terminal command. This is used by
+        compositors like Niri that expect a program and its arguments
+        as a list instead of a shell string.
+      '';
+    };
+
     exec = mkOption {
       type = str;
-      default =
-        if desktop.uwsm.enable
-        then withUWSM pkgs terminal.default
-        else getExe (builtins.getAttr terminal.default pkgs);
+      default = escapeShellArgs terminal.command;
+      internal = true;
+      readOnly = true;
       description = ''
-        The command to use for the terminal. This is used by the
-        `my.gui.terminal` module to determine which command to run.
+        The shell-escaped terminal command derived from
+        `my.gui.terminal.command`.
       '';
     };
 

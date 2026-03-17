@@ -122,15 +122,15 @@ in
             # Use Mod+Tab for toggle-overview instead, or focus-window-{up,down}
             "${modKey}+Return" = {
               repeat = false;
-              action.spawn = terminal.exec;
+              action.spawn = terminal.command;
             };
             "${modKey}+B" = {
               repeat = false;
-              action.spawn = browser.exec;
+              action.spawn = browser.command;
             };
             "${modKey}+${E}" = {
               repeat = false;
-              action.spawn = fileManager.exec;
+              action.spawn = fileManager.command;
             };
             "${modKey}+Tab".action.toggle-overview = [];
             "${modKey}+Q".action.close-window = [];

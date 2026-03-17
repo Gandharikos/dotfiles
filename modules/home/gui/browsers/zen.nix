@@ -8,7 +8,7 @@
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe';
-  inherit (lib.my) withUWSM';
+  inherit (lib.my) uwsmAppArgs;
   inherit (config.my) gui;
   inherit (config.my.gui) desktop;
   cfg = config.my.gui.apps.zen;
@@ -59,9 +59,9 @@ in {
         };
       };
     };
-    my.gui.browser.exec =
+    my.gui.browser.command =
       if desktop.uwsm.enable
-      then withUWSM' pkgs zenPkg "zen"
-      else (getExe' zenPkg "zen");
+      then uwsmAppArgs pkgs (getExe' zenPkg "zen") []
+      else [(getExe' zenPkg "zen")];
   };
 }

@@ -5,6 +5,7 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) singleton;
+  inherit (config.my.gui) terminal;
   cfg = config.my.gui.desktop.niri;
 in {
   config = mkIf cfg.enable {
@@ -49,27 +50,23 @@ in {
           border.enable = false;
         }
         {
-          matches = singleton {app-id = "kitty";};
-          opacity = 0.85;
-        }
-        {
           matches = singleton {app-id = "Alacritty";};
-          opacity = 0.85;
-        }
-        {
-          matches = singleton {app-id = "wezterm";};
-          opacity = 0.85;
+          inherit (terminal) opacity;
         }
         {
           matches = singleton {app-id = "ghostty";};
-          opacity = 0.7;
+          inherit (terminal) opacity;
+        }
+        {
+          matches = singleton {app-id = "wezterm";};
+          inherit (terminal) opacity;
         }
         {
           matches = [
             {app-id = "Spotify";}
             {title = "^(Spotify( Premium)?)$";}
           ];
-          opacity = 0.7;
+          opacity = 0.85;
         }
       ];
     };

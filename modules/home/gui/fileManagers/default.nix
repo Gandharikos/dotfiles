@@ -6,13 +6,24 @@
 }: let
   inherit (lib.options) mkOption;
   inherit (lib.modules) mkIf;
-  inherit (lib.types) enum str;
+  inherit (lib.types) enum str listOf coercedTo;
   inherit (lib.meta) getExe;
-  inherit (lib.my) withUWSM;
+  inherit (lib.strings) escapeShellArgs hasInfix;
+  inherit (lib.my) withUWSMArgs;
   inherit (config.my.gui) desktop fileManager;
   inherit (config.my) gui;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   enable = gui.enable && isLinux;
+  commandType = coercedTo str (
+    value:
+      if hasInfix " " value
+      then
+        throw ''
+          `my.gui.fileManager.command` accepts either an argv list or a single
+          program path. Use a list for commands with arguments.
+        ''
+      else [value]
+  ) (listOf str);
 in {
   imports = lib.my.scanPaths ./.;
 
@@ -31,15 +42,27 @@ in {
       default = "${fileManager.default}.desktop";
       description = "Desktop entry id used for XDG mime associations.";
     };
-    exec = mkOption {
-      type = str;
+    command = mkOption {
+      type = commandType;
       default =
         if desktop.uwsm.enable
-        then withUWSM pkgs fileManager.default
-        else getExe (builtins.getAttr fileManager.default pkgs);
+        then withUWSMArgs pkgs fileManager.default
+        else [getExe (builtins.getAttr fileManager.default pkgs)];
       description = ''
-        The command to use for the file manager. This is used by the
-        `my.gui.fileManager` module to determine which command to run.
+        The argv form of the file manager command. This is used by
+        compositors like Niri that expect a program and its arguments
+        as a list instead of a shell string.
+      '';
+    };
+
+    exec = mkOption {
+      type = str;
+      default = escapeShellArgs fileManager.command;
+      internal = true;
+      readOnly = true;
+      description = ''
+        The shell-escaped file manager command derived from
+        `my.gui.fileManager.command`.
       '';
     };
   };
