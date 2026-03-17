@@ -10,16 +10,8 @@ let
   cfg = gui.desktop;
   inherit (cfg.workspace) number;
 
-  # Convert mainKey to Aerospace modifier format
-  mod =
-    if cfg.mainKey == "SUPER" then
-      "cmd" # Super maps to Command on macOS
-    else if cfg.mainKey == "CTRL" then
-      "ctrl"
-    else if cfg.mainKey == "ALT" then
-      "alt"
-    else
-      cfg.mainKey; # Use as-is for "cmd-alt-ctrl" or other combinations
+  # Use mod directly from config
+  inherit (cfg) mod; # Use as-is for "cmd-alt-ctrl" or other combinations
 in
 with config.my.keyboard.keys;
 {

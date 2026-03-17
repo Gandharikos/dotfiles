@@ -18,7 +18,7 @@ let
     ;
   cfg = desktop.hyprland;
   num = desktop.workspace.number;
-  mod = desktop.mainKey;
+  inherit (desktop) mod;
   hyprsplit_enabled = cfg.plugins.enable && elem "hyprsplit" cfg.plugins.list;
   playerctl' = getExe pkgs.playerctl;
   wpctl' = getExe' pkgs.wireplumber "wpctl";

@@ -46,9 +46,9 @@ let
   noctalia = args: escapeShellArgs (noctaliaArgs args);
 
   modKey =
-    if desktop.mainKey == "SUPER" then
+    if desktop.mod == "SUPER" then
       "Mod"
-    else if desktop.mainKey == "CTRL" then
+    else if desktop.mod == "CTRL" then
       "Ctrl"
     else
       "Alt";

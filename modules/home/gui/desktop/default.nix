@@ -20,7 +20,7 @@ in
         description = "Number of workspaces";
       };
     };
-    mainKey = mkOption {
+    mod = mkOption {
       type = str;
       default = if isDarwin then "cmd-alt-ctrl" else "SUPER";
       description = ''
