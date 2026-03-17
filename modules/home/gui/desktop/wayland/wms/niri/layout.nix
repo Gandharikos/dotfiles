@@ -13,9 +13,9 @@ in {
         center-focused-column = "never";
         always-center-single-column = true;
         preset-column-widths = [
-          {proportion = 0.33333;}
-          {proportion = 0.5;}
-          {proportion = 0.66667;}
+          {proportion = 1.0 / 3.0;}
+          {proportion = 1.0 / 2.0;}
+          {proportion = 2.0 / 3.0;}
         ];
         default-column-width = {
           proportion = 0.5;
