@@ -5,7 +5,15 @@
 }: let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) singleton;
-  inherit (config.my.gui) terminal;
+  browserAppIds = [
+    "zen"
+    "firefox"
+    "org.mozilla.firefox"
+    "google-chrome"
+    "google-chrome-stable"
+  ];
+  browserMatches = builtins.map (appId: {"app-id" = "^${appId}$";}) browserAppIds;
+  pipTitle = "^(Picture-in-Picture|Picture in picture)$";
   cfg = config.my.gui.desktop.niri;
 in {
   config = mkIf cfg.enable {
@@ -18,12 +26,6 @@ in {
       ];
       window-rules = [
         {
-          # Default rule for all windows (no opacity = fully opaque)
-          matches = [{}];
-          open-maximized = false;
-          default-column-width = {
-            proportion = 1.0 / 2.0;
-          };
           geometry-corner-radius = {
             top-left = 12.0;
             top-right = 12.0;
@@ -38,8 +40,25 @@ in {
           open-floating = true;
         }
         {
-          matches = singleton {title = "^(Picture-in-Picture)$";};
+          matches = browserMatches;
+          excludes = singleton {title = pipTitle;};
+          open-maximized = true;
+        }
+        {
+          matches = singleton {title = pipTitle;};
           open-floating = true;
+          open-focused = false;
+          default-floating-position = {
+            x = 24;
+            y = 24;
+            relative-to = "bottom-right";
+          };
+          default-column-width = {
+            proportion = 0.3;
+          };
+          default-window-height = {
+            proportion = 0.3;
+          };
         }
         {
           matches = singleton {title = "^(Spotify( Premium)?)$";};
@@ -48,18 +67,6 @@ in {
         {
           matches = singleton {is-floating = true;};
           border.enable = false;
-        }
-        {
-          matches = singleton {app-id = "Alacritty";};
-          inherit (terminal) opacity;
-        }
-        {
-          matches = singleton {app-id = "ghostty";};
-          inherit (terminal) opacity;
-        }
-        {
-          matches = singleton {app-id = "wezterm";};
-          inherit (terminal) opacity;
         }
         {
           matches = [

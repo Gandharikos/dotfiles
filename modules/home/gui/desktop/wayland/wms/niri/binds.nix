@@ -14,16 +14,16 @@
   cfg = config.my.gui.desktop.niri;
 
   modKey =
-    if desktop.general.keybind.modifier == "SUPER"
+    if desktop.mainKey == "SUPER"
     then "Mod"
-    else if desktop.general.keybind.modifier == "CTRL"
+    else if desktop.mainKey == "CTRL"
     then "Ctrl"
     else "Alt";
   modShift = "${modKey}+Shift";
   modCtrl = "${modKey}+Ctrl";
   modAlt = "${modKey}+Alt";
 
-  numWorkspaces = desktop.general.workspace.number;
+  numWorkspaces = desktop.workspace.number;
   workspaceNumbers = lib.genList (i: i + 1) numWorkspaces;
   workspaceKey = n: toString (mod n 10);
   mkWorkspaceBinds = modifier: actionName: actionValueFn:
@@ -44,7 +44,7 @@
 
   hyprlock = withUWSMArgs pkgs "hyprlock";
   dmsEnabled = config.programs.dank-material-shell.enable or false;
-  useNiriBuiltinShot = desktop.shot == "dms" && !dmsEnabled;
+  useNiriBuiltinShot = desktop.shot.default == "dms" && !dmsEnabled;
   screenshotBinds =
     if useNiriBuiltinShot
     then {
@@ -105,7 +105,7 @@
     };
 
   lockBinds =
-    if desktop.lock == "hyprlock"
+    if desktop.lock.default == "hyprlock"
     then {
       "${modKey}+Alt+L".action.spawn = hyprlock;
     }
@@ -114,7 +114,7 @@ in
   with config.my.keyboard.keys; {
     config = mkIf cfg.enable {
       programs.niri.settings = {
-        screenshot-path = desktop.general.screenshot.path;
+        screenshot-path = desktop.shot.path;
 
         binds = foldl' lib.attrsets.recursiveUpdate {} [
           {

@@ -29,9 +29,9 @@
     else "${dmsCmdStr} ipc call ${args}";
 
   modKey =
-    if desktop.general.keybind.modifier == "SUPER"
+    if desktop.mainKey == "SUPER"
     then "Mod"
-    else if desktop.general.keybind.modifier == "CTRL"
+    else if desktop.mainKey == "CTRL"
     then "Ctrl"
     else "Alt";
 in {
@@ -91,7 +91,7 @@ in {
           "ALT, Comma, Toggle Settings, exec, ${settings}"
           "$mod, Apostrophe, Toggle Notifications, exec, ${notifications}"
         ]
-        ++ optionals (config.my.gui.desktop.lock == "dms") [
+        ++ optionals (config.my.gui.desktop.lock.default == "dms") [
           "SUPER ALT, L, Toggle Lock, exec, ${lock}"
         ];
       binddl = mkForce (let
@@ -126,7 +126,7 @@ in {
       ];
       binds = let
         spawn = args: {action.spawn = dms' args;};
-        screenshotBinds = optionalAttrs (desktop.shot == "dms") {
+        screenshotBinds = optionalAttrs (desktop.shot.default == "dms") {
           "Print" = spawn ["niri" "screenshot"];
           "Shift+Print" = spawn ["niri" "screenshotWindow"];
           "Ctrl+Print" = spawn ["niri" "screenshotScreen"];
@@ -194,7 +194,7 @@ in {
             "Alt+Comma" = spawn ["settings" "toggle"];
             "${modKey}+Apostrophe" = spawn ["notifications" "toggle"];
           }
-          // optionalAttrs (desktop.lock == "dms") {
+          // optionalAttrs (desktop.lock.default == "dms") {
             "${modKey}+Alt+L".action.spawn = dms' ["lock" "toggle"];
           }
           // screenshotBinds

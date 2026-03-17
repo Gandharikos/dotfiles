@@ -11,14 +11,14 @@ in {
       layout = {
         shadow.enable = true;
         center-focused-column = "never";
+        always-center-single-column = true;
         preset-column-widths = [
-          {proportion = 1.0 / 3.0;}
-          {proportion = 1.0 / 2.0;}
-          {proportion = 2.0 / 3.0;}
-          {proportion = 4.0 / 5.0;}
+          {proportion = 0.33333;}
+          {proportion = 0.5;}
+          {proportion = 0.66667;}
         ];
         default-column-width = {
-          proportion = 4.0 / 5.0;
+          proportion = 0.5;
         };
         focus-ring = {
           enable = true;

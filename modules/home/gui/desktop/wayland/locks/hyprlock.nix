@@ -12,7 +12,7 @@
   hyprlock' = runOnce pkgs "hyprlock";
   font_family = "SFProDisplay Nerd Font Bold";
   cfg = config.my.gui.desktop.hyprlock;
-  enable = config.my.gui.desktop.lock == "hyprlock" && config.my.gui.desktop.wayland.enable;
+  enable = config.my.gui.desktop.lock.default == "hyprlock" && config.my.gui.desktop.wayland.enable;
 in {
   options.my.gui.desktop.hyprlock = {
     colors = {

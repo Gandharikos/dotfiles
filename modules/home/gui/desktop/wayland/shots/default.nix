@@ -6,10 +6,27 @@
 }: let
   inherit (lib.meta) getExe';
   inherit (lib.modules) mkIf;
+  inherit (lib.options) mkOption;
+  inherit (lib.types) enum str;
+  inherit (config.xdg.userDirs.extraConfig) SCREENSHOTS;
   wl-copy' = getExe' pkgs.wl-clipboard-rs "wl-copy";
-  screenshotPath = config.my.gui.desktop.general.screenshot.path;
+  screenshotPath = config.my.gui.desktop.shot.path;
 in {
   imports = lib.my.scanPaths ./.;
+
+  options.my.gui.desktop.shot = {
+    default = mkOption {
+      type = enum ["hyprshot" "grimblast" "dms"];
+      default = "grimblast";
+      description = "The screenshot tool to use.";
+    };
+    path = mkOption {
+      type = str;
+      default = "${SCREENSHOTS}/screenshot-%Y%m%d-%H%M%S.png";
+      description = "Default output path template for desktop screenshots.";
+    };
+  };
+
   config = mkIf config.my.gui.desktop.wayland.enable {
     home = {
       file = {

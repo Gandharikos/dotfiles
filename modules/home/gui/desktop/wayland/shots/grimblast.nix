@@ -7,7 +7,7 @@
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe;
   inherit (lib.my) uwsmScript uwsmScriptArgs;
-  enable = config.my.gui.desktop.shot == "grimblast" && config.my.gui.desktop.wayland.enable;
+  enable = config.my.gui.desktop.shot.default == "grimblast" && config.my.gui.desktop.wayland.enable;
   grimblast = getExe pkgs.grimblast;
   satty = getExe pkgs.satty;
   areaShot = uwsmScript pkgs "grimblast-area-shot" ''

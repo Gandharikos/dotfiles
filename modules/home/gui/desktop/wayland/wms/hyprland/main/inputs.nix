@@ -9,8 +9,6 @@ in {
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland.settings = {
       input = {
-        kb_layout = "us";
-        kb_options = "ctrl:nocaps";
         # focus change on cursor move
         follow_mouse = 1;
         accel_profile = "flat";

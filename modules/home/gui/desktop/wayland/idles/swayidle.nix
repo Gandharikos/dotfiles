@@ -22,23 +22,19 @@
   suspendScript =
     if desktop.uwsm.enable
     then
-      uwsmScript pkgs "suspend-script" ''
-        # check if any player has statutes "Playing"
+      uwsmScript pkgs "swayidle-suspend-script" ''
         ${getExe pkgs.playerctl} -a status | ${
           getExe pkgs.ripgrep
         } Playing -q
-        # only suspend if nothing is playing
         if [ $? == 1 ]; then
           ${getExe' pkgs.systemd "systemctl"} suspend
         fi
       ''
     else
-      (pkgs.writeShellScript "suspend-script" ''
-        # check if any player has statutes "Playing"
+      (pkgs.writeShellScript "swayidle-suspend-script" ''
         ${getExe pkgs.playerctl} -a status | ${
           getExe pkgs.ripgrep
         } Playing -q
-        # only suspend if nothing is playing
         if [ $? == 1 ]; then
           ${getExe' pkgs.systemd "systemctl"} suspend
         fi
@@ -51,39 +47,42 @@
   dimScreen =
     if desktop.uwsm.enable
     then
-      uwsmScript pkgs "hypridle-dim-screen" ''
+      uwsmScript pkgs "swayidle-dim-screen" ''
         ${getExe pkgs.brillo} -O
         ${getExe pkgs.brillo} -u 1000000 -S 10
       ''
-    else "${getExe pkgs.brillo} -O; ${getExe pkgs.brillo} -u 1000000 -S 10";
+    else
+      (pkgs.writeShellScript "swayidle-dim-screen" ''
+        ${getExe pkgs.brillo} -O
+        ${getExe pkgs.brillo} -u 1000000 -S 10
+      '').outPath;
   restoreScreen = app (getExe pkgs.brillo) ["-I" "-u" "500000"];
 
   inherit (cfg) timeout;
 
-  enable = desktop.idle.default == "hypridle" && desktop.wayland.enable;
+  enable = desktop.idle.default == "swayidle" && desktop.wayland.enable;
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
   dms =
     if desktop.uwsm.enable
     then withUWSM' pkgs dmsPkg "dms"
     else getExe' dmsPkg "dms";
-  dms_lock = "${dms} ipc call lock lock";
-  lock_cmd =
+  dmsLock = "${dms} ipc call lock lock";
+  lockCmd =
     if desktop.lock.default == "hyprlock"
     then
       if desktop.uwsm.enable
-      then runOnce pkgs "hyprlock" # avoid starting multiple hyprlock instances
+      then runOnce pkgs "hyprlock"
       else getExe pkgs.hyprlock
     else if desktop.lock.default == "dms"
-    then dms_lock
+    then dmsLock
     else null;
-  # to avoid having to press a key twice to turn on the display
-  screen_on_cmd =
+  screenOnCmd =
     if desktop.default == "hyprland"
     then app hyprctl' ["dispatch" "dpms" "on"]
     else if desktop.default == "niri"
     then app niri' ["msg" "action" "power-on-monitors"]
     else null;
-  screen_off_cmd =
+  screenOffCmd =
     if desktop.default == "hyprland"
     then app hyprctl' ["dispatch" "dpms" "off"]
     else if desktop.default == "niri"
@@ -91,53 +90,52 @@
     else null;
 in {
   config = mkIf enable {
-    services.hypridle = {
+    services.swayidle = {
       enable = true;
 
-      settings = {
-        general = {
-          inherit lock_cmd;
-
-          # lock before suspend
-          before_sleep_cmd = app loginctl' ["lock-session"];
-
-          after_sleep_cmd = screen_on_cmd;
+      events =
+        {
+          before-sleep = app loginctl' ["lock-session"];
+        }
+        // lib.optionalAttrs (lockCmd != null) {
+          lock = lockCmd;
+        }
+        // lib.optionalAttrs (screenOnCmd != null) {
+          after-resume = screenOnCmd;
         };
 
-        listener =
-          [
-            {
-              timeout = timeout - 10;
-              # save the current brightness and dim the screen over a period of
-              # 1 second
-              on-timeout = dimScreen;
-              # brighten the screen over a period of 500ms to the saved value
-              on-resume = restoreScreen;
-            }
-          ]
-          ++ optionals cfg.keyboardBacklight.enable [
-            {
-              timeout = timeout / 2;
-              on-timeout = app brightnessctl' ["-sd" cfg.keyboardBacklight.device "set" "0"];
-              on-resume = app brightnessctl' ["-rd" cfg.keyboardBacklight.device];
-            }
-          ]
-          ++ [
-            {
-              inherit timeout;
-              on-timeout = app loginctl' ["lock-session"];
-            }
-            {
-              inherit timeout;
-              on-timeout = screen_off_cmd;
-              on-resume = screen_on_cmd;
-            }
-            {
-              timeout = timeout + 10;
-              on-timeout = suspendScript;
-            }
-          ];
-      };
+      timeouts =
+        [
+          {
+            timeout = timeout - 10;
+            command = dimScreen;
+            resumeCommand = restoreScreen;
+          }
+          {
+            inherit timeout;
+            command = app loginctl' ["lock-session"];
+          }
+        ]
+        ++ optionals cfg.keyboardBacklight.enable [
+          {
+            timeout = timeout / 2;
+            command = app brightnessctl' ["-sd" cfg.keyboardBacklight.device "set" "0"];
+            resumeCommand = app brightnessctl' ["-rd" cfg.keyboardBacklight.device];
+          }
+        ]
+        ++ optionals (screenOffCmd != null) [
+          {
+            inherit timeout;
+            command = screenOffCmd;
+            resumeCommand = screenOnCmd;
+          }
+        ]
+        ++ [
+          {
+            timeout = timeout + 10;
+            command = suspendScript;
+          }
+        ];
     };
   };
 }

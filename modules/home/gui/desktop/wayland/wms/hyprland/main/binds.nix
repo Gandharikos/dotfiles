@@ -11,8 +11,8 @@
   inherit (lib.my) uwsmApp uwsmScript;
   inherit (config.my.gui) desktop terminal browser fileManager;
   cfg = desktop.hyprland;
-  num = desktop.general.workspace.number;
-  mod = desktop.general.keybind.modifier;
+  num = desktop.workspace.number;
+  mod = desktop.mainKey;
   hyprsplit_enabled = cfg.plugins.enable && elem "hyprsplit" cfg.plugins.list;
   playerctl' = getExe pkgs.playerctl;
   wpctl' = getExe' pkgs.wireplumber "wpctl";
