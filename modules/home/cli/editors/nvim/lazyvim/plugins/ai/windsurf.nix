@@ -23,11 +23,7 @@ in
         windsurf-nvim
       ];
 
-      # extraSpec = ''
-      #   { import = "lazyvim.plugins.extras.ai.codeium" },
-      # '';
-
-      config = [ "ai/windsurf.lua" ];
+      imports = [ "lazyvim.plugins.extras.ai.codeium" ];
     };
 
     sops.secrets.codeium = {

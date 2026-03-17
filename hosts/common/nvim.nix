@@ -7,10 +7,9 @@
         custom.enable = true;
 
         # ai
-        windsurf.enable = true;
         copilot.native.enable = true;
+        copilot.chat.enable = true;
         sidekick.enable = true;
-        supermaven.enable = true;
         # coding
         mini-snippets.enable = true;
         neogen.enable = true;

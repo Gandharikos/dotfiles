@@ -41,20 +41,21 @@ in
       };
     })
     (mkIf cfg.lua.enable {
-      my.neovim.lazyvim.extraPlugins =
-        with pkgs.vimPlugins;
-        [ copilot-lua ]
-        ++ optionals (config.my.neovim.lazyvim.cmp == "nvim-cmp") [ copilot-cmp ]
-        ++ optionals (config.my.neovim.lazyvim.cmp == "blink" || config.my.neovim.lazyvim.cmp == "auto") [
-          blink-cmp-copilot
-        ];
-
-      my.neovim.lazyvim.config = [ "ai/copilot.lua" ];
+      my.neovim.lazyvim = {
+        imports = [ "lazyvim.plugins.extras.ai.copilot" ];
+        extraPlugins =
+          with pkgs.vimPlugins;
+          [ copilot-lua ]
+          ++ optionals (config.my.neovim.lazyvim.cmp == "nvim-cmp") [ copilot-cmp ]
+          ++ optionals (config.my.neovim.lazyvim.cmp == "blink" || config.my.neovim.lazyvim.cmp == "auto") [
+            blink-cmp-copilot
+          ];
+      };
     })
     (mkIf cfg.chat.enable {
       my.neovim.lazyvim = {
+        imports = [ "lazyvim.plugins.extras.ai.copilot-chat" ];
         extraPlugins = with pkgs.vimPlugins; [ CopilotChat-nvim ];
-        config = [ "ai/copilot-chat.lua" ];
       };
     })
     (mkIf cfg.native.enable {
