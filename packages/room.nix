@@ -24,6 +24,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/rvcas/room";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

@@ -8,28 +8,26 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.my.langs.cc;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkMerge mkIf;
   inherit (builtins) isList elemAt;
 
-  mkWrapper = package: postBuild: let
-    name =
-      if isList package
-      then elemAt package 0
-      else package;
-    paths =
-      if isList package
-      then package
-      else [package];
-  in
+  mkWrapper =
+    package: postBuild:
+    let
+      name = if isList package then elemAt package 0 else package;
+      paths = if isList package then package else [ package ];
+    in
     pkgs.symlinkJoin {
       inherit paths postBuild;
       name = "${name}-wrapped";
-      buildInputs = [pkgs.makeWrapper];
+      buildInputs = [ pkgs.makeWrapper ];
     };
-in {
+in
+{
   options.my.langs.cc = {
     enable = mkEnableOption "C/C++ development environment";
     xdg.enable = mkEnableOption "C/C++ XDG environment variables";

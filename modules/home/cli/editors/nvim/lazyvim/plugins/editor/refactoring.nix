@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.refactoring;
-in {
+in
+{
   options.my.neovim.lazyvim.refactoring = {
     enable = mkEnableOption "Refactoring tool";
   };
@@ -18,7 +20,7 @@ in {
         refactoring-nvim
       ];
 
-      imports = ["lazyvim.plugins.extras.editor.refactoring"];
+      imports = [ "lazyvim.plugins.extras.editor.refactoring" ];
     };
   };
 }

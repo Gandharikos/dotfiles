@@ -3,16 +3,18 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf mkAfter;
   inherit (lib.lists) elem;
   inherit (config.my.gui.desktop.hyprland) plugins;
   enable = plugins.enable && elem "hyprspace" plugins.list;
   hyprland_settings = config.wayland.windowManager.hyprland.settings;
-in {
+in
+{
   config = mkIf enable {
     wayland.windowManager.hyprland = {
-      plugins = with pkgs.hyprlandPlugins; [hyprspace];
+      plugins = with pkgs.hyprlandPlugins; [ hyprspace ];
 
       settings = {
         bindd = mkAfter [

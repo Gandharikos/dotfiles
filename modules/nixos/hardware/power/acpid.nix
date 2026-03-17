@@ -3,10 +3,12 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (config.my) machine;
-in {
+in
+{
   config = mkIf (machine.type == "laptop") {
     # pretty much handled by brightnessctl
     hardware.acpilight.enable = false;
@@ -20,7 +22,7 @@ in {
     ];
 
     boot = {
-      kernelModules = ["acpi_call"];
+      kernelModules = [ "acpi_call" ];
       extraModulePackages = with config.boot.kernelPackages; [
         acpi_call
         cpupower

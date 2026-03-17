@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.cmake;
-in {
+in
+{
   options.my.neovim.lazyvim.cmake = {
     enable = mkEnableOption "language cmake";
   };
@@ -22,7 +24,7 @@ in {
         cmake-tools-nvim
       ];
 
-      imports = ["lazyvim.plugins.extras.lang.cmake"];
+      imports = [ "lazyvim.plugins.extras.lang.cmake" ];
 
       extraPackages = with pkgs; [
         cmake-language-server

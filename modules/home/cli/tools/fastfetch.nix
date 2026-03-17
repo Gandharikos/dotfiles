@@ -2,8 +2,11 @@
   config,
   lib,
   ...
-}: let
-  shellAliases = {"fetch" = "fastfetch";};
+}:
+let
+  shellAliases = {
+    "fetch" = "fastfetch";
+  };
   inherit (config.programs) kitty;
   cfg = config.my.fastfetch;
   inherit (lib.options) mkEnableOption;
@@ -13,7 +16,8 @@
       fastfetch
     fi
   '';
-in {
+in
+{
   options.my.fastfetch = {
     enable = mkEnableOption "fastfetch";
     startOnLogin = mkEnableOption "fastfetch on login";
@@ -32,15 +36,14 @@ in {
         settings = {
           "$schema" = "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json";
           logo = {
-            type =
-              if kitty.enable
-              then "kitty-direct"
-              else "chafa";
+            type = if kitty.enable then "kitty-direct" else "chafa";
             # width = 60;
             height = 18;
             printRemaining = false;
             source = "$(find $HOME/.config/fastfetch/pngs/ -name '*.png' | sort -R | head -n 1)";
-            chafa = {symbols = "vhalf";};
+            chafa = {
+              symbols = "vhalf";
+            };
             padding = {
               top = 1;
               left = 2;
@@ -157,7 +160,6 @@ in {
       inherit shellAliases;
     };
 
-    xdg.configFile."fastfetch/pngs".source =
-      lib.my.relativeToConfig "fastfetch/pngs";
+    xdg.configFile."fastfetch/pngs".source = lib.my.relativeToConfig "fastfetch/pngs";
   };
 }

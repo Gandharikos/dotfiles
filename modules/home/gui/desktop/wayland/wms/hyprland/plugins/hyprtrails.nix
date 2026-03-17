@@ -3,15 +3,17 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) elem;
   inherit (config.my.gui.desktop.hyprland) plugins;
   enable = plugins.enable && elem "hyprtails" plugins.list;
-in {
+in
+{
   config = mkIf enable {
     wayland.windowManager.hyprland = {
-      plugins = with pkgs.hyprlandPlugins; [hyprtails];
+      plugins = with pkgs.hyprlandPlugins; [ hyprtails ];
 
       settings.plugin.hyprtrails = {
         # TODO: change this, don't use hardcoded color

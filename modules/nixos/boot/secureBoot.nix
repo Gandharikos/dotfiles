@@ -4,11 +4,13 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf mkForce mkDefault;
   inherit (lib.options) mkEnableOption;
   cfg = config.my.boot;
-in {
+in
+{
   # How to enter setup mode - msi motherboard
   ## 1. enter BIOS via [Del] Key
   ## 2. <Advance mode> => <Settings> => <Security> => <Secure Boot>

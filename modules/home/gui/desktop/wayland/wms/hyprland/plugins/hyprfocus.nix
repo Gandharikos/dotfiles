@@ -3,18 +3,20 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) elem;
   inherit (config.my.gui.desktop.hyprland) plugins;
   enable = plugins.enable && elem "hyprfocus" plugins.list;
-in {
+in
+{
   config = mkIf enable {
     wayland.windowManager.hyprland = {
-      plugins = with pkgs.hyprlandPlugins; [hyprfocus];
+      plugins = with pkgs.hyprlandPlugins; [ hyprfocus ];
 
       settings = {
-        bindd = ["$mod SHIFT, SPACE, Animate Focus, animatefocused"];
+        bindd = [ "$mod SHIFT, SPACE, Animate Focus, animatefocused" ];
         plugin.hyprfocus = {
           enabled = "yes";
           keyboard_focus_animation = "shrink";

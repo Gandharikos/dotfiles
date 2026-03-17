@@ -3,12 +3,14 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   cfg = config.my.theme.tokyonight;
   enable = cfg.enable && config.my.gui.enable && isLinux;
-in {
+in
+{
   config = mkIf enable {
     qt = {
       enable = true;

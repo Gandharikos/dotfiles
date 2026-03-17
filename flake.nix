@@ -1,20 +1,22 @@
 {
   description = "My NixOS flakes configuration makes me feel like the world is my oyster";
 
-  outputs = inputs @ {
-    flake-parts,
-    home-manager,
-    systems,
-    ...
-  }: let
-    lib =
-      inputs.nixpkgs.lib.extend
-      (final: _: {my = import ./lib {lib = final;};} // home-manager.lib);
-    specialArgs = {inherit lib;};
-  in
-    flake-parts.lib.mkFlake {inherit inputs specialArgs;} {
+  outputs =
+    inputs@{
+      flake-parts,
+      home-manager,
+      systems,
+      ...
+    }:
+    let
+      lib = inputs.nixpkgs.lib.extend (
+        final: _: { my = import ./lib { lib = final; }; } // home-manager.lib
+      );
+      specialArgs = { inherit lib; };
+    in
+    flake-parts.lib.mkFlake { inherit inputs specialArgs; } {
       systems = import systems;
-      imports = [./flake];
+      imports = [ ./flake ];
     };
 
   inputs = {
@@ -235,6 +237,17 @@
     quickshell = {
       url = "github:outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    noctalia-qs = {
+      url = "github:noctalia-dev/noctalia-qs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.noctalia-qs.follows = "noctalia-qs";
     };
 
     dms = {

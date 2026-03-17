@@ -2,30 +2,28 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) listOf enum;
   inherit (lib.modules) mkIf;
   inherit (lib.my) scanPaths;
   inherit (config.my.gui) desktop;
   cfg = desktop.hyprland;
-in {
+in
+{
   imports = scanPaths ./.;
 
   options.my.gui.desktop.hyprland = {
-    enable =
-      mkEnableOption "Enable Hyprland"
-      // {
-        default = desktop.wayland.enable && desktop.default == "hyprland";
-        internal = true;
-        readOnly = true;
-      };
+    enable = mkEnableOption "Enable Hyprland" // {
+      default = desktop.wayland.enable && desktop.default == "hyprland";
+      internal = true;
+      readOnly = true;
+    };
     plugins = {
-      enable =
-        mkEnableOption "Enable Hyprland plugins"
-        // {
-          default = true;
-        };
+      enable = mkEnableOption "Enable Hyprland plugins" // {
+        default = true;
+      };
       list = mkOption {
         default = [
           "hyprfocus"
@@ -63,7 +61,7 @@ in {
       systemd = {
         # NOTE: we use uwsm start hyprland, not manual ssystemd
         enable = false;
-        variables = ["--all"];
+        variables = [ "--all" ];
         extraCommands = [
           "systemctl --user stop graphical-session.target"
           "systemctl --user start hyprland-session.target"

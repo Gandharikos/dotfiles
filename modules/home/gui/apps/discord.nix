@@ -3,23 +3,23 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (config.my) gui;
   cfg = config.my.gui.apps.discord;
   enable = gui.enable && cfg.enable;
-in {
+in
+{
   imports = [
     inputs.nixcord.homeModules.nixcord
   ];
 
   options.my.gui.apps.discord = {
-    enable =
-      mkEnableOption "Discord"
-      // {
-        default = config.my.gui.enable;
-      };
+    enable = mkEnableOption "Discord" // {
+      default = config.my.gui.enable;
+    };
   };
 
   config = mkIf enable {

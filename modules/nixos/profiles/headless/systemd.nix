@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   isHeadless = !config.my.gui.enable;
-in {
+in
+{
   config = mkIf isHeadless {
     # https://github.com/numtide/srvos/blob/main/nixos/server/default.nix
     systemd = {

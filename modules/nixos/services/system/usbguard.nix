@@ -3,21 +3,24 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.services.usbguard;
-in {
+in
+{
   options.my.services.usbguard = {
-    enable =
-      mkEnableOption "Enable USBGuard"
-      // {
-        default = config.my.security.enable;
-      };
+    enable = mkEnableOption "Enable USBGuard" // {
+      default = config.my.security.enable;
+    };
   };
   config = mkIf cfg.enable {
     services.usbguard = {
-      IPCAllowedUsers = ["root" "${config.my.name}"];
+      IPCAllowedUsers = [
+        "root"
+        "${config.my.name}"
+      ];
       presentDevicePolicy = "allow";
       rules = ''
         allow with-interface equals { 08:*:* }
@@ -30,6 +33,6 @@ in {
       '';
     };
 
-    environment.systemPackages = [pkgs.usbguard];
+    environment.systemPackages = [ pkgs.usbguard ];
   };
 }

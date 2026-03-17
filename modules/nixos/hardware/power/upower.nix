@@ -2,10 +2,12 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (config.my) machine;
-in {
+in
+{
   config = mkIf (machine.type == "laptop") {
     # DBus service that provides power management support to applications.
     services.upower = {

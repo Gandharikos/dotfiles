@@ -3,19 +3,19 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (config.my) gui;
   cfg = config.my.gui.apps.firefox;
   enable = gui.enable && cfg.enable;
-in {
+in
+{
   options.my.gui.apps.firefox = {
-    enable =
-      mkEnableOption "firefox"
-      // {
-        default = config.my.gui.browser.default == "firefox";
-      };
+    enable = mkEnableOption "firefox" // {
+      default = config.my.gui.browser.default == "firefox";
+    };
   };
 
   config = mkIf enable {
@@ -142,7 +142,7 @@ in {
             "ddg".metaData.alias = "dg";
 
             "GitHub" = {
-              definedAliases = ["gh"];
+              definedAliases = [ "gh" ];
               urls = [
                 {
                   template = "https://github.com/search?q={searchTerms}&type=code";
@@ -153,7 +153,7 @@ in {
             };
 
             "youtube" = {
-              definedAliases = ["yt"];
+              definedAliases = [ "yt" ];
               urls = [
                 {
                   template = "https://www.youtube.com/results?search_query={searchTerms}";
@@ -164,7 +164,7 @@ in {
             };
 
             "ArtifactHUB" = {
-              definedAliases = ["ah"];
+              definedAliases = [ "ah" ];
               urls = [
                 {
                   template = "https://artifacthub.io/packages/search?sort=relevance&page=1&ts_query_web={searchTerms}";
@@ -173,14 +173,14 @@ in {
             };
 
             "My NixOS" = {
-              definedAliases = ["mn"];
-              urls = [{template = "https://mynixos.com/search?q={searchTerms}";}];
+              definedAliases = [ "mn" ];
+              urls = [ { template = "https://mynixos.com/search?q={searchTerms}"; } ];
               icon = "https://mynixos.com/favicon.ico";
               updateInterval = 7 * 24 * 60 * 60 * 1000; # every week
             };
 
             "NixOS Packages" = {
-              definedAliases = ["np"];
+              definedAliases = [ "np" ];
               urls = [
                 {
                   template = "https://search.nixos.org/packages?query={searchTerms}";
@@ -190,7 +190,7 @@ in {
             };
 
             "NixOS Options" = {
-              definedAliases = ["no"];
+              definedAliases = [ "no" ];
               urls = [
                 {
                   template = "https://search.nixos.org/options?query={searchTerms}";
@@ -200,7 +200,7 @@ in {
             };
 
             "home-manager Options" = {
-              definedAliases = ["hmo"];
+              definedAliases = [ "hmo" ];
               urls = [
                 {
                   template = "https://home-manager-options.extranix.com/?query={searchTerms}";
@@ -210,7 +210,7 @@ in {
             };
 
             "NixOS Wiki" = {
-              definedAliases = ["nw"];
+              definedAliases = [ "nw" ];
               urls = [
                 {
                   template = "https://wiki.nixos.org/w/index.php?search={searchTerms}";
@@ -220,7 +220,7 @@ in {
             };
 
             "GitHub lang:nix" = {
-              definedAliases = ["ghln"];
+              definedAliases = [ "ghln" ];
               urls = [
                 {
                   template = "https://github.com/search?q=lang:nix {searchTerms}&type=code";
@@ -231,7 +231,7 @@ in {
             };
 
             "GitHub nixpkgs" = {
-              definedAliases = ["ghnp"];
+              definedAliases = [ "ghnp" ];
               urls = [
                 {
                   template = "https://github.com/search?q=repo%3ANixOS%2Fnixpkgs {searchTerms}&type=code";
@@ -242,22 +242,22 @@ in {
             };
 
             "Freedium.cfd" = {
-              definedAliases = ["fd"];
-              urls = [{template = "https://freedium.cfd/{searchTerms}";}];
+              definedAliases = [ "fd" ];
+              urls = [ { template = "https://freedium.cfd/{searchTerms}"; } ];
               icon = "https://miro.medium.com/v2/5d8de952517e8160e40ef9841c781cdc14a5db313057fa3c3de41c6f5b494b19";
               updateInterval = 7 * 24 * 60 * 60 * 1000; # every week
             };
 
             "ProtonDB" = {
-              definedAliases = ["pd"];
-              urls = [{template = "https://protondb.com/search?q={searchTerms}";}];
+              definedAliases = [ "pd" ];
+              urls = [ { template = "https://protondb.com/search?q={searchTerms}"; } ];
               icon = "https://protondb.com/sites/protondb/images/favicon.ico";
               updateInterval = 7 * 24 * 60 * 60 * 1000; # every week
             };
 
             "HowLongToBeat" = {
-              definedAliases = ["hltb"];
-              urls = [{template = "https://howlongtobeat.com/?q={searchTerms}";}];
+              definedAliases = [ "hltb" ];
+              urls = [ { template = "https://howlongtobeat.com/?q={searchTerms}"; } ];
               icon = "https://howlongtobeat.com/img/icons/favicon-32x32.png";
               updateInterval = 7 * 24 * 60 * 60 * 1000; # every week
             };

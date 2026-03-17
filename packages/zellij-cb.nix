@@ -24,6 +24,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/ndavd/zellij-cb";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

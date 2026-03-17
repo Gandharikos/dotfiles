@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.rest;
-in {
+in
+{
   options.my.neovim.lazyvim.rest = {
     enable = mkEnableOption "rest tool";
   };
@@ -18,7 +20,7 @@ in {
         kulala-nvim
       ];
 
-      imports = ["lazyvim.plugins.extras.util.rest"];
+      imports = [ "lazyvim.plugins.extras.util.rest" ];
     };
   };
 }

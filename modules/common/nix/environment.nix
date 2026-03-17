@@ -3,14 +3,16 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (builtins) elem;
   inherit (lib.trivial) pipe;
   inherit (lib.lists) optionals;
   inherit (lib.attrsets) filterAttrs mapAttrs';
   inherit (lib.modules) mkForce;
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
-in {
+in
+{
   # for security reasons, do not load neovim's user config
   # since EDITOR may be used to edit some critical files
   environment = {
@@ -24,17 +26,17 @@ in {
     #   { }
     # '';
     # something something backwards compatibility something something nix channels
-    etc = let
-      inherit (config.nix) registry;
-      commonPaths =
-        [
+    etc =
+      let
+        inherit (config.nix) registry;
+        commonPaths = [
           "nixpkgs"
           "home-manager"
         ]
         ++ optionals isDarwin [
           "nix-darwin"
         ];
-    in
+      in
       pipe registry [
         (filterAttrs (name: _: (elem name commonPaths)))
         (mapAttrs' (

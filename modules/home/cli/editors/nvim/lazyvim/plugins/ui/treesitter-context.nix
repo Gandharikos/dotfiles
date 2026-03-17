@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.treesitter-context;
-in {
+in
+{
   options.my.neovim.lazyvim.treesitter-context = {
     enable = mkEnableOption "treesitter context";
   };
@@ -18,7 +20,7 @@ in {
         nvim-treesitter-context
       ];
 
-      imports = ["lazyvim.plugins.extras.ui.treesitter-context"];
+      imports = [ "lazyvim.plugins.extras.ui.treesitter-context" ];
     };
   };
 }

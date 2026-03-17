@@ -4,7 +4,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   config = {
     # FIXME: seems to cause opencode to just hang
     programs.opencode.settings.mcp = {

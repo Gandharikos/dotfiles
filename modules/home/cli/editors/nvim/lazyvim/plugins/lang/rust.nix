@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.rust;
-in {
+in
+{
   options.my.neovim.lazyvim.rust = {
     enable = mkEnableOption "language rust";
   };
@@ -20,7 +22,7 @@ in {
         neotest-rust
       ];
 
-      imports = ["lazyvim.plugins.extras.lang.rust"];
+      imports = [ "lazyvim.plugins.extras.lang.rust" ];
 
       extraPackages = with pkgs; [
         bacon

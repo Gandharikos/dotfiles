@@ -2,25 +2,23 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.security.auditd;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.modules) mkIf;
   inherit (lib.types) str;
-in {
+in
+{
   options.my.security.auditd = {
-    enable =
-      mkEnableOption "Enable auditd"
-      // {
-        default = config.my.security.enable;
-      };
+    enable = mkEnableOption "Enable auditd" // {
+      default = config.my.security.enable;
+    };
 
     autoPrune = {
-      enable =
-        mkEnableOption "Enable auto-pruning of audit logs via logrotate"
-        // {
-          default = true;
-        };
+      enable = mkEnableOption "Enable auto-pruning of audit logs via logrotate" // {
+        default = true;
+      };
 
       dates = mkOption {
         type = str;

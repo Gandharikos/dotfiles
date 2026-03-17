@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf;
   enable = config.my.gui.desktop.wayland.enable && !config.services.desktopManager.cosmic.enable;
-in {
+in
+{
   config = mkIf enable {
     systemd.services.seatd = {
       enable = true;
@@ -18,7 +20,7 @@ in {
         Restart = "always";
         RestartSec = "1";
       };
-      wantedBy = ["multi-user.target"];
+      wantedBy = [ "multi-user.target" ];
     };
   };
 }

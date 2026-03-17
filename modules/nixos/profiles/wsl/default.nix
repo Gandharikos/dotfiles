@@ -4,10 +4,12 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf mkDefault mkForce;
   isWsl = config.my.machine.type == "wsl";
-in {
+in
+{
   imports = [
     inputs.wsl.nixosModules.default
   ];
@@ -71,7 +73,7 @@ in {
     networking = {
       networkmanager.enable = mkForce false;
       nftables.enable = mkForce false;
-      extraHosts = mkForce '''';
+      extraHosts = mkForce "";
       tcpcrypt.enable = mkForce false;
     };
     # other
@@ -85,7 +87,7 @@ in {
 
     environment = {
       variables.BROWSER = mkForce "wsl-open";
-      systemPackages = [pkgs.wsl-open];
+      systemPackages = [ pkgs.wsl-open ];
     };
   };
 }

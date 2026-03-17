@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkAfter;
   inherit (lib.meta) getExe;
@@ -21,13 +22,12 @@
     ${hyprshell'} gui --mod-key ALT --key tab --close mod-key-release --reverse-key=mod=SHIFT --max-switch-offset 9 -m
     ${hyprshell'} dispatch -r
   '';
-in {
+in
+{
   options.my.gui.desktop.hyprland.switch = {
-    enable =
-      mkEnableOption "hyprswitch"
-      // {
-        default = cfg.enable;
-      };
+    enable = mkEnableOption "hyprswitch" // {
+      default = cfg.enable;
+    };
   };
 
   config = mkIf cfg.switch.enable {

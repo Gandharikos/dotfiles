@@ -1,6 +1,8 @@
-{lib, ...}: let
+{ lib, ... }:
+let
   inherit (lib) mkForce;
-in {
+in
+{
   environment = {
     # disable stub-ld, this exists to kill dynamically linked executables, since they cannot work
     # on NixOS, however we know that so we don't need to see the warning
@@ -8,7 +10,7 @@ in {
 
     # disable all packages installed by default, i prefer my own packages
     # this list normally includes things like perl
-    defaultPackages = mkForce [];
+    defaultPackages = mkForce [ ];
   };
 
   programs = {

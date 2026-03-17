@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   isLaptop = config.my.machine.type == "laptop";
-in {
+in
+{
   config = mkIf isLaptop {
     services.logind.settings.Login = {
       HandleLidSwitch = "ignore";

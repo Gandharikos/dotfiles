@@ -1,1 +1,1 @@
-{system.defaults.NSGlobalDomain.AppleInterfaceStyle = "Dark";}
+{ system.defaults.NSGlobalDomain.AppleInterfaceStyle = "Dark"; }

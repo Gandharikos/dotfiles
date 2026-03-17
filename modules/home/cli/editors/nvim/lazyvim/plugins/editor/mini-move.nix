@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.mini-move;
-in {
+in
+{
   options.my.neovim.lazyvim.mini-move = {
     enable = mkEnableOption "Mini move";
   };
@@ -21,7 +23,7 @@ in {
         }
       ];
 
-      config = ["editor/mini-move.lua"];
+      config = [ "editor/mini-move.lua" ];
     };
   };
 }

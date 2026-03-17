@@ -5,7 +5,8 @@
   osClass,
   aiCommon,
   ...
-}: let
+}:
+let
   cfg = config.my.gemini-cli;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
@@ -23,7 +24,8 @@
   #   fi
   # '';
   sharedAiTools = aiCommon;
-in {
+in
+{
   options.my.gemini-cli = {
     enable = mkEnableOption "gemini-cli";
   };
@@ -43,10 +45,7 @@ in {
       gemini-cli = {
         enable = true;
         # build error on darwin
-        package =
-          if (osClass == "nixos")
-          then pkgs.llm-agents.gemini-cli
-          else pkgs.gemini-cli;
+        package = if (osClass == "nixos") then pkgs.llm-agents.gemini-cli else pkgs.gemini-cli;
         settings = {
           ui.theme = "Default";
           general = {
@@ -60,9 +59,7 @@ in {
           GEMINI = lib.my.getFile "modules/home/cli/ai/common/base.md";
         };
 
-        commands =
-          sharedAiTools.geminiCli.commands
-          // sharedAiTools.geminiCli.agents;
+        commands = sharedAiTools.geminiCli.commands // sharedAiTools.geminiCli.agents;
       };
     };
   };

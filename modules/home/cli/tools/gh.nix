@@ -3,11 +3,13 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.gh;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.gh = {
     enable = mkEnableOption "gh";
   };

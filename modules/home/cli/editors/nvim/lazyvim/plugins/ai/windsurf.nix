@@ -4,13 +4,15 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.windsurf;
   inherit (config.home) homeDirectory;
   inherit (config.my) name;
-in {
+in
+{
   options.my.neovim.lazyvim.windsurf = {
     enable = mkEnableOption "AI plugin - windsurf";
   };
@@ -25,7 +27,7 @@ in {
       #   { import = "lazyvim.plugins.extras.ai.codeium" },
       # '';
 
-      config = ["ai/windsurf.lua"];
+      config = [ "ai/windsurf.lua" ];
     };
 
     sops.secrets.codeium = {

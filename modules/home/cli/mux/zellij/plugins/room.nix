@@ -1,24 +1,26 @@
-{pkgs, ...}: let
+{ pkgs, ... }:
+let
   roomWasm = "file:${pkgs.my.room}/bin/room.wasm";
   launchRoom = {
     LaunchOrFocusPlugin = {
-      _args = [roomWasm];
+      _args = [ roomWasm ];
       floating = true;
       ignore_case = true;
       quick_jump = true;
     };
   };
-in {
+in
+{
   programs.zellij.settings = {
     plugins.room._props.location = roomWasm;
     keybinds._children = [
       {
         shared_except = {
-          _args = ["locked"];
+          _args = [ "locked" ];
           _children = [
             {
               bind = {
-                _args = ["Alt r"];
+                _args = [ "Alt r" ];
                 _children = [
                   launchRoom
                 ];

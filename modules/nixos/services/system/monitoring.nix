@@ -1,6 +1,8 @@
-{lib, ...}: let
+{ lib, ... }:
+let
   inherit (lib.modules) mkDefault;
-in {
+in
+{
   services = {
     # monitor and control temperature
     thermald.enable = true;

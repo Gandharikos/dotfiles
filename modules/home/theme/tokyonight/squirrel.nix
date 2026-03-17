@@ -3,13 +3,15 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   cfg = config.my.theme.tokyonight;
   inherit (config.my.theme.colorscheme) palette slug;
   dir = "Library/Rime";
   inherit (lib.my) toHex;
-in {
+in
+{
   config = mkIf (cfg.enable && pkgs.stdenv.hostPlatform.isDarwin) {
     # FIXME: not working anyway
     home.file."${dir}/squirrel.custom.yaml".text = ''

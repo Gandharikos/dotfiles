@@ -2,7 +2,8 @@
   device ? "/dev/nvme0n1",
   swapSize ? "32G",
   ...
-}: {
+}:
+{
   disko.devices = {
     nodev."/" = {
       fsType = "tmpfs";
@@ -31,7 +32,7 @@
               mountpoint = "/boot";
               # Fix world-accessible /boot/loader/random-seed
               # https://github.com/nix-community/disko/issues/527#issuecomment-1924076948
-              mountOptions = ["umask=0077"];
+              mountOptions = [ "umask=0077" ];
             };
           };
           luks = {
@@ -81,55 +82,57 @@
           size = "100%FREE";
           content = {
             type = "btrfs";
-            extraArgs = ["-f"]; # Override existing filesystem
+            extraArgs = [ "-f" ]; # Override existing filesystem
             # Subvolumes must set a mountpoint in order to be mounted
             # unless its parent is mounted
-            subvolumes = let
-              mountOptions = [
-                "compress=zstd"
-                "noatime"
-                "nodiratime"
-                "discard"
-                "nofail"
-              ];
-            in {
-              # mount the top-level subvolume at /btr_pool
-              # it will be used by btrbk to create snapshots
-              "/" = {
-                mountpoint = "/btr_pool";
-                # btrfs's top-level subvolume, internally has an id 5
-                # we can access all other subvolumes from this subvolume.
-                mountOptions = ["subvolid=5"];
+            subvolumes =
+              let
+                mountOptions = [
+                  "compress=zstd"
+                  "noatime"
+                  "nodiratime"
+                  "discard"
+                  "nofail"
+                ];
+              in
+              {
+                # mount the top-level subvolume at /btr_pool
+                # it will be used by btrbk to create snapshots
+                "/" = {
+                  mountpoint = "/btr_pool";
+                  # btrfs's top-level subvolume, internally has an id 5
+                  # we can access all other subvolumes from this subvolume.
+                  mountOptions = [ "subvolid=5" ];
+                };
+                # why use @ in btrfs subvolume names:
+                # https://askubuntu.com/questions/987104/why-the-in-btrfs-subvolume-names
+                # https://www.reddit.com/r/btrfs/comments/11wnyoj/btrfs_what_is/
+                "@nix" = {
+                  mountOptions = [ "subvol=nix" ] ++ mountOptions;
+                  mountpoint = "/nix";
+                };
+                "@log" = {
+                  inherit mountOptions;
+                  mountpoint = "/var/log";
+                };
+                "@tmp" = {
+                  mountpoint = "/tmp";
+                  mountOptions = [ "noatime" ];
+                };
+                "@persist" = {
+                  mountOptions = [ "subvol=persist" ] ++ mountOptions;
+                  mountpoint = "/persist";
+                };
+                "@snapshots" = {
+                  mountOptions = [ "subvol=snapshots" ] ++ mountOptions;
+                  mountpoint = "/.snapshots";
+                };
+                "@swap" = {
+                  mountpoint = "/.swap";
+                  mountOptions = [ "noatime" ];
+                  swap.swapfile.size = swapSize;
+                };
               };
-              # why use @ in btrfs subvolume names:
-              # https://askubuntu.com/questions/987104/why-the-in-btrfs-subvolume-names
-              # https://www.reddit.com/r/btrfs/comments/11wnyoj/btrfs_what_is/
-              "@nix" = {
-                mountOptions = ["subvol=nix"] ++ mountOptions;
-                mountpoint = "/nix";
-              };
-              "@log" = {
-                inherit mountOptions;
-                mountpoint = "/var/log";
-              };
-              "@tmp" = {
-                mountpoint = "/tmp";
-                mountOptions = ["noatime"];
-              };
-              "@persist" = {
-                mountOptions = ["subvol=persist"] ++ mountOptions;
-                mountpoint = "/persist";
-              };
-              "@snapshots" = {
-                mountOptions = ["subvol=snapshots"] ++ mountOptions;
-                mountpoint = "/.snapshots";
-              };
-              "@swap" = {
-                mountpoint = "/.swap";
-                mountOptions = ["noatime"];
-                swap.swapfile.size = swapSize;
-              };
-            };
           };
         };
       };

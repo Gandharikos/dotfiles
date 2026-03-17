@@ -14,7 +14,8 @@
   config,
   options,
   ...
-}: {
+}:
+{
   boot.kernel.sysctl = lib.mkIf (!(options ? "wsl")) {
     # The Magic SysRq key is a key combo that allows users connected to the
     # system console of a Linux kernel to perform some low-level commands.

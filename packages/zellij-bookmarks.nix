@@ -24,6 +24,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/yaroslavborbat/zellij-bookmarks";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

@@ -3,7 +3,8 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.modules) mkIf;
   inherit (lib.types) str bool;
@@ -25,13 +26,12 @@
       mv *.glsl $out
     '';
   };
-in {
+in
+{
   options.my.gui.apps.ghostty = {
-    enable =
-      mkEnableOption "ghostty"
-      // {
-        default = terminal.default == "ghostty";
-      };
+    enable = mkEnableOption "ghostty" // {
+      default = terminal.default == "ghostty";
+    };
 
     enableShader = mkOption {
       type = bool;
@@ -54,10 +54,7 @@ in {
       enable = true;
       # NOTE: It's broken on macOS, so you should to install it by brew.
       # See: https://github.com/NixOS/nixpkgs/issues/388984
-      package =
-        if isLinux
-        then pkgs.ghostty
-        else null;
+      package = if isLinux then pkgs.ghostty else null;
       enableFishIntegration = true;
       enableZshIntegration = true;
       enableBashIntegration = true;

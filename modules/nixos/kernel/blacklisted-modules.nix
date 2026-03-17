@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib) optionals concatLists mkEnableOption;
-in {
+in
+{
   options.my.security = {
     fixWebcam = mkEnableOption "Fix the broken webcam by un-blacklisting the related kernel module.";
   };
@@ -92,7 +94,7 @@ in {
       ]
 
       # this is why your webcam no worky
-      (optionals (!config.my.security.fixWebcam) ["uvcvideo"])
+      (optionals (!config.my.security.fixWebcam) [ "uvcvideo" ])
 
       (optionals (!config.my.machine.hasBluetooth) [
         "bluetooth"

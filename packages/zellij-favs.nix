@@ -24,6 +24,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/JoseMM2002/zellij-favs";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

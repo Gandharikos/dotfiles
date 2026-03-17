@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.sidekick;
-in {
+in
+{
   options.my.neovim.lazyvim.sidekick = {
     enable = mkEnableOption "AI plugin - sidekick";
   };
@@ -18,7 +20,7 @@ in {
         sidekick-nvim
       ];
 
-      config = ["ai/sidekick.lua"];
+      config = [ "ai/sidekick.lua" ];
     };
   };
 }

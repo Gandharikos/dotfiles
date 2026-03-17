@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   isHeadless = !config.my.gui.enable;
-in {
+in
+{
   config = mkIf isHeadless {
     # print the URL instead on servers
     environment.variables.BROWSER = "echo";

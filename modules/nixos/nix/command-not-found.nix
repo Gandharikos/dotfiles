@@ -2,7 +2,8 @@
   inputs,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     inputs.programs-sqlite.nixosModules.programs-sqlite
   ];

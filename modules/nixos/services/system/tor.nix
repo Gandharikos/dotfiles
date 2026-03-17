@@ -2,18 +2,18 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (config.my) gui;
   cfg = config.my.services.tor;
-in {
+in
+{
   options.my.services.tor = {
-    enable =
-      mkEnableOption "Enable Tor"
-      // {
-        default = gui.enable;
-      };
+    enable = mkEnableOption "Enable Tor" // {
+      default = gui.enable;
+    };
   };
 
   config = mkIf cfg.enable {

@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.java;
-in {
+in
+{
   options.my.neovim.lazyvim.java = {
     enable = mkEnableOption "language java";
   };
@@ -18,7 +20,7 @@ in {
         nvim-jdtls
       ];
 
-      imports = ["lazyvim.plugins.extras.lang.java"];
+      imports = [ "lazyvim.plugins.extras.lang.java" ];
 
       extraPackages = with pkgs; [
         vscode-extensions.vscjava.vscode-java-debug

@@ -1,6 +1,7 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs.yazi = {
-    plugins = {inherit (pkgs.yaziPlugins) toggle-pane;};
+    plugins = { inherit (pkgs.yaziPlugins) toggle-pane; };
     keymap.mgr.prepend_keymap = [
       {
         desc = "Maximize or restore the preview pane";

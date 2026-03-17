@@ -3,10 +3,12 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   inherit (config.my) gui;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   config = mkIf gui.enable {
     # all fonts are linked to /nix/var/nix/profiles/system/sw/share/X11/fonts
     fonts = {
@@ -22,10 +24,23 @@ in {
       # the reason there's Noto Color Emoji everywhere is to override DejaVu's
       # B&W emojis that would sometimes show instead of some Color emojis
       fontconfig.defaultFonts = {
-        serif = ["Source Han Serif SC" "Source Han Serif TC" "Noto Color Emoji" "SFProDisplay Nerd Font"];
-        sansSerif = ["Source Han Sans SC" "Source Han Sans TC" "Noto Color Emoji" "SFProDisplay Nerd Font"];
-        monospace = ["JetBrainsMono Nerd Font" "Noto Color Emoji"];
-        emoji = ["Noto Color Emoji"];
+        serif = [
+          "Source Han Serif SC"
+          "Source Han Serif TC"
+          "Noto Color Emoji"
+          "SFProDisplay Nerd Font"
+        ];
+        sansSerif = [
+          "Source Han Sans SC"
+          "Source Han Sans TC"
+          "Noto Color Emoji"
+          "SFProDisplay Nerd Font"
+        ];
+        monospace = [
+          "JetBrainsMono Nerd Font"
+          "Noto Color Emoji"
+        ];
+        emoji = [ "Noto Color Emoji" ];
       };
     };
 

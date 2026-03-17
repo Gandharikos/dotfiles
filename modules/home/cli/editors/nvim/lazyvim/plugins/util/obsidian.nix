@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.obsidian;
-in {
+in
+{
   options.my.neovim.lazyvim.obsidian = {
     enable = mkEnableOption "Obsidian plugin for LazyVim";
   };
@@ -17,7 +19,7 @@ in {
       extraPlugins = with pkgs.vimPlugins; [
         obsidian-nvim
       ];
-      config = ["util/obsidian.lua"];
+      config = [ "util/obsidian.lua" ];
     };
   };
 }

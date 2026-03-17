@@ -26,6 +26,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/karimould/zellij-forgot";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

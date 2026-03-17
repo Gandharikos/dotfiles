@@ -3,12 +3,12 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   cfg = config.my.security.sudo;
   inherit (lib) map;
   inherit (lib.meta) getExe';
-  inherit
-    (lib.modules)
+  inherit (lib.modules)
     mkAfter
     mkDefault
     mkForce
@@ -16,8 +16,7 @@
     mkMerge
     ;
   inherit (lib.options) mkOption;
-  inherit
-    (lib.types)
+  inherit (lib.types)
     bool
     enum
     listOf
@@ -30,18 +29,19 @@
 
   mkSudoCommand = rule: {
     command = mkCommandPath rule;
-    options = ["NOPASSWD"];
+    options = [ "NOPASSWD" ];
   };
 
   mkDoasRule = rule: {
-    groups = ["wheel"];
+    groups = [ "wheel" ];
     noPass = true;
     cmd = mkCommandPath rule;
   };
 
   sudoCommands = map mkSudoCommand cfg.rules;
   doasCommands = map mkDoasRule cfg.rules;
-in {
+in
+{
   options.my.security.sudo = {
     backend = mkOption {
       type = enum [
@@ -146,7 +146,7 @@ in {
         '';
         extraRules = mkAfter [
           {
-            groups = ["wheel"];
+            groups = [ "wheel" ];
             commands = sudoCommands;
           }
         ];
@@ -159,7 +159,7 @@ in {
         extraRules = mkAfter (
           [
             {
-              groups = ["wheel"];
+              groups = [ "wheel" ];
               noPass = false;
               persist = true;
               keepEnv = true;

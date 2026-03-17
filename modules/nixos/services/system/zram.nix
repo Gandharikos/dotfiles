@@ -2,11 +2,13 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.services.zram;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.services.zram = {
     enable = mkEnableOption "Enable zram swap";
   };

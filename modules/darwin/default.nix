@@ -1,4 +1,5 @@
-{lib, ...}: {
+{ lib, ... }:
+{
   _class = "darwin";
-  imports = (lib.my.scanPaths ./.) ++ [../common];
+  imports = (lib.my.scanPaths ./.) ++ [ ../common ];
 }

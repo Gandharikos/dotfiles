@@ -1,4 +1,5 @@
-{lib, ...}: {
+{ lib, ... }:
+{
   imports = lib.my.scanPaths ./.;
 
   options.my.virtual = {

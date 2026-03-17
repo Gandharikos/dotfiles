@@ -2,16 +2,18 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkOption;
   inherit (lib.types) listOf str;
   inherit (lib.attrsets) genAttrs;
   inherit (config.my.machine) ethernetDevices;
-in {
+in
+{
   # run `ip a` to find out
   options.my.machine.ethernetDevices = mkOption {
     type = listOf str;
-    default = [];
+    default = [ ];
     description = "The network devices of the system";
   };
 

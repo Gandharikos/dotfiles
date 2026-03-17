@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.my.jujutsu;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.jujutsu = {
     enable = mkEnableOption "jujutsu";
   };

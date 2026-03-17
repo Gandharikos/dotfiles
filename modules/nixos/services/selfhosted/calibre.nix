@@ -2,12 +2,14 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.my.services.calibre;
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) port;
-in {
+in
+{
   options.my.services.calibre = {
     enable = mkEnableOption "calibre";
     port = mkOption {
@@ -20,6 +22,6 @@ in {
   config = mkIf cfg.enable {
     services.calibre-server.enable = true;
 
-    networking.firewall.allowedTCPPorts = [cfg.port];
+    networking.firewall.allowedTCPPorts = [ cfg.port ];
   };
 }

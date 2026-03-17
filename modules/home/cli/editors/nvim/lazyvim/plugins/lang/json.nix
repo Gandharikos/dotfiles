@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.json;
-in {
+in
+{
   options.my.neovim.lazyvim.json = {
     enable = mkEnableOption "language json";
   };
@@ -19,7 +21,7 @@ in {
         crates-nvim
       ];
 
-      imports = ["lazyvim.plugins.extras.lang.json"];
+      imports = [ "lazyvim.plugins.extras.lang.json" ];
 
       extraPackages = with pkgs; [
         bacon

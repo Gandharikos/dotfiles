@@ -2,11 +2,13 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.ripgrep;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.ripgrep = {
     enable = mkEnableOption "ripgrep";
   };

@@ -2,7 +2,8 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   lang = icon: color: {
     symbol = icon;
     format = "[$symbol ](${color})";
@@ -11,7 +12,8 @@
   cfg = config.my.starship;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.starship = {
     enable = mkEnableOption "starship";
   };
@@ -54,7 +56,9 @@ in {
           vimcmd_visual_symbol = "[](bold yellow)";
         };
         continuation_prompt = "∙  ┆ ";
-        line_break = {disabled = false;};
+        line_break = {
+          disabled = false;
+        };
         username = {
           format = "[$user]($style)";
           show_always = false;

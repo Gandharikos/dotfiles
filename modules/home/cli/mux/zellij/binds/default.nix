@@ -3,9 +3,11 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   vimZellijNavigatorUri = "file:${pkgs.my.vim-zellij-navigator}/bin/vim-zellij-navigator.wasm";
-in {
+in
+{
   imports = lib.my.scanPaths ./.;
   programs.zellij.settings.keybinds = with config.my.keyboard.keys; {
     _props.clear-defaults = true;
@@ -14,20 +16,24 @@ in {
         locked._children = [
           {
             bind = {
-              _args = ["Ctrl g"];
-              _children = [{SwitchToMode._args = ["normal"];}];
+              _args = [ "Ctrl g" ];
+              _children = [ { SwitchToMode._args = [ "normal" ]; } ];
             };
           }
         ];
       }
       {
         shared_except = {
-          _args = ["normal" "locked" "entersearch"];
+          _args = [
+            "normal"
+            "locked"
+            "entersearch"
+          ];
           _children = [
             {
               bind = {
-                _args = ["enter"];
-                _children = [{SwitchToMode._args = ["normal"];}];
+                _args = [ "enter" ];
+                _children = [ { SwitchToMode._args = [ "normal" ]; } ];
               };
             }
           ];
@@ -36,12 +42,18 @@ in {
       {
         # shared_except "normal" "locked"
         shared_except = {
-          _args = ["normal" "locked" "entersearch" "renametab" "renamepane"];
+          _args = [
+            "normal"
+            "locked"
+            "entersearch"
+            "renametab"
+            "renamepane"
+          ];
           _children = [
             {
               bind = {
-                _args = ["Esc"];
-                _children = [{SwitchToMode._args = ["normal"];}];
+                _args = [ "Esc" ];
+                _children = [ { SwitchToMode._args = [ "normal" ]; } ];
               };
             }
           ];
@@ -49,23 +61,26 @@ in {
       }
       {
         shared_except = {
-          _args = ["locked"];
+          _args = [ "locked" ];
           _children = [
             {
               bind = {
-                _args = ["Ctrl g"];
-                _children = [{SwitchToMode._args = ["locked"];}];
+                _args = [ "Ctrl g" ];
+                _children = [ { SwitchToMode._args = [ "locked" ]; } ];
               };
             }
             # Focus movement
             {
               bind = {
-                _args = ["Ctrl ${h}"];
+                _args = [ "Ctrl ${h}" ];
                 _children = [
                   {
                     MessagePlugin = {
-                      _args = [vimZellijNavigatorUri];
-                      _children = [{name._args = ["move_focus"];} {payload._args = ["left"];}];
+                      _args = [ vimZellijNavigatorUri ];
+                      _children = [
+                        { name._args = [ "move_focus" ]; }
+                        { payload._args = [ "left" ]; }
+                      ];
                     };
                   }
                 ];
@@ -73,12 +88,15 @@ in {
             }
             {
               bind = {
-                _args = ["Ctrl ${j}"];
+                _args = [ "Ctrl ${j}" ];
                 _children = [
                   {
                     MessagePlugin = {
-                      _args = [vimZellijNavigatorUri];
-                      _children = [{name._args = ["move_focus"];} {payload._args = ["down"];}];
+                      _args = [ vimZellijNavigatorUri ];
+                      _children = [
+                        { name._args = [ "move_focus" ]; }
+                        { payload._args = [ "down" ]; }
+                      ];
                     };
                   }
                 ];
@@ -86,12 +104,15 @@ in {
             }
             {
               bind = {
-                _args = ["Ctrl ${k}"];
+                _args = [ "Ctrl ${k}" ];
                 _children = [
                   {
                     MessagePlugin = {
-                      _args = [vimZellijNavigatorUri];
-                      _children = [{name._args = ["move_focus"];} {payload._args = ["up"];}];
+                      _args = [ vimZellijNavigatorUri ];
+                      _children = [
+                        { name._args = [ "move_focus" ]; }
+                        { payload._args = [ "up" ]; }
+                      ];
                     };
                   }
                 ];
@@ -99,12 +120,15 @@ in {
             }
             {
               bind = {
-                _args = ["Ctrl ${l}"];
+                _args = [ "Ctrl ${l}" ];
                 _children = [
                   {
                     MessagePlugin = {
-                      _args = [vimZellijNavigatorUri];
-                      _children = [{name._args = ["move_focus"];} {payload._args = ["right"];}];
+                      _args = [ vimZellijNavigatorUri ];
+                      _children = [
+                        { name._args = [ "move_focus" ]; }
+                        { payload._args = [ "right" ]; }
+                      ];
                     };
                   }
                 ];
@@ -114,12 +138,15 @@ in {
             # Resizing
             {
               bind = {
-                _args = ["Alt ${h}"];
+                _args = [ "Alt ${h}" ];
                 _children = [
                   {
                     MessagePlugin = {
-                      _args = [vimZellijNavigatorUri];
-                      _children = [{name._args = ["resize"];} {payload._args = ["left"];}];
+                      _args = [ vimZellijNavigatorUri ];
+                      _children = [
+                        { name._args = [ "resize" ]; }
+                        { payload._args = [ "left" ]; }
+                      ];
                     };
                   }
                 ];
@@ -127,12 +154,15 @@ in {
             }
             {
               bind = {
-                _args = ["Alt ${j}"];
+                _args = [ "Alt ${j}" ];
                 _children = [
                   {
                     MessagePlugin = {
-                      _args = [vimZellijNavigatorUri];
-                      _children = [{name._args = ["resize"];} {payload._args = ["down"];}];
+                      _args = [ vimZellijNavigatorUri ];
+                      _children = [
+                        { name._args = [ "resize" ]; }
+                        { payload._args = [ "down" ]; }
+                      ];
                     };
                   }
                 ];
@@ -140,12 +170,15 @@ in {
             }
             {
               bind = {
-                _args = ["Alt ${k}"];
+                _args = [ "Alt ${k}" ];
                 _children = [
                   {
                     MessagePlugin = {
-                      _args = [vimZellijNavigatorUri];
-                      _children = [{name._args = ["resize"];} {payload._args = ["up"];}];
+                      _args = [ vimZellijNavigatorUri ];
+                      _children = [
+                        { name._args = [ "resize" ]; }
+                        { payload._args = [ "up" ]; }
+                      ];
                     };
                   }
                 ];
@@ -153,12 +186,15 @@ in {
             }
             {
               bind = {
-                _args = ["Alt ${l}"];
+                _args = [ "Alt ${l}" ];
                 _children = [
                   {
                     MessagePlugin = {
-                      _args = [vimZellijNavigatorUri];
-                      _children = [{name._args = ["resize"];} {payload._args = ["right"];}];
+                      _args = [ vimZellijNavigatorUri ];
+                      _children = [
+                        { name._args = [ "resize" ]; }
+                        { payload._args = [ "right" ]; }
+                      ];
                     };
                   }
                 ];
@@ -166,29 +202,35 @@ in {
             }
             {
               bind = {
-                _args = ["Alt g"];
+                _args = [ "Alt g" ];
                 _children = [
                   {
                     Run = {
-                      _args = ["zellij" "run" "--floating" "--" "lazygit"];
+                      _args = [
+                        "zellij"
+                        "run"
+                        "--floating"
+                        "--"
+                        "lazygit"
+                      ];
                       close_on_exit = true;
                     };
                   }
-                  {SwitchToMode._args = ["locked"];}
+                  { SwitchToMode._args = [ "locked" ]; }
                 ];
               };
             }
             {
               bind = {
-                _args = ["Alt y"];
+                _args = [ "Alt y" ];
                 _children = [
                   {
-                    NewPane._args = ["Left"];
+                    NewPane._args = [ "Left" ];
                   }
                   {
-                    Run._args = ["yazi"];
+                    Run._args = [ "yazi" ];
                   }
-                  {SwitchToMode._args = ["locked"];}
+                  { SwitchToMode._args = [ "locked" ]; }
                 ];
               };
             }

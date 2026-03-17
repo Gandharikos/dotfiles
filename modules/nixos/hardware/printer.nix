@@ -2,11 +2,13 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (config.my.machine) hasPrinter;
-in {
+in
+{
   options.my.machine.hasPrinter = mkEnableOption "Whether has printer support";
 
   config = mkIf hasPrinter {

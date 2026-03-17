@@ -3,11 +3,13 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.practice;
-in {
+in
+{
   options.my.neovim.lazyvim.practice = {
     enable = mkEnableOption "Practice plugin";
   };
@@ -19,7 +21,7 @@ in {
         precognition-nvim
       ];
 
-      config = ["util/practice.lua"];
+      config = [ "util/practice.lua" ];
     };
   };
 }

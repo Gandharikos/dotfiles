@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.markdown;
-in {
+in
+{
   options.my.neovim.lazyvim.markdown = {
     enable = mkEnableOption "language markdown";
   };
@@ -30,7 +32,7 @@ in {
         mermaid-cli # for snacks.image
       ];
 
-      config = ["lang/markdown.lua"];
+      config = [ "lang/markdown.lua" ];
     };
   };
 }

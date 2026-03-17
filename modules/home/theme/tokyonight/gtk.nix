@@ -3,7 +3,8 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   cfg = config.my.theme.tokyonight;
@@ -12,7 +13,8 @@
   #   if cfg.style == "day"
   #   then 0
   #   else 1;
-in {
+in
+{
   config = mkIf enable {
     # gkt's theme settings, generate files:
     #   1. ~/.gtkrc-2.0
@@ -30,10 +32,7 @@ in {
       };
 
       iconTheme = {
-        name =
-          if cfg.style == "day"
-          then "Papirus-Light"
-          else "Papirus-Dark";
+        name = if cfg.style == "day" then "Papirus-Light" else "Papirus-Dark";
         package = pkgs.papirus-icon-theme;
       };
 

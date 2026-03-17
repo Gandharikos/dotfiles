@@ -1,4 +1,4 @@
-{lib, ...}:
-lib.foldl' lib.recursiveUpdate {} [
+{ lib, ... }:
+lib.foldl' lib.recursiveUpdate { } [
   (import ./changelog.nix)
 ]

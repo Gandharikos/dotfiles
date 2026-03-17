@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   cfg = config.my.gui.desktop.niri;
-in {
+in
+{
   config = mkIf cfg.enable {
     programs.niri.settings.environment = {
       XDG_CURRENT_DESKTOP = "niri";

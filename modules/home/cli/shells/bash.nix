@@ -2,13 +2,17 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   cfg = config.my.bash;
-in {
+in
+{
   options.my.bash = {
-    enable = mkEnableOption "bash" // {default = true;};
+    enable = mkEnableOption "bash" // {
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -18,7 +22,7 @@ in {
       historyFile = "$HOME/.bash_history";
       historyFileSize = 2000;
       historySize = 1000;
-      historyControl = ["erasedups"];
+      historyControl = [ "erasedups" ];
       historyIgnore = [
         "ls"
         "exit"

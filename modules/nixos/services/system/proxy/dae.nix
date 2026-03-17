@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.my.services.proxy;
   inherit (lib.modules) mkIf;
   daeBin = lib.getExe pkgs.dae;
@@ -25,20 +26,21 @@
       default: "mihomo-upstream"
     }
   '';
-in {
+in
+{
   config = mkIf cfg.enable {
-    environment.systemPackages = [pkgs.dae];
-    systemd.packages = [pkgs.dae];
+    environment.systemPackages = [ pkgs.dae ];
+    systemd.packages = [ pkgs.dae ];
 
-    networking.firewall.allowedTCPPorts = [12345];
-    networking.firewall.allowedUDPPorts = [12345];
+    networking.firewall.allowedTCPPorts = [ 12345 ];
+    networking.firewall.allowedUDPPorts = [ 12345 ];
 
     # Avoid the upstream services.dae module because its eval-time assertion
     # realizes dae-assets, which breaks evaluating x86_64-linux hosts from Darwin.
     systemd.services.dae = {
-      wantedBy = lib.mkForce [];
+      wantedBy = lib.mkForce [ ];
       serviceConfig = {
-        LoadCredential = ["config.dae:${daeConfig}"];
+        LoadCredential = [ "config.dae:${daeConfig}" ];
         ExecStartPre = [
           ""
           "${daeBin} validate -c \${CREDENTIALS_DIRECTORY}/config.dae"

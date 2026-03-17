@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.my.atuin;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkMerge mkForce;
@@ -33,16 +34,15 @@
         -k "$(${cat'} ${config.sops.secrets.atuin_keys.path})"
     fi
   '';
-in {
+in
+{
   options.my.atuin = {
     enable = mkEnableOption "atuin";
-    enableDesktop =
-      mkEnableOption "atuin desktop"
-      // {
-        internal = true;
-        readOnly = true;
-        default = config.my.gui.enable;
-      };
+    enableDesktop = mkEnableOption "atuin desktop" // {
+      internal = true;
+      readOnly = true;
+      default = config.my.gui.enable;
+    };
     autoLogin = mkEnableOption "atuin auto login";
   };
 
@@ -53,7 +53,7 @@ in {
         # Enable the background daemon
         # Add the new section to the bottom of your config file
         daemon.enable = true;
-        flags = ["--disable-up-arrow"];
+        flags = [ "--disable-up-arrow" ];
         settings = {
           ## enable or disable automatic sync
           auto_sync = true;
@@ -90,10 +90,10 @@ in {
         };
       };
       sops.secrets = {
-        atuin_key = {};
-        atuin_name = {};
-        atuin_password = {};
-        atuin_keys = {};
+        atuin_key = { };
+        atuin_name = { };
+        atuin_password = { };
+        atuin_keys = { };
       };
     }
     (mkIf cfg.enableDesktop {
@@ -110,7 +110,7 @@ in {
       launchd.agents.atuin-daemon = {
         enable = true;
         config = {
-          ProgramArguments = ["${atuinDaemonWrapper}"];
+          ProgramArguments = [ "${atuinDaemonWrapper}" ];
           RunAtLoad = true;
           # Start the daemon when the socket is missing. The wrapper will
           # create it cleanly, preventing EADDRINUSE from stale sockets.
@@ -126,7 +126,7 @@ in {
       launchd.agents.atuin-auto-login = mkIf cfg.autoLogin {
         enable = true;
         config = {
-          ProgramArguments = ["${atuinAutoLoginScript}"];
+          ProgramArguments = [ "${atuinAutoLoginScript}" ];
           RunAtLoad = true;
           KeepAlive = false;
           Requires = [
@@ -141,7 +141,10 @@ in {
       systemd.user.services.atuin-auto-login = mkIf cfg.autoLogin {
         Unit = {
           Description = "automatic atuin login";
-          Requires = ["sops-nix.service" "atuin-daemon.service"];
+          Requires = [
+            "sops-nix.service"
+            "atuin-daemon.service"
+          ];
         };
 
         Service = {
@@ -151,7 +154,7 @@ in {
         };
 
         Install = {
-          WantedBy = ["default.target"];
+          WantedBy = [ "default.target" ];
         };
       };
     })

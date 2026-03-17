@@ -3,12 +3,14 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (lib.my) isx86Linux;
   cfg = config.my.machine;
-in {
+in
+{
   # imports = [
   # ./low-latency.nix
   # ./settings.nix
@@ -40,8 +42,8 @@ in {
     };
 
     systemd.user.services = {
-      pipewire.wantedBy = ["default.target"];
-      pipewire-pulse.wantedBy = ["default.target"];
+      pipewire.wantedBy = [ "default.target" ];
+      pipewire-pulse.wantedBy = [ "default.target" ];
     };
   };
 }

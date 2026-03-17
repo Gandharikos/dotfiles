@@ -4,11 +4,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (config.home) homeDirectory;
   cfg = config.my.security;
-in {
+in
+{
   config = mkIf cfg.enable {
     programs.ssh = {
       enable = true;

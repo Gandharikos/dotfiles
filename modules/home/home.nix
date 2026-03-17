@@ -1,8 +1,10 @@
-{config, ...}: let
+{ config, ... }:
+let
   username = config.my.name;
   homeDirectory = config.my.home;
   inherit (config.my) stateVersion;
-in {
+in
+{
   imports = [
     # common options defined both user level and system level
     ../common/my
@@ -14,7 +16,10 @@ in {
   # paths it should manage.
   home = {
     inherit username homeDirectory stateVersion;
-    sessionPath = ["$HOME/.local/bin" "/opt/homebrew/bin"];
+    sessionPath = [
+      "$HOME/.local/bin"
+      "/opt/homebrew/bin"
+    ];
   };
 
   programs.home-manager.enable = true;

@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (config.my) machine;
-in {
+in
+{
   config = mkIf (machine.type == "laptop") {
     # Input settings for libinput
     services.libinput = {

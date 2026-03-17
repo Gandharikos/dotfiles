@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.prettier;
-in {
+in
+{
   options.my.neovim.lazyvim.prettier = {
     enable = mkEnableOption "formatting tool - prettier";
   };
@@ -18,7 +20,7 @@ in {
         nodePackages.prettier
       ];
 
-      imports = ["lazyvim.plugins.extras.formatting.prettier"];
+      imports = [ "lazyvim.plugins.extras.formatting.prettier" ];
     };
   };
 }

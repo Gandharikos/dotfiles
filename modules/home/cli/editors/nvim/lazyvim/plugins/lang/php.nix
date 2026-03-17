@@ -3,18 +3,20 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.php;
-in {
+in
+{
   options.my.neovim.lazyvim.php = {
     enable = mkEnableOption "language php";
   };
 
   config = mkIf cfg.enable {
     my.neovim.lazyvim = {
-      imports = ["lazyvim.plugins.extras.lang.php"];
+      imports = [ "lazyvim.plugins.extras.lang.php" ];
 
       extraPackages = with pkgs; [
         phpactor

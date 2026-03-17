@@ -2,11 +2,13 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.television;
-in {
+in
+{
   options.my.television = {
     enable = mkEnableOption "television";
   };

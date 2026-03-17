@@ -3,20 +3,20 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkForce;
   inherit (config.my.gui) desktop;
   cfg = desktop.hyprland;
-in {
+in
+{
   options.my.gui.desktop.hyprland = {
-    enable =
-      mkEnableOption "Enable Hyprland"
-      // {
-        default = desktop.wayland.enable && desktop.default == "hyprland";
-        internal = true;
-        readOnly = true;
-      };
+    enable = mkEnableOption "Enable Hyprland" // {
+      default = desktop.wayland.enable && desktop.default == "hyprland";
+      internal = true;
+      readOnly = true;
+    };
   };
 
   config = mkIf cfg.enable {

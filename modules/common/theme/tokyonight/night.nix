@@ -2,7 +2,8 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   palette = rec {
     cursor = {
@@ -69,7 +70,8 @@
   };
   cfg = config.my.theme.tokyonight;
   enable = cfg.enable && cfg.style == "night";
-in {
+in
+{
   config = mkIf enable {
     # my.theme.wallpaper = pkgs.fetchurl {
     #   url = "https://github.com/huwqchn/wallpapers/blob/main/tokyonight/tokyonight-kimoni-girl.png";

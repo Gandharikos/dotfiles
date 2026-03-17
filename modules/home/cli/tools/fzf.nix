@@ -3,7 +3,8 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   cfg = config.my.fzf;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkAfter;
@@ -13,7 +14,8 @@
   delta' = getExe pkgs.delta;
   fd_opts = "--hidden --exclude=.git --exclude=.github --exclude=.cache";
   eza_opts = concatStringsSep " " config.programs.eza.extraOptions;
-in {
+in
+{
   options.my.fzf = {
     enable = mkEnableOption "fzf";
   };
@@ -58,34 +60,34 @@ in {
         enableZshIntegration = true;
 
         defaultCommand = find';
-        defaultOptions =
-          [
-            "--cycle"
-            "--layout=reverse"
-            "--height=60%"
-            "--ansi"
-            "--preview-window=right:70%"
-            "--bind=ctrl-u:half-page-up,ctrl-d:half-page-down,ctrl-x:jump"
-            "--bind=ctrl-f:preview-page-down,ctrl-b:preview-page-up"
-            "--bind=ctrl-a:beginning-of-line,ctrl-e:end-of-line"
-            "--prompt="
-            "--pointer="
-            "--marker=│"
-            "--separator=─"
-            "--scrollbar=│"
-          ]
-          ++ (
-            if (config.my.keyboard.layout == "colemak")
-            then [
+        defaultOptions = [
+          "--cycle"
+          "--layout=reverse"
+          "--height=60%"
+          "--ansi"
+          "--preview-window=right:70%"
+          "--bind=ctrl-u:half-page-up,ctrl-d:half-page-down,ctrl-x:jump"
+          "--bind=ctrl-f:preview-page-down,ctrl-b:preview-page-up"
+          "--bind=ctrl-a:beginning-of-line,ctrl-e:end-of-line"
+          "--prompt="
+          "--pointer="
+          "--marker=│"
+          "--separator=─"
+          "--scrollbar=│"
+        ]
+        ++ (
+          if (config.my.keyboard.layout == "colemak") then
+            [
               "--bind=ctrl-e:down,ctrl-i:up"
             ]
-            else [
+          else
+            [
               "--bind=ctrl-j:down,ctrl-k:up"
             ]
-          );
+        );
 
         fileWidgetCommand = find';
-        fileWidgetOptions = ["--preview 'head {}'"];
+        fileWidgetOptions = [ "--preview 'head {}'" ];
 
         changeDirWidgetCommand = find';
         changeDirWidgetOptions = [

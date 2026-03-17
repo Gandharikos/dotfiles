@@ -4,7 +4,8 @@
   lib,
   themeName ? "abstract_ring",
   ...
-}: let
+}:
+let
   pack_1 = [
     "abstract_ring"
     "abstract_ring_alt"
@@ -93,7 +94,8 @@
     "tech_b"
     "unrap"
   ];
-  invertListToAttrs = listName: values: lib.lists.foldr (next: prev: {${next} = listName;} // prev) {} values;
+  invertListToAttrs =
+    listName: values: lib.lists.foldr (next: prev: { ${next} = listName; } // prev) { } values;
 
   availableThemes =
     (invertListToAttrs "pack_1" pack_1)
@@ -102,25 +104,25 @@
     // (invertListToAttrs "pack_4" pack_4);
   themePath = "${availableThemes.${themeName}}/${themeName}";
 in
-  stdenv.mkDerivation {
-    pname = "adi1090x-plymouth-${themeName}";
-    version = "0.0.1";
+stdenv.mkDerivation {
+  pname = "adi1090x-plymouth-${themeName}";
+  version = "0.0.1";
 
-    src = fetchgit {
-      url = "https://github.com/adi1090x/plymouth-themes";
-      rev = "bf2f570bee8e84c5c20caac353cbe1d811a4745f";
-      sha256 = "0scgba00f6by08hb14wrz26qcbcysym69mdlv913mhm3rc1szlal";
-    };
+  src = fetchgit {
+    url = "https://github.com/adi1090x/plymouth-themes";
+    rev = "bf2f570bee8e84c5c20caac353cbe1d811a4745f";
+    sha256 = "0scgba00f6by08hb14wrz26qcbcysym69mdlv913mhm3rc1szlal";
+  };
 
-    installPhase = ''
-      mkdir -p $out/share/plymouth/themes/
-      cp -r ${themePath} $out/share/plymouth/themes
-      sed -i "s|\/usr|$out|g" $out/share/plymouth/themes/${themeName}/${themeName}.plymouth
-    '';
+  installPhase = ''
+    mkdir -p $out/share/plymouth/themes/
+    cp -r ${themePath} $out/share/plymouth/themes
+    sed -i "s|\/usr|$out|g" $out/share/plymouth/themes/${themeName}/${themeName}.plymouth
+  '';
 
-    passthru = {
-      inherit availableThemes;
-    };
+  passthru = {
+    inherit availableThemes;
+  };
 
-    meta.platforms = lib.platforms.linux;
-  }
+  meta.platforms = lib.platforms.linux;
+}

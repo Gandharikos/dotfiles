@@ -2,7 +2,8 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (config) my;
   inherit (config.my.machine) type;
   inherit (lib.modules) mkForce mkMerge mkIf;
@@ -10,9 +11,10 @@
   isHost = type == "desktop" || type == "workstation";
   isVirtual = type == "vm" || type == "wsl";
   isServer = type == "server";
-in {
+in
+{
   config = mkMerge [
-    {time.hardwareClockInLocalTime = true;}
+    { time.hardwareClockInLocalTime = true; }
     (mkIf isServer {
       time.timeZone = mkForce "UTC";
     })

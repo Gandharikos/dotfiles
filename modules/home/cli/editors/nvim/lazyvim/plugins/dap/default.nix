@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.dap;
-in {
+in
+{
   options.my.neovim.lazyvim.dap = {
     enable = mkEnableOption "Debugging support";
   };
@@ -27,7 +29,7 @@ in {
         { "jay-babu/mason-nvim-dap.nvim", enabled = false },
       '';
 
-      config = ["editor/dap.lua"];
+      config = [ "editor/dap.lua" ];
     };
   };
 }

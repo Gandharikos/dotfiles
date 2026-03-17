@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.mini-surround;
-in {
+in
+{
   options.my.neovim.lazyvim.mini-surround = {
     enable = mkEnableOption "Fast and feature-rich surround actions";
   };
@@ -21,7 +23,7 @@ in {
         }
       ];
 
-      config = ["coding/mini-surround.lua"];
+      config = [ "coding/mini-surround.lua" ];
     };
   };
 }

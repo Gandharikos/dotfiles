@@ -1,4 +1,5 @@
-{inputs, ...}: {
+{ inputs, ... }:
+{
   imports = [
     inputs.hardware.nixosModules.dell-xps-15-9560-nvidia
     (import ../common/disko/luks-btrfs-tmpfs.nix {
@@ -46,7 +47,7 @@
       hasBluetooth = true;
       hasPrinter = false;
       hasTPM = true;
-      ethernetDevices = ["wlp2s0"]; # ymir wifi device
+      ethernetDevices = [ "wlp2s0" ]; # ymir wifi device
     };
   };
 }

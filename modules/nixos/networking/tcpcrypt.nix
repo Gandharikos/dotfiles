@@ -2,17 +2,19 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   isServer = config.my.machine.type == "server";
-in {
+in
+{
   # enable opportunistic TCP encryption
   # this is NOT a pancea, however, if the receiver supports encryption and the attacker is passive
   # privacy will be more plausible (but not guaranteed, unlike what the option docs suggest)
   networking.tcpcrypt.enable = !isServer;
 
   users = mkIf config.networking.tcpcrypt.enable {
-    groups.tcpcryptd = {};
+    groups.tcpcryptd = { };
     users.tcpcryptd = {
       group = "tcpcryptd";
       isSystemUser = true;

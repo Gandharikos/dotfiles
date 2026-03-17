@@ -4,12 +4,14 @@
   lib,
   aiCommon,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf mkEnableOption;
   sharedAiTools = aiCommon;
 
   cfg = config.my.opencode;
-in {
+in
+{
   imports = lib.my.scanPaths ./.;
 
   options.my.opencode = {

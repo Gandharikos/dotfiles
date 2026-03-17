@@ -1,5 +1,5 @@
-{lib, ...}:
-lib.foldl' lib.recursiveUpdate {} [
+{ lib, ... }:
+lib.foldl' lib.recursiveUpdate { } [
   (import ./flake-update.nix)
   (import ./module-scaffold.nix)
   (import ./nix-check.nix)

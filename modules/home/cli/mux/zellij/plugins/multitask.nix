@@ -3,11 +3,13 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   multitask = "${pkgs.my.multitask}/bin/multitask.wasm";
   inherit (lib.meta) getExe;
   shell = getExe (builtins.getAttr config.my.shell pkgs);
-in {
+in
+{
   programs.zellij.settings = {
     plugins.multitask = {
       _props.location = "file:${multitask}";

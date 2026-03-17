@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe getExe';
   inherit (lib.my) uwsmApp withUWSM withUWSM';
@@ -14,14 +15,35 @@
   wl-paste' = withUWSM' pkgs pkgs.wl-clipboard "wl-paste";
   wl-clip-persist' = withUWSM pkgs "wl-clip-persist";
   cliphist' = getExe pkgs.cliphist;
-in {
+in
+{
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland.settings = {
       exec = [
-        "${uwsmApp pkgs gsettings ["set" gnomeSchema "gtk-theme" gtk.theme.name]}"
-        "${uwsmApp pkgs gsettings ["set" gnomeSchema "icon-theme" gtk.iconTheme.name]}"
-        "${uwsmApp pkgs gsettings ["set" gnomeSchema "cursor-theme" gtk.cursorTheme.name]}"
-        "${uwsmApp pkgs gsettings ["set" gnomeSchema "gtk-font-theme" gtk.font.name]}"
+        "${uwsmApp pkgs gsettings [
+          "set"
+          gnomeSchema
+          "gtk-theme"
+          gtk.theme.name
+        ]}"
+        "${uwsmApp pkgs gsettings [
+          "set"
+          gnomeSchema
+          "icon-theme"
+          gtk.iconTheme.name
+        ]}"
+        "${uwsmApp pkgs gsettings [
+          "set"
+          gnomeSchema
+          "cursor-theme"
+          gtk.cursorTheme.name
+        ]}"
+        "${uwsmApp pkgs gsettings [
+          "set"
+          gnomeSchema
+          "gtk-font-theme"
+          gtk.font.name
+        ]}"
       ];
 
       exec-once = [

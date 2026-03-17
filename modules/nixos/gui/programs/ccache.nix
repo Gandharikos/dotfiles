@@ -2,14 +2,16 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) singleton optionals;
   inherit (lib.trivial) const;
 
   inherit (config.my) gui;
   cfg = config.programs.ccache;
-in {
+in
+{
   config = mkIf gui.enable {
     programs.ccache = {
       enable = true;
@@ -24,9 +26,9 @@ in {
       argument = "-";
     };
 
-    nix.settings.extra-sandbox-paths = [cfg.cacheDir];
+    nix.settings.extra-sandbox-paths = [ cfg.cacheDir ];
 
-    nixpkgs.overlays = optionals (cfg.enable && cfg.packageNames == []) (
+    nixpkgs.overlays = optionals (cfg.enable && cfg.packageNames == [ ]) (
       singleton (
         const (super: {
           ccacheWrapper = super.ccacheWrapper.override {

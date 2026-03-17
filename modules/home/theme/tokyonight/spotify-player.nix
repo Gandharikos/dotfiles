@@ -2,11 +2,13 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (config.my.theme.colorscheme) palette slug;
   cfg = config.my.theme.tokyonight;
-in {
+in
+{
   config = mkIf cfg.enable {
     programs.spotify-player = {
       settings.theme = slug;
@@ -38,54 +40,70 @@ in {
           component_style = {
             block_title = {
               fg = "BrightGreen";
-              modifiers = ["Italic" "Bold"];
+              modifiers = [
+                "Italic"
+                "Bold"
+              ];
             };
             like = {
               fg = "Red";
-              modifiers = ["Bold"];
+              modifiers = [ "Bold" ];
             };
             playback_track = {
               fg = "BrightMagenta";
-              modifiers = ["Italic"];
+              modifiers = [ "Italic" ];
             };
             playback_album = {
               fg = "BrightRed";
-              modifiers = ["Italic"];
+              modifiers = [ "Italic" ];
             };
             playback_artists = {
               fg = "BrightCyan";
-              modifiers = [];
+              modifiers = [ ];
             };
             playback_metadata = {
               fg = "BrightBlue";
-              modifiers = [];
+              modifiers = [ ];
             };
             playback_progress_bar = {
               fg = "BrightGreen";
-              modifiers = ["Italic"];
+              modifiers = [ "Italic" ];
             };
             current_playing = {
               fg = "Red";
-              modifiers = ["Bold" "Italic"];
+              modifiers = [
+                "Bold"
+                "Italic"
+              ];
             };
             playlist_desc = {
               fg = "White";
-              modifiers = ["Italic"];
+              modifiers = [ "Italic" ];
             };
             page_desc = {
               fg = "Magenta";
-              modifiers = ["Bold" "Italic"];
+              modifiers = [
+                "Bold"
+                "Italic"
+              ];
             };
             table_header = {
               fg = "Blue";
-              modifiers = ["Bold"];
+              modifiers = [ "Bold" ];
             };
-            border = {fg = "BrightYellow";};
+            border = {
+              fg = "BrightYellow";
+            };
             selection = {
               fg = "Red";
-              modifiers = ["Bold" "Reversed"];
+              modifiers = [
+                "Bold"
+                "Reversed"
+              ];
             };
-            secondary_row = {bg = "BrightBlack";};
+            secondary_row = {
+              bg = "BrightBlack";
+            };
           };
         }
       ];

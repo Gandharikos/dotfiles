@@ -3,10 +3,12 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (config.my) machine;
-in {
+in
+{
   config = mkIf (machine.type == "laptop") {
     # temperature target on battery
     services.undervolt = {

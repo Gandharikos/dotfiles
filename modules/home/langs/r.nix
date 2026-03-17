@@ -7,7 +7,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.my.langs.r;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
@@ -61,7 +62,8 @@
     nycflights13 # Data on all flights that departed NYC in 2013 (great for dplyr)
     AER # Datasets from "Applied Econometrics with R"
   ];
-in {
+in
+{
   options.my.langs.r = {
     enable = mkEnableOption "R development environment";
     xdg.enable = mkEnableOption "R XDG environment variables";

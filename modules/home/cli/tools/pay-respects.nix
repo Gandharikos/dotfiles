@@ -2,12 +2,14 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 
   cfg = config.my.pay-respects;
-in {
+in
+{
   options.my.pay-respects = {
     enable = mkEnableOption "pay-respects";
   };
@@ -34,7 +36,7 @@ in {
         _PR_GENERAL = {
           match_err = [
             {
-              pattern = ["permission denied"];
+              pattern = [ "permission denied" ];
               suggest = [
                 "#[executable(sudo), !cmd_contains(sudo)]\nsudo {{command}}"
               ];
@@ -46,8 +48,8 @@ in {
           command = "cargo";
           match_err = [
             {
-              pattern = ["could not find `Cargo.toml`"];
-              suggest = ["cargo init"];
+              pattern = [ "could not find `Cargo.toml`" ];
+              suggest = [ "cargo init" ];
             }
           ];
         };
@@ -56,8 +58,8 @@ in {
           command = "git";
           match_err = [
             {
-              pattern = ["has no upstream branch"];
-              suggest = ["git push --set-upstream origin $(git branch --show-current)"];
+              pattern = [ "has no upstream branch" ];
+              suggest = [ "git push --set-upstream origin $(git branch --show-current)" ];
             }
           ];
         };
@@ -66,8 +68,8 @@ in {
           command = "nix";
           match_err = [
             {
-              pattern = ["does not provide attribute"];
-              suggest = ["nix flake show"];
+              pattern = [ "does not provide attribute" ];
+              suggest = [ "nix flake show" ];
             }
           ];
         };

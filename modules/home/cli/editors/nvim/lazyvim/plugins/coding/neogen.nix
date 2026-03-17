@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.neogen;
-in {
+in
+{
   options.my.neovim.lazyvim.neogen = {
     enable = mkEnableOption "Comment tool - mini.comment";
   };
@@ -18,7 +20,7 @@ in {
         neogen
       ];
 
-      imports = ["lazyvim.plugins.extras.coding.neogen"];
+      imports = [ "lazyvim.plugins.extras.coding.neogen" ];
     };
   };
 }

@@ -23,16 +23,24 @@
       CustomUserPreferences."com.apple.symbolichotkeys".AppleSymbolicHotKeys = {
         # 64 = Spotlight search shortcut
         # Disable it to prevent Cmd+Space conflicts
-        "64" = {enabled = false;};
+        "64" = {
+          enabled = false;
+        };
         # 65 = Finder search shortcut (or "Show Spotlight window", depending on macOS version)
         # Disable it to fully turn off Spotlight-related key bindings
-        "65" = {enabled = false;};
+        "65" = {
+          enabled = false;
+        };
         # Previous input source = Ctrl+F12
         "60" = {
           enabled = true;
           value = {
             type = "standard";
-            parameters = [65535 111 8650752];
+            parameters = [
+              65535
+              111
+              8650752
+            ];
             # 65535: special; 111: F12 keyCode; 8650752: 0x840000 = FnFlag + Ctrl
           };
         };
@@ -42,7 +50,11 @@
           enabled = true;
           value = {
             type = "standard";
-            parameters = [65535 111 8781824];
+            parameters = [
+              65535
+              111
+              8781824
+            ];
             # 0x860000 = FnFlag + Ctrl + Shift
           };
         };

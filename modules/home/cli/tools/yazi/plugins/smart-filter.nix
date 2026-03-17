@@ -1,6 +1,7 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs.yazi = {
-    plugins = {inherit (pkgs.yaziPlugins) smart-filter;};
+    plugins = { inherit (pkgs.yaziPlugins) smart-filter; };
     keymap.mgr.prepend_keymap = [
       {
         on = "F";

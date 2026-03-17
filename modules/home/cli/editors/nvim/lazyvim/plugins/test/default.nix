@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.test;
-in {
+in
+{
   options.my.neovim.lazyvim.test = {
     enable = mkEnableOption "Neotest support";
   };
@@ -18,7 +20,7 @@ in {
         neotest
       ];
 
-      imports = ["lazyvim.plugins.extras.test.core"];
+      imports = [ "lazyvim.plugins.extras.test.core" ];
     };
   };
 }

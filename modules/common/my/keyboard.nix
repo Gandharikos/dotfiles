@@ -3,26 +3,37 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption mkOption mkPackageOption;
   inherit (lib.modules) mkIf;
-  inherit (lib.types) path enum addCheck str;
+  inherit (lib.types)
+    path
+    enum
+    addCheck
+    str
+    ;
   inherit (lib.my) relativeToConfig;
   cfg = config.my.keyboard;
   letters = lib.stringToCharacters "abcdefghijklmnopqrstuvwxyz";
   upperLetters = lib.stringToCharacters "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   char = addCheck str (s: builtins.stringLength s == 1);
-  mkLetterOption = letter:
+  mkLetterOption =
+    letter:
     mkOption {
       type = char;
       default = letter;
       description = "Single-letter option for ${letter}.";
     };
-in {
+in
+{
   options.my.keyboard = {
     # Note: I need to use general keyboard layout for my laptop and for Enterprise desktop
     layout = mkOption {
-      type = enum ["qwerty" "colemak"];
+      type = enum [
+        "qwerty"
+        "colemak"
+      ];
       default = "colemak";
       description = "The keyboard layout to use";
     };
@@ -32,7 +43,7 @@ in {
     kanata = {
       enable = mkEnableOption "Kanata keyboard remapping";
 
-      package = mkPackageOption pkgs "kanata-with-cmd" {};
+      package = mkPackageOption pkgs "kanata-with-cmd" { };
 
       configFile = mkOption {
         type = path;

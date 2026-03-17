@@ -3,12 +3,14 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.my) isx86Linux;
   cfg = config.my.video;
-in {
+in
+{
   options.my.video = {
     enable = mkEnableOption "Does the device allow for graphical programs";
 

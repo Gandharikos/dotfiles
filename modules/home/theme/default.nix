@@ -1,16 +1,16 @@
-{lib, ...}: let
+{ lib, ... }:
+let
   inherit (lib.my) scanPaths;
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.types) str;
-in {
+in
+{
   imports = scanPaths ./.;
 
   options.my.theme.general = {
-    transparent =
-      mkEnableOption "Enable tmux transparent"
-      // {
-        default = true;
-      };
+    transparent = mkEnableOption "Enable tmux transparent" // {
+      default = true;
+    };
     pad = {
       left = mkOption {
         type = str;

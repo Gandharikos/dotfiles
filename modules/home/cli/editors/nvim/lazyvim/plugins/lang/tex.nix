@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.tex;
-in {
+in
+{
   options.my.neovim.lazyvim.tex = {
     enable = mkEnableOption "language tex";
   };
@@ -18,7 +20,7 @@ in {
         vimtex
       ];
 
-      imports = ["lazyvim.plugins.extras.lang.tex"];
+      imports = [ "lazyvim.plugins.extras.lang.tex" ];
     };
   };
 }

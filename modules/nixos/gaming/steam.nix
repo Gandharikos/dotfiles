@@ -3,12 +3,14 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
 
   cfg = config.my.game.steam;
-in {
+in
+{
   options.my.game = {
     steam = {
       enable = mkEnableOption "Enable Steam";
@@ -24,19 +26,23 @@ in {
       # dedicatedServer.openFirewall = true;
       # Compatibility tools to install
       # this option used to be provided by modules/shared/nixos/steam
-      extraCompatPackages = [pkgs.proton-ge-bin.steamcompattool];
+      extraCompatPackages = [ pkgs.proton-ge-bin.steamcompattool ];
     };
 
     nixpkgs.overlays = [
       (_: prev: {
         steam = prev.steam.override (
-          {extraPkgs ? _: [], ...}: {
-            extraPkgs = pkgs':
+          {
+            extraPkgs ? _: [ ],
+            ...
+          }:
+          {
+            extraPkgs =
+              pkgs':
               builtins.attrValues {
                 extras = extraPkgs pkgs';
 
-                inherit
-                  (pkgs')
+                inherit (pkgs')
                   # Add missing dependencies
                   libgdiplus
                   keyutils
@@ -61,8 +67,7 @@ in {
 
                 inherit (pkgs.stdenv.cc.cc) lib;
 
-                inherit
-                  (pkgs)
+                inherit (pkgs)
                   libxcursor
                   libxi
                   libxinerama

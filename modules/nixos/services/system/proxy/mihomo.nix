@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.my.services.proxy;
   inherit (lib.modules) mkIf;
   configFile = "/var/lib/mihomo/config.yaml";
@@ -18,10 +19,11 @@
     ${pkgs.curl}/bin/curl -sfL -o ${configFile} "$sub_url"
     chown mihomo:mihomo ${configFile}
   '';
-in {
+in
+{
   config = mkIf cfg.enable {
     # Declare the secret key required from the default sops file.
-    sops.secrets.mihomo_subUrl = {};
+    sops.secrets.mihomo_subUrl = { };
 
     # https://wiki.metacubex.one/config
     # https://nixos.wiki/wiki/Mihomo
@@ -33,16 +35,16 @@ in {
       inherit configFile;
     };
 
-    networking.firewall.allowedTCPPorts = [9090];
+    networking.firewall.allowedTCPPorts = [ 9090 ];
 
     systemd.services.mihomo = {
       # Ensure the secret is decrypted before this service starts.
       # sops-nix will make the `data` available after it runs.
-      after = ["sops-nix.service"];
-      wants = ["sops-nix.service"];
+      after = [ "sops-nix.service" ];
+      wants = [ "sops-nix.service" ];
 
       # Do not start on boot; let the dispatcher script control it.
-      wantedBy = lib.mkForce [];
+      wantedBy = lib.mkForce [ ];
 
       # Run before starting mihomo
       preStart = ''
@@ -58,7 +60,7 @@ in {
         User = "root";
       };
       # Also needs to run after secrets are available.
-      after = ["sops-nix.service"];
+      after = [ "sops-nix.service" ];
     };
 
     systemd.timers."update-mihomo-config" = {
@@ -67,7 +69,7 @@ in {
         OnCalendar = "weekly";
         Persistent = true;
       };
-      wantedBy = ["timers.target"];
+      wantedBy = [ "timers.target" ];
     };
   };
 }

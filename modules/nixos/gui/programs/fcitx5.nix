@@ -3,18 +3,18 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkDefault;
   waylandEnabled = config.my.gui.desktop.wayland.enable;
   cfg = config.my.gui.system.fcitx5;
-in {
+in
+{
   options.my.gui.system.fcitx5 = {
-    enable =
-      mkEnableOption "Enable fcitx5 input method"
-      // {
-        default = config.my.gui.enable;
-      };
+    enable = mkEnableOption "Enable fcitx5 input method" // {
+      default = config.my.gui.enable;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -75,7 +75,7 @@ in {
               # };
             };
             notifications = {
-              globalSection = {};
+              globalSection = { };
               sections.HiddenNotifications = {
                 "0" = "fcitx-rime-deploy";
               };

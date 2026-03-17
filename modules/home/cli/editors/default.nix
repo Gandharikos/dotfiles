@@ -2,16 +2,23 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkOption;
   inherit (lib.modules) mkDefault;
   inherit (lib.types) enum;
   inherit (config.my) editor;
-in {
+in
+{
   imports = lib.my.scanPaths ./.;
 
   options.my.editor = mkOption {
-    type = enum ["nvim" "helix" "vscode" "emacs"];
+    type = enum [
+      "nvim"
+      "helix"
+      "vscode"
+      "emacs"
+    ];
     default = "nvim";
     description = "The editor to use";
   };

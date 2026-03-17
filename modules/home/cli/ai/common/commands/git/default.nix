@@ -1,5 +1,5 @@
-{lib, ...}:
-lib.foldl' lib.recursiveUpdate {} [
+{ lib, ... }:
+lib.foldl' lib.recursiveUpdate { } [
   (import ./add-and-format.nix)
   (import ./commit-changes.nix)
   (import ./commit-msg.nix)

@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.gx;
-in {
+in
+{
   options.my.neovim.lazyvim.gx = {
     enable = mkEnableOption "gx browse";
   };
@@ -17,6 +19,6 @@ in {
       gx-nvim
     ];
 
-    my.neovim.lazyvim.config = ["ui/gx.lua"];
+    my.neovim.lazyvim.config = [ "ui/gx.lua" ];
   };
 }

@@ -4,14 +4,18 @@
   lib,
   self,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.types) str path;
   cfg = config.my.security.gpg;
-in {
+in
+{
   options.my.security.gpg = {
-    enable = mkEnableOption "my security gpg" // {default = config.my.security.enable;};
+    enable = mkEnableOption "my security gpg" // {
+      default = config.my.security.enable;
+    };
     signGitCommits = mkOption {
       type = lib.types.bool;
       default = true;
@@ -113,18 +117,21 @@ in {
     };
 
     home = {
-      packages = lib.optionals config.gtk.enable [pkgs.gcr] ++ lib.optional pkgs.stdenv.hostPlatform.isDarwin pkgs.pinentry_mac;
+      packages =
+        lib.optionals config.gtk.enable [ pkgs.gcr ]
+        ++ lib.optional pkgs.stdenv.hostPlatform.isDarwin pkgs.pinentry_mac;
     };
 
     services.gpg-agent = {
       enable = true;
       enableSshSupport = true;
       pinentry.package =
-        if pkgs.stdenv.hostPlatform.isDarwin
-        then pkgs.pinentry_mac
-        else if config.gtk.enable || config.qt.enable
-        then pkgs.pinentry-qt
-        else pkgs.pinentry-tty;
+        if pkgs.stdenv.hostPlatform.isDarwin then
+          pkgs.pinentry_mac
+        else if config.gtk.enable || config.qt.enable then
+          pkgs.pinentry-qt
+        else
+          pkgs.pinentry-tty;
     };
   };
 }

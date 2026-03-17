@@ -2,17 +2,30 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.my) scanPaths relativeToConfig;
   inherit (lib.options) mkOption;
-  inherit (lib.types) enum str nullOr package path coercedTo attrs;
+  inherit (lib.types)
+    enum
+    str
+    nullOr
+    package
+    path
+    coercedTo
+    attrs
+    ;
   inherit (config) my;
-in {
+in
+{
   imports = scanPaths ./.;
 
   options.my.theme = {
     default = mkOption {
-      type = nullOr (enum ["tokyonight" "catppuccin"]);
+      type = nullOr (enum [
+        "tokyonight"
+        "catppuccin"
+      ]);
       default = "tokyonight";
       description = "The theme to use";
     };
@@ -45,18 +58,12 @@ in {
     };
     avatar = mkOption {
       type = nullOr (coercedTo package toString path);
-      default =
-        if my.gui.enable
-        then (relativeToConfig "avatars/makima.jpg")
-        else null;
+      default = if my.gui.enable then (relativeToConfig "avatars/makima.jpg") else null;
       description = "The avatar of the user";
     };
     wallpaper = mkOption {
       type = nullOr (coercedTo package toString path);
-      default =
-        if my.gui.enable
-        then ./nix.png
-        else null;
+      default = if my.gui.enable then ./nix.png else null;
       description = "The wallpaper of the system";
     };
   };

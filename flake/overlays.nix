@@ -4,54 +4,48 @@
   inputs,
   lib,
   ...
-}: let
+}:
+let
   overlaysPath = ../overlays;
   dynamicOverlaysSet =
-    if builtins.pathExists overlaysPath
-    then
-      lib.foldl'
-      (acc: name: let
-        overlayPath = overlaysPath + "/${name}";
-        overlayValue =
-          import overlayPath;
-        resolved =
-          if lib.isFunction overlayValue
-          then overlayValue {inherit inputs;}
-          else overlayValue;
-        isOverlaySet =
-          lib.isAttrs resolved
-          && resolved != {}
-          && lib.all lib.isFunction (builtins.attrValues resolved);
-      in
-        if isOverlaySet
-        then acc // resolved
-        else acc // {${name} = resolved;})
-      {}
-      (builtins.attrNames (builtins.readDir overlaysPath))
-    else {};
+    if builtins.pathExists overlaysPath then
+      lib.foldl' (
+        acc: name:
+        let
+          overlayPath = overlaysPath + "/${name}";
+          overlayValue = import overlayPath;
+          resolved = if lib.isFunction overlayValue then overlayValue { inherit inputs; } else overlayValue;
+          isOverlaySet =
+            lib.isAttrs resolved && resolved != { } && lib.all lib.isFunction (builtins.attrValues resolved);
+        in
+        if isOverlaySet then acc // resolved else acc // { ${name} = resolved; }
+      ) { } (builtins.attrNames (builtins.readDir overlaysPath))
+    else
+      { };
 
-  myPackagesOverlay = final: prev: let
-    directory = ../packages;
-    packageFunctions = prev.lib.filesystem.packagesFromDirectoryRecursive {
-      inherit directory;
-      callPackage = file: _args: import file;
-    };
-  in {
-    my = prev.lib.fix (
-      self:
-        prev.lib.mapAttrs (
-          _name: func: final.callPackage func (self // {inherit inputs;})
-        )
-        packageFunctions
-    );
-  };
-in {
-  flake = {
-    overlays =
-      dynamicOverlaysSet
-      // {
-        default = myPackagesOverlay;
-        my = myPackagesOverlay;
+  myPackagesOverlay =
+    final: prev:
+    let
+      directory = ../packages;
+      packageFunctions = prev.lib.filesystem.packagesFromDirectoryRecursive {
+        inherit directory;
+        callPackage = file: _args: import file;
       };
+    in
+    {
+      my = prev.lib.fix (
+        self:
+        prev.lib.mapAttrs (
+          _name: func: final.callPackage func (self // { inherit inputs; })
+        ) packageFunctions
+      );
+    };
+in
+{
+  flake = {
+    overlays = dynamicOverlaysSet // {
+      default = myPackagesOverlay;
+      my = myPackagesOverlay;
+    };
   };
 }

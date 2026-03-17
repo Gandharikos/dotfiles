@@ -3,15 +3,17 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) elem;
   inherit (config.my.gui.desktop.hyprland) plugins;
   enable = plugins.enable && elem "borders-plus-plus" plugins.list;
-in {
+in
+{
   config = mkIf enable {
     wayland.windowManager.hyprland = {
-      plugins = with pkgs.hyprlandPlugins; [borders-plus-plus];
+      plugins = with pkgs.hyprlandPlugins; [ borders-plus-plus ];
       settings.plugin.borders-plus-plus = {
         # TODO: change this, don't use hardcoded color
         # TODO: make this more senseable

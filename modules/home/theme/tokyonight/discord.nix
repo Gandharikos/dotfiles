@@ -2,11 +2,13 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   cfg = config.my.theme.tokyonight;
   inherit (config.my.theme.general) transparent;
-in {
+in
+{
   config = mkIf cfg.enable {
     programs.nixcord.config = {
       inherit transparent;

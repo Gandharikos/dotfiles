@@ -2,10 +2,12 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (config.my) gui name theme;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   # INFO: I don't want use this, but dms require it.
   config = mkIf gui.enable {
     services.accounts-daemon.enable = true;

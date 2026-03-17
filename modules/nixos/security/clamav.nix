@@ -3,13 +3,13 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.strings) escapeShellArgs;
   inherit (lib.meta) getExe';
-  inherit
-    (lib.types)
+  inherit (lib.types)
     int
     str
     bool
@@ -21,13 +21,12 @@
   notify-send' = getExe' pkgs.libnotify "notify-send";
 
   cfg = config.my.security.clamav;
-in {
+in
+{
   options.my.security.clamav = {
-    enable =
-      mkEnableOption "Enable ClamAV daemon."
-      // {
-        default = config.my.security.enable;
-      };
+    enable = mkEnableOption "Enable ClamAV daemon." // {
+      default = config.my.security.enable;
+    };
 
     daemon = {
       settings = mkOption {
@@ -83,7 +82,7 @@ in {
           str
           (listOf str)
         ]);
-        default = {};
+        default = { };
         description = ''
           freshclam configuration. Refer to <https://linux.die.net/man/5/freshclam.conf>,
           for details on supported values.
@@ -94,16 +93,14 @@ in {
 
   config = mkIf cfg.enable {
     services.clamav = {
-      daemon =
-        {
-          enable = true;
-        }
-        // cfg.daemon;
-      updater =
-        {
-          enable = true;
-        }
-        // cfg.updater;
+      daemon = {
+        enable = true;
+      }
+      // cfg.daemon;
+      updater = {
+        enable = true;
+      }
+      // cfg.updater;
     };
 
     systemd = {
@@ -132,8 +129,8 @@ in {
         };
 
         clamav-init-database = {
-          wantedBy = ["clamav-daemon.service"];
-          before = ["clamav-daemon.service"];
+          wantedBy = [ "clamav-daemon.service" ];
+          before = [ "clamav-daemon.service" ];
           serviceConfig.ExecStart = "systemctl start clamav-freshclam";
           unitConfig = {
             # opposite condition of clamav-daemon: only run this service if
@@ -146,13 +143,15 @@ in {
         };
 
         clamav-freshclam = {
-          wants = ["clamav-daemon.service"];
+          wants = [ "clamav-daemon.service" ];
           serviceConfig = {
-            ExecStart = let
-              message = "Updating ClamAV database";
-            in ''
-              ${getExe' pkgs.coreutils "echo"} -en ${message}
-            '';
+            ExecStart =
+              let
+                message = "Updating ClamAV database";
+              in
+              ''
+                ${getExe' pkgs.coreutils "echo"} -en ${message}
+              '';
             SuccessExitStatus = mkForce [
               11
               40

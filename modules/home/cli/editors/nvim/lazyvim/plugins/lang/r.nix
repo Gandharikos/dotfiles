@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.r;
@@ -12,7 +13,8 @@
   r-language-server = pkgs.writeShellScriptBin "r-language-server" ''
     exec ${R'} --slave -e 'languageserver::run()'
   '';
-in {
+in
+{
   options.my.neovim.lazyvim.r = {
     enable = mkEnableOption "language r";
   };
@@ -25,7 +27,7 @@ in {
         neotest-testthat
       ];
 
-      imports = ["lazyvim.plugins.extras.lang.r"];
+      imports = [ "lazyvim.plugins.extras.lang.r" ];
 
       extraPackages = [
         r-language-server

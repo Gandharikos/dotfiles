@@ -26,6 +26,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/laperlej/zellij-sessionizer";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

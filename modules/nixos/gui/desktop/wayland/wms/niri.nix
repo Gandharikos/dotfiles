@@ -2,20 +2,20 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (config.my.gui) desktop;
   cfg = desktop.niri;
-in {
+in
+{
   options.my.gui.desktop.niri = {
-    enable =
-      mkEnableOption "Enable Niri"
-      // {
-        default = desktop.wayland.enable && desktop.default == "niri";
-        internal = true;
-        readOnly = true;
-      };
+    enable = mkEnableOption "Enable Niri" // {
+      default = desktop.wayland.enable && desktop.default == "niri";
+      internal = true;
+      readOnly = true;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -25,7 +25,7 @@ in {
       prettyName = "niri";
       comment = "Niri compositor managed by UWSM";
       binPath = "/run/current-system/sw/bin/niri";
-      extraArgs = ["--session"];
+      extraArgs = [ "--session" ];
     };
   };
 }

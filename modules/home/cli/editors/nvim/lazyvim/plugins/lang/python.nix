@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.python;
-in {
+in
+{
   options.my.neovim.lazyvim.python = {
     enable = mkEnableOption "language python";
   };
@@ -20,7 +22,7 @@ in {
         venv-selector-nvim
       ];
 
-      imports = ["lazyvim.plugins.extras.lang.python"];
+      imports = [ "lazyvim.plugins.extras.lang.python" ];
 
       extraPackages = with pkgs; [
         pyright

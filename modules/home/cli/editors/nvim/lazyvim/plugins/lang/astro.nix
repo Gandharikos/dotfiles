@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.astro;
-in {
+in
+{
   options.my.neovim.lazyvim.astro = {
     enable = mkEnableOption "language astro";
   };
@@ -16,7 +18,7 @@ in {
     my.neovim.lazyvim = {
       typescript.enable = true;
 
-      imports = ["lazyvim.plugins.extras.lang.astro"];
+      imports = [ "lazyvim.plugins.extras.lang.astro" ];
 
       extraPackages = with pkgs; [
         astro-language-server

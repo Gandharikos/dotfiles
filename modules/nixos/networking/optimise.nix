@@ -2,12 +2,14 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
 
   cfg = config.my.networking;
-in {
+in
+{
   options.my.networking.optimizeTcp = mkEnableOption "Enable tcp optimizations";
 
   config = mkIf cfg.optimizeTcp {

@@ -2,9 +2,11 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   enable = config.my.machine.type == "workstation";
-in {
+in
+{
   services.scx = {
     inherit enable;
     scheduler = "scx_bpfland";

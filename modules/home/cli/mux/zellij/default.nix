@@ -3,22 +3,22 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.my.zellij;
   autoStart = config.my.mux.autoStart && config.my.mux.default == "zellij";
   inherit (lib) mkEnableOption mkIf getExe;
   inherit (lib.modules) mkDefault;
 
   shell = getExe (builtins.getAttr config.my.shell pkgs);
-in {
+in
+{
   imports = lib.my.scanPaths ./.;
 
   options.my.zellij = {
-    enable =
-      mkEnableOption "Zellij"
-      // {
-        default = config.my.mux.default == "zellij";
-      };
+    enable = mkEnableOption "Zellij" // {
+      default = config.my.mux.default == "zellij";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -76,11 +76,12 @@ in {
           scrollback_editor = getExe config.programs.neovim.package;
           # TODO: add option that handles darwin and X11/Wayland
           copy_command =
-            if pkgs.stdenv.hostPlatform.isDarwin
-            then "pbcopy"
-            else if pkgs.stdenv.hostPlatform.isLinux
-            then "wl-copy"
-            else "xclip -selection clipboard";
+            if pkgs.stdenv.hostPlatform.isDarwin then
+              "pbcopy"
+            else if pkgs.stdenv.hostPlatform.isLinux then
+              "wl-copy"
+            else
+              "xclip -selection clipboard";
 
           # serialized
           serialize_pane_viewport = true;

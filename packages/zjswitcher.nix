@@ -26,6 +26,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/WingsZeng/zjswitcher";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

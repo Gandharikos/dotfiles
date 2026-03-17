@@ -2,11 +2,13 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.my) scanPaths capitalize;
   cfg = config.my.theme.tokyonight;
-in {
+in
+{
   imports = scanPaths ./.;
 
   config = mkIf cfg.enable {

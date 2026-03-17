@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe;
   inherit (lib.my) uwsmScript uwsmScriptArgs;
@@ -34,7 +35,8 @@
   screenShotArgs = uwsmScriptArgs pkgs "grimblast-screen-shot" ''
     ${grimblast} --notify --cursor copysave screen - | ${satty} --filename -
   '';
-in {
+in
+{
   config = mkIf enable {
     wayland.windowManager.hyprland.settings = {
       bindd = [

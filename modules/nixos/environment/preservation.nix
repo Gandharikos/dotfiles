@@ -4,14 +4,16 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.persistence;
   hm = config.hm.my;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
   inherit (config.my) name;
-in {
-  imports = [inputs.preservation.nixosModules.default];
+in
+{
+  imports = [ inputs.preservation.nixosModules.default ];
 
   options.my.persistence = {
     enable = mkEnableOption "persistence"; # must use tmpfs for /
@@ -126,7 +128,7 @@ in {
               mode = "0700";
             }
           ];
-          files = [];
+          files = [ ];
         }
         (mkIf hm.gui.enable {
           directories = [
@@ -360,27 +362,29 @@ in {
     # Note that immediate parent directories of persisted files can also be
     # configured with ownership and permissions from the `parent` settings if
     # `configureParent = true` is set for the file.
-    systemd.tmpfiles.settings.preservation = let
-      permission = {
-        user = name;
-        group = lib.mkForce name;
-        mode = lib.mkForce "0750";
+    systemd.tmpfiles.settings.preservation =
+      let
+        permission = {
+          user = name;
+          group = lib.mkForce name;
+          mode = lib.mkForce "0750";
+        };
+      in
+      {
+        "/home/${name}/.config".d = permission;
+        "/home/${name}/.cache".d = permission;
+        "/home/${name}/.local".d = permission;
+        "/home/${name}/.local/share".d = permission;
+        "/home/${name}/.local/state".d = permission;
+        "/home/${name}/.local/state/nix".d = permission;
+        "/home/${name}/.terraform.d".d = permission;
       };
-    in {
-      "/home/${name}/.config".d = permission;
-      "/home/${name}/.cache".d = permission;
-      "/home/${name}/.local".d = permission;
-      "/home/${name}/.local/share".d = permission;
-      "/home/${name}/.local/state".d = permission;
-      "/home/${name}/.local/state/nix".d = permission;
-      "/home/${name}/.terraform.d".d = permission;
-    };
 
     # systemd-machine-id-commit.service would fail but it is not relevant
     # in this specific setup for a persistent machine-id so we disable it
     #
     # see the firstboot example below for an alternative approach
-    systemd.suppressedSystemUnits = ["systemd-machine-id-commit.service"];
+    systemd.suppressedSystemUnits = [ "systemd-machine-id-commit.service" ];
 
     # let the service commit the transient ID to the persistent volume
     systemd.services.systemd-machine-id-commit = {
@@ -410,46 +414,51 @@ in {
     system.activationScripts = {
       # NOTE: we use nixos-anywhere with copy-host-keys arg
       # so we need copy these ssh keys to /persist on fresh installs
-      persistent-ssh.text = let
-        sshKeys = [
-          {
-            path = "/etc/ssh/ssh_host_ed25519_key";
-            mode = "700";
-          }
-          {
-            path = "/etc/ssh/ssh_host_ed25519_key.pub";
-            mode = "755";
-          }
-          {
-            path = "/etc/ssh/ssh_host_rsa_key";
-            mode = "700";
-          }
-          {
-            path = "/etc/ssh/ssh_host_rsa_key.pub";
-            mode = "755";
-          }
-        ];
-        cpSSHKeys = key: let
-          dest = "/persist${key.path}";
-        in ''
-          if [ -f "${key.path}" ]; then
-            echo "Copying ${key.path} to ${dest} with mode ${key.mode}"
-            mkdir -p "$(dirname "${dest}")"
-            cp -a "${key.path}" "${dest}"
-            chmod ${key.mode} "${dest}"
+      persistent-ssh.text =
+        let
+          sshKeys = [
+            {
+              path = "/etc/ssh/ssh_host_ed25519_key";
+              mode = "700";
+            }
+            {
+              path = "/etc/ssh/ssh_host_ed25519_key.pub";
+              mode = "755";
+            }
+            {
+              path = "/etc/ssh/ssh_host_rsa_key";
+              mode = "700";
+            }
+            {
+              path = "/etc/ssh/ssh_host_rsa_key.pub";
+              mode = "755";
+            }
+          ];
+          cpSSHKeys =
+            key:
+            let
+              dest = "/persist${key.path}";
+            in
+            ''
+              if [ -f "${key.path}" ]; then
+                echo "Copying ${key.path} to ${dest} with mode ${key.mode}"
+                mkdir -p "$(dirname "${dest}")"
+                cp -a "${key.path}" "${dest}"
+                chmod ${key.mode} "${dest}"
+              fi
+            '';
+        in
+        ''
+          #!/bin/sh
+          if [ ! -f /persist/etc/ssh/.init ]; then
+            echo "Initializing persistent SSH keys..."
+            ${lib.concatLines (map cpSSHKeys sshKeys)}
+            touch /persist/etc/ssh/.init
+            echo "Persistent SSH keys initialization complete."
+          else
+            echo "Persistent SSH keys already initialized, skipping."
           fi
         '';
-      in ''
-        #!/bin/sh
-        if [ ! -f /persist/etc/ssh/.init ]; then
-          echo "Initializing persistent SSH keys..."
-          ${lib.concatLines (map cpSSHKeys sshKeys)}
-          touch /persist/etc/ssh/.init
-          echo "Persistent SSH keys initialization complete."
-        else
-          echo "Persistent SSH keys already initialized, skipping."
-        fi
-      '';
     };
   };
 }

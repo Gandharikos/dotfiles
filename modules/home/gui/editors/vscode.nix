@@ -3,19 +3,19 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (config.my) gui;
   cfg = config.my.gui.apps.vscode;
   enable = gui.enable && cfg.enable;
-in {
+in
+{
   options.my.gui.apps.vscode = {
-    enable =
-      mkEnableOption "Visual Studio Code"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Visual Studio Code" // {
+      default = true;
+    };
   };
 
   config = mkIf enable {

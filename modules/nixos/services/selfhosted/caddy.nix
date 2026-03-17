@@ -3,12 +3,14 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (config) my;
   cfg = config.my.services.caddy;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.services.caddy = {
     enable = mkEnableOption "Enable Caddy";
   };
@@ -18,7 +20,7 @@ in {
       shellAliases = {
         caddy-log = "journalctl _SYSTEMD_UNIT=caddy.service";
       };
-      systemPackages = with pkgs; [custom-caddy];
+      systemPackages = with pkgs; [ custom-caddy ];
     };
     services = {
       caddy = {

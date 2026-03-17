@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   cfg = config.my.keyboard.kanata;
-in {
+in
+{
   config = mkIf cfg.enable {
     hardware.uinput.enable = true;
     services.kanata = {

@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (config.my) gui;
@@ -18,13 +19,12 @@
   #   hash = "sha256-s3r8cdEliiPnKWs64Wgi0rC9Ngl1mkIrLnr2tIcyXWw=";
   #   fetchSubmodules = false;
   # };
-in {
+in
+{
   options.my.gui.system.squirrel = {
-    enable =
-      mkEnableOption "squirrel"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "squirrel" // {
+      default = true;
+    };
   };
 
   config = mkIf (gui.enable && cfg.enable && isDarwin) {
@@ -37,7 +37,7 @@ in {
       "${dir}/default.yaml".source = "${pkgs.rime-ice}/share/rime-data/rime_ice_suggestion.yaml";
     };
 
-    home.activation.rimeDeploy = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    home.activation.rimeDeploy = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       app="/Library/Input Methods/Squirrel.app/Contents/MacOS/Squirrel"
       "$app" --build  >/dev/null 2>&1 || :
       "$app" --reload >/dev/null 2>&1 || :

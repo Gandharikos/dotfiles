@@ -3,13 +3,15 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (lib.meta) getExe';
   cfg = config.my.virtual.distrobox;
   distrobox' = getExe' pkgs.distrobox "distrobox";
-in {
+in
+{
   options.my.virtual.distrobox = {
     enable = mkEnableOption "Enable distrobox";
   };
@@ -23,7 +25,7 @@ in {
     systemd.user = {
       timers."distrobox-update" = {
         enable = true;
-        wantedBy = ["timers.target"];
+        wantedBy = [ "timers.target" ];
         timerConfig = {
           OnBootSec = "1h";
           OnUnitActiveSec = "1d";

@@ -1,50 +1,52 @@
-_: let
+_:
+let
   /*
-  *
-  check if the host platform is linux and x86
+    *
+    check if the host platform is linux and x86
 
-  # Arguments
+    # Arguments
 
-  - [pkgs] the package set
+    - [pkgs] the package set
 
-  # Type
+    # Type
 
-  ```
-  isx86Linux :: AttrSet -> Bool
-  ```
+    ```
+    isx86Linux :: AttrSet -> Bool
+    ```
 
-  # Example
+    # Example
 
-  ```nix
-  isx86Linux pkgs
-  => true
-  ```
+    ```nix
+    isx86Linux pkgs
+    => true
+    ```
   */
   isx86Linux = pkgs: pkgs.stdenv.hostPlatform.isLinux && pkgs.stdenv.hostPlatform.isx86;
 
   /*
-  *
-  assume the first monitor in the list of monitors is primary
-  get its name from the list of monitors
+    *
+    assume the first monitor in the list of monitors is primary
+    get its name from the list of monitors
 
-  # Arguments
+    # Arguments
 
-  - [config] the configuration that nixosConfigurations provides
+    - [config] the configuration that nixosConfigurations provides
 
-  # Type
+    # Type
 
-  ```
-  primaryMonitor :: AttrSet -> String
-  ```
+    ```
+    primaryMonitor :: AttrSet -> String
+    ```
 
-  # Example
+    # Example
 
-  ```nix
-  primaryMonitor osConfig
-  => "DP-1"
-  ```
+    ```nix
+    primaryMonitor osConfig
+    => "DP-1"
+    ```
   */
   primaryMonitor = config: builtins.elemAt config.my.machine.monitors 0;
-in {
+in
+{
   inherit isx86Linux primaryMonitor;
 }

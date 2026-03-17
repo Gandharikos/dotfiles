@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.quarto;
-in {
+in
+{
   options.my.neovim.lazyvim.quarto = {
     enable = mkEnableOption "language quarto";
   };
@@ -22,7 +24,7 @@ in {
         img-clip-nvim
       ];
 
-      config = ["lang/quarto.lua"];
+      config = [ "lang/quarto.lua" ];
     };
   };
 }

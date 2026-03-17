@@ -1,6 +1,7 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs.yazi = {
-    plugins = {inherit (pkgs.yaziPlugins) piper;};
+    plugins = { inherit (pkgs.yaziPlugins) piper; };
     settings.plugin.prepend_previewers = [
       {
         name = "*.md";

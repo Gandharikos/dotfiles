@@ -1,4 +1,5 @@
-{lib, ...}: {
+{ lib, ... }:
+{
   imports = lib.my.scanPaths ./.;
   programs.zellij.settings.plugins = {
     compact-bar = {

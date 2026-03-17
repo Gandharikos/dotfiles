@@ -3,9 +3,9 @@
   config,
   pkgs,
   ...
-}: let
-  inherit
-    (lib.modules)
+}:
+let
+  inherit (lib.modules)
     mkIf
     mkMerge
     mkDefault
@@ -13,8 +13,7 @@
     ;
   inherit (lib.lists) optionals;
   inherit (lib.options) mkOption mkEnableOption literalExpression;
-  inherit
-    (lib.types)
+  inherit (lib.types)
     str
     raw
     listOf
@@ -22,7 +21,8 @@
     ;
 
   cfg = config.my.boot;
-in {
+in
+{
   imports = lib.my.scanPaths ./.;
 
   options.my.boot = {
@@ -49,7 +49,7 @@ in {
 
     extraModprobeConfig = mkOption {
       type = str;
-      default = ''options hid_apple fnmode=1'';
+      default = "options hid_apple fnmode=1";
       description = "Extra modprobe config that will be passed to system modprobe config.";
     };
 
@@ -63,13 +63,13 @@ in {
 
     extraKernelParams = mkOption {
       type = listOf str;
-      default = [];
+      default = [ ];
     };
 
     extraModulePackages = mkOption {
       type = listOf package;
-      default = [];
-      example = literalExpression ''with config.boot.kernelPackages; [acpi_call]'';
+      default = [ ];
+      example = literalExpression "with config.boot.kernelPackages; [acpi_call]";
       description = "Extra kernel modules to be loaded.";
     };
   };

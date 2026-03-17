@@ -9,25 +9,48 @@
   config,
   _class,
   ...
-}: let
+}:
+let
   extraSpecialArgs = {
-    inherit self self' inputs inputs' pkgs pkgs' lib;
+    inherit
+      self
+      self'
+      inputs
+      inputs'
+      pkgs
+      pkgs'
+      lib
+      ;
     osClass = _class;
   };
   inherit (config) my;
-in {
+in
+{
   imports = [
-    (lib.mkAliasOptionModule ["hm"] ["home-manager" "users" config.my.name])
+    (lib.mkAliasOptionModule [ "hm" ] [ "home-manager" "users" config.my.name ])
   ];
 
   hm = {
-    imports = [../home];
+    imports = [ ../home ];
     my = {
-      inherit (my) name fullName email shell home keyboard theme;
+      inherit (my)
+        name
+        fullName
+        email
+        shell
+        home
+        keyboard
+        theme
+        ;
 
       # We do not inherit `my` directly from `config` because NixOS declares options that should not flow into home-manager.
       machine = {
-        inherit (my.machine) type gpu cpu monitors;
+        inherit (my.machine)
+          type
+          gpu
+          cpu
+          monitors
+          ;
       };
       gui = {
         inherit (my.gui) enable;

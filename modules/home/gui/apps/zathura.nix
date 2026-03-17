@@ -2,19 +2,19 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (config.my) gui;
   cfg = config.my.gui.apps.zathura;
   enable = gui.enable && cfg.enable;
-in {
+in
+{
   options.my.gui.apps.zathura = {
-    enable =
-      mkEnableOption "Zathura"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Zathura" // {
+      default = true;
+    };
   };
 
   config = mkIf enable {

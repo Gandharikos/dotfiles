@@ -4,17 +4,16 @@
   pkgs,
   _class,
   ...
-}: let
+}:
+let
   inherit (lib.attrsets) filterAttrs attrValues mapAttrs;
   inherit (lib.modules) mkForce mkIf;
   inherit (lib.types) isType;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   flakeInputs = filterAttrs (name: value: (isType "flake" value) && (name != "self")) inputs;
-  sudoers =
-    if (_class == "nixos")
-    then "@wheel"
-    else "@admin";
-in {
+  sudoers = if (_class == "nixos") then "@wheel" else "@admin";
+in
+{
   # Auto upgrade nix package and the daemon service.
   # services.nix-daemon.enable = true;
   # Use this instead of services.nix-daemon.enable if you
@@ -24,17 +23,16 @@ in {
     # pin the registry to avoid downloading and evaluating a new nixpkgs version everytime
     # Define global flakes for this system
     # make `nix run nixpkgs#nixpkgs` use the same nixpkgs as the one used by this flake.
-    registry =
-      (mapAttrs (_: flake: {inherit flake;}) flakeInputs)
-      // {
-        # https://github.com/NixOS/nixpkgs/pull/388090
-        nixpkgs = mkForce {flake = inputs.nixpkgs;};
-      };
+    registry = (mapAttrs (_: flake: { inherit flake; }) flakeInputs) // {
+      # https://github.com/NixOS/nixpkgs/pull/388090
+      nixpkgs = mkForce { flake = inputs.nixpkgs; };
+    };
     # We love legacy support (for now)
     nixPath =
-      if (_class == "nixos")
-      then attrValues (mapAttrs (k: v: "${k}=flake:${v.outPath}") flakeInputs)
-      else mkForce (mapAttrs (_: v: v.outPath) flakeInputs);
+      if (_class == "nixos") then
+        attrValues (mapAttrs (k: v: "${k}=flake:${v.outPath}") flakeInputs)
+      else
+        mkForce (mapAttrs (_: v: v.outPath) flakeInputs);
     optimise.automatic = true;
     gc = {
       automatic = true;
@@ -55,9 +53,9 @@ in {
         "cgroups"
       ];
       # users or groups that are allowed ot do anything with the Nix daemon
-      allowed-users = [sudoers];
+      allowed-users = [ sudoers ];
       # users or groups that are allowed to manage the nix store
-      trusted-users = [sudoers];
+      trusted-users = [ sudoers ];
 
       # we don't want to track the registry, but we do want to allow the useage
       # of the `flake:` references, so we need to enable use-registries

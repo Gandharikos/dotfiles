@@ -3,17 +3,17 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.emacs;
-in {
+in
+{
   options.my.emacs = {
-    enable =
-      mkEnableOption "Enable Emacs"
-      // {
-        default = config.my.editor == "emacs";
-      };
+    enable = mkEnableOption "Enable Emacs" // {
+      default = config.my.editor == "emacs";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -24,12 +24,12 @@ in {
         sqlite # for org-roam
         emacs-all-the-icons-fonts
       ];
-      sessionPath = ["${config.xdg.configHome}/emacs/bin"];
-      sessionVariables = let
-        editor = "emacsclient -t";
-      in
-        mkIf (config.my.editor == "emacs")
-        {
+      sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];
+      sessionVariables =
+        let
+          editor = "emacsclient -t";
+        in
+        mkIf (config.my.editor == "emacs") {
           EDITOR = editor;
           VISUAL = editor;
           GIT_EDITOR = editor;

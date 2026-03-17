@@ -3,7 +3,8 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe;
   inherit (lib.strings) concatStringsSep;
@@ -13,7 +14,8 @@
   inherit (desktop) exec;
   inherit (login) autologin;
   persist = config.my.persistence.enable;
-in {
+in
+{
   options.my.gui.login.autologin =
     mkEnableOption ''
       Whether to enable passwordless login. This is generally useful on systems with

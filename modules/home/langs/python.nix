@@ -8,11 +8,13 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.my.langs.python;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
-in {
+in
+{
   options.my.langs.python = {
     enable = mkEnableOption "Python development environment";
     xdg.enable = mkEnableOption "Python XDG environment variables";
@@ -21,23 +23,23 @@ in {
   config = mkMerge [
     (mkIf cfg.enable {
       home.packages = with pkgs; [
-        (python3.withPackages
-          (ps:
-            with ps; [
-              jupyterlab
-              numpy
-              pandas
-              matplotlib
-              scikit-learn
-              sympy
-              # FIXME: This is a workaround for a bug in the nixpkgs version of
-              # plotly
-              #line_profiler
-              memory-profiler
-              psutil
-              ipywidgets
-              scipy
-            ]))
+        (python3.withPackages (
+          ps: with ps; [
+            jupyterlab
+            numpy
+            pandas
+            matplotlib
+            scikit-learn
+            sympy
+            # FIXME: This is a workaround for a bug in the nixpkgs version of
+            # plotly
+            #line_profiler
+            memory-profiler
+            psutil
+            ipywidgets
+            scipy
+          ]
+        ))
       ];
 
       home.shellAliases = {

@@ -3,11 +3,13 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.fhs;
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-in {
+in
+{
   options.my.fhs = {
     enable = mkEnableOption "Enable FHS environment";
   };
@@ -20,14 +22,16 @@ in {
         let
           base = pkgs.appimageTools.defaultFhsEnvArgs;
         in
-          pkgs.buildFHSEnv (base
-            // {
-              name = "fhs";
-              targetPkgs = pkgs: (base.targetPkgs pkgs) ++ [pkgs.pkg-config];
-              profile = "export FHS=1";
-              runScript = "bash";
-              extraOutputsToInstall = ["dev"];
-            })
+        pkgs.buildFHSEnv (
+          base
+          // {
+            name = "fhs";
+            targetPkgs = pkgs: (base.targetPkgs pkgs) ++ [ pkgs.pkg-config ];
+            profile = "export FHS=1";
+            runScript = "bash";
+            extraOutputsToInstall = [ "dev" ];
+          }
+        )
       )
     ];
 

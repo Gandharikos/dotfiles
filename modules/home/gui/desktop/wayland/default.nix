@@ -3,9 +3,11 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
-in {
+in
+{
   imports = lib.my.scanPaths ./.;
 
   config = mkIf config.my.gui.desktop.wayland.enable {

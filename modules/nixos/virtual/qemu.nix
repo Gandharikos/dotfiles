@@ -3,20 +3,20 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.virtual.qemu;
   isIntel = config.my.machine.cpu == "intel";
   isAmd = config.my.machine.cpu == "amd";
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (lib.lists) optionals;
-in {
+in
+{
   options.my.virtual.qemu = {
-    enable =
-      mkEnableOption "Enable qemu"
-      // {
-        default = config.my.virtual.enable;
-      };
+    enable = mkEnableOption "Enable qemu" // {
+      default = config.my.virtual.enable;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -70,17 +70,19 @@ in {
     '';
 
     # Additional kernel modules that may be needed by libvirt
-    boot.kernelModules =
-      ["vfio-pci"]
-      ++ optionals isAmd ["kvm-amd"]
-      ++ optionals isIntel ["kvm-intel"];
+    boot.kernelModules = [
+      "vfio-pci"
+    ]
+    ++ optionals isAmd [ "kvm-amd" ]
+    ++ optionals isIntel [ "kvm-intel" ];
     boot.extraModprobeConfig =
-      if isAmd
-      then "options kvm_amd nested=1"
-      else "options kvm_intel nested=1";
+      if isAmd then "options kvm_amd nested=1" else "options kvm_intel nested=1";
 
     # Trust bridge network interface(s)
-    networking.firewall.trustedInterfaces = ["virbr0" "br0"];
+    networking.firewall.trustedInterfaces = [
+      "virbr0"
+      "br0"
+    ];
 
     # For passthrough with VFI
     services.udev.extraRules = ''

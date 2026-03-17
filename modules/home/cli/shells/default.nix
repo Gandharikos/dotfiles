@@ -3,10 +3,12 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.meta) getExe;
   curl' = getExe pkgs.curl;
-in {
+in
+{
   imports = lib.my.scanPaths ./.;
   config.home = {
     shellAliases = {

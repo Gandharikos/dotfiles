@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.clangd;
-in {
+in
+{
   options.my.neovim.lazyvim.clangd = {
     enable = mkEnableOption "language clangd";
   };
@@ -23,7 +25,7 @@ in {
         clang-tools
       ];
 
-      config = ["lang/clangd.lua"];
+      config = [ "lang/clangd.lua" ];
     };
   };
 }

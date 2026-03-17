@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   isServer = config.my.machine.type == "server";
-in {
+in
+{
   config = mkIf isServer {
     # limit systemd journal size
     # https://wiki.archlinux.org/title/Systemd/Journal#Persistent_journals

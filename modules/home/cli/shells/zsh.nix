@@ -3,13 +3,17 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   cfg = config.my.zsh;
-in {
+in
+{
   options.my.zsh = {
-    enable = mkEnableOption "zsh" // {default = true;};
+    enable = mkEnableOption "zsh" // {
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -17,9 +21,13 @@ in {
       enable = true;
       dotDir = "${config.xdg.configHome}/zsh";
       defaultKeymap = "viins";
-      autosuggestion = {enable = true;};
+      autosuggestion = {
+        enable = true;
+      };
       enableCompletion = true;
-      syntaxHighlighting = {enable = true;};
+      syntaxHighlighting = {
+        enable = true;
+      };
       autocd = true;
       localVariables = {
         KEYTIMEOUT = "1";
@@ -57,7 +65,9 @@ in {
           "pkill *"
         ];
       };
-      historySubstringSearch = {enable = true;};
+      historySubstringSearch = {
+        enable = true;
+      };
       completionInit = ''
         zstyle ':completion:*' completer _expand _complete _ignored _approximate
         zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'

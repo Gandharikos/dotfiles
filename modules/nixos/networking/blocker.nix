@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   isServer = config.my.machine.type == "server";
   inherit (lib.modules) mkIf;
-in {
+in
+{
   config = mkIf (!isServer) {
     networking.stevenblack = {
       enable = true;

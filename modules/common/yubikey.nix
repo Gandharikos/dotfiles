@@ -3,19 +3,19 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.types) attrsOf int literalExample;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   cfg = config.my.yubikey;
-in {
+in
+{
   options.my.yubikey = {
-    enable =
-      mkEnableOption "yubikey support"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "yubikey support" // {
+      default = true;
+    };
 
     identifiers = mkOption {
       default = {

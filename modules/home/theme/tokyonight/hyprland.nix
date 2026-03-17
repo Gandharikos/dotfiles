@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.my) rgba gradient;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
@@ -11,7 +12,8 @@
 
   cfg = config.my.theme.tokyonight;
   enable = cfg.enable && config.my.gui.enable && isLinux;
-in {
+in
+{
   config = mkIf enable {
     wayland.windowManager.hyprland.settings = with palette; {
       group = {

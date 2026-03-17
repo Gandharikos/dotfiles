@@ -24,6 +24,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/fresh2dev/zellij-autolock";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

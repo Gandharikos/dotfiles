@@ -3,17 +3,17 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.my.security.apparmor;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.security.apparmor = {
-    enable =
-      mkEnableOption "Enable AppArmor"
-      // {
-        default = config.my.security.enable;
-      };
+    enable = mkEnableOption "Enable AppArmor" // {
+      default = config.my.security.enable;
+    };
   };
 
   config = mkIf cfg.enable {

@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe;
   inherit (lib.my) uwsmScript uwsmScriptArgs;
@@ -28,7 +29,8 @@
   outputShotArgs = uwsmScriptArgs pkgs "hyprshot-output-shot" ''
     ${hyprshot} --mode output --raw | ${satty} --filename -
   '';
-in {
+in
+{
   config = mkIf enable {
     wayland.windowManager.hyprland.settings.bindd = [
       # region

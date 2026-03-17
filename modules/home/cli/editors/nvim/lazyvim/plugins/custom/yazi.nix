@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.yazi;
-in {
+in
+{
   options.my.neovim.lazyvim.yazi = {
     enable = mkEnableOption "yazi explorer";
   };
@@ -18,7 +20,7 @@ in {
         yazi-nvim
       ];
 
-      config = ["editor/yazi.lua"];
+      config = [ "editor/yazi.lua" ];
     };
   };
 }

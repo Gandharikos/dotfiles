@@ -2,20 +2,20 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf mkDefault mkForce;
   isWSL = config.my.machine.type == "wsl";
   isProxy = config.my.services.proxy.enable;
   inherit (lib.options) mkEnableOption;
   cfg = config.my.networking;
-in {
+in
+{
   imports = lib.my.scanPaths ./.;
   options.my.networking = {
-    enableIPv6 =
-      mkEnableOption "Enable IPv6 supprot"
-      // {
-        default = true;
-      };
+    enableIPv6 = mkEnableOption "Enable IPv6 supprot" // {
+      default = true;
+    };
   };
   config = {
     networking = {

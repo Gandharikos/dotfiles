@@ -2,12 +2,14 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
 
   cfg = config.my.navi;
-in {
+in
+{
   options.my.navi = {
     enable = mkEnableOption "navi";
   };

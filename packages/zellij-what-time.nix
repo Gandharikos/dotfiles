@@ -26,6 +26,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/pirafrank/zellij-what-time";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

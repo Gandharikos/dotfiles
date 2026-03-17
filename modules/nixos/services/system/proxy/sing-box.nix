@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.my.services.proxy;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   config = mkIf cfg.enable {
     services.sing-box = {
       # Disabled as per user request.

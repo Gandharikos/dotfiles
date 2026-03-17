@@ -3,10 +3,12 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (config.my) gui;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   config = mkIf gui.enable {
     services = {
       # Thumbnail support for images
@@ -21,7 +23,7 @@ in {
         # Use the faster dbus-broker instead of the classic dbus-daemon
         implementation = "broker";
 
-        packages = builtins.attrValues {inherit (pkgs) dconf gcr udisks2;};
+        packages = builtins.attrValues { inherit (pkgs) dconf gcr udisks2; };
       };
     };
   };

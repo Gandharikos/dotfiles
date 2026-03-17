@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.mini-diff;
-in {
+in
+{
   options.my.neovim.lazyvim.mini-diff = {
     enable = mkEnableOption "Mini diff signs";
   };
@@ -21,7 +23,7 @@ in {
         }
       ];
 
-      imports = ["lazyvim.plugins.extras.editor.mini-diff"];
+      imports = [ "lazyvim.plugins.extras.editor.mini-diff" ];
     };
   };
 }

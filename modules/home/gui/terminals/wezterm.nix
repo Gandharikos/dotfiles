@@ -2,24 +2,26 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (config.my) gui;
   cfg = config.my.gui.apps.wezterm;
   enable = gui.enable && cfg.enable;
-in {
+in
+{
   options.my.gui.apps.wezterm = {
-    enable =
-      mkEnableOption "wezterm"
-      // {
-        default = config.my.gui.terminal.default == "wezterm";
-      };
+    enable = mkEnableOption "wezterm" // {
+      default = config.my.gui.terminal.default == "wezterm";
+    };
   };
 
   # TODO: Setup wezterm config use nix for more flexibility
   config = mkIf enable {
-    programs.wezterm = {enable = true;};
+    programs.wezterm = {
+      enable = true;
+    };
 
     xdg.configFile."wezterm" = {
       recursive = true;

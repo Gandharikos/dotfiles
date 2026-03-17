@@ -3,10 +3,12 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (config.my.gui.desktop.xorg) enable;
-in {
+in
+{
   config = mkIf enable {
     xdg.portal = {
       enable = true;

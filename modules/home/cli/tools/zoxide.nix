@@ -2,11 +2,13 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.zoxide;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.zoxide = {
     enable = mkEnableOption "zoxide";
   };
@@ -15,7 +17,7 @@ in {
     programs.zoxide = {
       enable = true;
 
-      options = ["--cmd cd"];
+      options = [ "--cmd cd" ];
     };
   };
 }

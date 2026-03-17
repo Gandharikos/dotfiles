@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   SubagentStop = [
     {
       matcher = "*";
@@ -8,9 +9,10 @@
           command = ''
             agent_type=$(cat | jq -r '.subagent_type // "Unknown"')
             ${
-              if pkgs.stdenv.hostPlatform.isDarwin
-              then ''osascript -e "display notification \"Subagent completed: $agent_type\" with title \"Claude Code\""''
-              else ''notify-send 'Claude Code' "Subagent completed: $agent_type"''
+              if pkgs.stdenv.hostPlatform.isDarwin then
+                ''osascript -e "display notification \"Subagent completed: $agent_type\" with title \"Claude Code\""''
+              else
+                ''notify-send 'Claude Code' "Subagent completed: $agent_type"''
             }
           '';
         }

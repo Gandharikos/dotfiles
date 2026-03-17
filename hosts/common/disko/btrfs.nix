@@ -2,7 +2,8 @@
   device ? "/dev/nvme0n1",
   swapSize ? "32G",
   ...
-}: {
+}:
+{
   disko = {
     # Do not let Disko manage fileSystems.* config for NixOS.
     # Reason is that Disko mounts partitions by GPT partition names, which are
@@ -30,7 +31,7 @@
                 mountpoint = "/boot";
                 # Fix world-accessible /boot/loader/random-seed
                 # https://github.com/nix-community/disko/issues/527#issuecomment-1924076948
-                mountOptions = ["umask=0077"];
+                mountOptions = [ "umask=0077" ];
               };
             };
             root = {
@@ -39,37 +40,39 @@
               size = "100%";
               content = {
                 type = "btrfs";
-                extraArgs = ["-f"]; # Override existing partition
+                extraArgs = [ "-f" ]; # Override existing partition
                 # Subvolumes must set a mountpoint in order to be mounted,
                 # unless their parent is mounted
-                subvolumes = let
-                  mountOptions = [
-                    "compress=zstd"
-                    "noatime"
-                  ];
-                in {
-                  "@root" = {
-                    mountpoint = "/";
-                    inherit mountOptions;
+                subvolumes =
+                  let
+                    mountOptions = [
+                      "compress=zstd"
+                      "noatime"
+                    ];
+                  in
+                  {
+                    "@root" = {
+                      mountpoint = "/";
+                      inherit mountOptions;
+                    };
+                    "@persist" = {
+                      mountpoint = "/persist";
+                      inherit mountOptions;
+                    };
+                    "@nix" = {
+                      mountpoint = "/nix";
+                      inherit mountOptions;
+                    };
+                    "@snapshots" = {
+                      mountpoint = "/.snapshots";
+                      inherit mountOptions;
+                    };
+                    "@swap" = {
+                      mountpoint = "/.swap";
+                      mountOptions = [ "noatime" ];
+                      swap.swapfile.size = swapSize;
+                    };
                   };
-                  "@persist" = {
-                    mountpoint = "/persist";
-                    inherit mountOptions;
-                  };
-                  "@nix" = {
-                    mountpoint = "/nix";
-                    inherit mountOptions;
-                  };
-                  "@snapshots" = {
-                    mountpoint = "/.snapshots";
-                    inherit mountOptions;
-                  };
-                  "@swap" = {
-                    mountpoint = "/.swap";
-                    mountOptions = ["noatime"];
-                    swap.swapfile.size = swapSize;
-                  };
-                };
               };
             };
           };

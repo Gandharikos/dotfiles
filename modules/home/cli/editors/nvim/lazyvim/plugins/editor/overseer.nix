@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.overseer;
-in {
+in
+{
   options.my.neovim.lazyvim.overseer = {
     enable = mkEnableOption "overseer";
   };
@@ -18,7 +20,7 @@ in {
         overseer-nvim
       ];
 
-      imports = ["lazyvim.plugins.extras.editor.overseer"];
+      imports = [ "lazyvim.plugins.extras.editor.overseer" ];
     };
   };
 }

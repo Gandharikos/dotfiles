@@ -3,13 +3,15 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkOption;
   inherit (lib.types) str;
   inherit (lib.meta) getExe;
   less' = getExe pkgs.less;
   bat' = getExe pkgs.bat;
-in {
+in
+{
   imports = lib.my.scanPaths ./.;
   options.my = {
     pager = mkOption {

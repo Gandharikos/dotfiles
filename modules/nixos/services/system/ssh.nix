@@ -3,7 +3,8 @@
   # pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (lib.strings) optionalString;
@@ -11,21 +12,21 @@
   cfg = config.my.services.ssh;
   sudoCfg = config.my.security.sudo;
   privilegeEscalationPamServices =
-    if sudoCfg.backend == "doas"
-    then {
-      doas.rssh = true;
-    }
-    else {
-      sudo.rssh = true;
-      sudo-i.rssh = true;
-    };
-in {
-  options.my.services.ssh = {
-    enable =
-      mkEnableOption "ssh"
-      // {
-        default = true;
+    if sudoCfg.backend == "doas" then
+      {
+        doas.rssh = true;
+      }
+    else
+      {
+        sudo.rssh = true;
+        sudo-i.rssh = true;
       };
+in
+{
+  options.my.services.ssh = {
+    enable = mkEnableOption "ssh" // {
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -79,7 +80,7 @@ in {
         IgnoreRhosts = "yes";
         MaxAuthTries = 3;
 
-        AllowUsers = [config.my.name];
+        AllowUsers = [ config.my.name ];
       };
       openFirewall = true;
       hostKeys = [

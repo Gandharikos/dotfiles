@@ -3,7 +3,8 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.my) capitalize;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
@@ -20,7 +21,8 @@
     cursorThemeName = hyprcursorName;
     inherit (colorscheme.palette.cursor) baseColor outlineColor watchBackgroundColor;
   };
-in {
+in
+{
   config = mkIf enable {
     my.theme.cursor = {
       name = xcursorName;

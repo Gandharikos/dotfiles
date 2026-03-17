@@ -3,11 +3,13 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   cfg = config.my.theme.tokyonight;
   inherit (config.my.theme.colorscheme) palette slug;
-in {
+in
+{
   config = mkIf cfg.enable {
     home = {
       # TODO: use gowall to change wallpaper to apply my colorscheme

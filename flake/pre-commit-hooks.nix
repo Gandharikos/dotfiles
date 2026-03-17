@@ -1,17 +1,24 @@
-{inputs, ...}: {
-  imports = [inputs.pre-commit-hooks.flakeModule];
+{ inputs, ... }:
+{
+  imports = [ inputs.pre-commit-hooks.flakeModule ];
 
   perSystem = {
     pre-commit = {
       # Add itself to `nix flake check`
       check.enable = false; # don't use this now
       settings = {
-        excludes = ["flake.lock" ".direnv"];
+        excludes = [
+          "flake.lock"
+          ".direnv"
+        ];
         hooks = {
           # Filesystem
           check-added-large-files = {
             enable = true;
-            excludes = ["\\.png" "\\.jpg"];
+            excludes = [
+              "\\.png"
+              "\\.jpg"
+            ];
           };
           check-case-conflicts.enable = true;
           trim-trailing-whitespace.enable = true;

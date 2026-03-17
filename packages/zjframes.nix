@@ -26,6 +26,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/dj95/zjstatus";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

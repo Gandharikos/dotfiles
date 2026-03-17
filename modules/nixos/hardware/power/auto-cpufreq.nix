@@ -2,11 +2,13 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf mkDefault;
   inherit (config.my) machine;
   MHz = x: x * 1000;
-in {
+in
+{
   config = mkIf (machine.type == "laptop") {
     # superior power management, littrally saves this crummy laptop
     # you have no clue how annoying it is when I have to update this on nixpkgs

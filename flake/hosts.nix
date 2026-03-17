@@ -4,8 +4,9 @@
   lib,
   withSystem,
   ...
-}: {
-  imports = [inputs.flake-hosts.flakeModule];
+}:
+{
+  imports = [ inputs.flake-hosts.flakeModule ];
 
   config.flake-hosts = {
     auto = {
@@ -13,29 +14,34 @@
       hostsDir = ../hosts;
     };
     perClass = class: {
-      modules =
-        [
-          # import the class module, this contains the common configurations between all systems of the same class
-          "${self}/modules/${class}/default.nix"
-        ]
-        ++ (
-          if class == "nixos"
-          then [
+      modules = [
+        # import the class module, this contains the common configurations between all systems of the same class
+        "${self}/modules/${class}/default.nix"
+      ]
+      ++ (
+        if class == "nixos" then
+          [
             inputs.home-manager.nixosModules.home-manager
             inputs.disko.nixosModules.disko
             inputs.nixos-generators.nixosModules.all-formats
             # inputs.niri.nixosModules.niri
             inputs.sops.nixosModules.sops
           ]
-          else if class == "darwin"
-          then [
+        else if class == "darwin" then
+          [
             inputs.home-manager.darwinModules.home-manager
             inputs.sops.darwinModules.sops
           ]
-          else []
-        );
+        else
+          [ ]
+      );
       specialArgs = {
-        inherit lib self inputs withSystem; # Pass all the args that your modules need
+        inherit
+          lib
+          self
+          inputs
+          withSystem
+          ; # Pass all the args that your modules need
       };
     };
   };

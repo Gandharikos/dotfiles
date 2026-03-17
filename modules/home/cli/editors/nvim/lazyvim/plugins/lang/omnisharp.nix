@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.omnisharp;
-in {
+in
+{
   options.my.neovim.lazyvim.omnisharp = {
     enable = mkEnableOption "language omnisharp";
   };
@@ -19,7 +21,7 @@ in {
         omnisharp-extended-lsp-nvim
       ];
 
-      imports = ["lazyvim.plugins.extras.lang.omnisharp"];
+      imports = [ "lazyvim.plugins.extras.lang.omnisharp" ];
 
       extraPackages = with pkgs; [
         csharpier

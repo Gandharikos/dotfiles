@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     inputs.nix-homebrew.darwinModules.nix-homebrew
     ./environment.nix

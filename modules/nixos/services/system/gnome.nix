@@ -3,13 +3,15 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf mkForce;
   inherit (config.my) gui;
-in {
+in
+{
   config = mkIf gui.enable {
     services = {
-      udev.packages = [pkgs.gnome-settings-daemon];
+      udev.packages = [ pkgs.gnome-settings-daemon ];
 
       gnome = {
         glib-networking.enable = true;

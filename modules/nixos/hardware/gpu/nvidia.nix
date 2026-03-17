@@ -3,18 +3,20 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf mkMerge mkDefault;
   isNvidia = config.my.machine.gpu == "nvidia";
   isHybrid = config.my.machine.gpu == "hybrid-nv";
   waylandEnabled = config.my.gui.desktop.wayland.enable;
-in {
+in
+{
   config = mkIf isNvidia {
     # nvidia drivers kinda are unfree software
     nixpkgs.config.allowUnfree = true;
 
     services.xserver = mkMerge [
-      {videoDrivers = ["nvidia"];}
+      { videoDrivers = [ "nvidia" ]; }
 
       # xorg settings
       (mkIf (!waylandEnabled) {
@@ -35,15 +37,15 @@ in {
 
     boot = {
       # blacklist mouveau module as otherwise it conflicts with nvidia drm
-      blacklistedKernelModules = ["nouveau"];
+      blacklistedKernelModules = [ "nouveau" ];
 
       # Enable the Nvidia's experimental framebuffer device
       # fix for the imaginary monitor taht does not exist
-      kernelModules = ["nvidia_drm.fbdev=1"];
+      kernelModules = [ "nvidia_drm.fbdev=1" ];
     };
 
     environment.sessionVariables = mkMerge [
-      {LIBVA_DRIVER_NAME = "nvidia";}
+      { LIBVA_DRIVER_NAME = "nvidia"; }
       (mkIf waylandEnabled {
         WLR_DRM_DEVICES = mkDefault "/dev/dri/card1";
         LIBVA_DRIVER_NAME = "nvidia";
@@ -93,8 +95,8 @@ in {
       };
 
       graphics = {
-        extraPackages = [pkgs.nvidia-vaapi-driver];
-        extraPackages32 = [pkgs.pkgsi686Linux.nvidia-vaapi-driver];
+        extraPackages = [ pkgs.nvidia-vaapi-driver ];
+        extraPackages32 = [ pkgs.pkgsi686Linux.nvidia-vaapi-driver ];
       };
     };
   };

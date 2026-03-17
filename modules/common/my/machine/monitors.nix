@@ -1,34 +1,39 @@
-{lib, ...}: let
+{ lib, ... }:
+let
   inherit (lib.options) mkOption;
-  inherit (lib.types) str listOf submodule float;
-in {
+  inherit (lib.types)
+    str
+    listOf
+    submodule
+    float
+    ;
+in
+{
   options.my.machine.monitors = mkOption {
-    type = listOf (
-      submodule {
-        options = {
-          name = mkOption {
-            type = str;
-            default = "DP-1";
-            description = "The name of the monitor";
-          };
-          resolution = mkOption {
-            type = str;
-            default = "3840x2160@60";
-            description = "The resolution of the monitor";
-          };
-          position = mkOption {
-            type = str;
-            default = "0x0";
-            description = "The position of the monitor";
-          };
-          scale = mkOption {
-            type = float;
-            default = 1;
-            description = "The scale of the monitor";
-          };
+    type = listOf (submodule {
+      options = {
+        name = mkOption {
+          type = str;
+          default = "DP-1";
+          description = "The name of the monitor";
         };
-      }
-    );
+        resolution = mkOption {
+          type = str;
+          default = "3840x2160@60";
+          description = "The resolution of the monitor";
+        };
+        position = mkOption {
+          type = str;
+          default = "0x0";
+          description = "The position of the monitor";
+        };
+        scale = mkOption {
+          type = float;
+          default = 1;
+          description = "The scale of the monitor";
+        };
+      };
+    });
     default = [
       {
         name = "DP-1";

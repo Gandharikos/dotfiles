@@ -2,11 +2,13 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.tray-tui;
-in {
+in
+{
   options.my.tray-tui = {
     enable = mkEnableOption "tray-tui";
   };

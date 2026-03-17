@@ -1,6 +1,8 @@
-{pkgs, ...}: let
+{ pkgs, ... }:
+let
   zjframesWasm = "file:${pkgs.my.zjframes}/bin/zjframes.wasm";
-in {
+in
+{
   programs.zellij.settings = {
     plugins.zjframes._props.location = zjframesWasm;
     load_plugins.zjframes = {

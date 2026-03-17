@@ -2,11 +2,13 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.attrsets) genAttrs;
   inherit (config.my) gui;
-in {
+in
+{
   config = mkIf gui.enable {
     systemd = {
       settings.Manager = {
@@ -25,17 +27,17 @@ in {
 
       services =
         genAttrs
-        [
-          "getty@tty1"
-          "autovt@tty1"
-          "getty@tty7"
-          "autovt@tty7"
-          "kmsconvt@tty1"
-          "kmsconvt@tty7"
-        ]
-        (_: {
-          enable = false;
-        });
+          [
+            "getty@tty1"
+            "autovt@tty1"
+            "getty@tty7"
+            "autovt@tty7"
+            "kmsconvt@tty1"
+            "kmsconvt@tty7"
+          ]
+          (_: {
+            enable = false;
+          });
     };
   };
 }

@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (config) my;
   inherit (lib.modules) mkIf mkDefault mkBefore;
   inherit (lib.options) mkOption mkEnableOption;
@@ -13,25 +14,30 @@
 
   cfg = config.my.services.tailscale;
   isClient = cfg.role == "client";
-  isSubnetRouter = builtins.elem cfg.role ["subnet-router" "router-exit-node"];
-  isExitNode = builtins.elem cfg.role ["exit-node" "router-exit-node"];
+  isSubnetRouter = builtins.elem cfg.role [
+    "subnet-router"
+    "router-exit-node"
+  ];
+  isExitNode = builtins.elem cfg.role [
+    "exit-node"
+    "router-exit-node"
+  ];
   isRoutingServer = isSubnetRouter || isExitNode;
-  advertiseRoutesFlag = optionals (isSubnetRouter && cfg.advertiseRoutes != []) [
+  advertiseRoutesFlag = optionals (isSubnetRouter && cfg.advertiseRoutes != [ ]) [
     "--advertise-routes=${concatStringsSep "," cfg.advertiseRoutes}"
   ];
-in {
+in
+{
   options.my.services.tailscale = {
-    enable =
-      mkEnableOption "Enable Tailscale"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Enable Tailscale" // {
+      default = true;
+    };
 
     autoConnect = mkEnableOption "Automatically connect to Tailscale";
 
     defaultFlags = mkOption {
       type = listOf str;
-      default = ["--ssh"];
+      default = [ "--ssh" ];
       description = "Default command-line flags passed to Tailscale before role-specific flags.";
     };
 
@@ -51,8 +57,11 @@ in {
 
     advertiseRoutes = mkOption {
       type = listOf str;
-      default = [];
-      example = ["192.168.1.0/24" "10.0.0.0/24"];
+      default = [ ];
+      example = [
+        "192.168.1.0/24"
+        "10.0.0.0/24"
+      ];
       description = ''
         Subnets advertised by Tailscale when the role includes subnet routing.
       '';
@@ -61,13 +70,13 @@ in {
 
   config = mkIf cfg.enable {
     sops.secrets = mkIf cfg.autoConnect {
-      tailscale_authKey = {};
+      tailscale_authKey = { };
     };
 
-    environment.systemPackages = with pkgs; [tailscale];
+    environment.systemPackages = with pkgs; [ tailscale ];
     networking.firewall = {
       # Always allow all traffic from the Tailscale virtual interface
-      trustedInterfaces = ["${config.services.tailscale.interfaceName}"];
+      trustedInterfaces = [ "${config.services.tailscale.interfaceName}" ];
     };
 
     services.tailscale = {
@@ -110,27 +119,23 @@ in {
       # - https://tailscale.com/blog/caddy
       permitCertUid = "root";
 
-      useRoutingFeatures = mkDefault (
-        if isClient
-        then "client"
-        else "server"
-      );
+      useRoutingFeatures = mkDefault (if isClient then "client" else "server");
     };
 
     systemd = {
-      network.wait-online.ignoredInterfaces = ["${config.services.tailscale.interfaceName}"];
+      network.wait-online.ignoredInterfaces = [ "${config.services.tailscale.interfaceName}" ];
       services = {
-        tailscaled.serviceConfig.Environment = mkBefore ["TS_NO_LOGS_NO_SUPPORT=true"];
+        tailscaled.serviceConfig.Environment = mkBefore [ "TS_NO_LOGS_NO_SUPPORT=true" ];
         tailscaled-autoconnect = mkIf cfg.autoConnect {
-          after = ["sops-nix.service"];
-          wants = ["sops-nix.service"];
+          after = [ "sops-nix.service" ];
+          wants = [ "sops-nix.service" ];
         };
       };
     };
 
     assertions = [
       {
-        assertion = !isSubnetRouter || cfg.advertiseRoutes != [];
+        assertion = !isSubnetRouter || cfg.advertiseRoutes != [ ];
         message = "Tailscale roles `subnet-router` and `router-exit-node` require `my.services.tailscale.advertiseRoutes` to be non-empty.";
       }
     ];

@@ -26,6 +26,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/blank2121/zellij-jump-list";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

@@ -2,11 +2,13 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.direnv;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.direnv = {
     enable = mkEnableOption "direnv";
     silent = mkEnableOption "silent";
@@ -22,7 +24,9 @@ in {
       # direnv based shells.
       nix-direnv.enable = true;
 
-      config.global = {hide_env_diff = true;};
+      config.global = {
+        hide_env_diff = true;
+      };
     };
   };
 }

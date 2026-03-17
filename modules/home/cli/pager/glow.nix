@@ -4,16 +4,18 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.glow;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.glow = {
     enable = mkEnableOption "glow";
   };
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [glow];
+    home.packages = with pkgs; [ glow ];
     home.sessionVariables.GLAMOUR_STYLE = "light";
 
     xdg.configFile."glow/glow.yml".source =

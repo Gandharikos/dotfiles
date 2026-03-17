@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (config.my.gui.desktop.wayland) enable;
-in {
+in
+{
   config = mkIf enable {
     environment.variables = {
       NIXOS_OZONE_WL = "1";

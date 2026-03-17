@@ -2,11 +2,13 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.services.btrbk;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   # ==================================================================
   #
   # Tool for creating snapshots and remote backups of btrfs subvolumes

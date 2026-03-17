@@ -1,4 +1,5 @@
-{self, ...}: {
+{ self, ... }:
+{
   # Global nixpkgs configuration. This is ignored if nixpkgs.pkgs is set
   # which is a case that should be avoided. Everything that is set to configure
   # nixpkgs must go here.
@@ -22,7 +23,7 @@
 
       # Default to none, add more as necessary. This is usually where
       # electron packages go when they reach EOL.
-      permittedInsecurePackages = [];
+      permittedInsecurePackages = [ ];
 
       # Nixpkgs sets internal package aliases to ease migration from other
       # distributions easier, or for convenience's sake. Even though the manual
@@ -40,7 +41,7 @@
       # about packages without maintainers but it seems to me
       # like there are more packages without maintainers than
       # with maintainers, so it's disabled for the time being.
-      showDerivationWarnings = [];
+      showDerivationWarnings = [ ];
     };
     overlays = builtins.attrValues self.overlays;
   };

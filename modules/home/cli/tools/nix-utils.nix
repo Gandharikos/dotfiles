@@ -3,17 +3,17 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.nix-utils;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.nix-utils = {
-    enable =
-      mkEnableOption "nix-utils"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "nix-utils" // {
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -43,7 +43,7 @@ in {
       nix-init = {
         enable = true;
         settings = {
-          maintainers = ["mulatta"];
+          maintainers = [ "mulatta" ];
           nixpkgs = "<nixpkgs>";
         };
       };

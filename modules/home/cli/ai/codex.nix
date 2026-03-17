@@ -4,11 +4,13 @@
   pkgs,
   aiCommon,
   ...
-}: let
+}:
+let
   cfg = config.my.codex;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.codex = {
     enable = mkEnableOption "codex";
   };

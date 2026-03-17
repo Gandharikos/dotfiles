@@ -26,6 +26,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/Nacho114/harpoon";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

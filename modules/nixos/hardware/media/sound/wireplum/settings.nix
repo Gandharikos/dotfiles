@@ -2,12 +2,14 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.lists) singleton;
 
   inherit (config.my) machine;
-in {
+in
+{
   # WirePlumber is a modular session / policy manager for PipeWire
   services.pipewire.wireplumber.extraConfig = mkMerge [
     {
@@ -24,7 +26,7 @@ in {
 
       "60-hdmi-lowprio" = {
         "monitor.alsa.rules" = singleton {
-          matches = singleton {"api.alsa.path" = "hdmi:.*";};
+          matches = singleton { "api.alsa.path" = "hdmi:.*"; };
 
           actions.update-props = {
             "node.name" = "Low Priority HDMI";
@@ -38,7 +40,7 @@ in {
 
       "60-onboard-card" = {
         "monitor.alsa.rules" = singleton {
-          matches = [{"media.class" = "Audio/Device";}];
+          matches = [ { "media.class" = "Audio/Device"; } ];
 
           actions.update-props = {
             "node.name" = "Onboard Audio";
@@ -52,7 +54,7 @@ in {
     (mkIf machine.hasBluetooth {
       "10-bluez" = {
         "monitor.bluez.rules" = singleton {
-          matches = singleton {"device.name" = "~bluez_card.*";};
+          matches = singleton { "device.name" = "~bluez_card.*"; };
           actions = {
             update-props = {
               "bluez5.roles" = [

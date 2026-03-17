@@ -2,12 +2,14 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   cfg = config.my.keyboard.kanata;
   # Use a stable executable path so launchd/TCC rules do not break across nix store hash changes.
   kanataBin = "/run/current-system/sw/bin/kanata";
-in {
+in
+{
   config = mkIf cfg.enable {
     # Install required packages
     environment.systemPackages = [

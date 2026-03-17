@@ -3,13 +3,15 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   src = pkgs.vimPlugins.tokyonight-nvim;
   cfg = config.my.theme.tokyonight;
   inherit (config.my.theme.colorscheme) slug;
   enable = cfg.enable && config.programs.wezterm.enable;
-in {
+in
+{
   config = mkIf enable {
     xdg.configFile."wezterm/theme.lua".text = ''
       local wezterm = require("wezterm")

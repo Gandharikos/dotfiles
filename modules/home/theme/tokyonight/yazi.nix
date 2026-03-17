@@ -3,12 +3,14 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   src = pkgs.vimPlugins.tokyonight-nvim;
   cfg = config.my.theme.tokyonight;
   inherit (config.my.theme.colorscheme) slug;
-in {
+in
+{
   config = mkIf cfg.enable {
     programs.yazi = {
       # plugins = {

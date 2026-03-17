@@ -3,12 +3,14 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.options) mkOption;
   inherit (lib.types) nullOr str;
   cfg = config.my.boot;
-in {
+in
+{
   imports = [
     inputs.dedsec-grub-theme.nixosModule
   ];

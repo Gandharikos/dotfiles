@@ -2,12 +2,14 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.my) rgba;
   inherit (config.my.theme.colorscheme) palette;
   cfg = config.my.theme.tokyonight;
-in {
+in
+{
   config = mkIf cfg.enable {
     # TODO: complete this
     programs.wlogout.style = with palette; ''

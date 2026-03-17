@@ -3,23 +3,23 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   cfg = config.my.conda;
-in {
+in
+{
   options.my.conda = {
-    enable =
-      mkEnableOption "conda"
-      // {
-        default = isLinux;
-      };
+    enable = mkEnableOption "conda" // {
+      default = isLinux;
+    };
   };
 
   config = mkIf cfg.enable {
     home = {
-      packages = [pkgs.conda];
+      packages = [ pkgs.conda ];
 
       file.".condarc" = {
         text = ''

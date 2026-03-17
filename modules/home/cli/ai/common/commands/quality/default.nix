@@ -1,5 +1,5 @@
-{lib, ...}:
-lib.foldl' lib.recursiveUpdate {} [
+{ lib, ... }:
+lib.foldl' lib.recursiveUpdate { } [
   (import ./deep-check.nix)
   (import ./dependency-audit.nix)
   (import ./module-lint.nix)

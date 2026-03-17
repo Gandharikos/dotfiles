@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.types) int;
   inherit (lib.modules) mkIf;
@@ -11,13 +12,12 @@
   inherit (config.my.gui.desktop.hyprland) plugins;
   enable = plugins.enable && elem "csgo-vulkan-fix" plugins.list;
   cfg = config.my.gui.desktop.hyprland.cs2fix;
-in {
+in
+{
   options.my.gui.desktop.hyprland.cs2fix = {
-    enable =
-      mkEnableOption "Enable csgo-vulkan-fix"
-      // {
-        default = enable;
-      };
+    enable = mkEnableOption "Enable csgo-vulkan-fix" // {
+      default = enable;
+    };
 
     width = mkOption {
       type = int;
@@ -33,7 +33,7 @@ in {
 
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland = {
-      plugins = with pkgs.hyprlandPlugins; [csgo-vulkan-fix];
+      plugins = with pkgs.hyprlandPlugins; [ csgo-vulkan-fix ];
       settings.plugin.csgo-vulkan-fix = {
         res_w = cfg.width;
         res_h = cfg.height;

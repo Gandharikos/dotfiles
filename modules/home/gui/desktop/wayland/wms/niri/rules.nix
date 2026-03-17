@@ -2,7 +2,8 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) singleton;
   browserAppIds = [
@@ -12,15 +13,16 @@
     "google-chrome"
     "google-chrome-stable"
   ];
-  browserMatches = builtins.map (appId: {"app-id" = "^${appId}$";}) browserAppIds;
+  browserMatches = builtins.map (appId: { "app-id" = "^${appId}$"; }) browserAppIds;
   pipTitle = "^(Picture-in-Picture|Picture in picture)$";
   cfg = config.my.gui.desktop.niri;
-in {
+in
+{
   config = mkIf cfg.enable {
     programs.niri.settings = {
       layer-rules = [
         {
-          matches = singleton {namespace = "^wallpaper$";};
+          matches = singleton { namespace = "^wallpaper$"; };
           place-within-backdrop = true;
         }
       ];
@@ -36,16 +38,16 @@ in {
           draw-border-with-background = false;
         }
         {
-          matches = singleton {title = "^(1Password)$";};
+          matches = singleton { title = "^(1Password)$"; };
           open-floating = true;
         }
         {
           matches = browserMatches;
-          excludes = singleton {title = pipTitle;};
+          excludes = singleton { title = pipTitle; };
           open-maximized = true;
         }
         {
-          matches = singleton {title = pipTitle;};
+          matches = singleton { title = pipTitle; };
           open-floating = true;
           open-focused = false;
           default-floating-position = {
@@ -61,17 +63,17 @@ in {
           };
         }
         {
-          matches = singleton {title = "^(Spotify( Premium)?)$";};
+          matches = singleton { title = "^(Spotify( Premium)?)$"; };
           open-on-workspace = "9";
         }
         {
-          matches = singleton {is-floating = true;};
+          matches = singleton { is-floating = true; };
           border.enable = false;
         }
         {
           matches = [
-            {app-id = "Spotify";}
-            {title = "^(Spotify( Premium)?)$";}
+            { app-id = "Spotify"; }
+            { title = "^(Spotify( Premium)?)$"; }
           ];
           opacity = 0.85;
         }

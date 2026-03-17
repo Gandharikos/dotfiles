@@ -3,31 +3,40 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) enum lines;
   inherit (lib.modules) mkIf;
-  inherit (lib.types) coercedTo listOf oneOf package str submodule;
+  inherit (lib.types)
+    coercedTo
+    listOf
+    oneOf
+    package
+    str
+    submodule
+    ;
   inherit (lib.lists) foldl';
   inherit (lib.my) sourceLua;
-  extraLuaConfigs =
-    foldl' (acc: path: acc // sourceLua path) {}
-    cfg.config;
+  extraLuaConfigs = foldl' (acc: path: acc // sourceLua path) { } cfg.config;
   cfg = config.my.neovim.lazyvim;
   pluginsOptionType = listOf (oneOf [
     package
     (submodule {
       options = {
-        name = mkOption {type = str;};
-        path = mkOption {type = package;};
+        name = mkOption { type = str; };
+        path = mkOption { type = package; };
       };
     })
   ]);
-in {
+in
+{
   imports = lib.my.scanPaths ./.;
 
   options.my.neovim.lazyvim = {
-    enable = mkEnableOption "LazyVim" // {default = config.my.neovim.enable;};
+    enable = mkEnableOption "LazyVim" // {
+      default = config.my.neovim.enable;
+    };
 
     plugins =
       # let
@@ -145,7 +154,11 @@ in {
       };
 
     cmp = mkOption {
-      type = enum ["nivm-cmp" "blink.cmp" "auto"];
+      type = enum [
+        "nivm-cmp"
+        "blink.cmp"
+        "auto"
+      ];
       default = "auto";
       description = ''
         choose the completion engine
@@ -154,7 +167,12 @@ in {
     };
 
     picker = mkOption {
-      type = enum ["telescope" "fzf" "snacks" "auto"];
+      type = enum [
+        "telescope"
+        "fzf"
+        "snacks"
+        "auto"
+      ];
       default = "auto";
       description = ''
         choose the picker engine
@@ -163,7 +181,11 @@ in {
     };
 
     explorer = mkOption {
-      type = enum ["neo-tree" "snacks" "auto"];
+      type = enum [
+        "neo-tree"
+        "snacks"
+        "auto"
+      ];
       default = "auto";
       description = ''
         choose the file explorer
@@ -173,17 +195,17 @@ in {
 
     extraPlugins = mkOption {
       type = pluginsOptionType;
-      default = [];
+      default = [ ];
     };
 
     excludePlugins = mkOption {
       type = pluginsOptionType;
-      default = [];
+      default = [ ];
     };
 
     config = mkOption {
-      type = coercedTo str (path: [path]) (listOf str);
-      default = [];
+      type = coercedTo str (path: [ path ]) (listOf str);
+      default = [ ];
       description = ''
         LazyVim Lua config files (relative to `nvim/lua/plugins/extras`) that
         should be linked into `nvim/lua/plugins`. Accepts either a single string
@@ -193,7 +215,7 @@ in {
 
     imports = mkOption {
       type = listOf str;
-      default = [];
+      default = [ ];
       description = ''
         LazyVim import modules to include in the generated spec.
       '';
@@ -220,7 +242,7 @@ in {
 
     extraPackages = mkOption {
       type = listOf package;
-      default = [];
+      default = [ ];
       example = lib.literalExpression ''
         [ pkgs.ripgrep ]
       '';
@@ -229,14 +251,16 @@ in {
 
   config = mkIf cfg.enable {
     my.neovim.lazyvim = {
-      finalExtraSpec = let
-        importsSpec =
-          lib.concatMapStrings (import: ''
+      finalExtraSpec =
+        let
+          importsSpec = lib.concatMapStrings (import: ''
             { import = "${import}" },
-          '')
-          cfg.imports;
-        specPieces = lib.filter (s: s != "") [importsSpec cfg.extraSpec];
-      in
+          '') cfg.imports;
+          specPieces = lib.filter (s: s != "") [
+            importsSpec
+            cfg.extraSpec
+          ];
+        in
         builtins.concatStringsSep "\n" specPieces;
       extraPackages = with pkgs; [
         # LazyVim essentials shipped with the wrapper
@@ -256,122 +280,126 @@ in {
       enable = true;
       inherit (cfg) extraPackages;
 
-      plugins = with pkgs.vimPlugins; [lazy-nvim];
+      plugins = with pkgs.vimPlugins; [ lazy-nvim ];
 
-      initLua = let
-        mkEntryFromDrv = drv:
-          if lib.isDerivation drv
-          then {
-            name = "${lib.getName drv}";
-            path = drv;
-          }
-          else drv;
+      initLua =
+        let
+          mkEntryFromDrv =
+            drv:
+            if lib.isDerivation drv then
+              {
+                name = "${lib.getName drv}";
+                path = drv;
+              }
+            else
+              drv;
 
-        lazyvimPlugins = pkgs.linkFarm "lazy-plugins" (builtins.map mkEntryFromDrv
-          (lib.subtractLists cfg.excludePlugins cfg.plugins
-            ++ cfg.extraPlugins));
-      in ''
-        local uv = vim.uv or vim.loop
-        local function path_exists(path)
-          return type(path) == "string" and uv.fs_stat(path) ~= nil
-        end
+          lazyvimPlugins = pkgs.linkFarm "lazy-plugins" (
+            builtins.map mkEntryFromDrv (lib.subtractLists cfg.excludePlugins cfg.plugins ++ cfg.extraPlugins)
+          );
+        in
+        ''
+          local uv = vim.uv or vim.loop
+          local function path_exists(path)
+            return type(path) == "string" and uv.fs_stat(path) ~= nil
+          end
 
-        local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-        local has_lazy = path_exists(lazypath)
+          local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+          local has_lazy = path_exists(lazypath)
 
-        if not has_lazy then
-          local fallback_patterns = {
-            vim.env.LAZY_NVIM_PATH,
-            vim.fn.stdpath("config") .. "/lazy.nvim",
-            "/nix/store/*-lazy.nvim-*",
-            "/nix/store/*-vimplugin-lazy.nvim-*",
-          }
+          if not has_lazy then
+            local fallback_patterns = {
+              vim.env.LAZY_NVIM_PATH,
+              vim.fn.stdpath("config") .. "/lazy.nvim",
+              "/nix/store/*-lazy.nvim-*",
+              "/nix/store/*-vimplugin-lazy.nvim-*",
+            }
 
-          for _, pattern in ipairs(fallback_patterns) do
-            if type(pattern) == "string" and pattern ~= "" then
-              if pattern:find("%*") then
-                local matches = vim.fn.glob(pattern, true, true)
-                if type(matches) == "string" then
-                  matches = { matches }
-                end
-                for _, match in ipairs(matches) do
-                  if path_exists(match) then
-                    lazypath = match
-                    has_lazy = true
-                    break
+            for _, pattern in ipairs(fallback_patterns) do
+              if type(pattern) == "string" and pattern ~= "" then
+                if pattern:find("%*") then
+                  local matches = vim.fn.glob(pattern, true, true)
+                  if type(matches) == "string" then
+                    matches = { matches }
                   end
+                  for _, match in ipairs(matches) do
+                    if path_exists(match) then
+                      lazypath = match
+                      has_lazy = true
+                      break
+                    end
+                  end
+                elseif path_exists(pattern) then
+                  lazypath = pattern
+                  has_lazy = true
                 end
-              elseif path_exists(pattern) then
-                lazypath = pattern
-                has_lazy = true
+              end
+              if has_lazy then
+                break
               end
             end
-            if has_lazy then
-              break
-            end
           end
-        end
 
-        if not has_lazy then
-          local repo = "https://github.com/folke/lazy.nvim.git"
-          vim.fn.system({ "git", "clone", "--filter=blob:none", repo, lazypath })
-          has_lazy = path_exists(lazypath)
-        end
+          if not has_lazy then
+            local repo = "https://github.com/folke/lazy.nvim.git"
+            vim.fn.system({ "git", "clone", "--filter=blob:none", repo, lazypath })
+            has_lazy = path_exists(lazypath)
+          end
 
-        if not has_lazy then
-          vim.api.nvim_err_writeln("lazy.nvim not found; install it or update your configuration.")
-          return
-        end
+          if not has_lazy then
+            vim.api.nvim_err_writeln("lazy.nvim not found; install it or update your configuration.")
+            return
+          end
 
-        vim.opt.rtp:prepend(lazypath)
-        vim.g.lazyvim_cmp = "${cfg.cmp}"
-        vim.g.lazyvim_picker = "${cfg.picker}"
-        vim.g.lazyvim_explorer = "${cfg.explorer}"
-        vim.g.lazyvim_check_order = false
-        require("lazy").setup({
-          change_detection = { notify = false },
-          defaults = {
-            lazy = true,
-            version = false
-          },
-          ui = { border = "rounded" },
-          dev = {
-            path = "${lazyvimPlugins}",
-            patterns = { "" },
-            fallback = true,
-          },
-          checker = { enabled = false },
-          rocks = {
-            enabled = false,
-          },
-          performance = {
-            cache = {
-              enabled = true,
+          vim.opt.rtp:prepend(lazypath)
+          vim.g.lazyvim_cmp = "${cfg.cmp}"
+          vim.g.lazyvim_picker = "${cfg.picker}"
+          vim.g.lazyvim_explorer = "${cfg.explorer}"
+          vim.g.lazyvim_check_order = false
+          require("lazy").setup({
+            change_detection = { notify = false },
+            defaults = {
+              lazy = true,
+              version = false
             },
-            rtp = {
-              disabled_plugins = {
-                "gzip",
-                "tarPlugin",
-                "tohtml",
-                "tutor",
-                "zipPlugin",
+            ui = { border = "rounded" },
+            dev = {
+              path = "${lazyvimPlugins}",
+              patterns = { "" },
+              fallback = true,
+            },
+            checker = { enabled = false },
+            rocks = {
+              enabled = false,
+            },
+            performance = {
+              cache = {
+                enabled = true,
+              },
+              rtp = {
+                disabled_plugins = {
+                  "gzip",
+                  "tarPlugin",
+                  "tohtml",
+                  "tutor",
+                  "zipPlugin",
+                },
               },
             },
-          },
-          spec = {
-            { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-            ${cfg.finalExtraSpec}
-            { import = "plugins" },
-            -- The following configs are needed for fixing lazyvim on nix
-            -- disable mason.nvim, use my.neovim.lazyvim.extraPackages
-            { "mason-org/mason-lspconfig.nvim", enabled = false },
-            { "mason-org/mason.nvim", enabled = false },
-            -- import/override with your plugins
-            -- treesitter ships with all grammars via overlay; keep ensure_installed empty to skip downloads
-            { "nvim-treesitter/nvim-treesitter", opts = function(_, opts) opts.ensure_installed = {} end },
-          },
-        })
-      '';
+            spec = {
+              { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+              ${cfg.finalExtraSpec}
+              { import = "plugins" },
+              -- The following configs are needed for fixing lazyvim on nix
+              -- disable mason.nvim, use my.neovim.lazyvim.extraPackages
+              { "mason-org/mason-lspconfig.nvim", enabled = false },
+              { "mason-org/mason.nvim", enabled = false },
+              -- import/override with your plugins
+              -- treesitter ships with all grammars via overlay; keep ensure_installed empty to skip downloads
+              { "nvim-treesitter/nvim-treesitter", opts = function(_, opts) opts.ensure_installed = {} end },
+            },
+          })
+        '';
     };
   };
 }

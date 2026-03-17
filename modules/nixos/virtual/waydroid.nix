@@ -3,7 +3,8 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (lib.meta) getExe;
@@ -23,13 +24,12 @@
     wait $WESTON_PID
     ${waydroid'} session stop
   '';
-in {
+in
+{
   options.my.virtual.waydroid = {
-    enable =
-      mkEnableOption "Enable waydroid"
-      // {
-        default = config.my.virtual.enable;
-      };
+    enable = mkEnableOption "Enable waydroid" // {
+      default = config.my.virtual.enable;
+    };
   };
 
   config = mkIf cfg.enable {

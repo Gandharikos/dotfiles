@@ -7,7 +7,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.my.langs.node;
   nodePkg = pkgs.nodejs_latest;
   inherit (lib.modules) mkMerge mkIf;
@@ -15,7 +16,8 @@
   inherit (lib.meta) getExe;
   inherit (config) xdg;
   yarn' = getExe pkgs.yarn;
-in {
+in
+{
   options.my.langs.node = {
     enable = mkEnableOption "Node.js development environment";
     xdg.enable = mkEnableOption "Node.js XDG environment variables";
@@ -34,7 +36,7 @@ in {
         ya = "yarn";
       };
 
-      home.sessionVariables.PATH = ["$(${yarn'} global bin)"];
+      home.sessionVariables.PATH = [ "$(${yarn'} global bin)" ];
     })
 
     (mkIf cfg.xdg.enable {

@@ -24,6 +24,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/leakec/multitask";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

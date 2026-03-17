@@ -2,11 +2,13 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.my.services.printing;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.services.printing = {
     enable = mkEnableOption "Enable printing";
   };
@@ -28,14 +30,14 @@ in {
 
     services.printing = {
       browsing = true;
-      listenAddresses = ["*:631"];
-      allowFrom = ["all"];
+      listenAddresses = [ "*:631" ];
+      allowFrom = [ "all" ];
       defaultShared = true;
     };
 
     networking.firewall = {
-      allowedUDPPorts = [631];
-      allowedTCPPorts = [631];
+      allowedUDPPorts = [ 631 ];
+      allowedTCPPorts = [ 631 ];
     };
   };
 }

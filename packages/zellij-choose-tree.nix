@@ -24,6 +24,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/laperlej/zellij-choose-tree";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

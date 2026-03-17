@@ -3,12 +3,14 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (lib.lists) optionals;
   cfg = config.my.nix-search-tv;
-in {
+in
+{
   options.my.nix-search-tv = {
     enable = mkEnableOption "nix-search-tv";
   };
@@ -20,17 +22,16 @@ in {
       enable = true;
 
       settings = {
-        indexes =
-          [
-            "nixpkgs"
-            "home-manager"
-          ]
-          ++ optionals pkgs.stdenv.hostPlatform.isLinux [
-            "nixos"
-          ]
-          ++ optionals pkgs.stdenv.hostPlatform.isDarwin [
-            "darwin"
-          ];
+        indexes = [
+          "nixpkgs"
+          "home-manager"
+        ]
+        ++ optionals pkgs.stdenv.hostPlatform.isLinux [
+          "nixos"
+        ]
+        ++ optionals pkgs.stdenv.hostPlatform.isDarwin [
+          "darwin"
+        ];
       };
     };
   };

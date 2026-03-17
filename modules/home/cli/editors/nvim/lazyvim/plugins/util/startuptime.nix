@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.startuptime;
-in {
+in
+{
   options.my.neovim.lazyvim.startuptime = {
     enable = mkEnableOption "startuptime";
   };
@@ -18,7 +20,7 @@ in {
         startuptime-nvim
       ];
 
-      imports = ["lazyvim.plugins.extras.util.startuptime"];
+      imports = [ "lazyvim.plugins.extras.util.startuptime" ];
     };
   };
 }

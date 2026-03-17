@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf mkForce;
   cfg = config.my.boot;
-in {
+in
+{
   config = mkIf (cfg.loader == "none") {
     boot.loader = {
       grub.enable = mkForce false;

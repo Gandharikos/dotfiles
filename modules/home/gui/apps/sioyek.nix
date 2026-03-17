@@ -2,19 +2,19 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (config.my) gui;
   cfg = config.my.gui.apps.sioyek;
   enable = gui.enable && cfg.enable;
-in {
+in
+{
   options.my.gui.apps.sioyek = {
-    enable =
-      mkEnableOption "Sioyek"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Sioyek" // {
+      default = true;
+    };
   };
 
   config = mkIf enable {
@@ -147,7 +147,7 @@ in {
         should_draw_portal_outline = "1";
 
         # Navigation
-        startup_commands = ["toggle_horizontal_scroll_lock"];
+        startup_commands = [ "toggle_horizontal_scroll_lock" ];
         use_heuristic_if_text_not_found = "1";
 
         # Search
@@ -178,6 +178,6 @@ in {
       };
     };
 
-    xdg.mimeApps.defaultApplicationPackages = [config.programs.sioyek.package];
+    xdg.mimeApps.defaultApplicationPackages = [ config.programs.sioyek.package ];
   };
 }

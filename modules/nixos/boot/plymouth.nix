@@ -3,7 +3,8 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.meta) getExe';
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption mkOption;
@@ -11,17 +12,16 @@
 
   cfg = config.my.boot.plymouth;
   plymouth' = getExe' pkgs.plymouth "plymouth";
-in {
+in
+{
   options.my.boot.plymouth = {
-    enable =
-      mkEnableOption "plymouth boot splash"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "plymouth boot splash" // {
+      default = true;
+    };
 
     playFullAnimation = mkEnableOption "Wait for the boot animation to finish playing before opening login shell.";
     themesPackage = mkOption {
-      default = pkgs.my.plymouth-themes.override {inherit (cfg) themeName;};
+      default = pkgs.my.plymouth-themes.override { inherit (cfg) themeName; };
       type = package;
     };
     themeName = mkOption {
@@ -34,7 +34,7 @@ in {
     boot = {
       plymouth = {
         enable = true;
-        themePackages = [cfg.themesPackage];
+        themePackages = [ cfg.themesPackage ];
         theme = cfg.themeName;
       };
 

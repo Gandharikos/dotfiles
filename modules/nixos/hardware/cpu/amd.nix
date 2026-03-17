@@ -2,10 +2,12 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (config.my) machine;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   config = mkIf (machine.cpu == "amd" || machine.cpu == "vm-amd") {
     hardware.cpu.amd.updateMicrocode = true;
     boot.kernelModules = [

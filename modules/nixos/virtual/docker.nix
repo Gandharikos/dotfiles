@@ -2,17 +2,17 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.virtual.docker;
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-in {
+in
+{
   options.my.virtual.docker = {
-    enable =
-      mkEnableOption "Docker"
-      // {
-        default = config.my.virtual.enable;
-      };
+    enable = mkEnableOption "Docker" // {
+      default = config.my.virtual.enable;
+    };
   };
   config = mkIf cfg.enable {
     virtualisation.docker = {
@@ -20,7 +20,9 @@ in {
       daemon.settings = {
         # enables pulling using containerd, which supports restarting from a partial pull
         # https://docs.docker.com/storage/containerd/
-        "features" = {"containerd-snapshotter" = true;};
+        "features" = {
+          "containerd-snapshotter" = true;
+        };
       };
 
       # start dockerd on boot.
@@ -30,7 +32,7 @@ in {
       # auto prune unused containers and images
       autoPrune = {
         enable = true;
-        flags = ["--all"];
+        flags = [ "--all" ];
       };
     };
   };

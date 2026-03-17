@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.zig;
-in {
+in
+{
   options.my.neovim.lazyvim.zig = {
     enable = mkEnableOption "language zig";
   };
@@ -18,7 +20,7 @@ in {
         neotest-zig
       ];
 
-      imports = ["lazyvim.plugins.extras.lang.zig"];
+      imports = [ "lazyvim.plugins.extras.lang.zig" ];
 
       extraPackages = with pkgs; [
         zls

@@ -2,11 +2,13 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (config.my.theme.colorscheme) palette;
   cfg = config.my.theme.tokyonight;
-in {
+in
+{
   config = mkIf cfg.enable {
     programs.fzf.colors = with palette; {
       "bg+" = bg_visual;

@@ -2,16 +2,18 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.attrsets) mapAttrs;
   isHeadless = !config.my.gui.enable;
-in {
+in
+{
   config = mkIf isHeadless {
     # we don't need fonts on a server
     # since there are no fonts to be configured outside the console
     fonts = mapAttrs (_: mkForce) {
-      packages = [];
+      packages = [ ];
       fontDir.enable = false;
       fontconfig.enable = false;
     };

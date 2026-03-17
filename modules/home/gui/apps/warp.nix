@@ -3,21 +3,21 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (config.my) gui;
   cfg = config.my.gui.apps.cloudflare-warp;
   enable = gui.enable && cfg.enable;
-in {
+in
+{
   options.my.gui.apps.cloudflare-warp = {
-    enable =
-      mkEnableOption "Cloudflare Warp"
-      // {
-        default = false;
-        # config.my.machine.type == "laptop"
-        # && pkgs.stdenv.hostPlatform.isLinux;
-      };
+    enable = mkEnableOption "Cloudflare Warp" // {
+      default = false;
+      # config.my.machine.type == "laptop"
+      # && pkgs.stdenv.hostPlatform.isLinux;
+    };
   };
 
   config = mkIf enable {
@@ -25,8 +25,8 @@ in {
       warp-taskbar = {
         Unit = {
           Description = "Cloudflare Warp taskbar";
-          After = ["graphical-session.target"];
-          PartOf = ["graphical-session.target"];
+          After = [ "graphical-session.target" ];
+          PartOf = [ "graphical-session.target" ];
         };
 
         Service = {
@@ -34,12 +34,12 @@ in {
           ExecStop = "pkill warp-taskbar";
         };
 
-        Install.WantedBy = ["graphical-session.target"];
+        Install.WantedBy = [ "graphical-session.target" ];
       };
     };
 
     home = {
-      packages = with pkgs; [cloudflare-warp];
+      packages = with pkgs; [ cloudflare-warp ];
     };
   };
 }

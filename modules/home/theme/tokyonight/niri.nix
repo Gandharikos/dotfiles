@@ -3,14 +3,16 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (config.my.theme.colorscheme) palette;
 
   cfg = config.my.theme.tokyonight;
   enable = cfg.enable && config.my.gui.enable && isLinux;
-in {
+in
+{
   config = mkIf enable {
     programs.niri.settings.layout = {
       background-color = palette.bg;

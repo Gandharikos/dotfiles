@@ -3,15 +3,17 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe;
   inherit (lib.my) uwsmApp;
   cfg = config.my.gui.desktop.hyprland;
   hyprshade = getExe pkgs.hyprshade;
-  hyprshadeAuto = uwsmApp pkgs hyprshade ["auto"];
-in {
+  hyprshadeAuto = uwsmApp pkgs hyprshade [ "auto" ];
+in
+{
   options.my.gui.desktop.hyprland.shade = {
     enable = mkEnableOption "hyprshade";
   };

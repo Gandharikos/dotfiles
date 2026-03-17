@@ -2,17 +2,17 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   cfg = config.my.services.fail2ban;
-in {
+in
+{
   options.my.services.fail2ban = {
-    enable =
-      mkEnableOption "fail2ban"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "fail2ban" // {
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable {

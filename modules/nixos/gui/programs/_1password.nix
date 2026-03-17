@@ -2,26 +2,26 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (config.my) name;
   cfg = config.my.gui.system._1password;
-in {
+in
+{
   options.my.gui.system._1password = {
-    enable =
-      mkEnableOption "1Password"
-      // {
-        default = config.my.gui.enable;
-      };
+    enable = mkEnableOption "1Password" // {
+      default = config.my.gui.enable;
+    };
   };
 
   config = mkIf cfg.enable {
     programs = {
-      _1password .enable = true;
+      _1password.enable = true;
       _1password-gui = {
         enable = true;
-        polkitPolicyOwners = [name];
+        polkitPolicyOwners = [ name ];
       };
     };
   };

@@ -1,12 +1,17 @@
-{lib, ...}: let
+{ lib, ... }:
+let
   inherit (lib.options) mkOption;
   inherit (lib.types) enum bool;
-in {
+in
+{
   imports = lib.my.scanPaths ./.;
 
   options.my.mux = {
     default = mkOption {
-      type = enum ["tmux" "zellij"];
+      type = enum [
+        "tmux"
+        "zellij"
+      ];
       default = "tmux";
       description = "The terminal multiplexer to use";
     };

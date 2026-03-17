@@ -7,7 +7,8 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv) isLinux;
   inherit (config) my;
@@ -59,27 +60,24 @@
     "audio/*"
   ];
 
-  images = ["image/*"];
+  images = [ "image/*" ];
   associations =
     (lib.genAttrs editor (_: [
-      "${
-        if my.editor == "helix"
-        then "Helix"
-        else my.editor
-      }.desktop"
+      "${if my.editor == "helix" then "Helix" else my.editor}.desktop"
     ]))
-    // (lib.genAttrs media (_: ["mpv.desktop"]))
-    // (lib.genAttrs images (_: ["viewnior.desktop"]))
-    // (lib.genAttrs browser (_: ["${my.gui.browser.desktopId}"]))
+    // (lib.genAttrs media (_: [ "mpv.desktop" ]))
+    // (lib.genAttrs images (_: [ "viewnior.desktop" ]))
+    // (lib.genAttrs browser (_: [ "${my.gui.browser.desktopId}" ]))
     // {
-      "application/pdf" = ["org.pwmt.zathura.desktop"];
-      "x-scheme-handler/spotify" = ["spotify.desktop"];
-      "x-scheme-handler/discord" = ["Discord.desktop"];
-      "x-scheme-handler/tg" = ["org.telegram.desktop"];
-      "x-scheme-handler/tonsite" = ["org.telegram.desktop"];
-      "inode/directory" = ["thunar.desktop"];
+      "application/pdf" = [ "org.pwmt.zathura.desktop" ];
+      "x-scheme-handler/spotify" = [ "spotify.desktop" ];
+      "x-scheme-handler/discord" = [ "Discord.desktop" ];
+      "x-scheme-handler/tg" = [ "org.telegram.desktop" ];
+      "x-scheme-handler/tonsite" = [ "org.telegram.desktop" ];
+      "inode/directory" = [ "thunar.desktop" ];
     };
-in {
+in
+{
   # xdg.configFile."mimeapps.list".force = true;
   xdg = {
     enable = true;

@@ -1,6 +1,8 @@
-{config, ...}: let
+{ config, ... }:
+let
   cfg = config.my.networking;
-in {
+in
+{
   # enable wireless database, it helps keeping wifi speedy
   hardware.wirelessRegulatoryDatabase = true;
   networking.wireless = {

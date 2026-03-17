@@ -3,13 +3,15 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe';
   cat' = getExe' pkgs.coreutils "cat";
   cfg = config.my.aichat;
-in {
+in
+{
   options.my.aichat = {
     enable = mkEnableOption "aichat";
   };
@@ -65,6 +67,6 @@ in {
         ];
       };
     };
-    sops.secrets.openrouter_api_key = {};
+    sops.secrets.openrouter_api_key = { };
   };
 }

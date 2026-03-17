@@ -3,10 +3,12 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim;
-in {
+in
+{
   config = mkIf (cfg.cmp == "auto" || cfg.cmp == "blink") {
     my.neovim.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [

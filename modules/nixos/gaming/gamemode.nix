@@ -3,7 +3,8 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (lib.strings) optionalString makeBinPath;
@@ -12,7 +13,7 @@
 
   hyprlandEnabled = config.my.gui.desktop.hyprland.enable;
 
-  programs = makeBinPath (builtins.attrValues {inherit (pkgs) hyprland coreutils systemd;});
+  programs = makeBinPath (builtins.attrValues { inherit (pkgs) hyprland coreutils systemd; });
 
   startscript = pkgs.writeShellScript "gamemode-start" ''
     ${optionalString hyprlandEnabled ''
@@ -35,7 +36,8 @@
   '';
 
   cfg = config.my.game;
-in {
+in
+{
   options.my.game = {
     enable = mkEnableOption "Gamescope compositing manager";
   };

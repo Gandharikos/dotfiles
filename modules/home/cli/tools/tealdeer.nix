@@ -2,11 +2,13 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.my.tealdeer;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.tealdeer = {
     enable = mkEnableOption "tealdeer";
   };

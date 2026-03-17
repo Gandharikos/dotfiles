@@ -3,7 +3,8 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.bat;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
@@ -17,7 +18,8 @@
     # FIXME: batwatch is broken
     # bgrep = getExe pkgs.bat-extras.batgrep;
   };
-in {
+in
+{
   options.my.bat = {
     enable = mkEnableOption "bat";
   };
@@ -26,7 +28,7 @@ in {
     # a cat(1) clone with syntax highlighting and Git integration.
     programs.bat = {
       enable = true;
-      config = {inherit (config.my) pager;};
+      config = { inherit (config.my) pager; };
       extraPackages = with pkgs.bat-extras; [
         batdiff
         batman
@@ -41,43 +43,46 @@ in {
     };
 
     # Custom batpipe viewers
-    xdg.configFile."batpipe/viewers.d/custom.sh".text = let
-      makeViewer = {
-        command,
-        filetype,
-        header ? "",
-      }: let
-        program = builtins.baseNameOf (builtins.head (lib.strings.splitString " " command));
+    xdg.configFile."batpipe/viewers.d/custom.sh".text =
+      let
+        makeViewer =
+          {
+            command,
+            filetype,
+            header ? "",
+          }:
+          let
+            program = builtins.baseNameOf (builtins.head (lib.strings.splitString " " command));
+          in
+          #sh
+          ''
+            BATPIPE_VIEWERS+=("${program}")
+
+            viewer_${program}_supports() {
+              case "$1" in
+                ${filetype}) return 0;;
+              esac
+              return 1
+            }
+
+            viewer_${program}_process() {
+              ${header}
+              ${command}
+              return "$?"
+            }
+          '';
+        batpipe_archive_header =
+          # sh
+          ''
+            batpipe_header    "Viewing contents of archive: %{PATH}%s" "$1"
+            batpipe_subheader "To view files within the archive, add the file path after the archive."
+          '';
+        batpipe_document_header =
+          # sh
+          ''
+            batpipe_header "Viewing text of document: %{PATH}%s" "$1"
+          '';
       in
-        #sh
-        ''
-          BATPIPE_VIEWERS+=("${program}")
-
-          viewer_${program}_supports() {
-            case "$1" in
-              ${filetype}) return 0;;
-            esac
-            return 1
-          }
-
-          viewer_${program}_process() {
-            ${header}
-            ${command}
-            return "$?"
-          }
-        '';
-      batpipe_archive_header =
-        # sh
-        ''
-          batpipe_header    "Viewing contents of archive: %{PATH}%s" "$1"
-          batpipe_subheader "To view files within the archive, add the file path after the archive."
-        '';
-      batpipe_document_header =
-        # sh
-        ''
-          batpipe_header "Viewing text of document: %{PATH}%s" "$1"
-        '';
-    in
       concatMapStrings makeViewer [
         {
           command = ''${getExe pkgs.python3Packages.docx2txt} "$1"'';

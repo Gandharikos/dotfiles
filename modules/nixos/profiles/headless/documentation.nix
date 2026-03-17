@@ -2,11 +2,13 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.attrsets) mapAttrs;
   isHeadless = !config.my.gui.enable;
-in {
+in
+{
   config = mkIf isHeadless {
     documentation = mapAttrs (_: mkForce) {
       enable = false;

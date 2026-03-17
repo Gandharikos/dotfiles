@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.harpoon;
-in {
+in
+{
   options.my.neovim.lazyvim.harpoon = {
     enable = mkEnableOption "harpoon2";
   };
@@ -18,7 +20,7 @@ in {
         harpoon
       ];
 
-      imports = ["lazyvim.plugins.extras.editor.harpoon2"];
+      imports = [ "lazyvim.plugins.extras.editor.harpoon2" ];
     };
   };
 }

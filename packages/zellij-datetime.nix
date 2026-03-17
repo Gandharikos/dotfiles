@@ -25,6 +25,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/h1romas4/zellij-datetime";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

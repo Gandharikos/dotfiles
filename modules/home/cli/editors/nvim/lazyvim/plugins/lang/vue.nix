@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.vue;
-in {
+in
+{
   options.my.neovim.lazyvim.vue = {
     enable = mkEnableOption "language vue";
   };
@@ -16,7 +18,7 @@ in {
     my.neovim.lazyvim = {
       typescript.enable = true;
 
-      imports = ["lazyvim.plugins.extras.lang.vue"];
+      imports = [ "lazyvim.plugins.extras.lang.vue" ];
 
       extraPackages = with pkgs; [
         vscode-extensions.vue.volar

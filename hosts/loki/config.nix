@@ -1,7 +1,8 @@
-{lib, ...}: {
+{ lib, ... }:
+{
   imports = [
     ./hardware-configuration.nix
-    (import ../common/disko/luks-btrfs-tmpfs.nix {})
+    (import ../common/disko/luks-btrfs-tmpfs.nix { })
   ];
 
   my = {
@@ -59,7 +60,7 @@
   services.automatic-timezoned.enable = lib.mkForce false;
 
   networking = {
-    nameservers = lib. mkForce [
+    nameservers = lib.mkForce [
       "198.18.0.2"
     ];
     tcpcrypt.enable = lib.mkForce false;

@@ -3,11 +3,13 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.virtual.podman;
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.options) mkEnableOption;
-in {
+in
+{
   options.my.virtual.podman = {
     enable = mkEnableOption "Podman";
   };
@@ -46,7 +48,7 @@ in {
         # Prune images and containers periodically
         autoPrune = {
           enable = true;
-          flags = ["--all"];
+          flags = [ "--all" ];
           dates = "weekly";
         };
       };

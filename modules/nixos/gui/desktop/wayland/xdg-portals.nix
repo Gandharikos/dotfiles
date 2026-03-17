@@ -3,23 +3,27 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf mkDefault;
   cfg = config.my.gui.desktop;
   portal =
-    if cfg.default == "hyprland"
-    then "hyprland"
-    else if cfg.default == "niri"
-    then "gnome"
-    else "wlr";
+    if cfg.default == "hyprland" then
+      "hyprland"
+    else if cfg.default == "niri" then
+      "gnome"
+    else
+      "wlr";
   extraPortals =
-    if cfg.default == "niri"
-    then [pkgs.xdg-desktop-portal-gnome]
-    else [pkgs.xdg-desktop-portal-wlr];
+    if cfg.default == "niri" then
+      [ pkgs.xdg-desktop-portal-gnome ]
+    else
+      [ pkgs.xdg-desktop-portal-wlr ];
   wlrEnable = cfg.default != "niri";
   inherit (cfg.wayland) enable;
-in {
+in
+{
   config = mkIf enable {
     xdg.portal = {
       enable = true;
@@ -30,9 +34,9 @@ in {
 
         # for flameshot to work
         # https://github.com/flameshot-org/flameshot/issues/3363#issuecomment-1753771427
-        "org.freedesktop.impl.portal.Screencast" = ["${portal}"];
-        "org.freedesktop.impl.portal.Screenshot" = ["${portal}"];
-        "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+        "org.freedesktop.impl.portal.Screencast" = [ "${portal}" ];
+        "org.freedesktop.impl.portal.Screenshot" = [ "${portal}" ];
+        "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
       };
       wlr = {
         enable = mkDefault wlrEnable;

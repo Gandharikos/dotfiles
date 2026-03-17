@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   environment = {
     variables = {
       # Do not send analytic data to Homebrew
@@ -15,6 +16,6 @@
     };
 
     # we add howbrew to the PATH so we can execute all the apps it installs
-    systemPath = [config.homebrew.prefix];
+    systemPath = [ config.homebrew.prefix ];
   };
 }

@@ -11,12 +11,14 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.my.langs.rust;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkMerge mkIf;
   inherit (config) xdg;
-in {
+in
+{
   options.my.langs.rust = {
     enable = mkEnableOption "Rust development environment";
     xdg.enable = mkEnableOption "Rust XDG environment variables";
@@ -24,7 +26,7 @@ in {
 
   config = mkMerge [
     (mkIf cfg.enable {
-      home.packages = [pkgs.rustup];
+      home.packages = [ pkgs.rustup ];
       home.shellAliases = {
         rs = "rustc";
         rsp = "rustup";
@@ -36,7 +38,7 @@ in {
       home.sessionVariables = rec {
         RUSTUP_HOME = "${xdg.dataHome}/rustup";
         CARGO_HOME = "${xdg.dataHome}/cargo";
-        PATH = ["${CARGO_HOME}/bin"];
+        PATH = [ "${CARGO_HOME}/bin" ];
       };
     })
   ];

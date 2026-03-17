@@ -4,17 +4,17 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.my.virtual.lxd;
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-in {
+in
+{
   options.my.virtual.lxd = {
-    enable =
-      mkEnableOption "Enable LXD"
-      // {
-        default = config.my.virtual.enable;
-      };
+    enable = mkEnableOption "Enable LXD" // {
+      default = config.my.virtual.enable;
+    };
   };
 
   config = mkIf cfg.enable {

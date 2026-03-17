@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.edgy;
-in {
+in
+{
   options.my.neovim.lazyvim.edgy = {
     enable = mkEnableOption "edgy";
   };
@@ -18,7 +20,7 @@ in {
         edgy-nvim
       ];
 
-      imports = ["lazyvim.plugins.extras.ui.edgy"];
+      imports = [ "lazyvim.plugins.extras.ui.edgy" ];
     };
   };
 }

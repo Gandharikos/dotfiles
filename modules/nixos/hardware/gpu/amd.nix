@@ -3,18 +3,20 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   isAmd = config.my.machine.gpu == "amd";
   inherit (lib.modules) mkIf;
-in {
+in
+{
   config = mkIf isAmd {
     # enable amdgpu xorg drivers
-    services.xserver.videoDrivers = ["amdgpu"];
+    services.xserver.videoDrivers = [ "amdgpu" ];
 
     # enable amdgpu kernel module
     boot = {
-      kernelModules = ["amdgpu"];
-      initrd.kernelModules = ["amdgpu"];
+      kernelModules = [ "amdgpu" ];
+      initrd.kernelModules = [ "amdgpu" ];
     };
 
     # enables AMDVLK & OpenCL support

@@ -1,8 +1,10 @@
-{lib, ...}: let
+{ lib, ... }:
+let
   inherit (lib.options) mkOption;
   inherit (lib.modules) mkForce;
   inherit (lib.types) enum;
-in {
+in
+{
   imports = lib.my.scanPaths ./.;
   options.my.boot.loader = mkOption {
     type = enum [

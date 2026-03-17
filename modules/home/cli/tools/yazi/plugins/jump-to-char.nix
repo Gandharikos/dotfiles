@@ -1,6 +1,7 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs.yazi = {
-    plugins = {inherit (pkgs.yaziPlugins) jump-to-char;};
+    plugins = { inherit (pkgs.yaziPlugins) jump-to-char; };
     keymap.mgr.prepend_keymap = [
       {
         desc = "Jump to char";

@@ -4,14 +4,16 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkMerge;
   inherit (config.my) name;
   inherit (lib) optionals;
   cfg = config.my.neovim.lazyvim.copilot;
   inherit (config.home) homeDirectory;
-in {
+in
+{
   options.my.neovim.lazyvim.copilot = {
     lua.enable = mkEnableOption "AI plugin - Copilot and Copilot-Chat";
     native.enable = mkEnableOption "Using native Copilot or using copilot.lua";
@@ -29,7 +31,7 @@ in {
     }
 
     (mkIf (cfg.lua.enable || cfg.native.enable || cfg.chat.enable) {
-      my.neovim.lazyvim.extraPackages = with pkgs; [nodejs_24];
+      my.neovim.lazyvim.extraPackages = with pkgs; [ nodejs_24 ];
 
       sops.secrets.github-copilot = {
         sopsFile = "${self}/secrets/${name}/github-copilot";
@@ -39,26 +41,26 @@ in {
       };
     })
     (mkIf cfg.lua.enable {
-      my.neovim.lazyvim.extraPlugins = with pkgs.vimPlugins;
-        [copilot-lua]
-        ++ optionals (config.my.neovim.lazyvim.cmp == "nvim-cmp")
-        [copilot-cmp]
-        ++ optionals (config.my.neovim.lazyvim.cmp
-          == "blink"
-          || config.my.neovim.lazyvim.cmp == "auto") [blink-cmp-copilot];
+      my.neovim.lazyvim.extraPlugins =
+        with pkgs.vimPlugins;
+        [ copilot-lua ]
+        ++ optionals (config.my.neovim.lazyvim.cmp == "nvim-cmp") [ copilot-cmp ]
+        ++ optionals (config.my.neovim.lazyvim.cmp == "blink" || config.my.neovim.lazyvim.cmp == "auto") [
+          blink-cmp-copilot
+        ];
 
-      my.neovim.lazyvim.config = ["ai/copilot.lua"];
+      my.neovim.lazyvim.config = [ "ai/copilot.lua" ];
     })
     (mkIf cfg.chat.enable {
       my.neovim.lazyvim = {
-        extraPlugins = with pkgs.vimPlugins; [CopilotChat-nvim];
-        config = ["ai/copilot-chat.lua"];
+        extraPlugins = with pkgs.vimPlugins; [ CopilotChat-nvim ];
+        config = [ "ai/copilot-chat.lua" ];
       };
     })
     (mkIf cfg.native.enable {
       my.neovim.lazyvim = {
-        imports = ["lazyvim.plugins.extras.ai.copilot-native"];
-        extraPackages = with pkgs; [copilot-language-server];
+        imports = [ "lazyvim.plugins.extras.ai.copilot-native" ];
+        extraPackages = with pkgs; [ copilot-language-server ];
       };
     })
   ];

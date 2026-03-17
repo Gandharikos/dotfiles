@@ -4,13 +4,15 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (config.home) homeDirectory;
   inherit (config.my) name;
   cfg = config.my.neovim.lazyvim.supermaven;
-in {
+in
+{
   options.my.neovim.lazyvim.supermaven = {
     enable = mkEnableOption "AI plugin - Supermaven";
   };
@@ -21,7 +23,7 @@ in {
         supermaven-nvim
       ];
 
-      imports = ["lazyvim.plugins.extras.ai.supermaven"];
+      imports = [ "lazyvim.plugins.extras.ai.supermaven" ];
     };
 
     sops.secrets.supermaven = {

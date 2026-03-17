@@ -2,11 +2,13 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   cfg = config.my.machine;
-in {
+in
+{
   options.my.machine.hasTPM = mkEnableOption "Whether the system has tpm support";
 
   config = mkIf cfg.hasTPM {
@@ -26,6 +28,6 @@ in {
       pkcs11.enable = true;
     };
 
-    boot.initrd.kernelModules = ["tpm"];
+    boot.initrd.kernelModules = [ "tpm" ];
   };
 }

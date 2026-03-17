@@ -2,17 +2,17 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.helix;
-in {
+in
+{
   options.my.helix = {
-    enable =
-      mkEnableOption "helix"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "helix" // {
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -49,7 +49,9 @@ in {
             normal = "block";
             select = "underline";
           };
-          file-picker = {hidden = false;};
+          file-picker = {
+            hidden = false;
+          };
         };
         keys = mkIf (config.my.keyboard.layout == "colemak") {
           normal = {

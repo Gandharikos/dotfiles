@@ -2,12 +2,14 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.my.services.jellyfin;
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) int;
-in {
+in
+{
   options.my.services.jellyfin = {
     enable = mkEnableOption "jellyfin";
     port = mkOption {
@@ -25,8 +27,8 @@ in {
     };
 
     networking.firewall = {
-      allowedTCPPorts = [cfg.port];
-      allowedUDPPorts = [cfg.port];
+      allowedTCPPorts = [ cfg.port ];
+      allowedUDPPorts = [ cfg.port ];
     };
   };
 }

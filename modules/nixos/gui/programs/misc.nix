@@ -3,10 +3,12 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (config.my) gui;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   config = mkIf gui.enable {
     environment.systemPackages = with pkgs; [
       android-tools

@@ -3,11 +3,13 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.nix-index;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   imports = [
     inputs.nix-index-database.homeModules.nix-index
   ];

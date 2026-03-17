@@ -26,6 +26,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/FuriouZz/zjpane";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

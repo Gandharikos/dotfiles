@@ -3,20 +3,20 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (config.my.gui) desktop;
   cfg = desktop.cosmic;
-in {
+in
+{
   options.my.gui.desktop.cosmic = {
-    enable =
-      mkEnableOption "Enable Hyprland"
-      // {
-        default = desktop.wayland.enable && desktop.default == "cosmic";
-        internal = true;
-        readOnly = true;
-      };
+    enable = mkEnableOption "Enable Hyprland" // {
+      default = desktop.wayland.enable && desktop.default == "cosmic";
+      internal = true;
+      readOnly = true;
+    };
   };
 
   config = mkIf cfg.enable {

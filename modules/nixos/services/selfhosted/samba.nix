@@ -3,11 +3,13 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.my.services.samba;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.services.samba = {
     enable = mkEnableOption "Enable Samba";
   };

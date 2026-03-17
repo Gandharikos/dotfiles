@@ -3,10 +3,12 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim;
-in {
+in
+{
   config = mkIf (cfg.picker == "telescope") {
     my.neovim.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
@@ -19,7 +21,7 @@ in {
         fzf-lua
       ];
 
-      config = ["editor/telescope.lua"];
+      config = [ "editor/telescope.lua" ];
     };
   };
 }

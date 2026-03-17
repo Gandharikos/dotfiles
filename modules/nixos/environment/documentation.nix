@@ -1,6 +1,8 @@
-{lib, ...}: let
+{ lib, ... }:
+let
   inherit (lib) mkForce;
-in {
+in
+{
   documentation = {
     enable = mkForce false;
     dev.enable = mkForce false;

@@ -4,13 +4,15 @@
   lib,
   aiCommon,
   ...
-}: let
+}:
+let
   cfg = config.my.claude-code;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  hooks = lib.my.importDir ./hooks {inherit pkgs;};
+  hooks = lib.my.importDir ./hooks { inherit pkgs; };
   sharedAiTools = aiCommon;
-in {
+in
+{
   options.my.claude-code = {
     enable = mkEnableOption "claude-code";
   };
@@ -146,7 +148,7 @@ in {
             "Bash(killall:*)"
             "Bash(pkill:*)"
           ];
-          deny = [];
+          deny = [ ];
           defaultMode = "default";
         };
         model = "claude-sonnet-4-5";

@@ -3,11 +3,13 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   cfg = config.my.zk;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.zk = {
     enable = mkEnableOption "zk";
   };
@@ -47,7 +49,7 @@ in {
         group = {
           daily = {
             # Directories listed here will automatically use this group when creating notes.
-            paths = ["Fleeting/Daily"];
+            paths = [ "Fleeting/Daily" ];
             note = {
               # %Y-%m-%d is actually the default format, so you could use {{format-date now}} instead.
               filename = "{{format-date now '%Y-%m-%d'}}";
@@ -63,46 +65,45 @@ in {
           fzf-preview = "${lib.getExe pkgs.glow} --style ${config.home.sessionVariables.GLAMOUR_STYLE} {-1}";
         };
 
-        alias = let
-          # Respect the user's preferred shell when forwarding arguments.
-          argsVar =
-            if config.my.shell == "fish"
-            then "$argv"
-            else "$@";
-        in {
-          list = "zk list --quiet -f oneline ${argsVar}";
-          ls = "zk list ${argsVar}";
-          wc = "zk list --sort word-count ${argsVar}";
+        alias =
+          let
+            # Respect the user's preferred shell when forwarding arguments.
+            argsVar = if config.my.shell == "fish" then "$argv" else "$@";
+          in
+          {
+            list = "zk list --quiet -f oneline ${argsVar}";
+            ls = "zk list ${argsVar}";
+            wc = "zk list --sort word-count ${argsVar}";
 
-          search = "zk list -i ${argsVar}";
+            search = "zk list -i ${argsVar}";
 
-          # remove a files
-          rm = "zk list --interactive --quiet --format path --delimiter0 ${argsVar} | xargs -0 rm -vf --";
+            # remove a files
+            rm = "zk list --interactive --quiet --format path --delimiter0 ${argsVar} | xargs -0 rm -vf --";
 
-          daily = "zk new $ZK_NOTEBOOK_DIR/Fleeting/Daily";
+            daily = "zk new $ZK_NOTEBOOK_DIR/Fleeting/Daily";
 
-          # Show a random note.
-          lucky = "zk list --quiet --format full --sort random --limit 1";
+            # Show a random note.
+            lucky = "zk list --quiet --format full --sort random --limit 1";
 
-          # Edit the last modified note.
-          last = "zk edit --limit 1 --sort modified- ${argsVar}";
+            # Edit the last modified note.
+            last = "zk edit --limit 1 --sort modified- ${argsVar}";
 
-          # Edit the notes selected interactively among the notes created the last two weeks.
-          # This alias doesn't take any argument, so nothing to forward.
-          recent = "zk edit --sort created- --created-after 'last two weeks' --interactive";
+            # Edit the notes selected interactively among the notes created the last two weeks.
+            # This alias doesn't take any argument, so nothing to forward.
+            recent = "zk edit --sort created- --created-after 'last two weeks' --interactive";
 
-          # Print paths separated with colons for the notes found with the given
-          # arguments. This can be useful to expand a complex search query into a flag
-          # taking only paths. For example:
-          #   zk list --link-to "`zk path -m potato`"
-          path = "zk list --quiet --format {{path}} --delimiter , ${argsVar}";
+            # Print paths separated with colons for the notes found with the given
+            # arguments. This can be useful to expand a complex search query into a flag
+            # taking only paths. For example:
+            #   zk list --link-to "`zk path -m potato`"
+            path = "zk list --quiet --format {{path}} --delimiter , ${argsVar}";
 
-          # Returns the Git history for the notes found with the given arguments.
-          # Note the use of a pipe: we still forward the original arguments.
-          log = "zk list --format path --delimiter0 --quiet ${argsVar} | xargs -t -0 git log --patch --";
+            # Returns the Git history for the notes found with the given arguments.
+            # Note the use of a pipe: we still forward the original arguments.
+            log = "zk list --format path --delimiter0 --quiet ${argsVar} | xargs -t -0 git log --patch --";
 
-          tags = "zk tag list ${argsVar}";
-        };
+            tags = "zk tag list ${argsVar}";
+          };
 
         lsp = {
           diagnostics = {

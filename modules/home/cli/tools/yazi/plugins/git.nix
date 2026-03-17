@@ -1,7 +1,8 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # Show the status of GIt file changes as linemode in the file list
   programs.yazi = {
-    plugins = {inherit (pkgs.yaziPlugins) git;};
+    plugins = { inherit (pkgs.yaziPlugins) git; };
     initLua = ''
       require("git"):setup()
 

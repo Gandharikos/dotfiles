@@ -3,32 +3,33 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (config.my) gui;
-in {
+in
+{
   config = mkIf gui.enable {
-    environment.systemPackages = [pkgs.appimage-run];
+    environment.systemPackages = [ pkgs.appimage-run ];
 
     # run appimages with appimage-run
     boot.binfmt.registrations =
       lib.genAttrs
-      [
-        "appimage"
-        "AppImage"
-      ]
-      (ext: {
-        recognitionType = "extension";
-        magicOrExtension = ext;
-        interpreter = "/run/current-system/sw/bin/appimage-run";
-      });
+        [
+          "appimage"
+          "AppImage"
+        ]
+        (ext: {
+          recognitionType = "extension";
+          magicOrExtension = ext;
+          interpreter = "/run/current-system/sw/bin/appimage-run";
+        });
 
     # run unpatched linux binaries with nix-ld
     programs.nix-ld = {
       enable = true;
       libraries = builtins.attrValues {
-        inherit
-          (pkgs)
+        inherit (pkgs)
           openssl
           curl
           glib

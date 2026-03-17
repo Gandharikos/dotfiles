@@ -3,20 +3,20 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.types) listOf str;
 
   inherit (builtins) concatStringsSep;
   cfg = config.my.services.earlyoom;
-in {
+in
+{
   options.my.services.earlyoom = {
-    enable =
-      mkEnableOption "earlyoom"
-      // {
-        default = config.my.gui.enable;
-      };
+    enable = mkEnableOption "earlyoom" // {
+      default = config.my.gui.enable;
+    };
     avoid = mkOption {
       type = listOf str;
       default = [
@@ -86,16 +86,18 @@ in {
         freeMemThreshold = 5;
         freeMemKillThreshold = 2;
 
-        extraArgs = let
-          avoid = concatStringsSep "|" cfg.avoid;
-          prefer = concatStringsSep "|" cfg.prefer;
-        in [
-          "-g"
-          "--avoid"
-          "^(${avoid})$" # things that we want to avoid killing
-          "--prefer"
-          "^(${prefer})$" # things we want to remove fast
-        ];
+        extraArgs =
+          let
+            avoid = concatStringsSep "|" cfg.avoid;
+            prefer = concatStringsSep "|" cfg.prefer;
+          in
+          [
+            "-g"
+            "--avoid"
+            "^(${avoid})$" # things that we want to avoid killing
+            "--prefer"
+            "^(${prefer})$" # things we want to remove fast
+          ];
 
         # we should ideally write the logs into a designated log file; or even better, to the journal
         # for now we can hope this echo sends the log to somewhere we can observe later

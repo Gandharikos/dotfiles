@@ -5,7 +5,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkMerge mkIf;
   # inherit (pkgs.stdenv.hostPlatform) isLinux;
@@ -14,55 +15,52 @@
   inherit (config.my) name gui;
   cfg = config.my.gui.apps.spotify;
   enable = gui.enable && cfg.enable;
-in {
+in
+{
   imports = [
     inputs.spicetify-nix.homeManagerModules.default
   ];
 
   options.my.gui.apps.spotify = {
-    enable =
-      mkEnableOption "Spotify"
-      // {
-        default = true;
-      };
-    spotify-player.enable =
-      mkEnableOption "Spotify Player TUI"
-      // {
-        default = config.my.gui.apps.spotify.enable;
-      };
-    spicetify.enable =
-      mkEnableOption "Spicetify"
-      // {
-        default = config.my.gui.apps.spotify.enable;
-      };
+    enable = mkEnableOption "Spotify" // {
+      default = true;
+    };
+    spotify-player.enable = mkEnableOption "Spotify Player TUI" // {
+      default = config.my.gui.apps.spotify.enable;
+    };
+    spicetify.enable = mkEnableOption "Spicetify" // {
+      default = config.my.gui.apps.spotify.enable;
+    };
   };
 
   config = mkMerge [
     (mkIf enable {
-      programs.spicetify = let
-        spicePkgs = inputs.spicetify-nix.legacyPackages.${system};
-      in {
-        enable = true;
-        # windowManagerPatch = isLinux;
-        enabledCustomApps = with spicePkgs.apps; [
-          lyricsPlus
-          reddit
-          marketplace
-          ncsVisualizer
-          historyInSidebar
-          betterLibrary
-        ];
-        enabledExtensions = with spicePkgs.extensions; [
-          adblock
-          fullAppDisplay
-          keyboardShortcut
-          hidePodcasts
-          songStats
-          shuffle # shuffle+ (special characters are sanitized out of extension names)
-          playlistIcons
-          powerBar
-        ];
-      };
+      programs.spicetify =
+        let
+          spicePkgs = inputs.spicetify-nix.legacyPackages.${system};
+        in
+        {
+          enable = true;
+          # windowManagerPatch = isLinux;
+          enabledCustomApps = with spicePkgs.apps; [
+            lyricsPlus
+            reddit
+            marketplace
+            ncsVisualizer
+            historyInSidebar
+            betterLibrary
+          ];
+          enabledExtensions = with spicePkgs.extensions; [
+            adblock
+            fullAppDisplay
+            keyboardShortcut
+            hidePodcasts
+            songStats
+            shuffle # shuffle+ (special characters are sanitized out of extension names)
+            playlistIcons
+            powerBar
+          ];
+        };
     })
     (mkIf enable {
       programs.spotify-player = {
@@ -133,7 +131,7 @@ in {
           mode = "0644";
           format = "binary";
         };
-        spotify_client_id = {};
+        spotify_client_id = { };
       };
     })
   ];

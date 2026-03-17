@@ -3,20 +3,20 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (config.my) gui;
   cfg = config.my.gui.apps.obs;
   enable = gui.enable && cfg.enable;
   # inherit (pkgs.stdenv.hostPlatform) isLinux;
-in {
+in
+{
   options.my.gui.apps.obs = {
-    enable =
-      mkEnableOption "OBS"
-      // {
-        default = false;
-      };
+    enable = mkEnableOption "OBS" // {
+      default = false;
+    };
   };
 
   config = mkIf enable {

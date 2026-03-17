@@ -5,15 +5,23 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.my.yubikey.touchDetector;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.modules) mkIf;
-  inherit (lib.types) bool listOf str package literalExpression;
+  inherit (lib.types)
+    bool
+    listOf
+    str
+    package
+    literalExpression
+    ;
   inherit (lib.strings) concatStringsSep;
   inherit (lib.lists) optionals;
   inherit (lib.meta) getExe getExe';
-in {
+in
+{
   options.my.yubikey = {
     touchDetector = {
       enable = mkEnableOption "a tool to detect when your YubiKey is waiting for a touch";
@@ -30,7 +38,7 @@ in {
 
       extraArgs = mkOption {
         type = listOf str;
-        default = ["--libnotify"];
+        default = [ "--libnotify" ];
         defaultText = literalExpression ''[ "--libnotify" ]'';
         description = ''
           Extra arguments to pass to the tool. The arguments are not escaped.
@@ -54,7 +62,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [cfg.package];
+    home.packages = [ cfg.package ];
 
     # Service description licensed under ISC
     # See https://github.com/maximbaz/yubikey-touch-detector/blob/c9fdff7163361d6323e2de0449026710cacbc08a/LICENSE
@@ -66,63 +74,64 @@ in {
         RemoveOnStop = true;
         SocketMode = "0660";
       };
-      Install.WantedBy = ["sockets.target"];
+      Install.WantedBy = [ "sockets.target" ];
     };
 
     # Same license thing for the description here
     systemd.user.services.yubikey-touch-detector = {
       Unit = {
         Description = "Detects when your YubiKey is waiting for a touch";
-        Requires = optionals cfg.socket.enable ["yubikey-touch-detector.socket"];
+        Requires = optionals cfg.socket.enable [ "yubikey-touch-detector.socket" ];
       };
       Service = {
         ExecStart = "${cfg.package}/bin/yubikey-touch-detector ${concatStringsSep " " cfg.extraArgs}";
-        Environment = ["PATH=${lib.makeBinPath [pkgs.gnupg]}"];
+        Environment = [ "PATH=${lib.makeBinPath [ pkgs.gnupg ]}" ];
         Restart = "on-failure";
         RestartSec = "1sec";
       };
-      Install.Also = optionals cfg.socket.enable ["yubikey-touch-detector.socket"];
-      Install.WantedBy = ["default.target"];
+      Install.Also = optionals cfg.socket.enable [ "yubikey-touch-detector.socket" ];
+      Install.WantedBy = [ "default.target" ];
     };
     # Play sound when the YubiKey is waiting for a touch
-    systemd.user.services.yubikey-touch-detector-sound = let
-      file = cfg.notificationSoundFile;
-      yubikey-play-sound = pkgs.writeShellScriptBin "yubikey-play-sound" ''
-        socket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/yubikey-touch-detector.socket"
+    systemd.user.services.yubikey-touch-detector-sound =
+      let
+        file = cfg.notificationSoundFile;
+        yubikey-play-sound = pkgs.writeShellScriptBin "yubikey-play-sound" ''
+          socket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/yubikey-touch-detector.socket"
 
-        while true; do
+          while true; do
 
-            if [ ! -e "$socket" ]; then
-                printf '{"text": "Waiting for YubiKey socket"}\n'
-                while [ ! -e "$socket" ]; do sleep 1; done
-            fi
-            printf '{"text": ""}\n'
-
-            ${getExe' pkgs.netcat "nc"} -U "$socket" | while read -n5 cmd; do
-
-              if [ "''${cmd:4:1}" = "1" ]; then
-                printf "Playing ${file}\n"
-                ${getExe pkgs.mpv} --volume=100 ${file} > /dev/null
-              else
-                printf "Ignored yubikey command: $cmd\n"
+              if [ ! -e "$socket" ]; then
+                  printf '{"text": "Waiting for YubiKey socket"}\n'
+                  while [ ! -e "$socket" ]; do sleep 1; done
               fi
-            done
+              printf '{"text": ""}\n'
 
-            ${getExe' pkgs.coreutils "sleep"} 1
-        done
-      '';
-    in
+              ${getExe' pkgs.netcat "nc"} -U "$socket" | while read -n5 cmd; do
+
+                if [ "''${cmd:4:1}" = "1" ]; then
+                  printf "Playing ${file}\n"
+                  ${getExe pkgs.mpv} --volume=100 ${file} > /dev/null
+                else
+                  printf "Ignored yubikey command: $cmd\n"
+                fi
+              done
+
+              ${getExe' pkgs.coreutils "sleep"} 1
+          done
+        '';
+      in
       mkIf cfg.notificationSound {
         Unit = {
           Description = "Play sound when the YubiKey is waiting for a touch";
-          Requires = ["yubikey-touch-detector.service"];
+          Requires = [ "yubikey-touch-detector.service" ];
         };
         Service = {
           ExecStart = "${lib.getBin yubikey-play-sound}/bin/yubikey-play-sound";
           Restart = "on-failure";
           RestartSec = "1sec";
         };
-        Install.WantedBy = ["yubikey-touch-detector.service"];
+        Install.WantedBy = [ "yubikey-touch-detector.service" ];
       };
   };
 }

@@ -4,19 +4,19 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim;
-in {
-  imports = [./lazyvim];
+in
+{
+  imports = [ ./lazyvim ];
 
   options.my.neovim = {
-    enable =
-      mkEnableOption "neovim"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "neovim" // {
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable {

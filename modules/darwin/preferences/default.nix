@@ -1,4 +1,5 @@
-{lib, ...}: {
+{ lib, ... }:
+{
   imports = lib.my.scanPaths ./.;
   # activationScripts are executed every time you boot the system or run `nixos-rebuild` / `darwin-rebuild`.
   # system.activationScripts.postUserActivation.text = ''

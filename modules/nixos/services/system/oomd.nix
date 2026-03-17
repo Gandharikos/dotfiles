@@ -2,17 +2,17 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkDefault mkIf;
   cfg = config.my.services.oomd;
-in {
+in
+{
   options.my.services.oomd = {
-    enable =
-      mkEnableOption "oomd"
-      // {
-        default = !config.my.services.earlyoom.enable;
-      };
+    enable = mkEnableOption "oomd" // {
+      default = !config.my.services.earlyoom.enable;
+    };
   };
   config = mkIf cfg.enable {
     systemd = {

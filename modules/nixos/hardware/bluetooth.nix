@@ -3,11 +3,13 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   cfg = config.my.machine;
-in {
+in
+{
   options.my.machine.hasBluetooth = mkEnableOption "Whether the system has bluetooth support";
 
   config = mkIf cfg.hasBluetooth {
@@ -27,7 +29,7 @@ in {
       enable = true;
       package = pkgs.bluez;
       powerOnBoot = true;
-      disabledPlugins = ["sap"];
+      disabledPlugins = [ "sap" ];
       settings = {
         General = {
           Experimental = true;

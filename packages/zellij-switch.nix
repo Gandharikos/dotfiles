@@ -26,6 +26,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/mostafaqanbaryan/zellij-switch";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

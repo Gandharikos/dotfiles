@@ -3,12 +3,14 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
 
   cfg = config.my.services.logrotate;
-in {
+in
+{
   options.my.services.logrotate = {
     enable = mkEnableOption "logrotate";
   };

@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.yaml;
-in {
+in
+{
   options.my.neovim.lazyvim.yaml = {
     enable = mkEnableOption "language yaml";
   };
@@ -17,7 +19,7 @@ in {
       extraPlugins = with pkgs.vimPlugins; [
         SchemaStore-nvim
       ];
-      imports = ["lazyvim.plugins.extras.lang.yaml"];
+      imports = [ "lazyvim.plugins.extras.lang.yaml" ];
       extraPackages = with pkgs; [
         yaml-language-server
       ];

@@ -2,30 +2,48 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   cfg = config.my.gui.desktop.hyprland;
-in {
+in
+{
   config = mkIf cfg.enable {
     # workspace rules
     wayland.windowManager.hyprland.settings = {
       # layer rules
-      layerrule = let
-        toRegex = list: let
-          elements = lib.concatStringsSep "|" list;
-        in "^(${elements})$";
+      layerrule =
+        let
+          toRegex =
+            list:
+            let
+              elements = lib.concatStringsSep "|" list;
+            in
+            "^(${elements})$";
 
-        lowopacity = ["bar" "calendar" "notifications" "system-menu"];
+          lowopacity = [
+            "bar"
+            "calendar"
+            "notifications"
+            "system-menu"
+          ];
 
-        highopacity = ["osd" "logout_dialog"];
+          highopacity = [
+            "osd"
+            "logout_dialog"
+          ];
 
-        blurred = lib.concatLists [lowopacity highopacity];
-      in [
-        "match:namespace ${toRegex blurred}, blur on"
-        "match:namespace ${toRegex ["bar"]}, xray 1"
-        "match:namespace ${toRegex (highopacity ++ ["music"])}, ignore_alpha 0.5"
-        "match:namespace ${toRegex lowopacity}, ignore_alpha 0.2"
-      ];
+          blurred = lib.concatLists [
+            lowopacity
+            highopacity
+          ];
+        in
+        [
+          "match:namespace ${toRegex blurred}, blur on"
+          "match:namespace ${toRegex [ "bar" ]}, xray 1"
+          "match:namespace ${toRegex (highopacity ++ [ "music" ])}, ignore_alpha 0.5"
+          "match:namespace ${toRegex lowopacity}, ignore_alpha 0.2"
+        ];
 
       windowrule = [
         # 1Password

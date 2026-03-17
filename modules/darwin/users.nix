@@ -1,6 +1,8 @@
-{config, ...}: let
+{ config, ... }:
+let
   inherit (config.networking) hostName;
-in {
+in
+{
   networking.computerName = hostName;
   system.primaryUser = config.my.name;
 }

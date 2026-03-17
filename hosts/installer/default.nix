@@ -1,5 +1,6 @@
-{inputs, ...}: {
+{ inputs, ... }:
+{
   pure = true;
-  modules = [./config.nix];
-  specialArgs = {inherit inputs;};
+  modules = [ ./config.nix ];
+  specialArgs = { inherit inputs; };
 }

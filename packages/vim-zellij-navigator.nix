@@ -26,6 +26,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/hiasr/vim-zellij-navigator";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

@@ -2,11 +2,13 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.fd;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-in {
+in
+{
   options.my.fd = {
     enable = mkEnableOption "fd";
   };
@@ -14,7 +16,10 @@ in {
   config = mkIf cfg.enable {
     programs.fd = {
       enable = true;
-      ignores = [".git/" ".direnv/"];
+      ignores = [
+        ".git/"
+        ".direnv/"
+      ];
       hidden = true;
     };
   };

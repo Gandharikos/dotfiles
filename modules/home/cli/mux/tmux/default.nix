@@ -3,23 +3,25 @@
   lib,
   config,
   ...
-}: let
-  shellAliases = {"t" = "tmux";};
+}:
+let
+  shellAliases = {
+    "t" = "tmux";
+  };
   cfg = config.my.tmux;
   autoStart = config.my.mux.autoStart && config.my.mux.default == "tmux";
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkBefore;
   inherit (lib.meta) getExe;
   shell = getExe (builtins.getAttr config.my.shell pkgs);
-in {
+in
+{
   imports = lib.my.scanPaths ./.;
 
   options.my.tmux = {
-    enable =
-      mkEnableOption "tmux"
-      // {
-        default = config.my.mux.default == "tmux";
-      };
+    enable = mkEnableOption "tmux" // {
+      default = config.my.mux.default == "tmux";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -41,13 +43,12 @@ in {
           end
         '';
       };
-      zsh = let
-        # see: https://github.com/catppuccin/nix/pull/543/files
-        key =
-          if builtins.hasAttr "initContent" config.programs.zsh
-          then "initContent"
-          else "initExtraFirst";
-      in
+      zsh =
+        let
+          # see: https://github.com/catppuccin/nix/pull/543/files
+          key =
+            if builtins.hasAttr "initContent" config.programs.zsh then "initContent" else "initExtraFirst";
+        in
         mkIf autoStart {
           "${key}" = mkBefore ''
             if [[ -z "$TMUX" ]] \

@@ -2,12 +2,14 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 
   cfg = config.my.jjui;
-in {
+in
+{
   options.my.jjui = {
     enable = mkEnableOption "jjui";
   };

@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.typst;
-in {
+in
+{
   options.my.typst = {
     enable = mkEnableOption "typst";
   };

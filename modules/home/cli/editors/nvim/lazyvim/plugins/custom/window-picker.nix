@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.window-picker;
-in {
+in
+{
   options.my.neovim.lazyvim.window-picker = {
     enable = mkEnableOption "window picker";
   };
@@ -18,7 +20,7 @@ in {
         nvim-window-picker
       ];
 
-      config = ["ui/window-picker.lua"];
+      config = [ "ui/window-picker.lua" ];
     };
   };
 }

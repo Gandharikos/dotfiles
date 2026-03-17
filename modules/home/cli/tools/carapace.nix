@@ -2,12 +2,14 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 
   cfg = config.my.carapace;
-in {
+in
+{
   options.my.carapace = {
     enable = mkEnableOption "carapace";
   };

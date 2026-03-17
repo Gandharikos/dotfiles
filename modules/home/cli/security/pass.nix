@@ -3,13 +3,15 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   passwordStoreDir = "${config.xdg.dataHome}/password-store";
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkOption;
   inherit (lib.types) str;
   cfg = config.my.security;
-in {
+in
+{
   options.my.security.gpg = {
     encrytionKey = mkOption {
       type = str;
@@ -61,7 +63,11 @@ in {
       # https://github.com/browserpass/browserpass-extension
       browserpass = {
         enable = true;
-        browsers = ["chrome" "chromium" "firefox"];
+        browsers = [
+          "chrome"
+          "chromium"
+          "firefox"
+        ];
       };
     };
   };

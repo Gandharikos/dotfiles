@@ -2,20 +2,20 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (config.my) gui;
   inherit (config.my.gui) terminal;
   cfg = config.my.gui.apps.kitty;
   enable = gui.enable && cfg.enable;
-in {
+in
+{
   options.my.gui.apps.kitty = {
-    enable =
-      mkEnableOption "kitty"
-      // {
-        default = terminal.default == "kitty";
-      };
+    enable = mkEnableOption "kitty" // {
+      default = terminal.default == "kitty";
+    };
   };
 
   config = mkIf enable {
@@ -131,7 +131,7 @@ in {
         map --when-focus-on var:IS_NVIM ctrl+q
       '';
       # macOS specific settings
-      darwinLaunchOptions = ["--start-as=maximized"];
+      darwinLaunchOptions = [ "--start-as=maximized" ];
     };
   };
 }

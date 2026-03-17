@@ -3,10 +3,12 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (config.my.gui.login.sddm) enable;
-in {
+in
+{
   config = mkIf enable {
     services.displayManager.sddm = {
       enable = true;

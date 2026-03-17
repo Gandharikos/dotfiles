@@ -3,20 +3,20 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (config.my) gui;
   cfg = config.my.gui.apps.veracrypt;
   enable = gui.enable && cfg.enable;
-in {
+in
+{
   options.my.gui.apps.veracrypt = {
-    enable =
-      mkEnableOption "Veracrypt"
-      // {
-        default = isLinux;
-      };
+    enable = mkEnableOption "Veracrypt" // {
+      default = isLinux;
+    };
   };
 
   config = mkIf enable {

@@ -3,19 +3,19 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (config.my) gui;
   cfg = config.my.gui.apps.zotero;
   enable = gui.enable && cfg.enable;
-in {
+in
+{
   options.my.gui.apps.zotero = {
-    enable =
-      mkEnableOption "Zotero"
-      // {
-        default = false;
-      };
+    enable = mkEnableOption "Zotero" // {
+      default = false;
+    };
   };
 
   config = mkIf enable {

@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.meta) getExe';
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkOption;
@@ -11,12 +12,17 @@
   inherit (config.xdg.userDirs.extraConfig) SCREENSHOTS;
   wl-copy' = getExe' pkgs.wl-clipboard-rs "wl-copy";
   screenshotPath = config.my.gui.desktop.shot.path;
-in {
+in
+{
   imports = lib.my.scanPaths ./.;
 
   options.my.gui.desktop.shot = {
     default = mkOption {
-      type = enum ["hyprshot" "grimblast" "dms"];
+      type = enum [
+        "hyprshot"
+        "grimblast"
+        "dms"
+      ];
       default = "grimblast";
       description = "The screenshot tool to use.";
     };

@@ -2,7 +2,8 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   sudoCfg = config.my.security.sudo;
   inherit (lib.modules) mkDefault;
   pamInclude = ''
@@ -10,7 +11,8 @@
     account include login
     session include login
   '';
-in {
+in
+{
   security.pam = {
     # fix "too many files open" errors while writing a lot of data at once
     # (e.g. when building a large package)
@@ -30,37 +32,39 @@ in {
       }
     ];
 
-    services = let
-      ttyAudit = {
-        enable = true;
-        enablePattern = "*";
-      };
-      fprintAuth = config.services.fprintd.enable;
-      enableGnomeKeyring = mkDefault config.my.gui.enable;
-      gnupg = {
-        enable = true;
-        noAutostart = true;
-        storeOnly = true;
-      };
-      privilegeEscalationServices =
-        if sudoCfg.backend == "doas"
-        then {
-          doas = {
-            inherit ttyAudit;
-            setLoginUid = true;
-          };
-        }
-        else {
-          sudo = {
-            inherit ttyAudit;
-            setLoginUid = true;
-          };
-          sudo-i = {
-            inherit ttyAudit;
-            setLoginUid = true;
-          };
+    services =
+      let
+        ttyAudit = {
+          enable = true;
+          enablePattern = "*";
         };
-    in
+        fprintAuth = config.services.fprintd.enable;
+        enableGnomeKeyring = mkDefault config.my.gui.enable;
+        gnupg = {
+          enable = true;
+          noAutostart = true;
+          storeOnly = true;
+        };
+        privilegeEscalationServices =
+          if sudoCfg.backend == "doas" then
+            {
+              doas = {
+                inherit ttyAudit;
+                setLoginUid = true;
+              };
+            }
+          else
+            {
+              sudo = {
+                inherit ttyAudit;
+                setLoginUid = true;
+              };
+              sudo-i = {
+                inherit ttyAudit;
+                setLoginUid = true;
+              };
+            };
+      in
       {
         # Allow screen lockers such as Swaylock or gtklock) to also unlock the screen.
         swaylock.text = pamInclude;

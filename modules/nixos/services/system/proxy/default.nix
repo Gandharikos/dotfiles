@@ -2,9 +2,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.my) scanPaths;
-in {
+in
+{
   imports = scanPaths ./.;
 
   options.my.services.proxy = {

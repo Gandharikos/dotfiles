@@ -6,18 +6,20 @@
   config,
   osConfig,
   ...
-}: let
+}:
+let
   inherit (config.my) name;
   inherit (osConfig.networking) hostName;
-in {
+in
+{
   config = {
     programs.opencode.settings.lsp = {
       nixd = {
-        command = [(lib.getExe pkgs.nixd)];
-        extensions = [".nix"];
+        command = [ (lib.getExe pkgs.nixd) ];
+        extensions = [ ".nix" ];
         initialization = {
           formatting = {
-            command = [(lib.getExe pkgs.nixfmt)];
+            command = [ (lib.getExe pkgs.nixfmt) ];
           };
           options = {
             nixos = {
@@ -31,8 +33,8 @@ in {
       };
 
       emmylua-ls = {
-        command = [(lib.getExe pkgs.emmylua-ls)];
-        extensions = [".lua"];
+        command = [ (lib.getExe pkgs.emmylua-ls) ];
+        extensions = [ ".lua" ];
         initialization = {
           Lua = {
             diagnostics = {
@@ -53,7 +55,7 @@ in {
       };
 
       pyright = {
-        command = [(lib.getExe pkgs.pyright)];
+        command = [ (lib.getExe pkgs.pyright) ];
         extensions = [
           ".py"
           ".pyi"
@@ -72,7 +74,7 @@ in {
       };
 
       clangd = {
-        command = [(lib.getExe' pkgs.clang-tools "clangd")];
+        command = [ (lib.getExe' pkgs.clang-tools "clangd") ];
         extensions = [
           ".c"
           ".cpp"
@@ -105,7 +107,7 @@ in {
       };
 
       gopls = {
-        command = [(lib.getExe pkgs.gopls)];
+        command = [ (lib.getExe pkgs.gopls) ];
         extensions = [
           ".go"
           ".mod"
@@ -114,12 +116,12 @@ in {
       };
 
       rust-analyzer = {
-        command = [(lib.getExe pkgs.rust-analyzer)];
-        extensions = [".rs"];
+        command = [ (lib.getExe pkgs.rust-analyzer) ];
+        extensions = [ ".rs" ];
       };
 
       csharp = {
-        command = [(lib.getExe pkgs.roslyn-ls)];
+        command = [ (lib.getExe pkgs.roslyn-ls) ];
         extensions = [
           ".cs"
           ".csx"
@@ -155,7 +157,7 @@ in {
           "lsp"
           "stdio"
         ];
-        extensions = [".toml"];
+        extensions = [ ".toml" ];
       };
     };
   };

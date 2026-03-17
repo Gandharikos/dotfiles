@@ -3,15 +3,17 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) elem;
   inherit (config.my.gui.desktop.hyprland) plugins;
   enable = plugins.enable && elem "hyprbars" plugins.list;
-in {
+in
+{
   config = mkIf enable {
     wayland.windowManager.hyprland = {
-      plugins = with pkgs.hyprlandPlugins; [hyprbars];
+      plugins = with pkgs.hyprlandPlugins; [ hyprbars ];
       settings.plugin.hyprbars = {
         bar_height = 20;
         bar_precedence_over_border = true;

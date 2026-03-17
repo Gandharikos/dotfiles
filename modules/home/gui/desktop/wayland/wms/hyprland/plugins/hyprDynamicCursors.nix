@@ -3,15 +3,17 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) elem;
   inherit (config.my.gui.desktop.hyprland) plugins;
   enable = plugins.enable && elem "hypr-dynamic-cursors" plugins.list;
-in {
+in
+{
   config = mkIf enable {
     wayland.windowManager.hyprland = {
-      plugins = with pkgs.hyprlandPlugins; [hypr-dynamic-cursors];
+      plugins = with pkgs.hyprlandPlugins; [ hypr-dynamic-cursors ];
       settings.plugin.dynamic-cursors = {
         enabled = true;
         mode = "stretch";

@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.inc-rename;
-in {
+in
+{
   options.my.neovim.lazyvim.inc-rename = {
     enable = mkEnableOption "Incremental LSP renaming based on Neovim's command-preview feature";
   };
@@ -18,7 +20,7 @@ in {
         inc-rename-nvim
       ];
 
-      imports = ["lazyvim.plugins.extras.editor.inc-rename"];
+      imports = [ "lazyvim.plugins.extras.editor.inc-rename" ];
     };
   };
 }

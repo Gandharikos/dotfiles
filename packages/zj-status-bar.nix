@@ -26,6 +26,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/cristiand391/zj-status-bar";
     license = licenses.mit;
     platforms = platforms.all;
-    maintainers = [];
+    maintainers = [ ];
   };
 }

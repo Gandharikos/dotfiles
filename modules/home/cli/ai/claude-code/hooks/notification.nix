@@ -1,9 +1,13 @@
-{pkgs, ...}: let
-  notify = title: message:
-    if pkgs.stdenv.hostPlatform.isDarwin
-    then ''osascript -e 'display notification "${message}" with title "${title}"' ''
-    else ''notify-send '${title}' '${message}' '';
-in {
+{ pkgs, ... }:
+let
+  notify =
+    title: message:
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      ''osascript -e 'display notification "${message}" with title "${title}"' ''
+    else
+      "notify-send '${title}' '${message}' ";
+in
+{
   Notification = [
     {
       matcher = "";

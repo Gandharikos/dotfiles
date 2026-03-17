@@ -3,22 +3,22 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (config.my) gui;
   cfg = config.my.gui.apps.warp;
   enable = gui.enable && cfg.enable;
-in {
+in
+{
   options.my.gui.apps.warp = {
-    enable =
-      mkEnableOption "warp"
-      // {
-        default = config.my.gui.terminal.default == "warp";
-      };
+    enable = mkEnableOption "warp" // {
+      default = config.my.gui.terminal.default == "warp";
+    };
   };
 
   config = mkIf enable {
-    home.packages = with pkgs; [warp-terminal];
+    home.packages = with pkgs; [ warp-terminal ];
   };
 }

@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.octo;
-in {
+in
+{
   options.my.neovim.lazyvim.octo = {
     enable = mkEnableOption "octo";
   };
@@ -18,7 +20,7 @@ in {
         octo-nvim
       ];
 
-      imports = ["lazyvim.plugins.extras.util.octo"];
+      imports = [ "lazyvim.plugins.extras.util.octo" ];
     };
   };
 }

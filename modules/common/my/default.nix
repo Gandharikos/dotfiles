@@ -3,12 +3,14 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (lib.my) scanPaths;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.types) enum str singleLineStr;
-in {
+in
+{
   imports = scanPaths ./.;
 
   options.my = {
@@ -29,7 +31,12 @@ in {
     };
     # TODO: need config nushell
     shell = mkOption {
-      type = enum ["bash" "fish" "zsh" "nushell"];
+      type = enum [
+        "bash"
+        "fish"
+        "zsh"
+        "nushell"
+      ];
       default = "fish";
       description = "The shell to use";
     };
@@ -43,20 +50,17 @@ in {
     home = mkOption {
       internal = true;
       type = str;
-      default = let
-        user = config.my.name;
-      in
-        if isLinux
-        then "/home/${user}"
-        else "/Users/${user}";
+      default =
+        let
+          user = config.my.name;
+        in
+        if isLinux then "/home/${user}" else "/Users/${user}";
       description = "The user home directory";
     };
     security = {
-      enable =
-        mkEnableOption "Security"
-        // {
-          default = true;
-        };
+      enable = mkEnableOption "Security" // {
+        default = true;
+      };
     };
     stateVersion = mkOption {
       internal = true;

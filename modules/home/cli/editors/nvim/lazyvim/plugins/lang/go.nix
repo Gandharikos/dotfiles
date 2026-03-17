@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim.lazyvim.go;
-in {
+in
+{
   options.my.neovim.lazyvim.go = {
     enable = mkEnableOption "language go";
   };
@@ -19,7 +21,7 @@ in {
         neotest-golang
       ];
 
-      imports = ["lazyvim.plugins.extras.lang.go"];
+      imports = [ "lazyvim.plugins.extras.lang.go" ];
 
       extraPackages = with pkgs; [
         delve

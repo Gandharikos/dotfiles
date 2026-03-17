@@ -3,7 +3,8 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.services.proxy;
   inherit (lib.modules) mkIf;
 
@@ -17,7 +18,13 @@
     fi
 
     # Add necessary commands to PATH
-    export PATH=${lib.makeBinPath [pkgs.networkmanager pkgs.systemd pkgs.util-linux]}
+    export PATH=${
+      lib.makeBinPath [
+        pkgs.networkmanager
+        pkgs.systemd
+        pkgs.util-linux
+      ]
+    }
 
     # Get runtime info
     # Note: SSID will be empty if connected via Ethernet.
@@ -34,7 +41,8 @@
       systemctl stop mihomo.service dae.service || true
     fi
   '';
-in {
+in
+{
   # This configuration block is only active if proxies are enabled at build-time
   # (which defaults to true only if timezone is Asia/Shanghai).
   config = mkIf (cfg.enable && config.networking.networkmanager.enable) {
