@@ -1,5 +1,6 @@
 {
   lib,
+  config,
   pkgs,
   ...
 }:
@@ -8,6 +9,7 @@ let
   inherit (lib.options) mkOption;
   inherit (lib.types) int str;
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
+  inherit (config.my.gui) desktop;
 in
 {
   imports = scanPaths ./.;
@@ -22,10 +24,19 @@ in
     };
     mod = mkOption {
       type = str;
-      default = if isDarwin then "cmd-alt-ctrl" else "SUPER";
+      default =
+        if isDarwin then
+          "cmd-alt-ctrl"
+        else if desktop.default == "niri" then
+          "Mod"
+        else
+          "SUPER";
+      internal = true;
+      readOnly = true;
       description = ''
         Main modifier key for desktop keybinds.
-        - Linux: SUPER (Windows/Super key), CTRL, or ALT
+        - Linux/Niri: Mod
+        - Linux/other: SUPER
         - macOS: cmd-alt-ctrl (Hyper key combination)
       '';
     };
