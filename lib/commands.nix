@@ -23,9 +23,9 @@ let
       uwsm'
       "app"
       "--"
-      exe
+      (toString exe)
     ]
-    ++ args;
+    ++ map toString args;
 
   uwsmApp =
     pkgs: exe: args:
