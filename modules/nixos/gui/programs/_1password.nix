@@ -7,10 +7,10 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (config.my) name;
-  cfg = config.my.gui.system._1password;
+  cfg = config.my.gui._1password;
 in
 {
-  options.my.gui.system._1password = {
+  options.my.gui._1password = {
     enable = mkEnableOption "1Password" // {
       default = config.my.gui.enable;
     };

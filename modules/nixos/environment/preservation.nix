@@ -199,9 +199,17 @@ in
             ".config/vlc"
           ];
         })
-        (mkIf config.my.gui.system._1password.enable {
+        (mkIf config.my.gui._1password.enable {
           directories = [
             ".config/1Password"
+          ];
+        })
+        (mkIf config.my.gui.fcitx5.enable {
+          directories = [
+            ".config/fcitx"
+            ".config/fcitx5"
+            ".local/share/fcitx5"
+            ".cache/fcitx5"
           ];
         })
         (mkIf hm.atuin.enable {

@@ -8,10 +8,10 @@ let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkDefault;
   waylandEnabled = config.my.gui.desktop.wayland.enable;
-  cfg = config.my.gui.system.fcitx5;
+  cfg = config.my.gui.fcitx5;
 in
 {
-  options.my.gui.system.fcitx5 = {
+  options.my.gui.fcitx5 = {
     enable = mkEnableOption "Enable fcitx5 input method" // {
       default = config.my.gui.enable;
     };
