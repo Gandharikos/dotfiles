@@ -26,7 +26,7 @@ in
       ];
       default =
         if desktop.shell.default == "dank-material-shell" then
-          if desktop.default == "hyprland" then "hyprshot" else "dank-material-shell"
+          "dank-material-shell"
         else if desktop.shell.default == "noctalia-shell" then
           if desktop.default == "hyprland" then "hyprshot" else "grimblast"
         else
