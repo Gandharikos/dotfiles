@@ -45,7 +45,7 @@ let
     ++ args;
   noctalia = args: escapeShellArgs (noctaliaArgs args);
 
-  inherit (desktop) mod;
+  inherit (desktop) modKey;
 in
 {
   imports = [
@@ -333,43 +333,43 @@ in
         in
         with keys;
         {
-          "${mod}+Space" = spawn [
+          "${modKey}+Space" = spawn [
             "launcher"
             "toggle"
           ];
-          "${mod}+V" = spawn [
+          "${modKey}+V" = spawn [
             "launcher"
             "clipboard"
           ];
-          "${mod}+W" = spawn [
+          "${modKey}+W" = spawn [
             "launcher"
             "windows"
           ];
-          "${mod}+Escape" = spawn [
+          "${modKey}+Escape" = spawn [
             "systemMonitor"
             "toggle"
           ];
-          "${mod}+X" = spawn [
+          "${modKey}+X" = spawn [
             "sessionMenu"
             "toggle"
           ];
-          "${mod}+Ctrl+C" = spawn [
+          "${modKey}+Ctrl+C" = spawn [
             "controlCenter"
             "toggle"
           ];
-          "${mod}+Shift+D" = spawn [
+          "${modKey}+Shift+D" = spawn [
             "notifications"
             "toggleDND"
           ];
-          "${mod}+Shift+T" = spawn [
+          "${modKey}+Shift+T" = spawn [
             "darkMode"
             "toggle"
           ];
-          "${mod}+Shift+${N}" = spawn [
+          "${modKey}+Shift+${N}" = spawn [
             "nightLight"
             "toggle"
           ];
-          "${mod}+${I}" = spawn [
+          "${modKey}+${I}" = spawn [
             "idleInhibitor"
             "toggle"
           ];
@@ -377,13 +377,13 @@ in
             "settings"
             "toggle"
           ];
-          "${mod}+Apostrophe" = spawn [
+          "${modKey}+Apostrophe" = spawn [
             "notifications"
             "toggleHistory"
           ];
         }
         // {
-          "${mod}+Alt+L".action.spawn = noctaliaArgs [
+          "${modKey}+Alt+L".action.spawn = noctaliaArgs [
             "lockScreen"
             "lock"
           ];

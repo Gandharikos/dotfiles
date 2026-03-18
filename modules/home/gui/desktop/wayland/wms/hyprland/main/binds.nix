@@ -18,7 +18,7 @@ let
     ;
   cfg = desktop.hyprland;
   num = desktop.workspace.number;
-  inherit (desktop) mod;
+  inherit (desktop) modKey;
   hyprsplit_enabled = cfg.plugins.enable && elem "hyprsplit" cfg.plugins.list;
   playerctl' = getExe pkgs.playerctl;
   wpctl' = getExe' pkgs.wireplumber "wpctl";
@@ -38,7 +38,7 @@ with config.my.keyboard.keys;
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland = {
       settings = {
-        "$mod" = mod;
+        "$mod" = modKey;
         # keybindings
         bindd = [
           # command

@@ -41,7 +41,7 @@ let
     else
       "${dmsCmdStr} ipc call ${args}";
 
-  inherit (desktop) mod;
+  inherit (desktop) modKey;
 in
 {
   imports = [
@@ -233,43 +233,43 @@ in
         in
         with keys;
         {
-          "${mod}+Space" = spawn [
+          "${modKey}+Space" = spawn [
             "spotlight"
             "toggle"
           ];
-          "${mod}+V" = spawn [
+          "${modKey}+V" = spawn [
             "clipboard"
             "toggle"
           ];
-          "${mod}+Escape" = spawn [
+          "${modKey}+Escape" = spawn [
             "processlist"
             "toggle"
           ];
-          "${mod}+X" = spawn [
+          "${modKey}+X" = spawn [
             "powermenu"
             "toggle"
           ];
-          "${mod}+Ctrl+C" = spawn [
+          "${modKey}+Ctrl+C" = spawn [
             "control-center"
             "toggle"
           ];
-          "${mod}+${N}" = spawn [
+          "${modKey}+${N}" = spawn [
             "notepad"
             "toggle"
           ];
-          "${mod}+Shift+D" = spawn [
+          "${modKey}+Shift+D" = spawn [
             "notifications"
             "toggleDoNotDisturb"
           ];
-          "${mod}+Shift+T" = spawn [
+          "${modKey}+Shift+T" = spawn [
             "theme"
             "toggle"
           ];
-          "${mod}+Shift+${N}" = spawn [
+          "${modKey}+Shift+${N}" = spawn [
             "night"
             "toggle"
           ];
-          "${mod}+${I}" = spawn [
+          "${modKey}+${I}" = spawn [
             "inhibit"
             "toggle"
           ];
@@ -277,13 +277,13 @@ in
             "settings"
             "toggle"
           ];
-          "${mod}+Apostrophe" = spawn [
+          "${modKey}+Apostrophe" = spawn [
             "notifications"
             "toggle"
           ];
         }
         // {
-          "${mod}+Alt+L".action.spawn = dms' [
+          "${modKey}+Alt+L".action.spawn = dms' [
             "lock"
             "toggle"
           ];

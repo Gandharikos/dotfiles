@@ -10,8 +10,8 @@ let
   cfg = gui.desktop;
   inherit (cfg.workspace) number;
 
-  # Use mod directly from config
-  inherit (cfg) mod; # Use as-is for "cmd-alt-ctrl" or other combinations
+  # Use modKey directly from config
+  inherit (cfg) modKey; # Use as-is for "cmd-alt-ctrl" or other combinations
 in
 with config.my.keyboard.keys;
 {
@@ -89,81 +89,81 @@ with config.my.keyboard.keys;
           main = {
             binding = {
               # See: https://nikitabobko.github.io/AeroSpace/commands#layout
-              "${mod}-space" = "layout tiles horizontal vertical";
-              "${mod}-shift-space" = "layout accordion horizontal vertical";
+              "${modKey}-space" = "layout tiles horizontal vertical";
+              "${modKey}-shift-space" = "layout accordion horizontal vertical";
 
               # See: https://nikitabobko.github.io/AeroSpace/commands#focus
-              "${mod}-${h}" = "focus left";
-              "${mod}-${j}" = "focus down";
-              "${mod}-${k}" = "focus up";
-              "${mod}-${l}" = "focus right";
+              "${modKey}-${h}" = "focus left";
+              "${modKey}-${j}" = "focus down";
+              "${modKey}-${k}" = "focus up";
+              "${modKey}-${l}" = "focus right";
 
               # See: https://nikitabobko.github.io/AeroSpace/commands#move
-              "${mod}-shift-${h}" = "move left";
-              "${mod}-shift-${j}" = "move down";
-              "${mod}-shift-${k}" = "move up";
-              "${mod}-shift-${l}" = "move right";
+              "${modKey}-shift-${h}" = "move left";
+              "${modKey}-shift-${j}" = "move down";
+              "${modKey}-shift-${k}" = "move up";
+              "${modKey}-shift-${l}" = "move right";
 
               # See: https://nikitabobko.github.io/AeroSpace/commands#resize
-              "${mod}-shift-minus" = "resize smart -50";
-              "${mod}-shift-equal" = "resize smart +50";
+              "${modKey}-shift-minus" = "resize smart -50";
+              "${modKey}-shift-equal" = "resize smart +50";
 
               # fullscreen
-              "${mod}-f" = "fullscreen";
+              "${modKey}-f" = "fullscreen";
               # switch layout between tiling and floating
-              "${mod}-shift-f" = "layout floating tiling";
+              "${modKey}-shift-f" = "layout floating tiling";
 
               # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-              # "${mod}-1" = "workspace 1";
-              # "${mod}-2" = "workspace 2";
-              # "${mod}-3" = "workspace 3";
-              # "${mod}-4" = "workspace 4";
-              # "${mod}-5" = "workspace 5";
-              # "${mod}-6" = "workspace 6";
-              # "${mod}-7" = "workspace 7";
-              # "${mod}-8" = "workspace 8";
-              # "${mod}-9" = "workspace 9";
-              # "${mod}-0" = "workspace 0";
+              # "${modKey}-1" = "workspace 1";
+              # "${modKey}-2" = "workspace 2";
+              # "${modKey}-3" = "workspace 3";
+              # "${modKey}-4" = "workspace 4";
+              # "${modKey}-5" = "workspace 5";
+              # "${modKey}-6" = "workspace 6";
+              # "${modKey}-7" = "workspace 7";
+              # "${modKey}-8" = "workspace 8";
+              # "${modKey}-9" = "workspace 9";
+              # "${modKey}-0" = "workspace 0";
 
               # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
-              # "${mod}-shift-1" = "move-node-to-workspace 1";
-              # "${mod}-shift-2" = "move-node-to-workspace 2";
-              # "${mod}-shift-3" = "move-node-to-workspace 3";
-              # "${mod}-shift-4" = "move-node-to-workspace 4";
-              # "${mod}-shift-5" = "move-node-to-workspace 5";
-              # "${mod}-shift-6" = "move-node-to-workspace 6";
-              # "${mod}-shift-7" = "move-node-to-workspace 7";
-              # "${mod}-shift-8" = "move-node-to-workspace 8";
-              # "${mod}-shift-9" = "move-node-to-workspace 9";
-              # "${mod}-shift-0" = "move-node-to-workspace 0";
+              # "${modKey}-shift-1" = "move-node-to-workspace 1";
+              # "${modKey}-shift-2" = "move-node-to-workspace 2";
+              # "${modKey}-shift-3" = "move-node-to-workspace 3";
+              # "${modKey}-shift-4" = "move-node-to-workspace 4";
+              # "${modKey}-shift-5" = "move-node-to-workspace 5";
+              # "${modKey}-shift-6" = "move-node-to-workspace 6";
+              # "${modKey}-shift-7" = "move-node-to-workspace 7";
+              # "${modKey}-shift-8" = "move-node-to-workspace 8";
+              # "${modKey}-shift-9" = "move-node-to-workspace 9";
+              # "${modKey}-shift-0" = "move-node-to-workspace 0";
 
               # Custom shortcuts
-              "${mod}-enter" = "exec-and-forget open -n /applications/ghostty.app";
+              "${modKey}-enter" = "exec-and-forget open -n /applications/ghostty.app";
 
               # cmd-b = 'exec-and-forget open -n /Applications/Arc.app'
-              "${mod}-b" = "exec-and-forget open -a \"zen browser\"";
+              "${modKey}-b" = "exec-and-forget open -a \"zen browser\"";
 
               # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
-              "${mod}-tab" = "workspace-back-and-forth";
+              "${modKey}-tab" = "workspace-back-and-forth";
               # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
-              "${mod}-shift-tab" = "move-workspace-to-monitor --wrap-around next";
+              "${modKey}-shift-tab" = "move-workspace-to-monitor --wrap-around next";
 
-              "${mod}-leftSquareBracket" = "workspace prev";
-              "${mod}-rightSquareBracket" = "workspace next";
-              "${mod}-shift-leftSquareBracket" = "move-node-to-workspace prev";
-              "${mod}-shift-rightSquareBracket" = "move-node-to-workspace next";
+              "${modKey}-leftSquareBracket" = "workspace prev";
+              "${modKey}-rightSquareBracket" = "workspace next";
+              "${modKey}-shift-leftSquareBracket" = "move-node-to-workspace prev";
+              "${modKey}-shift-rightSquareBracket" = "move-node-to-workspace next";
 
-              "${mod}-comma" = "focus-monitor left";
-              "${mod}-period" = "focus-monitor right";
+              "${modKey}-comma" = "focus-monitor left";
+              "${modKey}-period" = "focus-monitor right";
 
-              "${mod}-shift-comma" = "move-node-to-monitor left";
-              "${mod}-shift-period" = "move-node-to-monitor right";
+              "${modKey}-shift-comma" = "move-node-to-monitor left";
+              "${modKey}-shift-period" = "move-node-to-monitor right";
               # See: https://nikitabobko.github.io/AeroSpace/commands#mode
-              "${mod}-esc" = "mode service";
+              "${modKey}-esc" = "mode service";
 
-              "${mod}-r" = "mode resize";
+              "${modKey}-r" = "mode resize";
 
-              "${mod}-shift-r" = "reload-config";
+              "${modKey}-shift-r" = "reload-config";
             }
             // (mkAerospaceWorkspaces hyper number);
           };

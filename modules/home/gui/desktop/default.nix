@@ -22,7 +22,7 @@ in
         description = "Number of workspaces";
       };
     };
-    mod = mkOption {
+    modKey = mkOption {
       type = str;
       default =
         if isDarwin then
