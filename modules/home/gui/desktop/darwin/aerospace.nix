@@ -165,7 +165,7 @@ with config.my.keyboard.keys;
 
               "${modKey}-shift-r" = "reload-config";
             }
-            // (mkAerospaceWorkspaces hyper number);
+            // (mkAerospaceWorkspaces modKey number);
           };
           resize = {
             binding = {
