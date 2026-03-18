@@ -136,7 +136,7 @@ in
     bind ${N} previous-layout
 
     # copy-mode-vi
-    bind Space copy-mode
+    bind Escape copy-mode
     bind -T copy-mode-vi v send-keys -X begin-selection
     bind -T copy-mode-vi ${h} send-keys -X cursor-left
     bind -T copy-mode-vi ${l} send-keys -X cursor-right

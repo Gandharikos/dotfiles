@@ -330,6 +330,7 @@ in
         (mkIf hm.tmux.enable {
           directories = [
             ".tmux"
+            ".local/share/tmux"
           ];
         })
         (mkIf hm.yazi.enable {

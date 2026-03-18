@@ -6,6 +6,7 @@
 }:
 let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
+  inherit (lib.strings) optionalString;
   isColemak = config.my.keyboard.layout == "colemak";
 
   clipboardCmd = if isDarwin then "pbcopy" else "${pkgs.wl-clipboard}/bin/wl-copy";
@@ -25,7 +26,12 @@ in
       plugin = resurrect;
       extraConfig = ''
         set -g @resurrect-capture-pane-contents 'on'
+        set -g @resurrect-strategy-vim 'session'
         set -g @resurrect-strategy-nvim 'session'
+        set -g @resurrect-processes 'vi vim nvim nvim-ruby cat less more tail watch'
+        set -g @resurrect-dir ~/.local/share/tmux/resurrect
+        # Borrowed from: https://github.com/tmux-plugins/tmux-resurrect/issues/247#issuecomment-2387643976
+        set -g @resurrect-hook-post-save-all "sed -i 's| --cmd .*-vim-pack-dir||g; s|/etc/profiles/per-user/$USER/bin/||g; s|/nix/store/.*/bin/||g' $(readlink -f ~/.local/share/tmux/resurrect)"
       '';
     }
     {
@@ -39,19 +45,20 @@ in
     {
       plugin = tmux-thumbs;
       extraConfig = ''
+        # plugin setup
         set -g @thumbs-key 'Enter'
-        ${lib.optionalString isColemak "set -g @thumbs-alphabet colemak-homerow"}
+        ${optionalString isColemak "set -g @thumbs-alphabet colemak-homerow"}
         set -g @thumbs-command 'echo -n {} | ${clipboardCmd} && tmux display-message "Copied to clipboard: {}"'
       '';
     }
+    {
+      plugin = tmux-which-key;
+      extraConfig = ''
+        set -g @tmux-which-key-xdg-enable 1;
+        set -g @tmux-which-key-disable-autobuild 1
+      '';
+    }
     yank
-    # {
-    #   plugin = open;
-    #   extraConfig = ''
-    #     set -g @open 'x'
-    #     set -g @open-editor 'X'
-    #   '';
-    # }
     {
       plugin = tmux-fzf;
       extraConfig = ''
