@@ -31,7 +31,7 @@ in
     };
     timeout = mkOption {
       type = int;
-      default = 600;
+      default = 100;
       description = "Base idle timeout in seconds.";
     };
     keyboardBacklight = {
