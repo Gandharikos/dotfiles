@@ -1,4 +1,15 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+let
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+  isColemak = config.my.keyboard.layout == "colemak";
+
+  clipboardCmd = if isDarwin then "pbcopy" else "${pkgs.wl-clipboard}/bin/wl-copy";
+in
 {
   programs.tmux.plugins = with pkgs.tmuxPlugins; [
     # theme
@@ -26,8 +37,12 @@
       '';
     }
     {
-      plugin = jump;
-      extraConfig = "set -g @jump-key 'g'";
+      plugin = tmux-thumbs;
+      extraConfig = ''
+        set -g @thumbs-key 'Enter'
+        ${lib.optionalString isColemak "set -g @thumbs-alphabet colemak-homerow"}
+        set -g @thumbs-command 'echo -n {} | ${clipboardCmd} && tmux display-message "Copied to clipboard: {}"'
+      '';
     }
     yank
     # {
