@@ -73,7 +73,7 @@ let
         "lockScreen"
         "lock"
       ]
-    else if desktop.shell.default == "dms" then
+    else if desktop.shell.default == "dank-material-shell" then
       app dms [
         "ipc"
         "call"

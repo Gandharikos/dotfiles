@@ -7,14 +7,13 @@
 }:
 let
   inherit (lib.modules) mkIf mkForce;
-  inherit (lib.attrsets) optionalAttrs;
   inherit (lib.lists) optionals;
   inherit (lib.meta) getExe';
   inherit (config.my.gui) desktop;
   inherit (config.my.theme) wallpaper;
   inherit (config.my.keyboard) keys;
 
-  enable = desktop.wayland.enable && desktop.shell.default == "dms";
+  enable = desktop.wayland.enable && desktop.shell.default == "dank-material-shell";
 
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
   uwsm = getExe' pkgs.uwsm "uwsm";
@@ -42,13 +41,7 @@ let
     else
       "${dmsCmdStr} ipc call ${args}";
 
-  modKey =
-    if desktop.mod == "SUPER" then
-      "Mod"
-    else if desktop.mod == "CTRL" then
-      "Ctrl"
-    else
-      "Alt";
+  inherit (desktop) mod;
 in
 {
   imports = [
@@ -57,7 +50,6 @@ in
   config = mkIf enable {
     programs.dank-material-shell = {
       enable = true;
-
       systemd = {
         enable = true;
         restartIfChanged = true;
@@ -156,24 +148,6 @@ in
       binds =
         let
           spawn = args: { action.spawn = dms' args; };
-          screenshotBinds = optionalAttrs (desktop.shot.default == "dms") {
-            "Print" = spawn [
-              "niri"
-              "screenshot"
-            ];
-            "Shift+Print" = spawn [
-              "niri"
-              "screenshotWindow"
-            ];
-            "Ctrl+Print" = spawn [
-              "niri"
-              "screenshotScreen"
-            ];
-            "${modKey}+Print" = spawn [
-              "niri"
-              "screenshot"
-            ];
-          };
           xf86Binds = {
             "XF86AudioPlay" = {
               allow-when-locked = true;
@@ -259,43 +233,43 @@ in
         in
         with keys;
         {
-          "${modKey}+Space" = spawn [
+          "${mod}+Space" = spawn [
             "spotlight"
             "toggle"
           ];
-          "${modKey}+V" = spawn [
+          "${mod}+V" = spawn [
             "clipboard"
             "toggle"
           ];
-          "${modKey}+Escape" = spawn [
+          "${mod}+Escape" = spawn [
             "processlist"
             "toggle"
           ];
-          "${modKey}+X" = spawn [
+          "${mod}+X" = spawn [
             "powermenu"
             "toggle"
           ];
-          "${modKey}+Ctrl+C" = spawn [
+          "${mod}+Ctrl+C" = spawn [
             "control-center"
             "toggle"
           ];
-          "${modKey}+${N}" = spawn [
+          "${mod}+${N}" = spawn [
             "notepad"
             "toggle"
           ];
-          "${modKey}+Shift+D" = spawn [
+          "${mod}+Shift+D" = spawn [
             "notifications"
             "toggleDoNotDisturb"
           ];
-          "${modKey}+Shift+T" = spawn [
+          "${mod}+Shift+T" = spawn [
             "theme"
             "toggle"
           ];
-          "${modKey}+Shift+${N}" = spawn [
+          "${mod}+Shift+${N}" = spawn [
             "night"
             "toggle"
           ];
-          "${modKey}+${I}" = spawn [
+          "${mod}+${I}" = spawn [
             "inhibit"
             "toggle"
           ];
@@ -303,18 +277,17 @@ in
             "settings"
             "toggle"
           ];
-          "${modKey}+Apostrophe" = spawn [
+          "${mod}+Apostrophe" = spawn [
             "notifications"
             "toggle"
           ];
         }
         // {
-          "${modKey}+Alt+L".action.spawn = dms' [
+          "${mod}+Alt+L".action.spawn = dms' [
             "lock"
             "toggle"
           ];
         }
-        // screenshotBinds
         // xf86Binds;
     };
   };

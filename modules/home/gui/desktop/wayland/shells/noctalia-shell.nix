@@ -45,13 +45,7 @@ let
     ++ args;
   noctalia = args: escapeShellArgs (noctaliaArgs args);
 
-  modKey =
-    if desktop.mod == "SUPER" then
-      "Mod"
-    else if desktop.mod == "CTRL" then
-      "Ctrl"
-    else
-      "Alt";
+  inherit (desktop) mod;
 in
 {
   imports = [
@@ -67,12 +61,21 @@ in
       };
 
       settings = {
+        bar = {
+          density = "compact";
+        };
         general = {
           showChangelogOnStartup = false;
           telemetryEnabled = false;
         }
         // optionalAttrs (avatar != null) {
           avatarImage = toString avatar;
+          radiusRatio = 0.2;
+        };
+
+        location = {
+          name = "Shanghai";
+          monthBeforeDay = true;
         };
 
         appLauncher = {
@@ -330,43 +333,43 @@ in
         in
         with keys;
         {
-          "${modKey}+Space" = spawn [
+          "${mod}+Space" = spawn [
             "launcher"
             "toggle"
           ];
-          "${modKey}+V" = spawn [
+          "${mod}+V" = spawn [
             "launcher"
             "clipboard"
           ];
-          "${modKey}+W" = spawn [
+          "${mod}+W" = spawn [
             "launcher"
             "windows"
           ];
-          "${modKey}+Escape" = spawn [
+          "${mod}+Escape" = spawn [
             "systemMonitor"
             "toggle"
           ];
-          "${modKey}+X" = spawn [
+          "${mod}+X" = spawn [
             "sessionMenu"
             "toggle"
           ];
-          "${modKey}+Ctrl+C" = spawn [
+          "${mod}+Ctrl+C" = spawn [
             "controlCenter"
             "toggle"
           ];
-          "${modKey}+Shift+D" = spawn [
+          "${mod}+Shift+D" = spawn [
             "notifications"
             "toggleDND"
           ];
-          "${modKey}+Shift+T" = spawn [
+          "${mod}+Shift+T" = spawn [
             "darkMode"
             "toggle"
           ];
-          "${modKey}+Shift+${N}" = spawn [
+          "${mod}+Shift+${N}" = spawn [
             "nightLight"
             "toggle"
           ];
-          "${modKey}+${I}" = spawn [
+          "${mod}+${I}" = spawn [
             "idleInhibitor"
             "toggle"
           ];
@@ -374,13 +377,13 @@ in
             "settings"
             "toggle"
           ];
-          "${modKey}+Apostrophe" = spawn [
+          "${mod}+Apostrophe" = spawn [
             "notifications"
             "toggleHistory"
           ];
         }
         // {
-          "${modKey}+Alt+L".action.spawn = noctaliaArgs [
+          "${mod}+Alt+L".action.spawn = noctaliaArgs [
             "lockScreen"
             "lock"
           ];

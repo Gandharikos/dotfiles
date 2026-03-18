@@ -10,10 +10,10 @@ in
   options.my.gui.desktop.shell = {
     default = mkOption {
       type = nullOr (enum [
-        "dms"
+        "dank-material-shell"
         "noctalia-shell"
       ]);
-      default = "dms";
+      default = "dank-material-shell";
       description = "The desktop shell to use.";
     };
   };

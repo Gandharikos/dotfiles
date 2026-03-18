@@ -15,8 +15,18 @@ in
       type = enum [
         "hypridle"
         "swayidle"
+        "dank-material-shell"
+        "noctalia-shell"
       ];
-      default = if config.my.gui.desktop.default == "hyprland" then "hypridle" else "swayidle";
+      default =
+        if config.my.gui.desktop.shell.default == "noctalia-shell" then
+          "noctalia-shell"
+        else if config.my.gui.desktop.shell.default == "dank-material-shell" then
+          "dank-material-shell"
+        else if config.my.gui.desktop.default == "hyprland" then
+          "hypridle"
+        else
+          "swayidle";
       description = "The idle tool to use.";
     };
     timeout = mkOption {

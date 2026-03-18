@@ -9,7 +9,7 @@ let
   inherit (lib.meta) getExe getExe';
   inherit (lib.modules) mkIf;
   inherit (lib.my) uwsmAppArgs;
-  inherit (lib.trivial) mod;
+  modNum = lib.trivial.mod;
   inherit (config.my.gui)
     desktop
     terminal
@@ -18,21 +18,14 @@ let
     ;
 
   cfg = config.my.gui.desktop.niri;
-
-  modKey =
-    if desktop.mod == "SUPER" then
-      "Mod"
-    else if desktop.mod == "CTRL" then
-      "Ctrl"
-    else
-      "Alt";
-  modShift = "${modKey}+Shift";
-  modCtrl = "${modKey}+Ctrl";
-  modAlt = "${modKey}+Alt";
+  inherit (desktop) mod;
+  modShift = "${mod}+Shift";
+  modCtrl = "${mod}+Ctrl";
+  modAlt = "${mod}+Alt";
 
   numWorkspaces = desktop.workspace.number;
   workspaceNumbers = lib.genList (i: i + 1) numWorkspaces;
-  workspaceKey = n: toString (mod n 10);
+  workspaceKey = n: toString (modNum n 10);
   mkWorkspaceBinds =
     modifier: actionName: actionValueFn:
     builtins.listToAttrs (
@@ -55,14 +48,14 @@ let
   dmsEnabled = config.programs.dank-material-shell.enable or false;
   noctaliaEnabled = config.programs.noctalia-shell.enable or false;
   shellHandlesXf86Binds = dmsEnabled || noctaliaEnabled;
-  useNiriBuiltinShot = desktop.shot.default == "dms" && !dmsEnabled;
+  useNiriBuiltinShot = desktop.shot.default == "dank-material-shell" && !dmsEnabled;
   screenshotBinds =
     if useNiriBuiltinShot then
       {
         "Print".action.screenshot = [ ];
         "Shift+Print".action.screenshot-window.write-to-disk = true;
         "Ctrl+Print".action.screenshot-screen.write-to-disk = true;
-        "${modKey}+Print".action.screenshot = [ ];
+        "${mod}+Print".action.screenshot = [ ];
       }
     else
       { };
@@ -155,64 +148,64 @@ with config.my.keyboard.keys;
         {
           # Note: next-window and previous-window are not valid niri actions
           # Use Mod+Tab for toggle-overview instead, or focus-window-{up,down}
-          "${modKey}+Return" = {
+          "${mod}+Return" = {
             repeat = false;
             action.spawn = terminal.command;
           };
-          "${modKey}+B" = {
+          "${mod}+B" = {
             repeat = false;
             action.spawn = browser.command;
           };
-          "${modKey}+${E}" = {
+          "${mod}+${E}" = {
             repeat = false;
             action.spawn = fileManager.command;
           };
-          "${modKey}+Tab".action.toggle-overview = [ ];
-          "${modKey}+Q".action.close-window = [ ];
-          "${modKey}+Shift+Escape".action.quit.skip-confirmation = true;
+          "${mod}+Tab".action.toggle-overview = [ ];
+          "${mod}+Q".action.close-window = [ ];
+          "${mod}+Shift+Escape".action.quit.skip-confirmation = true;
 
           # Focus movement (Hyprland-like).
-          "${modKey}+${H}".action.focus-column-left = [ ];
-          "${modKey}+${L}".action.focus-column-right = [ ];
-          "${modKey}+${K}".action.focus-window-up = [ ];
-          "${modKey}+${J}".action.focus-window-down = [ ];
+          "${mod}+${H}".action.focus-column-left = [ ];
+          "${mod}+${L}".action.focus-column-right = [ ];
+          "${mod}+${K}".action.focus-window-up = [ ];
+          "${mod}+${J}".action.focus-window-down = [ ];
 
           # Move windows/columns.
-          "${modKey}+Shift+${H}".action.move-column-left = [ ];
-          "${modKey}+Shift+${L}".action.move-column-right = [ ];
-          "${modKey}+Shift+${K}".action.move-window-up = [ ];
-          "${modKey}+Shift+${J}".action.move-window-down = [ ];
+          "${mod}+Shift+${H}".action.move-column-left = [ ];
+          "${mod}+Shift+${L}".action.move-column-right = [ ];
+          "${mod}+Shift+${K}".action.move-window-up = [ ];
+          "${mod}+Shift+${J}".action.move-window-down = [ ];
 
           # Niri-specific column management.
-          "${modKey}+Ctrl+${H}".action.consume-or-expel-window-left = [ ];
-          "${modKey}+Ctrl+${L}".action.consume-or-expel-window-right = [ ];
-          "${modKey}+T".action.toggle-column-tabbed-display = [ ];
+          "${mod}+Ctrl+${H}".action.consume-or-expel-window-left = [ ];
+          "${mod}+Ctrl+${L}".action.consume-or-expel-window-right = [ ];
+          "${mod}+T".action.toggle-column-tabbed-display = [ ];
 
           # Floating / fullscreen.
-          "${modKey}+F".action.fullscreen-window = [ ];
-          "${modKey}+Shift+F".action.toggle-window-floating = [ ];
-          "${modKey}+M".action.maximize-column = [ ];
-          "${modKey}+C".action.center-column = [ ];
-          "${modKey}+R".action.switch-preset-column-width = [ ];
-          "${modKey}+Shift+R".action.switch-preset-window-height = [ ];
-          "${modKey}+Minus".action.set-column-width = "-10%";
-          "${modKey}+Equal".action.set-column-width = "+10%";
+          "${mod}+F".action.fullscreen-window = [ ];
+          "${mod}+Shift+F".action.toggle-window-floating = [ ];
+          "${mod}+M".action.maximize-column = [ ];
+          "${mod}+C".action.center-column = [ ];
+          "${mod}+R".action.switch-preset-column-width = [ ];
+          "${mod}+Shift+R".action.switch-preset-window-height = [ ];
+          "${mod}+Minus".action.set-column-width = "-10%";
+          "${mod}+Equal".action.set-column-width = "+10%";
 
           # Monitor focus / move workspace.
-          "${modKey}+Comma".action.focus-monitor-left = [ ];
-          "${modKey}+Period".action.focus-monitor-right = [ ];
-          "${modKey}+Shift+Comma".action.move-workspace-to-monitor-left = [ ];
-          "${modKey}+Shift+Period".action.move-workspace-to-monitor-right = [ ];
+          "${mod}+Comma".action.focus-monitor-left = [ ];
+          "${mod}+Period".action.focus-monitor-right = [ ];
+          "${mod}+Shift+Comma".action.move-workspace-to-monitor-left = [ ];
+          "${mod}+Shift+Period".action.move-workspace-to-monitor-right = [ ];
 
           # Workspace navigation.
-          "${modKey}+BracketLeft".action.focus-workspace-up = [ ];
-          "${modKey}+BracketRight".action.focus-workspace-down = [ ];
-          "${modKey}+Shift+BracketLeft".action.move-column-to-workspace-up = [ ];
-          "${modKey}+Shift+BracketRight".action.move-column-to-workspace-down = [ ];
-          "${modKey}+Backspace".action.focus-workspace-up = [ ];
+          "${mod}+BracketLeft".action.focus-workspace-up = [ ];
+          "${mod}+BracketRight".action.focus-workspace-down = [ ];
+          "${mod}+Shift+BracketLeft".action.move-column-to-workspace-up = [ ];
+          "${mod}+Shift+BracketRight".action.move-column-to-workspace-down = [ ];
+          "${mod}+Backspace".action.focus-workspace-up = [ ];
 
           # Hotkey overlay.
-          "${modKey}+Slash".action.show-hotkey-overlay = [ ];
+          "${mod}+Slash".action.show-hotkey-overlay = [ ];
 
           # Keyboard backlight.
           "XF86KbdBrightnessUp" = {
@@ -236,7 +229,7 @@ with config.my.keyboard.keys;
         }
         screenshotBinds
         xf86FallbackBinds
-        (mkWorkspaceBinds modKey "focus-workspace" (n: n))
+        (mkWorkspaceBinds mod "focus-workspace" (n: n))
         (mkWorkspaceBinds modShift "move-window-to-workspace" (n: n))
         (mkWorkspaceBinds modCtrl "move-window-to-workspace" (n: [
           { focus = false; }
