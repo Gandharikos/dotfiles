@@ -27,7 +27,7 @@
     }
     {
       plugin = jump;
-      extraConfig = "set -g @jump-key 'Enter'";
+      extraConfig = "set -g @jump-key 'g'";
     }
     yank
     # {
