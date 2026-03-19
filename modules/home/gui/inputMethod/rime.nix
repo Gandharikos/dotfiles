@@ -43,8 +43,6 @@ in
           schema_list:
             - schema: luna_pinyin
             - schema: rime_ice
-            - schema: t9
-            - schema: double_pinyin
       '';
 
       "${cfg.dir}/grammar.yaml".source = pkgs.fetchurl {
