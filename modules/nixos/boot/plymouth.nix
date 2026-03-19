@@ -26,7 +26,7 @@ in
     };
     themeName = mkOption {
       type = str;
-      default = "abstract_ring_alt";
+      default = "angular_alt";
     };
   };
 
