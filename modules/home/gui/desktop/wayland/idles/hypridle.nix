@@ -1,100 +1,28 @@
 {
   lib,
   config,
-  pkgs,
-  inputs,
   ...
 }:
 let
   inherit (lib.lists) optionals;
-  inherit (lib.meta) getExe getExe';
-  inherit (lib.my) uwsmApp uwsmScript;
   inherit (lib.modules) mkIf;
 
   inherit (config.my.gui) desktop;
   cfg = desktop.idle;
-
-  app = exe: args: uwsmApp pkgs exe args;
-
-  suspendScript = uwsmScript pkgs "suspend-script" ''
-    # check if any player has statutes "Playing"
-    ${getExe pkgs.playerctl} -a status | ${getExe pkgs.ripgrep} Playing -q
-    # only suspend if nothing is playing
-    if [ $? == 1 ]; then
-      ${getExe' pkgs.systemd "systemctl"} suspend
-    fi
-  '';
-
-  loginctl' = getExe' pkgs.systemd "loginctl";
-  brightnessctl' = getExe pkgs.brightnessctl;
-  hyprctl' = getExe' pkgs.hyprland "hyprctl";
-  niri' = getExe' pkgs.niri "niri";
-  dimScreen = uwsmScript pkgs "hypridle-dim-screen" ''
-    ${getExe pkgs.brillo} -O
-    ${getExe pkgs.brillo} -u 1000000 -S 10
-  '';
-  restoreScreen = app (getExe pkgs.brillo) [
-    "-I"
-    "-u"
-    "500000"
-  ];
-
   inherit (cfg) timeout;
+  inherit (cfg.commands)
+    lock
+    lockSession
+    screenOn
+    screenOff
+    dimScreen
+    restoreScreen
+    suspend
+    keyboardBacklightOff
+    keyboardBacklightOn
+    ;
 
   enable = desktop.idle.default == "hypridle" && desktop.wayland.enable;
-  dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  dms = getExe' dmsPkg "dms";
-  noctaliaQsPkg = inputs.noctalia-qs.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  qs' = getExe' noctaliaQsPkg "qs";
-  # DMS lock needs script wrapper to avoid shell escaping issues with special chars in path
-  dmsLock = uwsmScript pkgs "hypridle-lock-dms" ''
-    ${dms} ipc call lock lock
-  '';
-  lock_cmd =
-    if desktop.shell.default == "noctalia-shell" then
-      app qs' [
-        "-c"
-        "noctalia-shell"
-        "ipc"
-        "call"
-        "lockScreen"
-        "lock"
-      ]
-    else if desktop.shell.default == "dank-material-shell" then
-      dmsLock
-    else
-      app loginctl' [ "lock-session" ];
-  # to avoid having to press a key twice to turn on the display
-  screen_on_cmd =
-    if desktop.default == "hyprland" then
-      app hyprctl' [
-        "dispatch"
-        "dpms"
-        "on"
-      ]
-    else if desktop.default == "niri" then
-      app niri' [
-        "msg"
-        "action"
-        "power-on-monitors"
-      ]
-    else
-      null;
-  screen_off_cmd =
-    if desktop.default == "hyprland" then
-      app hyprctl' [
-        "dispatch"
-        "dpms"
-        "off"
-      ]
-    else if desktop.default == "niri" then
-      app niri' [
-        "msg"
-        "action"
-        "power-off-monitors"
-      ]
-    else
-      null;
 in
 {
   config = mkIf enable {
@@ -105,52 +33,38 @@ in
 
       settings = {
         general = {
-          inherit lock_cmd;
-
-          # lock before suspend
-          before_sleep_cmd = app loginctl' [ "lock-session" ];
-
-          after_sleep_cmd = screen_on_cmd;
+          lock_cmd = lock;
+          before_sleep_cmd = lockSession;
+          after_sleep_cmd = screenOn;
         };
 
         listener = [
           {
             timeout = timeout - 10;
-            # save the current brightness and dim the screen over a period of
-            # 1 second
-            on-timeout = dimScreen;
-            # brighten the screen over a period of 500ms to the saved value
+            on-timeout = toString dimScreen;
             on-resume = restoreScreen;
           }
         ]
         ++ optionals cfg.keyboardBacklight.enable [
           {
             timeout = timeout / 2;
-            on-timeout = app brightnessctl' [
-              "-sd"
-              cfg.keyboardBacklight.device
-              "set"
-              "0"
-            ];
-            on-resume = app brightnessctl' [
-              "-rd"
-              cfg.keyboardBacklight.device
-            ];
+            on-timeout = keyboardBacklightOff;
+            on-resume = keyboardBacklightOn;
           }
         ]
         ++ [
           {
             inherit timeout;
-            on-timeout = app loginctl' [ "lock-session" ];
+            on-timeout = lockSession;
           }
           {
             inherit timeout;
-            on-timeout = screen_off_cmd;
-            on-resume = screen_on_cmd;
+            on-timeout = screenOff;
+            on-resume = screenOn;
           }
           {
             timeout = timeout + 10;
-            on-timeout = suspendScript;
+            on-timeout = toString suspend;
           }
         ];
       };
