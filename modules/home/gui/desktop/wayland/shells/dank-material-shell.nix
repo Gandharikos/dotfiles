@@ -18,16 +18,12 @@ let
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
   uwsm = getExe' pkgs.uwsm "uwsm";
   dmsExe = getExe' dmsPkg "dms";
-  dmsCmd =
-    if desktop.uwsm.enable then
-      [
-        uwsm
-        "app"
-        "--"
-        dmsExe
-      ]
-    else
-      [ dmsExe ];
+  dmsCmd = [
+    uwsm
+    "app"
+    "--"
+    dmsExe
+  ];
   dmsCmdStr = builtins.concatStringsSep " " dmsCmd;
   dms' =
     args:
@@ -66,7 +62,7 @@ in
     ];
     wayland.windowManager.hyprland.settings = with keys; {
       exec-once = optionals (wallpaper != null) [
-        (dms' "wallpaper set ${wallpaper}")
+        (dms' "wallpaper set ${toString wallpaper}")
       ];
       bindd =
         let

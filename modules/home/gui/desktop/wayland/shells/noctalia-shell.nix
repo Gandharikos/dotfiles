@@ -23,16 +23,12 @@ let
   qsPkg = inputs.noctalia-qs.packages.${pkgs.stdenv.hostPlatform.system}.default;
   uwsm = getExe' pkgs.uwsm "uwsm";
   qsExe = getExe' qsPkg "qs";
-  qsCmd =
-    if desktop.uwsm.enable then
-      [
-        uwsm
-        "app"
-        "--"
-        qsExe
-      ]
-    else
-      [ qsExe ];
+  qsCmd = [
+    uwsm
+    "app"
+    "--"
+    qsExe
+  ];
   noctaliaArgs =
     args:
     qsCmd
