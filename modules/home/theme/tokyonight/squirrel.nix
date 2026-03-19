@@ -36,6 +36,7 @@ in
           ascii_mode: true
           no_inline: true
         style/color_scheme: tokyonight
+        style/color_scheme_dark: tokyonight
         style/font_point: 18
         preset_color_schemes/tokyonight:
           name: "Tokyo Night"
