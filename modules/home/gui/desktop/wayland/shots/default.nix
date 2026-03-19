@@ -8,7 +8,7 @@ let
   inherit (lib.meta) getExe';
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkOption;
-  inherit (lib.types) enum str;
+  inherit (lib.types) enum str nullOr;
   inherit (config.my.gui) desktop;
   inherit (config.xdg.userDirs.extraConfig) SCREENSHOTS;
   wl-copy' = getExe' pkgs.wl-clipboard-rs "wl-copy";
@@ -19,19 +19,21 @@ in
 
   options.my.gui.desktop.shot = {
     default = mkOption {
-      type = enum [
+      type = nullOr (enum [
         "hyprshot"
         "grimblast"
         "dank-material-shell"
-      ];
+      ]);
       default =
         if desktop.shell.default == "dank-material-shell" then
           "dank-material-shell"
-        else if desktop.shell.default == "noctalia-shell" then
-          if desktop.default == "hyprland" then "hyprshot" else "grimblast"
+        else if desktop.default == "hyprland" then
+          "hyprshot"
+        else if desktop.default == "niri" then
+          "grimblast"
         else
-          "grimblast";
-      description = "The screenshot tool to use.";
+          null;
+      description = "The screenshot tool to use. Set to null to disable.";
     };
     path = mkOption {
       type = str;

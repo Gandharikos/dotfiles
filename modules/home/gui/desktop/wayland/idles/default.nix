@@ -5,29 +5,33 @@
 }:
 let
   inherit (lib.options) mkEnableOption mkOption;
-  inherit (lib.types) enum int str;
+  inherit (lib.types)
+    enum
+    int
+    str
+    nullOr
+    ;
 in
 {
   imports = lib.my.scanPaths ./.;
 
   options.my.gui.desktop.idle = {
     default = mkOption {
-      type = enum [
+      type = nullOr (enum [
         "hypridle"
         "swayidle"
-        "dank-material-shell"
         "noctalia-shell"
-      ];
+      ]);
       default =
         if config.my.gui.desktop.shell.default == "noctalia-shell" then
           "noctalia-shell"
-        else if config.my.gui.desktop.shell.default == "dank-material-shell" then
-          "dank-material-shell"
         else if config.my.gui.desktop.default == "hyprland" then
           "hypridle"
+        else if config.my.gui.desktop.default == "niri" then
+          "swayidle"
         else
-          "swayidle";
-      description = "The idle tool to use.";
+          null;
+      description = "The idle tool to use. Set to null to disable.";
     };
     timeout = mkOption {
       type = int;
