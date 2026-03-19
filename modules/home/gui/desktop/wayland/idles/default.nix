@@ -156,7 +156,7 @@ in
 
     timeout = mkOption {
       type = int;
-      default = 100;
+      default = 600;
       description = "Base idle timeout in seconds.";
     };
 
