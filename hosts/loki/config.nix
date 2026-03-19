@@ -6,6 +6,7 @@
   ];
 
   my = {
+    security.auditd.enable = lib.mkForce false;
     boot = {
       secureBoot = false;
       tmpOnTmpfs = false;
