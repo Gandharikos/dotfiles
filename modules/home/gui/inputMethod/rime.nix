@@ -30,18 +30,17 @@ in
 
   config = mkIf cfg.enable {
     home.file = {
-      "${cfg.dir}/cn_dicts".source = "${pkgs.rime-ice}/share/rime-data/cn_dicts";
-      "${cfg.dir}/rime_ice.dict.yaml".source =
-        pkgs.runCommand "rime_ice.dict.yaml" { preferLocalBuild = true; }
-          ''
-            sed '/^\.\.\.$/q' ${pkgs.rime-ice}/share/rime-data/rime_ice.dict.yaml > $out
-          '';
+      ${cfg.dir} = {
+        source = "${pkgs.rime-ice}/share/rime-data";
+        recursive = true;
+      };
 
       "${cfg.dir}/default.custom.yaml".text = ''
         patch:
           __include: rime_ice_suggestion:/
           schema_list:
             - schema: luna_pinyin
+            - schema: double_pinyin_flypy
             - schema: rime_ice
       '';
 
@@ -55,10 +54,6 @@ in
         sha256 = "0ygcpbhp00lb5ghi56kpxl1mg52i7hdlrznm2wkdq8g3hjxyxfqi";
       };
 
-      # https://github.com/rime/librime/issues/972
-      # patch:
-      #   punctuator/digit_separators: ",.:" # default value, set "" to disable
-      #   punctuator/digit_separator_action: "" # default not set, set "commit" to auto commit
       "${cfg.dir}/luna_pinyin.custom.yaml".text = ''
         patch:
           __include: grammar:/hans
