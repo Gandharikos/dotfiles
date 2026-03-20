@@ -82,6 +82,23 @@
         }
         {
           bind = {
+            _args = [ "l" ];
+            _children = [
+              {
+                LaunchOrFocusPlugin = {
+                  _args = [ "zellij:layout-manager" ];
+                  _children = [
+                    { floating = true; }
+                    { move_to_focused_tab = true; }
+                  ];
+                };
+              }
+              { SwitchToMode._args = [ "normal" ]; }
+            ];
+          };
+        }
+        {
+          bind = {
             _args = [ "p" ];
             _children = [
               {

@@ -234,6 +234,14 @@ in
                 ];
               };
             }
+            {
+              bind = {
+                _args = [ "Ctrl q" ];
+                _children = [
+                  { CloseFocus = { }; }
+                ];
+              };
+            }
           ];
         };
       }
