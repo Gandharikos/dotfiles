@@ -69,6 +69,12 @@ in
                 _children = [ { SwitchToMode._args = [ "locked" ]; } ];
               };
             }
+            {
+              bind = {
+                _args = [ "Ctrl Enter" ];
+                _children = [ { NewPane = { }; } ];
+              };
+            }
             # Focus movement
             {
               bind = {
