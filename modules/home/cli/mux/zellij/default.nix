@@ -89,10 +89,10 @@ in
 
           # web
           # https://zellij.dev/tutorials/web-client/
-          web_server = true;
+          # web_server = true;
           # Generated with `nix run nixpkgs#mkcert -install localhost 127.0.0.1`
-          web_server_cert = builtins.toString /etc/nixos/localhost+1.pem;
-          web_server_key = builtins.toString /etc/nixos/localhost+1-key.pem;
+          # web_server_cert = builtins.toString /etc/nixos/localhost+1.pem;
+          # web_server_key = builtins.toString /etc/nixos/localhost+1-key.pem;
           enforce_https_over_localhost = true;
         };
       };

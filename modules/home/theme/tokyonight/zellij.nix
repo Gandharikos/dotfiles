@@ -6,7 +6,6 @@
 }:
 let
   inherit (lib.modules) mkIf mkForce;
-  src = pkgs.vimPlugins.tokyonight-nvim;
   inherit (config.my.theme.colorscheme) slug;
   enable = cfg.enable && config.my.zellij.enable;
   inherit (config.my.theme) tokyonight colorscheme;
@@ -20,8 +19,52 @@ in
     programs.zellij = {
       settings = {
         theme = slug;
-        theme_dir = "${src}/extras/zellij";
+        theme_dir = "${config.xdg.configHome}/zellij/themes";
         default_layout = mkForce "tmux";
+      };
+      themes.${slug} = with palette; {
+        themes.${slug} = {
+          inherit
+            fg
+            red
+            green
+            yellow
+            blue
+            magenta
+            cyan
+            white
+            orange
+            ;
+          bg = bg_highlight;
+          black = bg;
+
+          frame_selected = {
+            base = blue;
+            background = bg;
+            emphasis_0 = orange;
+            emphasis_1 = blue;
+            emphasis_2 = magenta;
+            emphasis_3 = fg;
+          };
+
+          frame_unselected = {
+            base = comment;
+            background = bg;
+            emphasis_0 = comment;
+            emphasis_1 = fg_dark;
+            emphasis_2 = dark3;
+            emphasis_3 = fg_dark;
+          };
+
+          frame_highlight = {
+            base = orange;
+            background = bg;
+            emphasis_0 = yellow;
+            emphasis_1 = orange;
+            emphasis_2 = magenta;
+            emphasis_3 = fg;
+          };
+        };
       };
       layouts = {
         tmux = {
