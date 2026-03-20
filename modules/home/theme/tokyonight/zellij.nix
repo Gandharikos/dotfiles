@@ -104,8 +104,8 @@ in
 
                                 hide_frame_for_single_pane = "false";
 
-                                mode_normal = "${l_pad}#[bg=${bg_highlight},fg=${green},bold] NORMAL${r_pad}";
-                                mode_tmux = "${l_pad}#[bg=${bg_highlight},fg=${blue},bold] TMUX${r_pad}";
+                                mode_normal = "${l_pad}#[bg=${bg_highlight},fg=${blue},bold] NORMAL${r_pad}";
+                                mode_tmux = "${l_pad}#[bg=${bg_highlight},fg=${green},bold] TMUX${r_pad}";
                                 mode_locked = "${l_pad}#[bg=${bg_highlight},fg=${red},bold] LOCKED${r_pad}";
                                 mode_pane = "${l_pad}#[bg=${bg_highlight},fg=${green2},bold] PANE${r_pad}";
                                 mode_tab = "${l_pad}#[bg=${bg_highlight},fg=${teal},bold] TAB${r_pad}";
