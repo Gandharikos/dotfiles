@@ -82,7 +82,7 @@
             bind = {
               _args = [ "z" ];
               _children = [
-                { ToggleFloatingPanes = { }; }
+                { ToggleFocusFullscreen = { }; }
                 { SwitchToMode._args = [ "normal" ]; }
               ];
             };
@@ -92,6 +92,24 @@
               _args = [ "p" ];
               _children = [
                 { TogglePanePinned = { }; }
+                { SwitchToMode._args = [ "normal" ]; }
+              ];
+            };
+          }
+          {
+            bind = {
+              _args = [ "g" ];
+              _children = [
+                { TogglePaneInGroup = { }; }
+                { SwitchToMode._args = [ "normal" ]; }
+              ];
+            };
+          }
+          {
+            bind = {
+              _args = [ "G" ];
+              _children = [
+                { ToggleGroupMarking = { }; }
                 { SwitchToMode._args = [ "normal" ]; }
               ];
             };
@@ -135,6 +153,12 @@
               "Right"
             ];
             _children = [ { MoveFocus._args = [ "Right" ]; } ];
+          };
+        }
+        {
+          bind = {
+            _args = [ "Tab" ];
+            _children = [ { SwitchFocus = { }; } ];
           };
         }
         {

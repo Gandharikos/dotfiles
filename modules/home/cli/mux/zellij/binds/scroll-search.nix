@@ -61,13 +61,19 @@
         }
         {
           bind = {
-            _args = [ n ];
+            _args = [
+              "/"
+              n
+            ];
             _children = [ { Search._args = [ "down" ]; } ];
           };
         }
         {
           bind = {
-            _args = [ N ];
+            _args = [
+              "?"
+              N
+            ];
             _children = [ { Search._args = [ "up" ]; } ];
           };
         }
@@ -160,30 +166,6 @@
             bind = {
               _args = [ "b" ];
               _children = [ { PageScrollUp = { }; } ];
-            };
-          }
-          {
-            bind = {
-              _args = [ "/" ];
-              _children = [ { Search._args = [ "down" ]; } ];
-            };
-          }
-          {
-            bind = {
-              _args = [ "?" ];
-              _children = [ { Search._args = [ "up" ]; } ];
-            };
-          }
-          {
-            bind = {
-              _args = [ n ];
-              _children = [ { Search._args = [ "down" ]; } ];
-            };
-          }
-          {
-            bind = {
-              _args = [ N ];
-              _children = [ { Search._args = [ "up" ]; } ];
             };
           }
         ];

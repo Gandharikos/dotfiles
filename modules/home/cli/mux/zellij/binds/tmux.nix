@@ -58,19 +58,17 @@
         }
         {
           bind = {
-            _args = [ "Space" ];
+            _args = [ "m" ];
             _children = [
-              { SwitchToMode._args = [ "session" ]; }
+              { NextSwapLayout = { }; }
             ];
           };
         }
-        # Tab Operations
         {
           bind = {
-            _args = [ "r" ];
+            _args = [ "M" ];
             _children = [
-              { SwitchToMode._args = [ "renametab" ]; }
-              { TabNameInput._args = [ 0 ]; }
+              { PreviousSwapLayout = { }; }
             ];
           };
         }

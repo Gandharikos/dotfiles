@@ -48,6 +48,16 @@
               ];
             };
           }
+          # Tab Operations
+          {
+            bind = {
+              _args = [ "r" ];
+              _children = [
+                { SwitchToMode._args = [ "renametab" ]; }
+                { TabNameInput._args = [ 0 ]; }
+              ];
+            };
+          }
           {
             bind = {
               _args = [ "1" ];
@@ -197,15 +207,6 @@
               "Down"
             ];
             _children = [ { GoToNextTab = { }; } ];
-          };
-        }
-        {
-          bind = {
-            _args = [ "c" ];
-            _children = [
-              { SwitchToMode._args = [ "renametab" ]; }
-              { TabNameInput._args = [ 0 ]; }
-            ];
           };
         }
         {
