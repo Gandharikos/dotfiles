@@ -7,7 +7,13 @@
 let
   cfg = config.my.zellij;
   autoStart = config.my.mux.autoStart && config.my.mux.default == "zellij";
-  inherit (lib) mkEnableOption mkIf getExe;
+  inherit (lib)
+    mkEnableOption
+    mkIf
+    getExe
+    mkOption
+    types
+    ;
   inherit (lib.modules) mkDefault;
 
   shell = getExe (builtins.getAttr config.my.shell pkgs);
@@ -18,6 +24,29 @@ in
   options.my.zellij = {
     enable = mkEnableOption "Zellij" // {
       default = config.my.mux.default == "zellij";
+    };
+    template = mkOption {
+      internal = true;
+      type = types.anything;
+      default = {
+        default_tab_template._children = [
+          {
+            pane = {
+              size = 1;
+              borderless = true;
+              plugin.location = "zellij:tab-bar";
+            };
+          }
+          { children = { }; }
+          {
+            pane = {
+              size = 2;
+              borderless = true;
+              plugin.location = "zellij:status-bar";
+            };
+          }
+        ];
+      };
     };
   };
 
