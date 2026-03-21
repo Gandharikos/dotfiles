@@ -58,6 +58,42 @@
         }
         {
           bind = {
+            _args = [ H ];
+            _children = [
+              { MovePane._args = [ "Left" ]; }
+              { SwitchToMode._args = [ "normal" ]; }
+            ];
+          };
+        }
+        {
+          bind = {
+            _args = [ J ];
+            _children = [
+              { MovePane._args = [ "Down" ]; }
+              { SwitchToMode._args = [ "normal" ]; }
+            ];
+          };
+        }
+        {
+          bind = {
+            _args = [ K ];
+            _children = [
+              { MovePane._args = [ "Up" ]; }
+              { SwitchToMode._args = [ "normal" ]; }
+            ];
+          };
+        }
+        {
+          bind = {
+            _args = [ L ];
+            _children = [
+              { MovePane._args = [ "Right" ]; }
+              { SwitchToMode._args = [ "normal" ]; }
+            ];
+          };
+        }
+        {
+          bind = {
             _args = [ "m" ];
             _children = [
               { NextSwapLayout = { }; }
