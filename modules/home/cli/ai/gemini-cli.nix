@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  osClass,
   aiCommon,
   ...
 }:
@@ -45,7 +44,7 @@ in
       gemini-cli = {
         enable = true;
         # build error on darwin
-        package = if (osClass == "nixos") then pkgs.llm-agents.gemini-cli else pkgs.gemini-cli;
+        package = pkgs.llm-agents.gemini-cli;
         settings = {
           ui.theme = "Default";
           general = {
