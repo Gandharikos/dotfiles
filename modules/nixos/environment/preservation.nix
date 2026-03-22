@@ -237,12 +237,6 @@ in
             "go"
           ];
         })
-        (mkIf hm.langs.java.enable {
-          directories = [
-            ".gradle"
-            ".m2"
-          ];
-        })
         (mkIf hm.langs.node.enable {
           directories = [
             ".npm"

@@ -1,7 +1,3 @@
-# modules/dev/r.nix --- https://r-project.org/
-#
-# R’s ecosystem delights me. CRAN is a museum and a playground at once.
-# But system libs, fonts, and geo deps can be… spicy. Let’s make it sane.
 {
   lib,
   config,

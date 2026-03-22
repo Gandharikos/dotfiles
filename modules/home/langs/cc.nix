@@ -1,8 +1,3 @@
-# modules/dev/cc.nix --- C & C++
-#
-# I like C. I tolerate C++. I like++ C with a few choice C++ features tacked on.
-# Liking C/C++ seems to be an unpopular opinion, so it's my guilty secret.
-# Don't tell anyone pls.
 {
   lib,
   config,
