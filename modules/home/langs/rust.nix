@@ -1,15 +1,7 @@
-# modules/dev/rust.nix --- https://rust-lang.org
-#
-# Oh Rust. The light of my life, fire of my loins. Years of C++ has conditioned
-# me to believe there was no hope left, but the gods have heard us. Sure, you're
-# not going to replace C/C++. Sure, your starlight popularity has been
-# overblown. Sure, macros aren't namespaced, cargo bypasses crates.io, and there
-# is no formal proof of your claims for safety, but who said you have to solve
-# all the world's problems to be wonderful?
 {
   lib,
   config,
-  pkgs,
+  inputs',
   ...
 }:
 let
@@ -17,6 +9,14 @@ let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkMerge mkIf;
   inherit (config) xdg;
+  fenixPkgs = inputs'.fenix.packages;
+  rustToolchain = fenixPkgs.stable.withComponents [
+    "cargo"
+    "clippy"
+    "rust-src"
+    "rustc"
+    "rustfmt"
+  ];
 in
 {
   options.my.langs.rust = {
@@ -26,19 +26,21 @@ in
 
   config = mkMerge [
     (mkIf cfg.enable {
-      home.packages = [ pkgs.rustup ];
+      home.packages = [
+        rustToolchain
+        fenixPkgs.stable.rust-analyzer
+      ];
       home.shellAliases = {
         rs = "rustc";
-        rsp = "rustup";
         ca = "cargo";
       };
     })
 
     (mkIf cfg.xdg.enable {
       home.sessionVariables = rec {
-        RUSTUP_HOME = "${xdg.dataHome}/rustup";
         CARGO_HOME = "${xdg.dataHome}/cargo";
         PATH = [ "${CARGO_HOME}/bin" ];
+        RUST_SRC_PATH = "${rustToolchain}/lib/rustlib/src/rust/library";
       };
     })
   ];

@@ -658,6 +658,7 @@ Extensive customization with numerous custom plugins:
 ### Language Support
 
 - **Rust** (`langs/rust.nix`):
+  - Toolchain managed with fenix
   - Complete toolchain (rustc, cargo, clippy, rustfmt)
   - rust-analyzer LSP
   - Cargo tools and utilities

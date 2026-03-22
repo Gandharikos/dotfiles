@@ -212,6 +212,11 @@
       };
     };
 
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # spicetify-nix
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
