@@ -48,7 +48,7 @@
     };
     keyboard = {
       layout = "qwerty";
-      kanata.enable = true;
+      type = "kanata";
     };
   };
 

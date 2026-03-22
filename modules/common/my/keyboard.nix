@@ -5,11 +5,13 @@
   ...
 }:
 let
-  inherit (lib.options) mkEnableOption mkOption mkPackageOption;
+  inherit (lib.options) mkOption mkPackageOption;
   inherit (lib.modules) mkIf;
   inherit (lib.types)
     path
     enum
+    nullOr
+    bool
     addCheck
     str
     ;
@@ -38,10 +40,26 @@ in
       description = "The keyboard layout to use";
     };
 
+    type = mkOption {
+      type = nullOr (enum [
+        "kanata"
+        "karabiner"
+        "keyd"
+      ]);
+      default = null;
+      description = "The keyboard remapping tool to use. null disables all remapping.";
+    };
+
     keys = lib.genAttrs (letters ++ upperLetters) mkLetterOption;
 
     kanata = {
-      enable = mkEnableOption "Kanata keyboard remapping";
+      enable = mkOption {
+        type = bool;
+        default = config.my.keyboard.type == "kanata";
+        internal = true;
+        readOnly = true;
+        description = "Whether kanata is active. Controlled by my.keyboard.type.";
+      };
 
       package = mkPackageOption pkgs "kanata-with-cmd" { };
 
@@ -52,6 +70,24 @@ in
       };
 
       # tray.enable = mkEnableOption "kanata tray helper" // {default = cfg.enable;};
+    };
+
+    karabiner = {
+      package = mkPackageOption pkgs "karabiner-elements" { };
+
+      configFile = mkOption {
+        type = path;
+        default = relativeToConfig "karabiner/karabiner.json";
+        description = "Path to the Karabiner-Elements configuration file.";
+      };
+    };
+
+    keyd = {
+      configFile = mkOption {
+        type = path;
+        default = relativeToConfig "keyd/default.conf";
+        description = "Path to the keyd configuration file.";
+      };
     };
   };
 
