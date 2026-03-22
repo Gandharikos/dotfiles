@@ -62,6 +62,11 @@
             category = "nix";
           }
           {
+            package = pkgs.cachix;
+            help = "Manage Cachix binary caches";
+            category = "nix";
+          }
+          {
             help = "disko";
             name = "disko";
             command = ''
