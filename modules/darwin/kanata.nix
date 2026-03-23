@@ -1,19 +1,22 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
-  cfg = config.my.keyboard.kanata;
+  cfg = config.my.services.kanata;
   # Use a stable executable path so launchd/TCC rules do not break across nix store hash changes.
   kanataBin = "/run/current-system/sw/bin/kanata";
+  kanataConfig = (import ../common/my/keyboard/kanata.nix { inherit lib pkgs; }).mkKanataConfig { };
+  configFile = pkgs.writeText "kanata.kbd" kanataConfig;
 in
 {
   config = mkIf cfg.enable {
     # Install required packages
     environment.systemPackages = [
-      cfg.package
+      pkgs.kanata-with-cmd
     ];
 
     # Launch daemon for the Virtual HID Device
@@ -37,7 +40,7 @@ in
           ProgramArguments = [
             kanataBin
             "--cfg"
-            (toString cfg.configFile)
+            (toString configFile)
           ];
           Label = "org.nixos.kanata";
           KeepAlive = true;

@@ -115,7 +115,6 @@
       # "stats" # beautiful system monitor
       "eudic" # dictionary
       "ghostty" # terminal
-      "karabiner-elements" # keyboard remap
       "keycastr" # show keystrokes on screen
       "macfuse" # required by veracrypt
       "obs" # stream / recoding software
