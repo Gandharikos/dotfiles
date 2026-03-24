@@ -19,8 +19,6 @@ in
       extraPlugins = with pkgs.vimPlugins; [
         sidekick-nvim
       ];
-
-      config = [ "ai/sidekick.lua" ];
     };
   };
 }
