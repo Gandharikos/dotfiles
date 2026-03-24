@@ -31,7 +31,7 @@ in
                   r_pad = "#[bg=${statusline},fg=${bg_highlight}]${pad.right}";
                 in
                 {
-                  location = "file:${zjstatusWasm}";
+                  _props.location = "file:${zjstatusWasm}";
 
                   # source: https://github.com/merikan/.dotfiles/blob/main/config/zellij/themes/zjstatus/catppuccin.kdl
                   format_left = "{mode} ${l_pad}#[bg=${bg_highlight},fg=${cyan}] {session}${r_pad} {notifications}";
