@@ -6,10 +6,10 @@
 }:
 stdenv.mkDerivation rec {
   pname = "zellij-bookmarks";
-  version = "v0.4.0";
+  version = "v0.5.0";
   src = fetchurl {
     url = "https://github.com/yaroslavborbat/zellij-bookmarks/releases/download/${version}/zellij-bookmarks.wasm";
-    sha256 = "sha256-3xOu4/rpoyuJSyffkmlDZma2yvzuGtSgm7PKcOHPnpQ=";
+    sha256 = "sha256-3QckhOez/Y13+CgGDrhizxbbiTNC9izlxc0gvNEvvYM=";
   };
   dontUnpack = true;
 

@@ -6,10 +6,10 @@
 }:
 stdenv.mkDerivation rec {
   pname = "zellij-favs";
-  version = "v1.0.2";
+  version = "v1.0.4";
   src = fetchurl {
     url = "https://github.com/JoseMM2002/zellij-favs/releases/download/${version}/zellij-favs.wasm";
-    sha256 = "sha256-yiP4i5kiS+41tHqwWvO0nvpvZbxtrZYnFUT1bKY9LSc=";
+    sha256 = "sha256-Bc4nsAbPIdbI5xqPC2bnTSqV8Jzf6EDKNTFbRqXq92Y=";
   };
   dontUnpack = true;
 

@@ -6,11 +6,11 @@
 }:
 stdenv.mkDerivation rec {
   pname = "zjframes";
-  version = "v0.21.1";
+  version = "v0.22.0";
 
   src = fetchurl {
     url = "https://github.com/dj95/zjstatus/releases/download/${version}/zjframes.wasm";
-    sha256 = "05nizb96llh80srgy38lwciv371y3qr1rd2q4iw5zkgvqd0lxnd0";
+    sha256 = "sha256-lg5RzEbuM3hravlN1DOWVnoX48G2iQSrgawRrL89r/A=";
   };
 
   dontUnpack = true;

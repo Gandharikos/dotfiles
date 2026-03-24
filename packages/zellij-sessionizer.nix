@@ -6,11 +6,11 @@
 }:
 stdenv.mkDerivation rec {
   pname = "zellij-sessionizer";
-  version = "v0.4.3";
+  version = "v0.5.0";
 
   src = fetchurl {
     url = "https://github.com/laperlej/zellij-sessionizer/releases/download/${version}/zellij-sessionizer.wasm";
-    sha256 = "sha256-AGuWbuRX7Yi9tPdZTzDKULXh3XLUs4navuieCimUgzQ=";
+    sha256 = "sha256-xBhBwCPnToH5mg/Y2V4FBO0gLfLNuSYE31HJ5OoLoFs=";
   };
 
   dontUnpack = true;

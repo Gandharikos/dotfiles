@@ -6,11 +6,11 @@
 }:
 stdenv.mkDerivation rec {
   pname = "zjstatus";
-  version = "v0.21.1";
+  version = "v0.22.0";
 
   src = fetchurl {
     url = "https://github.com/dj95/zjstatus/releases/download/${version}/zjstatus.wasm";
-    sha256 = "06mfcijmsmvb2gdzsql6w8axpaxizdc190b93s3nczy212i846fw";
+    sha256 = "sha256-TeQm0gscv4YScuknrutbSdksF/Diu50XP4W/fwFU3VM=";
   };
 
   dontUnpack = true;
