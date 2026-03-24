@@ -8,7 +8,7 @@ in
       _props.location = autolockWasm;
       # automatically lock when these processes are active
       is_enabled = true;
-      triggers = "nvim|vim|yazi|atuin|fzf";
+      triggers = "nvim|vim|atuin|fzf";
       reaction_seconds = "0.3";
     };
     load_plugins = {
