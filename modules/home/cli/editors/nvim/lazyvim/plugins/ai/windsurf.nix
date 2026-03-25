@@ -8,17 +8,17 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.windsurf;
+  cfg = config.my.lazyvim.windsurf;
   inherit (config.home) homeDirectory;
   inherit (config.my) name;
 in
 {
-  options.my.neovim.lazyvim.windsurf = {
+  options.my.lazyvim.windsurf = {
     enable = mkEnableOption "AI plugin - windsurf";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
         windsurf-nvim
       ];

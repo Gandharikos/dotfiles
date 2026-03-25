@@ -7,15 +7,17 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.mini-files;
+  cfg = config.my.lazyvim.mini-files;
 in
 {
-  options.my.neovim.lazyvim.mini-files = {
+  options.my.lazyvim.mini-files = {
     enable = mkEnableOption "Mini files explorer";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
+      imports = [ "lazyvim.plugins.extras.editor.mini-files" ];
+
       extraPlugins = with pkgs.vimPlugins; [
         {
           name = "mini.files";
@@ -23,7 +25,6 @@ in
         }
       ];
 
-      config = [ "editor/mini-files.lua" ];
     };
   };
 }

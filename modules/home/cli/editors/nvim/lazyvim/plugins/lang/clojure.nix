@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.clojure;
+  cfg = config.my.lazyvim.clojure;
 in
 {
-  options.my.neovim.lazyvim.clojure = {
+  options.my.lazyvim.clojure = {
     enable = mkEnableOption "language clojure";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins =
         with pkgs.vimPlugins;
         [
@@ -23,7 +23,7 @@ in
           baleia-nvim
           conjure
         ]
-        ++ lib.optionals (config.my.neovim.lazyvim.cmp == "nvim-cmp") [ cmp-conjure ];
+        ++ lib.optionals (config.my.lazyvim.cmp == "nvim-cmp") [ cmp-conjure ];
 
       imports = [ "lazyvim.plugins.extras.lang.clojure" ];
 

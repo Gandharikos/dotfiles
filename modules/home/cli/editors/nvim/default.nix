@@ -6,7 +6,8 @@
   ...
 }:
 let
-  inherit (lib.options) mkEnableOption;
+  inherit (lib.options) mkEnableOption mkOption;
+  inherit (lib.types) nullOr enum;
   inherit (lib.modules) mkIf;
   cfg = config.my.neovim;
 in
@@ -16,6 +17,12 @@ in
   options.my.neovim = {
     enable = mkEnableOption "neovim" // {
       default = true;
+    };
+
+    distro = mkOption {
+      type = nullOr (enum [ "lazyvim" ]);
+      default = "lazyvim";
+      description = "The Neovim distribution to use";
     };
   };
 

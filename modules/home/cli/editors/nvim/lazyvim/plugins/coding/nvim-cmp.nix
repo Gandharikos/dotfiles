@@ -6,11 +6,11 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim;
+  cfg = config.my.lazyvim;
 in
 {
   config = mkIf (cfg.cmp == "nvim-cmp") {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
         nvim-cmp
         cmp-nvim-lsp
@@ -31,7 +31,7 @@ in
         blink-compat
       ];
 
-      config = [ "coding/nvim-cmp.lua" ];
+      imports = [ "lazyvim.plugins.extras.coding.nvim-cmp" ];
     };
   };
 }

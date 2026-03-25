@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.test;
+  cfg = config.my.lazyvim.test;
 in
 {
-  options.my.neovim.lazyvim.test = {
+  options.my.lazyvim.test = {
     enable = mkEnableOption "Neotest support";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
         neotest
       ];

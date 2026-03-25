@@ -7,19 +7,20 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.dial;
+  cfg = config.my.lazyvim.dial;
 in
 {
-  options.my.neovim.lazyvim.dial = {
+  options.my.lazyvim.dial = {
     enable = mkEnableOption "Increment and decrement numbers, dates, and more";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
+      imports = [ "lazyvim.plugins.extras.editor.dial" ];
+
       extraPlugins = with pkgs.vimPlugins; [
         dial-nvim
       ];
-      config = [ "coding/dial.lua" ];
     };
   };
 }

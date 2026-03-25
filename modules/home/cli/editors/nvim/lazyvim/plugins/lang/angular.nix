@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.angular;
+  cfg = config.my.lazyvim.angular;
 in
 {
-  options.my.neovim.lazyvim.angular = {
+  options.my.lazyvim.angular = {
     enable = mkEnableOption "language angular";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       typescript.enable = true;
 
       imports = [ "lazyvim.plugins.extras.lang.angular" ];

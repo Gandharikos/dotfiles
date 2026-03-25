@@ -6,16 +6,17 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim;
+  cfg = config.my.lazyvim;
 in
 {
   config = mkIf (cfg.explorer == "neo-tree") {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
+      imports = [ "lazyvim.plugins.extras.editor.neo-tree" ];
+
       extraPlugins = with pkgs.vimPlugins; [
         neo-tree
       ];
 
-      config = [ "editor/neo-tree.lua" ];
     };
   };
 }

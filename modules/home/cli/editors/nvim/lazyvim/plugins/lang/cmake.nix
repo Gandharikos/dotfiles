@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.cmake;
+  cfg = config.my.lazyvim.cmake;
 in
 {
-  options.my.neovim.lazyvim.cmake = {
+  options.my.lazyvim.cmake = {
     enable = mkEnableOption "language cmake";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       excludePlugins = with pkgs.vimPlugins; [
         cmake-tools-nvim
       ];

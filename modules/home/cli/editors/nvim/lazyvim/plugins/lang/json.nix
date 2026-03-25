@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.json;
+  cfg = config.my.lazyvim.json;
 in
 {
-  options.my.neovim.lazyvim.json = {
+  options.my.lazyvim.json = {
     enable = mkEnableOption "language json";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
         SchemaStore-nvim
         crates-nvim

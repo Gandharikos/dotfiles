@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.omnisharp;
+  cfg = config.my.lazyvim.omnisharp;
 in
 {
-  options.my.neovim.lazyvim.omnisharp = {
+  options.my.lazyvim.omnisharp = {
     enable = mkEnableOption "language omnisharp";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
         neotest-dotnet
         omnisharp-extended-lsp-nvim

@@ -7,15 +7,17 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.mini-move;
+  cfg = config.my.lazyvim.mini-move;
 in
 {
-  options.my.neovim.lazyvim.mini-move = {
+  options.my.lazyvim.mini-move = {
     enable = mkEnableOption "Mini move";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
+      imports = [ "lazyvim.plugins.extras.editor.mini-move" ];
+
       extraPlugins = with pkgs.vimPlugins; [
         {
           name = "mini.move";
@@ -23,7 +25,6 @@ in
         }
       ];
 
-      config = [ "editor/mini-move.lua" ];
     };
   };
 }

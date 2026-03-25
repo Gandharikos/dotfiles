@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.clangd;
+  cfg = config.my.lazyvim.clangd;
 in
 {
-  options.my.neovim.lazyvim.clangd = {
+  options.my.lazyvim.clangd = {
     enable = mkEnableOption "language clangd";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
         clangd_extensions-nvim
       ];
@@ -25,7 +25,7 @@ in
         clang-tools
       ];
 
-      config = [ "lang/clangd.lua" ];
+      imports = [ "lazyvim.plugins.extras.lang.clangd" ];
     };
   };
 }

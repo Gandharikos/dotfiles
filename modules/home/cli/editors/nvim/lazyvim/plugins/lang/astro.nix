@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.astro;
+  cfg = config.my.lazyvim.astro;
 in
 {
-  options.my.neovim.lazyvim.astro = {
+  options.my.lazyvim.astro = {
     enable = mkEnableOption "language astro";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       typescript.enable = true;
 
       imports = [ "lazyvim.plugins.extras.lang.astro" ];

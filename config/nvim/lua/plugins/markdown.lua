@@ -1,7 +1,7 @@
 return {
-  { import = "lazyvim.plugins.extras.lang.markdown" },
   {
     "MeanderingProgrammer/render-markdown.nvim",
+    optional = true,
     ft = { "markdown", "vimwiki", "norg", "rmd", "org" },
     opts = function()
       return {
@@ -11,6 +11,7 @@ return {
   },
   {
     "folke/snacks.nvim",
+    optional = true,
     opts = {
       image = {},
     },

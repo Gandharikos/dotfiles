@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.typescript;
+  cfg = config.my.lazyvim.typescript;
 in
 {
-  options.my.neovim.lazyvim.typescript = {
+  options.my.lazyvim.typescript = {
     enable = mkEnableOption "language typescript";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       imports = [ "lazyvim.plugins.extras.lang.typescript" ];
 
       extraPackages = with pkgs; [

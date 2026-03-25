@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.mini-snippets;
+  cfg = config.my.lazyvim.mini-snippets;
 in
 {
-  options.my.neovim.lazyvim.mini-snippets = {
+  options.my.lazyvim.mini-snippets = {
     enable = mkEnableOption "Code snippet engine - mini-snippets";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins =
         with pkgs.vimPlugins;
         [
@@ -25,7 +25,7 @@ in
           }
           friendly-snippets
         ]
-        ++ lib.optionals (config.my.neovim.lazyvim.cmp == "nvim-cmp") [ cmp-mini-snippets ];
+        ++ lib.optionals (config.my.lazyvim.cmp == "nvim-cmp") [ cmp-mini-snippets ];
 
       excludePlugins = with pkgs.vimPlugins; [
         nvim-snippets

@@ -563,16 +563,4 @@ return {
       return opts
     end,
   },
-  {
-    "tris203/precognition.nvim",
-    optional = true,
-    opts = function(_, opts)
-      opts = opts or {}
-      opts.hints = vim.tbl_extend("force", opts.hints or {}, {
-        e = { text = "j", prio = 8 },
-        E = { text = "J", prio = 5 },
-      })
-      return opts
-    end,
-  },
 }

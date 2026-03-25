@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.mini-diff;
+  cfg = config.my.lazyvim.mini-diff;
 in
 {
-  options.my.neovim.lazyvim.mini-diff = {
+  options.my.lazyvim.mini-diff = {
     enable = mkEnableOption "Mini diff signs";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
         {
           name = "mini.diff";

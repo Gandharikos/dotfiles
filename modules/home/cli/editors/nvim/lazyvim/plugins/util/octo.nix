@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.octo;
+  cfg = config.my.lazyvim.octo;
 in
 {
-  options.my.neovim.lazyvim.octo = {
+  options.my.lazyvim.octo = {
     enable = mkEnableOption "octo";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
         octo-nvim
       ];

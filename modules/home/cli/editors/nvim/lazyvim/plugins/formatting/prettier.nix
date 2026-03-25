@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.prettier;
+  cfg = config.my.lazyvim.prettier;
 in
 {
-  options.my.neovim.lazyvim.prettier = {
+  options.my.lazyvim.prettier = {
     enable = mkEnableOption "formatting tool - prettier";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPackages = with pkgs; [
         nodePackages.prettier
       ];

@@ -10,15 +10,15 @@ let
   inherit (lib.modules) mkIf;
   inherit (config.home) homeDirectory;
   inherit (config.my) name;
-  cfg = config.my.neovim.lazyvim.supermaven;
+  cfg = config.my.lazyvim.supermaven;
 in
 {
-  options.my.neovim.lazyvim.supermaven = {
+  options.my.lazyvim.supermaven = {
     enable = mkEnableOption "AI plugin - Supermaven";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
         supermaven-nvim
       ];

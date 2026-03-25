@@ -9,17 +9,13 @@ let
   inherit (lib.types) enum lines;
   inherit (lib.modules) mkIf;
   inherit (lib.types)
-    coercedTo
     listOf
     oneOf
     package
     str
     submodule
     ;
-  inherit (lib.lists) foldl';
-  inherit (lib.my) sourceLua;
-  extraLuaConfigs = foldl' (acc: path: acc // sourceLua path) { } cfg.config;
-  cfg = config.my.neovim.lazyvim;
+  cfg = config.my.lazyvim;
   pluginsOptionType = listOf (oneOf [
     package
     (submodule {
@@ -33,9 +29,10 @@ in
 {
   imports = lib.my.scanPaths ./.;
 
-  options.my.neovim.lazyvim = {
+  options.my.lazyvim = {
     enable = mkEnableOption "LazyVim" // {
-      default = config.my.neovim.enable;
+      default = config.my.neovim.distro == "lazyvim";
+      internal = true;
     };
 
     plugins =
@@ -203,16 +200,6 @@ in
       default = [ ];
     };
 
-    config = mkOption {
-      type = coercedTo str (path: [ path ]) (listOf str);
-      default = [ ];
-      description = ''
-        LazyVim Lua config files (relative to `nvim/lua/plugins/extras`) that
-        should be linked into `nvim/lua/plugins`. Accepts either a single string
-        or a list of strings.
-      '';
-    };
-
     imports = mkOption {
       type = listOf str;
       default = [ ];
@@ -250,7 +237,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       finalExtraSpec =
         let
           importsSpec = lib.concatMapStrings (import: ''
@@ -273,8 +260,6 @@ in
         ripgrep
       ];
     };
-
-    xdg.configFile = extraLuaConfigs;
 
     programs.neovim = {
       enable = true;

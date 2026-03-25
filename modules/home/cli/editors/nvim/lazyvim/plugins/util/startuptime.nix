@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.startuptime;
+  cfg = config.my.lazyvim.startuptime;
 in
 {
-  options.my.neovim.lazyvim.startuptime = {
+  options.my.lazyvim.startuptime = {
     enable = mkEnableOption "startuptime";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
         startuptime-nvim
       ];

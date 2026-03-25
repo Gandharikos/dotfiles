@@ -6,11 +6,11 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim;
+  cfg = config.my.lazyvim;
 in
 {
   config = mkIf (cfg.cmp == "auto" || cfg.cmp == "blink") {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
         blink-cmp
         blink-compat

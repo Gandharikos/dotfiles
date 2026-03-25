@@ -57,7 +57,7 @@ in
       enableAudioWavelength = true; # Audio visualizer (cava)
       enableCalendarEvents = false; # Calendar integration (khal)
     };
-    my.neovim.lazyvim.extraPlugins = [
+    my.lazyvim.extraPlugins = [
       pkgs.vimPlugins.base16-nvim
     ];
     wayland.windowManager.hyprland.settings = with keys; {

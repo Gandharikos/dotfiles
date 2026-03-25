@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.smear-cursor;
+  cfg = config.my.lazyvim.smear-cursor;
 in
 {
-  options.my.neovim.lazyvim.smear-cursor = {
+  options.my.lazyvim.smear-cursor = {
     enable = mkEnableOption "animate cursor";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
         smear-cursor-nvim
       ];

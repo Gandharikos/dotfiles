@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.php;
+  cfg = config.my.lazyvim.php;
 in
 {
-  options.my.neovim.lazyvim.php = {
+  options.my.lazyvim.php = {
     enable = mkEnableOption "language php";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       imports = [ "lazyvim.plugins.extras.lang.php" ];
 
       extraPackages = with pkgs; [

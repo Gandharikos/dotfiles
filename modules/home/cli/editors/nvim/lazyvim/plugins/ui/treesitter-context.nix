@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.treesitter-context;
+  cfg = config.my.lazyvim.treesitter-context;
 in
 {
-  options.my.neovim.lazyvim.treesitter-context = {
+  options.my.lazyvim.treesitter-context = {
     enable = mkEnableOption "treesitter context";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
         nvim-treesitter-context
       ];

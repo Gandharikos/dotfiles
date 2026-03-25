@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.mini-surround;
+  cfg = config.my.lazyvim.mini-surround;
 in
 {
-  options.my.neovim.lazyvim.mini-surround = {
+  options.my.lazyvim.mini-surround = {
     enable = mkEnableOption "Fast and feature-rich surround actions";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
         {
           name = "mini.surround";
@@ -23,7 +23,7 @@ in
         }
       ];
 
-      config = [ "coding/mini-surround.lua" ];
+      imports = [ "lazyvim.plugins.extras.coding.mini-surround" ];
     };
   };
 }

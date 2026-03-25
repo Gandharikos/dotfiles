@@ -7,15 +7,15 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.neovim.lazyvim.lean;
+  cfg = config.my.lazyvim.lean;
 in
 {
-  options.my.neovim.lazyvim.lean = {
+  options.my.lazyvim.lean = {
     enable = mkEnableOption "language lean";
   };
 
   config = mkIf cfg.enable {
-    my.neovim.lazyvim = {
+    my.lazyvim = {
       extraPlugins = with pkgs.vimPlugins; [
         lean-nvim
       ];

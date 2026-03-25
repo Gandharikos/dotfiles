@@ -1,5 +1,4 @@
 return {
-  { import = "lazyvim.plugins.extras.lang.clangd" },
   -- correctly setup lspconfig
   {
     "neovim/nvim-lspconfig",
