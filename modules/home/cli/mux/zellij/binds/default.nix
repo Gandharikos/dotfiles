@@ -86,6 +86,8 @@ in
                       _children = [
                         { name._args = [ "move_focus_or_tab" ]; }
                         { payload._args = [ "left" ]; }
+                        { move_mod._args = [ "ctrl" ]; }
+                        { use_arrow_keys.args = [ "false" ]; }
                       ];
                     };
                   }
@@ -102,6 +104,8 @@ in
                       _children = [
                         { name._args = [ "move_focus" ]; }
                         { payload._args = [ "down" ]; }
+                        { move_mod._args = [ "ctrl" ]; }
+                        { use_arrow_keys.args = [ "false" ]; }
                       ];
                     };
                   }
@@ -118,6 +122,8 @@ in
                       _children = [
                         { name._args = [ "move_focus" ]; }
                         { payload._args = [ "up" ]; }
+                        { move_mod._args = [ "ctrl" ]; }
+                        { use_arrow_keys.args = [ "false" ]; }
                       ];
                     };
                   }
@@ -134,6 +140,8 @@ in
                       _children = [
                         { name._args = [ "move_focus_or_tab" ]; }
                         { payload._args = [ "right" ]; }
+                        { move_mod._args = [ "ctrl" ]; }
+                        { use_arrow_keys.args = [ "false" ]; }
                       ];
                     };
                   }
@@ -152,6 +160,7 @@ in
                       _children = [
                         { name._args = [ "resize" ]; }
                         { payload._args = [ "left" ]; }
+                        { resize_mod._args = [ "alt" ]; }
                       ];
                     };
                   }
@@ -168,6 +177,7 @@ in
                       _children = [
                         { name._args = [ "resize" ]; }
                         { payload._args = [ "down" ]; }
+                        { resize_mod._args = [ "alt" ]; }
                       ];
                     };
                   }
@@ -184,6 +194,7 @@ in
                       _children = [
                         { name._args = [ "resize" ]; }
                         { payload._args = [ "up" ]; }
+                        { resize_mod._args = [ "alt" ]; }
                       ];
                     };
                   }
@@ -200,6 +211,7 @@ in
                       _children = [
                         { name._args = [ "resize" ]; }
                         { payload._args = [ "right" ]; }
+                        { resize_mod._args = [ "alt" ]; }
                       ];
                     };
                   }
