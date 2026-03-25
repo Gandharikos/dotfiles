@@ -32,6 +32,7 @@ in
   options.my.lazyvim = {
     enable = mkEnableOption "LazyVim" // {
       default = config.my.neovim.distro == "lazyvim";
+      readOnly = true;
       internal = true;
     };
 
