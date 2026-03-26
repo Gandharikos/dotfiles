@@ -5,8 +5,8 @@
       custom.enable = true;
 
       # ai
-      copilot.native.enable = true;
-      copilot.chat.enable = true;
+      copilot.native.enable = false;
+      copilot.chat.enable = false;
       sidekick.enable = true;
       # coding
       mini-snippets.enable = true;
