@@ -9,7 +9,9 @@ let
   cfg = config.my.services.kanata;
   kanataConfig =
     (import ../../../common/my/keyboard/kanata.nix { inherit lib pkgs; }).mkKanataConfig
-      { };
+      {
+        includeDefCfg = false;
+      };
 in
 {
   config = mkIf cfg.enable {
@@ -18,7 +20,10 @@ in
       enable = true;
       package = pkgs.kanata-with-cmd;
       keyboards.default = {
-        configFile = pkgs.writeText "kanata.kbd" kanataConfig;
+        config = kanataConfig;
+        extraDefCfg = ''
+          process-unmapped-keys yes
+        '';
       };
     };
   };
