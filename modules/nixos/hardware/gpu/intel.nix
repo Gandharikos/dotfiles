@@ -11,8 +11,6 @@ let
 in
 {
   config = mkIf (machine.gpu == "intel" || machine.gpu == "hybrid-nv") {
-    # i915 kernel module
-    boot.initrd.kernelModules = [ "i915" ];
     # we enable modesetting since this is recomeneded for intel gpus
     services.xserver.videoDrivers = [ "modesetting" ];
 
@@ -31,10 +29,10 @@ in
       };
     };
 
-    environment.systemPackages = [ pkgs.intel-gpu-tools ];
-
-    environment.variables = mkIf (config.hardware.graphics.enable && machine.gpu != "hybrid-nv") {
-      VDPAU_DRIVER = "va_gl";
-    };
+    # environment.systemPackages = [ pkgs.intel-gpu-tools ];
+    #
+    # environment.variables = mkIf (config.hardware.graphics.enable && machine.gpu != "hybrid-nv") {
+    #   VDPAU_DRIVER = "va_gl";
+    # };
   };
 }
