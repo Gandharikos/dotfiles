@@ -10,7 +10,6 @@ in
 {
   config = mkIf (machine.cpu == "intel" || machine.cpu == "vm-intel") {
     hardware.cpu.intel.updateMicrocode = true;
-    services.thermald.enable = true;
 
     boot = {
       kernelModules = [ "kvm-intel" ];

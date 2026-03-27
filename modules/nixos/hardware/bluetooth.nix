@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   config,
   ...
 }:
@@ -27,17 +26,14 @@ in
     # [bluetooth] # trust [hex-address]
     hardware.bluetooth = {
       enable = true;
-      package = pkgs.bluez;
-      powerOnBoot = true;
       disabledPlugins = [ "sap" ];
-      settings = {
-        General = {
-          Experimental = true;
-          JustWorksPepairing = "always";
-          MultiProfile = "multiple";
-        };
+      settings.General = {
+        JustWorksPepairing = "always";
+        MultiProfile = "multiple";
       };
     };
+
+    boot.kernelModules = [ "btusb" ];
 
     # https://wiki.nixos.org/wiki/Bluetooth
     services.blueman.enable = true;
