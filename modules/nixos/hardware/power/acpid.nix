@@ -10,9 +10,6 @@ let
 in
 {
   config = mkIf (machine.type == "laptop") {
-    # pretty much handled by brightnessctl
-    hardware.acpilight.enable = false;
-
     # handle ACPI events
     services.acpid.enable = true;
 
