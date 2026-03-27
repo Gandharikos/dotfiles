@@ -20,7 +20,6 @@ in
         gpu = null;
         cpu = null;
         hasTPM = false;
-        hasSound = false;
       };
       boot = {
         loader = "none";
@@ -35,7 +34,6 @@ in
         };
       };
       gui.enable = mkDefault false;
-      video.enable = mkForce false;
       game.enable = mkForce false;
       security = {
         enable = false;
