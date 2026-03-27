@@ -1,13 +1,12 @@
 {
   lib,
-  self,
   pkgs,
   config,
   ...
 }:
 let
   inherit (lib) mkIf;
-  inherit (self.lib) isx86Linux;
+  inherit (lib.my) isx86Linux;
 in
 {
   config = mkIf config.my.gui.enable {
