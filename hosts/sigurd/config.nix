@@ -17,7 +17,6 @@
         optimizeCompressor = true;
       };
     };
-    video.enable = true;
     game.enable = true;
     security.enable = true;
     services = {
@@ -32,7 +31,6 @@
       type = "desktop";
       cpu = "intel";
       gpu = "nvidia";
-      hasSound = true;
       hasBluetooth = true;
       hasPrinter = false;
       hasTPM = true;

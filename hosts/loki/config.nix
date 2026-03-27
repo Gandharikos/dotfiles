@@ -18,7 +18,6 @@
         optimizeCompressor = true;
       };
     };
-    video.enable = true;
     services = {
       btrbk.enable = true;
       zram.enable = true;
@@ -33,7 +32,6 @@
       type = "laptop";
       cpu = "intel";
       gpu = "intel";
-      hasSound = true;
       hasBluetooth = true;
       hasPrinter = false;
       hasTPM = true;
