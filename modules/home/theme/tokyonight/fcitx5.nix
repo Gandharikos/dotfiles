@@ -41,7 +41,7 @@ let
         y="8"
         width="44"
         height="44"
-        rx="14"
+        rx="5"
         fill="${palette.bg}"
         stroke="${palette.bg_highlight}"
         stroke-width="1.5"
@@ -57,7 +57,7 @@ let
         y="10"
         width="40"
         height="40"
-        rx="14"
+        rx="5"
         fill="${palette.blue}"
       />
     </svg>
