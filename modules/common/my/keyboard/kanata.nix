@@ -1,10 +1,11 @@
 { lib, pkgs, ... }:
 {
-  # Helper to generate the kanata configuration string based on the platform
+  # Helper to generate the kanata configuration string based on the platform.
   mkKanataConfig =
     {
       isLinux ? pkgs.stdenv.isLinux,
       isDarwin ? pkgs.stdenv.isDarwin,
+      includeDefCfg ? true,
     }:
     let
       # Define the bottom row based on the OS (6 keys each)
@@ -26,21 +27,22 @@
         else
           "lctl lmet lalt           spc            @hyper rmet";
 
-      # Print Screen key varies by platform in kanata
-      prtScKey = if isLinux then "sysrq" else "f13";
+      # Print Screen key varies by platform in kanata.
+      prtScKey = if isLinux then "prtsc" else "f13";
     in
     ''
       ;; Generated Kanata configuration
-      (defcfg
-        process-unmapped-keys yes
-        ${lib.optionalString isLinux ''
-          linux-dev /dev/input/by-path/platform-i8042-serio-0-event-kbd
-          linux-continue-if-no-devs-found yes
-        ''}
-        ${lib.optionalString isDarwin ''
-          macos-dev-names-include ("Apple Internal Keyboard / Trackpad")
-        ''}
-      )
+      ${lib.optionalString includeDefCfg ''
+        (defcfg
+          process-unmapped-keys yes
+          ${lib.optionalString isLinux ''
+            linux-continue-if-no-devs-found yes
+          ''}
+          ${lib.optionalString isDarwin ''
+            macos-dev-names-include ("Apple Internal Keyboard / Trackpad")
+          ''}
+        )
+      ''}
 
       (defsrc
         tab  q    w    e    r    t    y    u    i    o    p bspc
