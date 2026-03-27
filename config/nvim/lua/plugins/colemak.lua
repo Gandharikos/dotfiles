@@ -250,45 +250,48 @@ return {
   {
     "neovim/nvim-lspconfig",
     optional = true,
-    init = function()
-      local keys = require("lazyvim.plugins.lsp.keymaps").get()
-      keys[#keys + 1] = { "K", false }
-      keys[#keys + 1] = { "gK", false }
-      keys[#keys + 1] = { "<c-k>", false, mode = "i" }
-      keys[#keys + 1] = { "<a-n>", false }
-      keys[#keys + 1] = { "<a-p>", false }
-
-      keys[#keys + 1] = { "I", vim.lsp.buf.hover, desc = "Hover" }
-      keys[#keys + 1] = { "gI", vim.lsp.buf.signature_help, desc = "Signature Help", has = "signatureHelp" }
-      keys[#keys + 1] = {
-        "<c-h>",
-        vim.lsp.buf.signature_help,
-        mode = "i",
-        desc = "Signature Help",
-        has = "signatureHelp",
-      }
-      keys[#keys + 1] = {
-        "<a-.>",
-        function()
-          Snacks.words.jump(vim.v.count1, true)
-        end,
-        has = "documentHighlight",
-        desc = "Next Reference",
-        cond = function()
-          return Snacks.words.is_enabled()
-        end,
-      }
-      keys[#keys + 1] = {
-        "<a-,>",
-        function()
-          Snacks.words.jump(-vim.v.count1, true)
-        end,
-        has = "documentHighlight",
-        desc = "Prev Reference",
-        cond = function()
-          return Snacks.words.is_enabled()
-        end,
-      }
+    opts = function(_, opts)
+      opts = opts or {}
+      local server = ensure(opts, "servers", "*")
+      server.keys = replace_keys(server.keys or {}, {
+        { "K", false },
+        { "gK", false },
+        { "<c-k>", false, mode = "i" },
+        { "<a-n>", false },
+        { "<a-p>", false },
+        { "I", vim.lsp.buf.hover, desc = "Hover" },
+        { "gI", vim.lsp.buf.signature_help, desc = "Signature Help", has = "signatureHelp" },
+        {
+          "<c-h>",
+          vim.lsp.buf.signature_help,
+          mode = "i",
+          desc = "Signature Help",
+          has = "signatureHelp",
+        },
+        {
+          "<a-.>",
+          function()
+            Snacks.words.jump(vim.v.count1, true)
+          end,
+          has = "documentHighlight",
+          desc = "Next Reference",
+          enabled = function()
+            return Snacks.words.is_enabled()
+          end,
+        },
+        {
+          "<a-,>",
+          function()
+            Snacks.words.jump(-vim.v.count1, true)
+          end,
+          has = "documentHighlight",
+          desc = "Prev Reference",
+          enabled = function()
+            return Snacks.words.is_enabled()
+          end,
+        },
+      })
+      return opts
     end,
   },
   -- Extras overrides

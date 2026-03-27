@@ -5,7 +5,7 @@
 }:
 let
   inherit (lib.options) mkEnableOption;
-  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.modules) mkIf mkBefore;
   cfg = config.my.yazi;
 in
 with config.my.keyboard.keys;
@@ -197,7 +197,7 @@ with config.my.keyboard.keys;
       };
       keymap = {
         mgr = {
-          prepend_keymap = mkDefault [
+          prepend_keymap = mkBefore [
             {
               on = "w";
               run = ''shell "$SHELL" --block --confirm'';
@@ -221,10 +221,6 @@ with config.my.keyboard.keys;
               on = h;
               run = "leave";
             }
-            {
-              on = l;
-              run = "plugin smart-enter";
-            }
 
             {
               on = H;
@@ -234,19 +230,10 @@ with config.my.keyboard.keys;
               on = L;
               run = "forward";
             }
-            {
-              desc = "Paste into the hovered directory or CWD";
-              on = "p";
-              run = "plugin smart-paste";
-            }
 
             {
               on = "<C-u>";
               run = "seek -5";
-            }
-            {
-              on = "<C-d>";
-              run = "seek 5";
             }
 
             # Operation
