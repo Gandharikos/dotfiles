@@ -5,7 +5,6 @@
   ...
 }:
 let
-  inherit (builtins) readFile;
   inherit (lib.modules) mkIf;
   src = pkgs.vimPlugins.tokyonight-nvim;
   cfg = config.my.theme.tokyonight;
@@ -13,6 +12,8 @@ let
 in
 {
   config = mkIf cfg.enable {
-    programs.fish.interactiveShellInit = readFile "${src}/extras/fish/${slug}.fish";
+    programs.fish.interactiveShellInit = ''
+      source ${src}/extras/fish/${slug}.fish
+    '';
   };
 }
