@@ -74,7 +74,7 @@ in
 {
   config = mkIf enable {
     my.theme = {
-      wallpaper = inputs.wallpapers.wallpapers.tokyonight.anime_girl.path;
+      wallpaper = inputs.wallpapers.tokyonight.anime-girl.path;
       # I hated base16 scheme, so I made my own
       colorscheme = {
         inherit palette;
