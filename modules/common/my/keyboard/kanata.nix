@@ -5,7 +5,6 @@
     {
       isLinux ? pkgs.stdenv.isLinux,
       isDarwin ? pkgs.stdenv.isDarwin,
-      includeDefCfg ? true,
     }:
     let
       # Define the bottom row based on the OS (6 keys each)
@@ -32,7 +31,6 @@
     in
     ''
       ;; Generated Kanata configuration
-      ${lib.optionalString includeDefCfg ''
         (defcfg
           process-unmapped-keys yes
           ${lib.optionalString isLinux ''
@@ -42,7 +40,6 @@
             macos-dev-names-include ("Apple Internal Keyboard / Trackpad")
           ''}
         )
-      ''}
 
       (defsrc
         tab  q    w    e    r    t    y    u    i    o    p bspc
