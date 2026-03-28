@@ -342,6 +342,7 @@ in
         })
         (mkIf hm.zellij.enable {
           directories = [
+            ".cache/zellij"
             ".local/share/zellij"
           ];
         })
