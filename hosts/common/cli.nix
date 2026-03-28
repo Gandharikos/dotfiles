@@ -48,7 +48,7 @@
     lazygit.enable = true;
 
     mux = {
-      default = "zellij";
+      default = "tmux";
       autoStart = true;
     };
 
