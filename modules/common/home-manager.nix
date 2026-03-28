@@ -70,5 +70,9 @@ in
     backupFileExtension = "backup";
     useGlobalPkgs = true;
     useUserPackages = true;
+    verbose = true;
+
+    # common options defined both user level and system level
+    sharedModules = [ ./my ];
   };
 }
