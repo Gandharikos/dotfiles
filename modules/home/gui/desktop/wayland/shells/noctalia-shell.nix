@@ -91,7 +91,7 @@ in
         };
       }
       // optionalAttrs (wallpaper != null) {
-        wallpaper.directory = builtins.dirOf (toString wallpaper);
+        wallpaper.directory = toString (inputs.wallpapers.outPath + "/wallpapers");
       };
     };
 
