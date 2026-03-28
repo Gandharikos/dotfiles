@@ -52,6 +52,24 @@ in
           ];
         }
         {
+          command = "git log --all --stat --";
+          description = "Show Git history for a specific path";
+          tag = [
+            "cmd"
+            "git"
+            "history"
+          ];
+        }
+        {
+          command = "git log -p --";
+          description = "Show commit history with patches for a specific path";
+          tag = [
+            "cmd"
+            "git"
+            "history"
+          ];
+        }
+        {
           command = "sops --in-place set secrets/services/default.yaml '[\"my_key\"]' '\"my-secret-value\"'";
           description = "Set a string secret in secrets/services/default.yaml directly";
           tag = [
