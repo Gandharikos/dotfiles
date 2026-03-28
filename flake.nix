@@ -256,5 +256,7 @@
         quickshell.follows = "quickshell";
       };
     };
+
+    wallpapers.url = "github:Gandharikos/wallpapers";
   };
 }

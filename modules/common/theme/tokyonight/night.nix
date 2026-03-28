@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  inputs,
   ...
 }:
 let
@@ -73,12 +74,8 @@ let
 in
 {
   config = mkIf enable {
-    # my.theme.wallpaper = pkgs.fetchurl {
-    #   url = "https://github.com/huwqchn/wallpapers/blob/main/tokyonight/tokyonight-kimoni-girl.png";
-    #   sha256 = "1y3nlxm8if13ckc8z1vfwkhn66sqb2az33l0ai1v1xh96nlp8qfz";
-    # };
     my.theme = {
-      wallpaper = ./walls/mos-design.jpg;
+      wallpaper = inputs.wallpapers.wallpapers.tokyonight.tokyo_night_street_mos.path;
       # I hated base16 scheme, so I made my own
       colorscheme = {
         inherit palette;
