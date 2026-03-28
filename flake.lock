@@ -1564,6 +1564,7 @@
         "spicetify-nix": "spicetify-nix",
         "systems": "systems_6",
         "treefmt": "treefmt",
+        "wallpapers": "wallpapers",
         "wsl": "wsl",
         "zen": "zen"
       }
@@ -1815,6 +1816,21 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "wallpapers": {
+      "locked": {
+        "lastModified": 1774719160,
+        "narHash": "sha256-t7ghY3AHyjQiOklb00uU2CVbzM3pYNj2dh20ysGZUhQ=",
+        "owner": "Gandharikos",
+        "repo": "wallpapers",
+        "rev": "80a037831217c88088834aa59d3d19d556ddaab3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Gandharikos",
+        "repo": "wallpapers",
         "type": "github"
       }
     },
