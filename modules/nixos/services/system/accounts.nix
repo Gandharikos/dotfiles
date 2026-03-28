@@ -4,12 +4,14 @@
   ...
 }:
 let
-  inherit (config.my) gui name theme;
+  inherit (config.my) name theme;
+  inherit (config.hm.my) gui;
   inherit (lib.modules) mkIf;
+  dmsEnabled = gui.enable && gui.desktop.shell == "dnak-material-shell";
 in
 {
   # INFO: I don't want use this, but dms require it.
-  config = mkIf gui.enable {
+  config = mkIf dmsEnabled {
     services.accounts-daemon.enable = true;
     # Declaratively set up the avatar and user configuration
     systemd.tmpfiles.rules = [
