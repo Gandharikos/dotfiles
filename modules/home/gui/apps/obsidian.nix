@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 let
@@ -19,9 +18,9 @@ in
   };
 
   config = mkIf enable {
-    home.packages = with pkgs; [
-      # note taking
-      obsidian
-    ];
+    programs.obsidian = {
+      enable = true;
+      cli.enable = true;
+    };
   };
 }
