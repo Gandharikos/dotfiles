@@ -74,7 +74,7 @@ in
 {
   config = mkIf enable {
     my.theme = {
-      wallpaper = inputs.wallpapers.tokyonight.tokyo-photo.path;
+      wallpaper = inputs.wallpapers.tokyonight.tokyo-night-street.path;
       # I hated base16 scheme; so I made my own
       colorscheme = {
         inherit palette;
