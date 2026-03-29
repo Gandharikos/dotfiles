@@ -12,7 +12,6 @@ in
 {
   config = mkIf cfg.enable {
     home = {
-      # TODO: use gowall to change wallpaper to apply my colorscheme
       packages = with pkgs; [
         gowall
       ];
