@@ -46,7 +46,7 @@ in
         # build error on darwin
         package = pkgs.llm-agents.gemini-cli;
         settings = {
-          ui.theme = "Default";
+          ui.theme = lib.mkDefault "Default";
           general = {
             vimMode = true;
             preferredEditor = "nvim";

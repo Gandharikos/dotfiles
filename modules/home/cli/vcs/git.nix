@@ -29,7 +29,7 @@ in
         "riff"
         "delta"
       ]);
-      default = "riff";
+      default = "delta";
       description = "The git diff tool to use";
     };
   };

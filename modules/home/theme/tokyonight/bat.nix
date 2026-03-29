@@ -14,11 +14,9 @@ in
   config = mkIf cfg.enable {
     programs.bat = {
       config.theme = slug;
-      themes = {
-        "${slug}" = {
-          inherit src;
-          file = "extras/sublime/${slug}.tmTheme";
-        };
+      themes."${slug}" = {
+        inherit src;
+        file = "extras/sublime/${slug}.tmTheme";
       };
     };
   };

@@ -1,24 +1,30 @@
 {
   lib,
+  pkgs,
   config,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
+  src = pkgs.vimPlugins.tokyonight-nvim;
   cfg = config.my.theme.tokyonight;
+  enable = cfg.enable && config.my.gui.apps.discord.enable;
   inherit (config.my.theme.general) transparent;
+  inherit (config.my.theme.colorscheme) slug;
+  discordTheme = builtins.replaceStrings [ "\${pink}" ] [ "var(--guild-boosting-pink)" ] (
+    builtins.readFile "${src}/extras/discord/${slug}.css"
+  );
 in
 {
-  config = mkIf cfg.enable {
+  config = mkIf enable {
     programs.nixcord.config = {
       inherit transparent;
       frameless = true;
       enabledThemes = [
-        "tokyo-night.theme.css"
-      ];
-      themeLinks = [
-        "https://raw.githubusercontent.com/Dyzean/Tokyo-Night/main/themes/tokyo-night.theme.css"
+        "${slug}.css"
       ];
     };
+
+    home.file."${config.programs.nixcord.configDir}/themes/${slug}.css".text = discordTheme;
   };
 }
