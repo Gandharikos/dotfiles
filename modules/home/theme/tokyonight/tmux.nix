@@ -59,7 +59,7 @@ in
 
             set -g message-style bg=${fg_gutter},fg=${blue}
             set -g message-command-style bg=${fg_gutter},fg=${blue}
-            set-window-option -g mode-style bg=${bg_highlight},fg=${green}
+            set -g mode-style bg=${bg_highlight},fg=${green}
 
             set -g pane-border-style fg=${fg_gutter}
             set -g pane-active-border-style fg=${blue}
