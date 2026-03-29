@@ -71,7 +71,7 @@ let
     };
 
     codex = {
-      customInstructions = builtins.readFile (lib.my.getFile "modules/home/cli/ai/common/base.md");
+      customInstructions = builtins.readFile (lib.my.getFile "modules/home/cli/ai/shared/base.md");
       skills = {
         "ai-commands" = renderEntries "ai-commands" aiCommands;
         "ai-agents" = renderEntries "ai-agents" aiAgents;

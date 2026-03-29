@@ -2,9 +2,9 @@
   modules = [
     {
       hm.imports = [
-        ./common/nvim.nix
-        ./common/cli.nix
-        ./common/dev.nix
+        ./shared/nvim.nix
+        ./shared/cli.nix
+        ./shared/dev.nix
       ];
     }
   ];

@@ -166,7 +166,7 @@ in
 
       inherit (sharedAiTools.claudeCode) commands;
 
-      memory.source = lib.my.getFile "modules/home/cli/ai/common/base.md";
+      memory.source = lib.my.getFile "modules/home/cli/ai/shared/base.md";
     };
   };
 }

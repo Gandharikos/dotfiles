@@ -11,13 +11,13 @@
 
     ### **Module Organization:**
     - **Platform separation**: `modules/nixos/`, `modules/darwin/`, `modules/home/`
-    - **Common modules**: Shared via `lib.my.getFile "modules/common/..."`
+    - **Shared modules**: Shared via `lib.my.getFile "modules/shared/..."`
     - **Suite-based grouping**: Related functionality in `suites/` modules
     - **Archetype profiles**: High-level configurations in `archetypes/`
     - **Auto-discovery**: Modules automatically discovered via `importModulesRecursive`
 
     ### **Configuration Layering (7 levels):**
-    1. **Common modules** - Cross-platform base functionality
+    1. **Shared modules** - Cross-platform base functionality
     2. **Platform modules** - OS-specific configurations
     3. **Home modules** - User-space applications
     4. **Suite modules** - Grouped functionality with defaults

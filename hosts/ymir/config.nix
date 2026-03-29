@@ -2,7 +2,7 @@
 {
   imports = [
     inputs.hardware.nixosModules.dell-xps-15-9560-nvidia
-    (import ../common/disko/luks-btrfs-tmpfs.nix {
+    (import ../shared/disko/luks-btrfs-tmpfs.nix {
       device = "/dev/nvme0n1";
       swapSize = "8G";
     })
