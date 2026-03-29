@@ -7,7 +7,7 @@
   imports = [
     ./hardware-configuration.nix
     inputs.disko.nixosModules.disko
-    (import ../shared/disko/luks-btrfs-tmpfs.nix { })
+    (import ../common/disko/luks-btrfs-tmpfs.nix { })
   ];
   boot.loader = {
     systemd-boot.enable = true;

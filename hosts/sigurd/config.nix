@@ -2,7 +2,7 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    (import ../shared/disko/luks-btrfs-tmpfs.nix { })
+    (import ../common/disko/luks-btrfs-tmpfs.nix { })
   ];
 
   my = {

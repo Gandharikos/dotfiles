@@ -9,7 +9,7 @@ let
   cfg = config.my.services.kanata;
   # Use a stable executable path so launchd/TCC rules do not break across nix store hash changes.
   kanataBin = "/run/current-system/sw/bin/kanata";
-  kanataConfig = (import ../shared/my/keyboard/kanata.nix { inherit lib pkgs; }).mkKanataConfig { };
+  kanataConfig = (import ../common/my/keyboard/kanata.nix { inherit lib pkgs; }).mkKanataConfig { };
   configFile = pkgs.writeText "kanata.kbd" kanataConfig;
 in
 {

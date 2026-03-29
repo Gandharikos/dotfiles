@@ -55,7 +55,7 @@ in
           security.auth.selectedType = "oauth-personal";
         };
         context = {
-          GEMINI = lib.my.getFile "modules/home/cli/ai/shared/base.md";
+          GEMINI = lib.my.getFile "modules/home/cli/ai/common/base.md";
         };
 
         commands = sharedAiTools.geminiCli.commands // sharedAiTools.geminiCli.agents;

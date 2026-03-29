@@ -34,7 +34,7 @@ in
       inherit (sharedAiTools.claudeCode) agents;
       inherit (sharedAiTools.claudeCode) commands;
 
-      rules = builtins.readFile (lib.my.getFile "modules/home/cli/ai/shared/base.md");
+      rules = builtins.readFile (lib.my.getFile "modules/home/cli/ai/common/base.md");
     };
   };
 }
