@@ -80,9 +80,7 @@ in
             checkpointing = {
               enabled = true;
             };
-            enablePromptCompletion = true;
             preferredEditor = "neovim";
-            previewFeatures = true;
             sessionRetention = {
               enabled = true;
               maxAge = "30d";
@@ -94,7 +92,6 @@ in
             };
           };
           tools = {
-            autoAccept = false;
             shell.showColor = true;
             useRipgrep = true;
             truncateToolOutputThreshold = 50000;
