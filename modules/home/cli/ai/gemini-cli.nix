@@ -46,16 +46,77 @@ in
         # build error on darwin
         package = pkgs.llm-agents.gemini-cli;
         settings = {
-          ui.theme = lib.mkDefault "Default";
-          general = {
-            vimMode = true;
-            preferredEditor = "nvim";
+          contextFilename = "AGENTS.md";
+
+          context = {
+            discoveryMaxDirs = 1000;
+            # NOTE: bombs out on repos that don't have them
+            # includeDirectories = [
+            #   "lib"
+            #   "modules"
+            #   "docs"
+            # ];
+            loadMemoryFromIncludeDirectories = true;
+            fileFiltering = {
+              enableFuzzySearch = true;
+              enableRecursiveFileSearch = true;
+              respectGeminiIgnore = true;
+              respectGitIgnore = true;
+            };
           };
-          tools.autlAccept = false;
-          security.auth.selectedType = "oauth-personal";
+          ui = {
+            footer.hideContextPercentage = false;
+            inlineThinkingMode = "full";
+            showCitations = true;
+            showModelInfoInChat = true;
+            showStatusInTitle = true;
+            useAlternateBuffer = true;
+            showMemoryUsage = true;
+            theme = lib.mkDefault "Default";
+          };
+          ide.enabled = true;
+          privacy.usageStatisticsEnabled = false;
+          general = {
+            checkpointing = {
+              enabled = true;
+            };
+            enablePromptCompletion = true;
+            preferredEditor = "neovim";
+            previewFeatures = true;
+            sessionRetention = {
+              enabled = true;
+              maxAge = "30d";
+              maxCount = 100;
+            };
+            vimMode = true;
+            plan = {
+              modelRouting = true;
+            };
+          };
+          tools = {
+            autoAccept = false;
+            shell.showColor = true;
+            useRipgrep = true;
+            truncateToolOutputThreshold = 50000;
+          };
+          security = {
+            auth.selectedType = "oauth-personal";
+            folderTrust.enabled = true;
+            environmentVariableRedaction.enabled = true;
+          };
+
+          experimental = {
+            plan = true;
+            taskTracker = true;
+            modelSteering = true;
+            toolOutputMasking = {
+              enabled = true;
+              protectLatestTurn = true;
+            };
+          };
         };
         context = {
-          GEMINI = lib.my.getFile "modules/home/cli/ai/common/base.md";
+          AGENTS = lib.my.getFile "modules/home/cli/ai/common/base.md";
         };
 
         commands = sharedAiTools.geminiCli.commands // sharedAiTools.geminiCli.agents;
