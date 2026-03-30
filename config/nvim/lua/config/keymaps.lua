@@ -97,8 +97,8 @@ vim.keymap.set("n", "s", "<nop>", { noremap = true, desc = "split/surround/selec
 
 -- Switch buffer with tab
 -- vim.keymap.set("n", "<tab>", "<tab>") -- conflict with <C-i>
-vim.keymap.set("n", "<tab>", "]b", { desc = "Next buffer", remap = true, silent = true })
-vim.keymap.set("n", "<s-tab>", "[b", { desc = "Prev buffer", remap = true, silent = true })
+-- vim.keymap.set("n", "<tab>", "]b", { desc = "Next buffer", remap = true, silent = true })
+-- vim.keymap.set("n", "<s-tab>", "[b", { desc = "Prev buffer", remap = true, silent = true })
 
 -- Tabs management
 map("n", "]<tab>", "<cmd>tabn<CR>", { desc = "Next Tab" })
