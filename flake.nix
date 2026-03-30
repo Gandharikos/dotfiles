@@ -162,7 +162,10 @@
 
     programs-sqlite.url = "github:wamserma/flake-programs-sqlite";
 
-    # catppuccin.url = "github:catppuccin/nix";
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # niri
     niri = {
