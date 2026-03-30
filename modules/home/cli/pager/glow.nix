@@ -8,7 +8,7 @@
 let
   cfg = config.my.glow;
   inherit (lib.options) mkEnableOption;
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkDefault;
 in
 {
   options.my.glow = {
@@ -16,7 +16,7 @@ in
   };
   config = mkIf cfg.enable {
     home.packages = with pkgs; [ glow ];
-    home.sessionVariables.GLAMOUR_STYLE = "light";
+    home.sessionVariables.GLAMOUR_STYLE = mkDefault "light";
 
     xdg.configFile."glow/glow.yml".source =
       (inputs.nixago.lib.${pkgs.stdenv.hostPlatform.system}.make {

@@ -18,6 +18,8 @@ in
       enable = true;
       inherit (cfg) flavor accent;
       cursors.enable = config.my.gui.enable && isLinux;
+      grub.enable = false;
+      plymouth.enable = false;
     };
   };
 }
