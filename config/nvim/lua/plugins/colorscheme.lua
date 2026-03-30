@@ -5,12 +5,6 @@ local theme_path = "plugins.colorschemes." .. colorscheme_name
 
 M = {
   { import = theme_path },
-  {
-    "LazyVim/LazyVim",
-    opts = {
-      colorscheme = colorscheme_name,
-    },
-  },
 }
 
 return M
