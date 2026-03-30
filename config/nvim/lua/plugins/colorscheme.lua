@@ -1,12 +1,12 @@
 local M = {}
 
-local colorscheme = os.getenv("THEME") or "tokyonight"
-local theme_path = "plugins.colorschemes." .. colorscheme
+local colorscheme_name = os.getenv("COLORSCHEME_NAME") or "tokyonight"
+local theme_path = "plugins.colorschemes." .. colorscheme_name
 local has_theme, _ = pcall(require, theme_path)
 
 if not has_theme then
-  colorscheme = "tokyonight"
-  theme_path = "plugins.colorschemes." .. colorscheme
+  colorscheme_name = "tokyonight"
+  theme_path = "plugins.colorschemes." .. colorscheme_name
 end
 
 M = {
@@ -14,7 +14,7 @@ M = {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = colorscheme,
+      colorscheme = colorscheme_name,
     },
   },
 }

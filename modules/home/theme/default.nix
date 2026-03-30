@@ -1,8 +1,10 @@
-{ lib, ... }:
+{ lib, config, ... }:
 let
   inherit (lib.my) scanPaths;
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.types) str;
+  inherit (lib.modules) mkIf;
+  inherit (config.my) theme;
 in
 {
   imports = scanPaths ./.;
@@ -22,6 +24,13 @@ in
         default = "";
         description = "The right padding of status bar";
       };
+    };
+  };
+
+  config = mkIf (theme != null) {
+    home.sessionVariables = {
+      COLORSCHEME = theme.colorscheme.slug;
+      COLORSCHEME_NAME = theme.default;
     };
   };
 }

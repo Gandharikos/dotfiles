@@ -8,7 +8,6 @@
 let
   inherit (lib.modules) mkIf mkMerge;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.my.theme.colorscheme) slug;
   cfg = config.my.theme.catppuccin;
   guiLinux = config.my.gui.enable && isLinux;
 in
@@ -26,7 +25,10 @@ in
         wezterm.apply = true;
       };
 
-      home.sessionVariables.THEME = slug;
+      home.sessionVariables = {
+        COLORSCHEME_FLAVOR = cfg.flavor;
+        COLORSCHEME_ACCENT = cfg.accent;
+      };
     }
     (mkIf guiLinux {
       catppuccin.cursors.enable = true;

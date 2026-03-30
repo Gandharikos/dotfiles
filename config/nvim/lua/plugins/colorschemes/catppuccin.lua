@@ -7,7 +7,9 @@ return {
     optional = true,
     opts = function(_, opts)
       local old_custom_highlights = opts.custom_highlights
+      local flavor = os.getenv("COLORSCHEME_FLAVOR") or "mocha"
 
+      opts.flavour = flavor
       opts.transparent_background = true
       opts.float = vim.tbl_deep_extend("force", opts.float or {}, {
         transparent = true,
