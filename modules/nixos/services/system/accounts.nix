@@ -5,9 +5,9 @@
 }:
 let
   inherit (config.my) name theme;
-  inherit (config.hm.my) gui;
+  inherit (config.hm.my.gui) desktop;
   inherit (lib.modules) mkIf;
-  dmsEnabled = gui.enable && gui.desktop.shell == "dnak-material-shell";
+  dmsEnabled = desktop.wayland.enable && desktop.shell.default == "dank-material-shell";
 in
 {
   # INFO: I don't want use this, but dms require it.
