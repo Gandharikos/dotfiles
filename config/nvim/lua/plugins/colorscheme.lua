@@ -1,25 +1,22 @@
-return {
-  -- tokyonight
+local M = {}
+
+local colorscheme = os.getenv("THEME") or "tokyonight"
+local theme_path = "plugins.colorschemes." .. colorscheme
+local has_theme, _ = pcall(require, theme_path)
+
+if not has_theme then
+  colorscheme = "tokyonight"
+  theme_path = "plugins.colorschemes." .. colorscheme
+end
+
+M = {
+  { import = theme_path },
   {
-    "folke/tokyonight.nvim",
-    optional = true,
+    "LazyVim/LazyVim",
     opts = {
-      on_highlights = function(hl, _)
-        hl.StatusLine = { bg = "none" } -- status line of current window
-        hl.WinBar = { bg = "none" } -- window bar of current window
-        hl.NormalFloat = { bg = "none" } -- set float windows background to transparent
-      end,
-      style = "moon",
-      transparent = true, -- Enable this to disable setting the background color
+      colorscheme = colorscheme,
     },
   },
-  {
-    "nvim-lualine/lualine.nvim",
-    optional = true,
-    opts = function(_, opts)
-      local theme = require("lualine.themes.tokyonight")
-      theme.normal.c.bg = "none"
-      opts.options.theme = theme
-    end,
-  },
 }
+
+return M
