@@ -115,7 +115,10 @@
       # "stats" # beautiful system monitor
       "eudic" # dictionary
       "ghostty" # terminal
+      "granola"
       "keycastr" # show keystrokes on screen
+      "linear-linear"
+      "loom"
       "macfuse" # required by veracrypt
       "obs" # stream / recoding software
       # "obs" # stream / recoding software
@@ -128,6 +131,7 @@
       "rustdesk" # remote desktop client
       # sing-box
       "sfm"
+      "slack"
       "squirrel-app" # input method for Chinese, rime-squirrel
       # "obsidian" # note-taking
       # "miniforge" # Miniconda's community-driven distribution
