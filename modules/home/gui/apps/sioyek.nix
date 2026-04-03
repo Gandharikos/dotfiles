@@ -121,12 +121,7 @@ in
 
         # Visual appearance
         linear_filter = "1";
-        background_color = "1.0 1.0 1.0";
-        text_highlight_color = "1.0 1.0 0.0";
-        page_separator_color = "0.9 0.9 0.9";
         page_separator_width = "2";
-        status_bar_color = "1 1 1";
-        status_bar_text_color = "0 0 0";
 
         # Behavior
         should_launch_new_window = "1";
@@ -136,14 +131,7 @@ in
         # Academic features
         should_draw_highlight_outline = "1";
         should_highlight_links = "1";
-        highlight_color_a = "1.0 1.0 0.0"; # Yellow for general highlights
-        highlight_color_b = "0.0 1.0 0.0"; # Green for important
-        highlight_color_c = "1.0 0.5 0.0"; # Orange for todo
-        highlight_color_d = "1.0 0.0 0.0"; # Red for critical
-        highlight_color_e = "0.5 0.5 1.0"; # Blue for reference
 
-        # Portal settings (for academic linking)
-        portal_color = "0.0 0.5 1.0";
         should_draw_portal_outline = "1";
 
         # Navigation
@@ -161,14 +149,9 @@ in
 
         # Window behavior
         fit_to_page_width = "1";
-        default_dark_mode = "0";
 
         # Synctex support for LaTeX
         synctex_command = "nvim --headless -c \"VimtexInverseSearch %2 '%1'\"";
-
-        # Custom colors for dark mode
-        custom_background_color = "0.1 0.1 0.1";
-        custom_text_color = "0.9 0.9 0.9";
 
         # Misc
         check_for_updates_on_startup = "0";
