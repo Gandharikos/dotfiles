@@ -43,6 +43,19 @@ in
             k = "up";
             l = "right";
             backspace = "delete";
+            # German umlauts
+            a = "macro(ä)";
+            u = "macro(ü)";
+            o = "macro(ö)";
+            s = "macro(ß)";
+          };
+
+          "tab_layer+shift" = {
+            # German umlauts (uppercase)
+            a = "macro(Ä)";
+            u = "macro(Ü)";
+            o = "macro(Ö)";
+            s = "macro(ẞ)";
           };
         };
       };

@@ -60,6 +60,11 @@
         escctrl (tap-hold-press $tapping-term $quick-tap esc lctl)
         smart_sft (tap-dance 200 (@sft @caps_word))
         tab-mod (tap-hold-press $tapping-term $quick-tap tab (layer-while-held tab_layer))
+        ;; German umlauts with shift support
+        ä (fork (unicode ä) (unicode Ä) (lsft rsft))
+        ö (fork (unicode ö) (unicode Ö) (lsft rsft))
+        ü (fork (unicode ü) (unicode Ü) (lsft rsft))
+        ß (fork (unicode ß) (unicode ẞ) (lsft rsft))
         ${lib.optionalString isDarwin ''
           hyper (multi lctl lalt lmet)
         ''}
@@ -73,9 +78,9 @@
       )
 
       (deflayer tab_layer
-        _    C-f12    _    _    _    _    _    _    _    _    ${prtScKey} del
-        _    _        _    _    _    _    left down up   right _    _    _
-        _    _        _    _    _    _    _    _    _    _    _
+        _    C-f12 _    _    _    _    _    @ü   _    @ö    ${prtScKey} del
+        _    @ä    @ß   _    _    _    left down up   right _    _    _
+        _    _     _    _    _    _    _    _    _    _     _
         _    _    _              _              _    _
       )
     '';

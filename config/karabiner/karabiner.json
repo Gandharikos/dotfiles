@@ -66,6 +66,71 @@
                 "type": "basic",
                 "from": { "key_code": "delete_or_backspace" },
                 "to": [{ "key_code": "delete_forward" }]
+              },
+              {
+                "conditions": [{ "type": "variable_if", "name": "tab_layer", "value": 1 }],
+                "type": "basic",
+                "from": { "key_code": "a", "modifiers": { "mandatory": ["shift"] } },
+                "to": [
+                  { "key_code": "u", "modifiers": ["left_option"] },
+                  { "key_code": "a", "modifiers": ["shift"] }
+                ],
+                "description": "tab + shift + a -> Ä"
+              },
+              {
+                "conditions": [{ "type": "variable_if", "name": "tab_layer", "value": 1 }],
+                "type": "basic",
+                "from": { "key_code": "a" },
+                "to": [{ "key_code": "u", "modifiers": ["left_option"] }, { "key_code": "a" }],
+                "description": "tab + a -> ä"
+              },
+              {
+                "conditions": [{ "type": "variable_if", "name": "tab_layer", "value": 1 }],
+                "type": "basic",
+                "from": { "key_code": "u", "modifiers": { "mandatory": ["shift"] } },
+                "to": [
+                  { "key_code": "u", "modifiers": ["left_option"] },
+                  { "key_code": "u", "modifiers": ["shift"] }
+                ],
+                "description": "tab + shift + u -> Ü"
+              },
+              {
+                "conditions": [{ "type": "variable_if", "name": "tab_layer", "value": 1 }],
+                "type": "basic",
+                "from": { "key_code": "u" },
+                "to": [{ "key_code": "u", "modifiers": ["left_option"] }, { "key_code": "u" }],
+                "description": "tab + u -> ü"
+              },
+              {
+                "conditions": [{ "type": "variable_if", "name": "tab_layer", "value": 1 }],
+                "type": "basic",
+                "from": { "key_code": "o", "modifiers": { "mandatory": ["shift"] } },
+                "to": [
+                  { "key_code": "u", "modifiers": ["left_option"] },
+                  { "key_code": "o", "modifiers": ["shift"] }
+                ],
+                "description": "tab + shift + o -> Ö"
+              },
+              {
+                "conditions": [{ "type": "variable_if", "name": "tab_layer", "value": 1 }],
+                "type": "basic",
+                "from": { "key_code": "o" },
+                "to": [{ "key_code": "u", "modifiers": ["left_option"] }, { "key_code": "o" }],
+                "description": "tab + o -> ö"
+              },
+              {
+                "conditions": [{ "type": "variable_if", "name": "tab_layer", "value": 1 }],
+                "type": "basic",
+                "from": { "key_code": "s", "modifiers": { "mandatory": ["shift"] } },
+                "to": [{ "key_code": "b", "modifiers": ["left_option"] }],
+                "description": "tab + shift + s -> ẞ"
+              },
+              {
+                "conditions": [{ "type": "variable_if", "name": "tab_layer", "value": 1 }],
+                "type": "basic",
+                "from": { "key_code": "s" },
+                "to": [{ "key_code": "s", "modifiers": ["left_option"] }],
+                "description": "tab + s -> ß"
               }
             ]
           }
