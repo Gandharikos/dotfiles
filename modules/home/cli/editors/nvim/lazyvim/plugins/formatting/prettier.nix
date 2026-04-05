@@ -17,7 +17,7 @@ in
   config = mkIf cfg.enable {
     my.lazyvim = {
       extraPackages = with pkgs; [
-        nodePackages.prettier
+        prettier
       ];
 
       imports = [ "lazyvim.plugins.extras.formatting.prettier" ];
