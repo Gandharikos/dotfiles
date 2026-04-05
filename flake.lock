@@ -772,6 +772,22 @@
         "type": "github"
       }
     },
+    "lazyvim-starter": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1733936199,
+        "narHash": "sha256-QrpnlDD4r1X4C8PqBhQ+S3ar5C+qDrU1Jm/lPqyMIFM=",
+        "owner": "LazyVim",
+        "repo": "starter",
+        "rev": "803bc181d7c0d6d5eeba9274d9be49b287294d99",
+        "type": "github"
+      },
+      "original": {
+        "owner": "LazyVim",
+        "repo": "starter",
+        "type": "github"
+      }
+    },
     "llm-agents": {
       "inputs": {
         "blueprint": "blueprint_2",
@@ -997,6 +1013,30 @@
         "owner": "Enzime",
         "ref": "pr-105-latest",
         "repo": "nix-vm-test",
+        "type": "github"
+      }
+    },
+    "nix4lazyvim": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "lazyvim-starter": "lazyvim-starter",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1775368428,
+        "narHash": "sha256-EjMGi86ohZ0Q1k/n1zSuO7q56fzPoqb2GmWb+eJtpnY=",
+        "owner": "Gandharikos",
+        "repo": "nix4lazyvim",
+        "rev": "2c5a2759821c0441fc286cb21fea827ede8a10f0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Gandharikos",
+        "repo": "nix4lazyvim",
         "type": "github"
       }
     },
@@ -1570,6 +1610,7 @@
         "nix-homebrew": "nix-homebrew",
         "nix-index-database": "nix-index-database",
         "nix-topology": "nix-topology",
+        "nix4lazyvim": "nix4lazyvim",
         "nixago": "nixago",
         "nixcord": "nixcord",
         "nixos-anywhere": "nixos-anywhere",

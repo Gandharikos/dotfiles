@@ -54,6 +54,8 @@
 
     navi.enable = true;
 
+    neovim.enable = true;
+
     nix-index.enable = true;
 
     nix-search-tv.enable = true;

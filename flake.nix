@@ -194,6 +194,14 @@
       };
     };
 
+    nix4lazyvim = {
+      url = "github:Gandharikos/nix4lazyvim";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
+
     # AI tools
     llm-agents = {
       url = "github:numtide/llm-agents.nix";
