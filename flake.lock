@@ -1027,11 +1027,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1775373067,
-        "narHash": "sha256-fk4ZB2Uyr1L8qPY4lKM2XRKDG/A8nENB55OJBTQaJ4s=",
+        "lastModified": 1775378035,
+        "narHash": "sha256-D6ngLrpcPevhdiy15xv81DAAHaIBiFhuRUFFUQ04pNY=",
         "owner": "Gandharikos",
         "repo": "nix4lazyvim",
-        "rev": "747a889b57c604478ced97e1605b9e1f832871a7",
+        "rev": "0b8d8770722cbabccd38b8914aa130fbb2267cc1",
         "type": "github"
       },
       "original": {
