@@ -18,7 +18,7 @@ in
       enable = true;
       neovim = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
       configDir = relativeToConfig "nvim";
-      installDependencies = true;
+      enableDependencies = true;
 
       extras = {
         ai.sidekick.enable = true;
@@ -96,6 +96,7 @@ in
         dropbar-nvim
         scope-nvim
         obsidian-nvim
+        zk-nvim
       ];
     };
   };
