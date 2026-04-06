@@ -1,5 +1,4 @@
 local flavor = os.getenv("COLORSCHEME_FLAVOR") or "mocha"
-local colorscheme = "catppuccin-" .. flavor
 
 return {
   {
@@ -17,7 +16,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = colorscheme,
+      colorscheme = "catppuccin-nvim",
     },
   },
 }
