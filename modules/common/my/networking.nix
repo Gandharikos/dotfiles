@@ -6,7 +6,9 @@ in
 {
   options.my.networking = {
     proxy = {
-      enable = mkEnableOption "proxy service";
+      enable = mkEnableOption "proxy service" // {
+        default = true;
+      };
 
       backend = mkOption {
         type = enum [ "mihomo" ];
@@ -14,16 +16,25 @@ in
         description = "Proxy backend to use (currently only mihomo is supported)";
       };
 
+      mode = mkOption {
+        type = enum [
+          "service"
+          "desktop"
+        ];
+        default = "service";
+        description = ''
+          Proxy operating mode.
+          `service` runs Mihomo as a standalone service.
+          `desktop` uses the Clash Verge desktop workflow instead.
+        '';
+      };
+
       enableWebui = mkEnableOption "proxy web UI" // {
         default = true;
       };
 
-      autoStart = mkEnableOption "auto start proxy service on boot" // {
+      autoStart = mkEnableOption "auto start proxy service on boot on Darwin in service mode" // {
         default = false;
-      };
-
-      enableGui = mkEnableOption "Clash Verge GUI client" // {
-        default = true;
       };
     };
 

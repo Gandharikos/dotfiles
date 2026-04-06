@@ -2,269 +2,213 @@
 
 ## Architecture
 
-- **NixOS**: system-level service via systemd
-- **Darwin**: system-level service via launchd daemons
-- **Default behavior**: no auto-start, manual control through the GUI or service manager
+- `mode = "service"` uses standalone Mihomo
+- `mode = "desktop"` uses Clash Verge
+- NixOS service mode enables `services.mihomo`
+- Darwin service mode installs `mihomo` and can optionally create a launchd daemon
 
 ## Quick Configuration
 
-### NixOS
+### NixOS service mode
 
 ```nix
-# hosts/sigurd/config.nix or another NixOS host
 {
   my.networking.proxy = {
     enable = true;
-    enableGui = true;    # Default, can be omitted
-    autoStart = false;   # Default
-    enableWebui = true;  # Optional
+    mode = "service";    # Default
+    enableWebui = true;  # Default
   };
 }
 ```
 
-### Darwin (macOS)
+### Darwin service mode
 
 ```nix
-# hosts/eir/config.nix or hosts/tyr/config.nix
 {
   my.networking.proxy = {
     enable = true;
-    enableGui = true;      # Default, can be omitted
+    mode = "service";    # Default
     autoStart = false;
-    enableWebui = false;   # The GUI is usually enough
+    enableWebui = true;  # Default
   };
 }
 ```
 
-Prerequisite: `secrets/services/mihomo.yaml` must already contain an encrypted `mihomo_config`.
+### Desktop mode
+
+```nix
+{
+  my.networking.proxy = {
+    enable = true;
+    mode = "desktop";
+  };
+}
+```
+
+Service mode requires `mihomo_config` in `secrets/services/mihomo.yaml`. Desktop mode does not.
 
 ## Option Reference
 
 ### `enable`
 
 - Type: `boolean`
-- Default: `false`
-- Meaning: enable Mihomo integration
-
-### `enableGui`
-
-- Type: `boolean`
 - Default: `true`
-- Meaning: install the Clash Verge GUI client
+- Meaning: enable proxy integration
+
+### `backend`
+
+- Type: `"mihomo"`
+- Default: `"mihomo"`
+- Meaning: select the proxy backend
+
+### `mode`
+
+- Type: `"service" | "desktop"`
+- Default: `"service"`
+- Meaning: choose between standalone Mihomo service mode and Clash Verge desktop mode
 
 ### `enableWebui`
 
 - Type: `boolean`
 - Default: `true`
-- Meaning: enable the WebUI package (`metacubexd`)
+- Meaning: enable the WebUI package in service mode
 
 ### `autoStart`
 
 - Type: `boolean`
 - Default: `false`
-- Meaning: start the Mihomo service automatically at boot
+- Meaning: auto-start the Mihomo daemon on Darwin in service mode
 
-## Using the GUI
+## Mode Behavior
 
-### 1. Enable the GUI
+### Service mode on NixOS
 
-With `enableGui = true`, rebuild the system and launch Clash Verge.
+- Enables `services.mihomo`
+- Starts through systemd automatically
+- Uses the encrypted `mihomo_config` secret
+- Can expose WebUI at `http://localhost:9090/ui`
 
-**NixOS**:
+### Service mode on Darwin
 
-```bash
-clash-verge
-```
+- Installs `mihomo`
+- Uses the encrypted `mihomo_config` secret
+- Supports WebUI at `http://localhost:9090/ui`
+- Runs manually by default, or via launchd when `autoStart = true`
 
-**Darwin**:
+### Desktop mode
 
-```bash
-open -a "Clash Verge"
-```
+- NixOS enables `programs.clash-verge`
+- Darwin installs the `clash-verge-rev` Homebrew cask
+- Does not enable the standalone Mihomo service
+- Does not use the encrypted `mihomo_config` deployment path
 
-Typical flow:
+## Starting and Stopping
 
-1. Open the GUI application.
-2. Import the config or confirm `mihomo_config` has already been deployed.
-3. Click "Start" or "Connect" when you need the proxy.
-4. Click "Stop" or "Disconnect" when you do not.
-
-### 2. Use the WebUI
-
-If `enableWebui = true`:
-
-1. Start the Mihomo service manually.
-2. Open `http://localhost:9090/ui`.
-
-## Manual Service Management
-
-### NixOS
+### NixOS service mode
 
 ```bash
-sudo systemctl start mihomo
 sudo systemctl stop mihomo
 sudo systemctl restart mihomo
 sudo systemctl status mihomo
 sudo journalctl -u mihomo -f
-sudo systemctl enable mihomo
 ```
 
-### Darwin
+### Darwin service mode
 
 ```bash
-sudo launchctl load /Library/LaunchDaemons/com.mihomo.proxy.plist
-sudo launchctl unload /Library/LaunchDaemons/com.mihomo.proxy.plist
-sudo launchctl list | grep mihomo
-tail -f /var/log/mihomo.log
-tail -f /var/log/mihomo-error.log
+mihomo -d ~/.config/mihomo
+pkill mihomo
 ```
 
-## Using the SOPS Secret
+### Desktop mode
 
-The module now expects a full encrypted Mihomo config file instead of a subscription URL.
+```bash
+# NixOS
+clash-verge
 
-```nix
-{
-  my.networking.proxy = {
-    enable = true;
-    enableGui = true;
-    autoStart = false;
-    enableWebui = true;
-  };
-
-  # Ensure `mihomo_config` exists in secrets/services/mihomo.yaml
-}
+# Darwin
+open -a "Clash Verge"
 ```
 
-## Config File Locations
+## Config and Logs
 
-### NixOS
+### Service mode on NixOS
 
 - Config file: `/var/lib/mihomo/config.yaml`
 - Logs: `journalctl -u mihomo`
 
-### Darwin
+### Service mode on Darwin
 
 - Config file: `~/.config/mihomo/config.yaml`
 - Logs: `/var/log/mihomo.log` and `/var/log/mihomo-error.log`
 
-## WebUI Access
+## Examples
 
-If WebUI is enabled:
-
-- URL: `http://localhost:9090/ui`
-- Port: `9090`
-
-## Example Configurations
-
-### Example 1: NixOS + encrypted config + GUI
+### NixOS service mode with WebUI
 
 ```nix
-# hosts/sigurd/config.nix
 {
   my.networking.proxy = {
     enable = true;
-    enableGui = true;
+    mode = "service";
+    enableWebui = true;
+  };
+}
+```
+
+### Darwin service mode with manual start
+
+```nix
+{
+  my.networking.proxy = {
+    enable = true;
+    mode = "service";
     autoStart = false;
     enableWebui = true;
   };
 }
 ```
 
-### Example 2: NixOS + WebUI only
+### Darwin service mode with launchd auto-start
 
 ```nix
 {
   my.networking.proxy = {
     enable = true;
-    enableGui = false;
-    autoStart = false;
-    enableWebui = true;
-  };
-}
-```
-
-### Example 3: Darwin + GUI
-
-```nix
-# hosts/eir/config.nix
-{
-  my.networking.proxy = {
-    enable = true;
-    enableGui = true;
-    autoStart = false;
-    enableWebui = false;
-  };
-}
-```
-
-### Example 4: Auto-start enabled
-
-```nix
-{
-  my.networking.proxy = {
-    enable = true;
-    enableGui = true;
+    mode = "service";
     autoStart = true;
-    enableWebui = false;
+    enableWebui = true;
   };
 }
 ```
 
-## Recommended Workflow
+### Desktop mode on either platform
 
-### Daily use
+```nix
+{
+  my.networking.proxy = {
+    enable = true;
+    mode = "desktop";
+  };
+}
+```
 
-1. Configure:
+## Migration
 
-   ```nix
-   my.networking.proxy = {
-     enable = true;
-     enableGui = true;
-   };
-   ```
+If you were using `enableGui` before, switch to `mode`:
 
-2. Rebuild: `sudo nixos-rebuild switch` or `darwin-rebuild switch --flake .`
+```nix
+my.networking.proxy = {
+  enable = true;
+  mode = "service";  # or "desktop"
+};
+```
 
-3. Use:
-   - Open Clash Verge when you need the proxy
-   - Disconnect when finished
-   - Switch nodes inside the GUI
-
-### WebUI-only use
-
-1. Configure:
-
-   ```nix
-   my.networking.proxy = {
-     enable = true;
-     enableGui = false;
-     enableWebui = true;
-   };
-   ```
-
-2. Start Mihomo: `sudo systemctl start mihomo`
-
-3. Open: `http://localhost:9090/ui`
+`enableGui = true` maps most closely to `mode = "desktop"` if your intent was to use Clash Verge.
 
 ## Troubleshooting
 
-### GUI cannot find the Mihomo binary
-
-Check whether Mihomo is in `PATH`:
-
-```bash
-which mihomo
-```
-
-Expected output:
-
-- NixOS: `/run/current-system/sw/bin/mihomo`
-- Darwin: `/nix/var/nix/profiles/default/bin/mihomo`
-
-### Service failed to start
-
-Check logs:
+### Service mode failed to start
 
 ```bash
 # NixOS
@@ -274,43 +218,17 @@ sudo journalctl -u mihomo -n 50
 tail -50 /var/log/mihomo-error.log
 ```
 
-### Port conflict
+### WebUI is unavailable
 
-Mihomo uses port `9090` by default. Check for conflicts with:
+- Confirm `mode = "service"`
+- Confirm `enableWebui = true`
+- Open `http://localhost:9090/ui`
+
+### Port conflict
 
 ```bash
 sudo lsof -i :9090
 ```
-
-## Relation to the Old Setup
-
-- `my.networking.proxy.enable` controls whether proxy-related integration is enabled
-- `my.networking.proxy.backend = "mihomo"` selects Mihomo as the backend
-- On both NixOS and Darwin, enabling `my.networking.proxy` activates the platform-specific Mihomo
-  integration
-
-## Migration
-
-If you were using the previous setup:
-
-1. Enable the module:
-
-   ```nix
-   my.networking.proxy.enable = true;
-   ```
-
-2. Configure the GUI and static config:
-
-   ```nix
-   my.networking.proxy = {
-     enable = true;
-     enableGui = true;
-   };
-   ```
-
-3. Rebuild the system.
-
-4. Verify by opening the GUI or checking service state.
 
 ## References
 

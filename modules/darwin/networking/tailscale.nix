@@ -6,7 +6,7 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (lib.meta) getExe getExe';
+  inherit (lib.meta) getExe;
   inherit (lib.lists) optionals;
   inherit (lib.strings) concatStringsSep escapeShellArgs;
 
@@ -25,10 +25,8 @@ let
     "--advertise-routes=${concatStringsSep "," cfg.advertiseRoutes}"
   ];
 
-  stateDir = "/var/lib/tailscale";
   socketPath = "/var/run/tailscaled.socket";
   tailscale' = getExe pkgs.tailscale;
-  tailscaled' = getExe' pkgs.tailscale "tailscaled";
   upArgs =
     cfg.defaultFlags
     ++ optionals isClient [
@@ -74,30 +72,13 @@ let
 in
 {
   config = mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.tailscale ];
+    services.tailscale.enable = true;
 
     sops.secrets = mkIf cfg.autoConnect {
       tailscale_authKey = {
         owner = "root";
         group = "wheel";
         mode = "0400";
-      };
-    };
-
-    launchd.daemons.tailscaled = {
-      serviceConfig = {
-        ProgramArguments = [
-          tailscaled'
-          "--statedir=${stateDir}"
-          "--socket=${socketPath}"
-          "--no-logs-no-support"
-        ];
-        Label = "org.nixos.tailscaled";
-        KeepAlive = true;
-        RunAtLoad = true;
-        StandardOutPath = "/var/log/tailscaled.log";
-        StandardErrorPath = "/var/log/tailscaled-error.log";
-        WorkingDirectory = "/tmp";
       };
     };
 
@@ -111,12 +92,6 @@ in
         WorkingDirectory = "/tmp";
       };
     };
-
-    system.activationScripts.tailscale-setup.text = ''
-      mkdir -p ${stateDir}
-      chown root:wheel ${stateDir}
-      chmod 0700 ${stateDir}
-    '';
 
     assertions = [
       {
