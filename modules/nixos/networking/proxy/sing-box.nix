@@ -8,21 +8,30 @@
 let
   cfg = config.my.networking.proxy;
   inherit (lib) mkIf mkForce;
-  singBoxCfg = cfg.singBox;
-  baseSettings = proxyCommon.mkSingBoxSettings {
-    inherit pkgs singBoxCfg;
+  generateConfig = proxyCommon.mkSingBoxGenerateConfig {
+    name = "generate-sing-box-config";
+    inherit pkgs;
+    sourceConfigPath = config.sops.secrets.proxy_source_config.path;
+    outputConfigPath = "/run/sing-box/config.json";
+    outputNodesPath = "/run/sing-box/generated-outbounds.json";
+    singBoxCfg = cfg.singBox;
   };
 in
 {
   config = mkIf (cfg.enable && cfg.backend == "sing-box") {
     services.sing-box = {
       enable = true;
-      settings = lib.recursiveUpdate baseSettings singBoxCfg.settings;
+      settings = { };
     };
 
     systemd.services.sing-box = {
-      after = [ "network-online.target" ];
+      after = [
+        "network-online.target"
+        "sops-nix.service"
+      ];
+      requires = [ "sops-nix.service" ];
       wants = [ "network-online.target" ];
+      serviceConfig.ExecStartPre = mkForce "+${lib.getExe generateConfig}";
       wantedBy = if cfg.autoStart then [ "multi-user.target" ] else mkForce [ ];
     };
   };
