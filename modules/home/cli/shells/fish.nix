@@ -70,8 +70,6 @@ in
         lzd = "lazydocker";
         ipy = "ipython";
         cc = "cc -Wall -Werror -Wextra";
-        pc = "proxychains4";
-        icat = "wezterm imgcat";
         ns = "netstat -tunlp";
         # cd
         ".." = "cd ..";
