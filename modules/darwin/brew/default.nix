@@ -99,7 +99,6 @@
       # for development
       "qt@5"
       "reattach-to-user-namespace" # need by tmux
-      "tailscale"
       "terraform"
       "terraformer"
       "wget"

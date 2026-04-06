@@ -5,8 +5,13 @@
   ...
 }:
 let
+  inherit (lib.attrsets) attrByPath;
   inherit (lib.strings) optionalString;
-  persist = config.my.persistence.enable;
+  persist = attrByPath [
+    "my"
+    "persistence"
+    "enable"
+  ] false config;
 in
 {
   sops = {

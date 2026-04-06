@@ -18,7 +18,7 @@ in
       "interface-name:br-*"
       "interface-name:rndis*"
     ]
-    ++ optionals config.my.services.tailscale.enable [ "interface-name:tailscale*" ]
+    ++ optionals config.my.networking.tailscale.enable [ "interface-name:tailscale*" ]
     ++ optionals config.my.virtual.podman.enable [
       "interface-name:docker*"
       "interface-name:podman*"

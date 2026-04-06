@@ -6,7 +6,7 @@
 let
   inherit (lib) mkIf mkDefault mkForce;
   isWSL = config.my.machine.type == "wsl";
-  isProxy = config.my.services.proxy.enable;
+  isProxy = config.my.networking.proxy.enable;
   inherit (lib.options) mkEnableOption;
   cfg = config.my.networking;
 in
