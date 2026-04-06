@@ -1,15 +1,18 @@
-# Mihomo (Clash Verge) Quick Start
+# Clash/Mihomo Proxy Quick Start
 
 ## Design
 
-Unified proxy using **Clash Verge** (includes mihomo core):
+Automatic proxy implementation based on environment:
 
-- **Clash Verge** is used for both GUI and service modes
 - Mode is automatically determined by `my.gui.enable`:
-  - `gui.enable = true`: Full Clash Verge GUI
-  - `gui.enable = false`: Clash Verge runs in service mode (headless)
-- **NixOS**: Uses `programs.clash-verge` with systemd
-- **Darwin**: Installs via Homebrew, configure service mode in app settings
+  - **`gui.enable = true`**: Clash Verge GUI (desktop environments)
+  - **`gui.enable = false`**: mihomo core + WebUI (servers/headless)
+- **NixOS**:
+  - GUI: `programs.clash-verge`
+  - Headless: `services.mihomo` + metacubexd WebUI
+- **Darwin**:
+  - GUI: Clash Verge via Homebrew
+  - Headless: mihomo core via launchd
 
 ## Quick Configuration
 

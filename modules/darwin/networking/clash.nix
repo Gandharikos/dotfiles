@@ -1,38 +1,65 @@
 {
   lib,
   config,
+  pkgs,
   self,
   ...
 }:
 let
   cfg = config.my.networking.proxy;
   inherit (lib.modules) mkIf;
+  inherit (lib.meta) getExe;
+  guiEnabled = config.my.gui.enable;
 
-  # Clash Verge config directory
-  configDir = "${config.my.home}/.config/clash-verge";
-  configFile = "${configDir}/config.yaml";
+  # Config paths
+  clashVergeConfigDir = "${config.my.home}/.config/clash-verge";
+  mihomoConfigDir = "${config.my.home}/.config/mihomo";
+  configFile =
+    if guiEnabled then "${clashVergeConfigDir}/config.yaml" else "${mihomoConfigDir}/config.yaml";
 in
 {
-  config = mkIf cfg.enable {
-    # Install Clash Verge via Homebrew
-    # Works in both GUI and service modes
-    # Service mode: configure in Clash Verge settings (enable "Service Mode")
-    homebrew.casks = [ "clash-verge-rev" ];
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      # Common: decrypt secrets
+      {
+        sops.secrets.clash_config = {
+          sopsFile = "${self}/secrets/services/clash.yaml";
+          path = configFile;
+          owner = config.my.name;
+          group = "staff";
+          mode = "0600";
+        };
+      }
 
-    # Decrypt clash config to clash-verge config directory
-    # sops.secrets automatically creates parent directory with proper permissions
-    sops.secrets.clash_config = {
-      sopsFile = "${self}/secrets/services/clash.yaml";
-      path = configFile;
-      owner = config.my.name;
-      group = "staff";
-      mode = "0600";
-    };
+      # GUI mode: use Clash Verge
+      (mkIf guiEnabled {
+        homebrew.casks = [ "clash-verge-rev" ];
+      })
 
-    # Note: On Darwin, Clash Verge manages its own service
-    # To enable service mode (when my.gui.enable = false):
-    # 1. Open Clash Verge
-    # 2. Settings -> General -> Enable "Service Mode"
-    # 3. (Optional) Enable "Launch on Startup" if autoStart is desired
-  };
+      # Non-GUI mode: use mihomo core + WebUI
+      (mkIf (!guiEnabled) {
+        environment.systemPackages = with pkgs; [
+          mihomo
+          metacubexd
+        ];
+
+        # Launch daemon for mihomo
+        launchd.daemons.mihomo = mkIf cfg.autoStart {
+          serviceConfig = {
+            ProgramArguments = [
+              "${getExe pkgs.mihomo}"
+              "-d"
+              mihomoConfigDir
+            ];
+            Label = "com.mihomo.proxy";
+            KeepAlive = true;
+            RunAtLoad = true;
+            StandardOutPath = "/var/log/mihomo.log";
+            StandardErrorPath = "/var/log/mihomo-error.log";
+            WorkingDirectory = "/tmp";
+          };
+        };
+      })
+    ]
+  );
 }
