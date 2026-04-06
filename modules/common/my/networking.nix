@@ -10,7 +10,7 @@ in
         default = true;
       };
 
-      autoStart = mkEnableOption "auto start proxy on boot" // {
+      autoStart = mkEnableOption "auto start proxy on boot (NixOS only)" // {
         default = false;
       };
     };

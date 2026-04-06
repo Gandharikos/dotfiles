@@ -2,50 +2,47 @@
 
 ## Architecture
 
-- `mode = "service"` uses standalone Mihomo
-- `mode = "desktop"` uses Clash Verge
-- NixOS service mode enables `services.mihomo`
-- Darwin service mode installs `mihomo` and can optionally create a launchd daemon
+- NixOS switches automatically based on `my.gui.enable`
+- NixOS GUI hosts use `programs.clash-verge`
+- NixOS headless hosts use `services.mihomo` with WebUI
+- Darwin always uses Clash Verge via Homebrew
 
 ## Quick Configuration
 
-### NixOS service mode
+### NixOS GUI host
+
+```nix
+{
+  my.gui.enable = true;
+  my.networking.proxy = {
+    enable = true;
+  };
+}
+```
+
+### NixOS headless host
+
+```nix
+{
+  my.gui.enable = false;
+  my.networking.proxy = {
+    enable = true;
+    autoStart = true;
+  };
+}
+```
+
+### Darwin
 
 ```nix
 {
   my.networking.proxy = {
     enable = true;
-    mode = "service";    # Default
-    enableWebui = true;  # Default
   };
 }
 ```
 
-### Darwin service mode
-
-```nix
-{
-  my.networking.proxy = {
-    enable = true;
-    mode = "service";    # Default
-    autoStart = false;
-    enableWebui = true;  # Default
-  };
-}
-```
-
-### Desktop mode
-
-```nix
-{
-  my.networking.proxy = {
-    enable = true;
-    mode = "desktop";
-  };
-}
-```
-
-Service mode requires `mihomo_config` in `secrets/services/mihomo.yaml`. Desktop mode does not.
+The module expects encrypted `clash_config` in `secrets/services/clash.yaml`.
 
 ## Option Reference
 
@@ -55,56 +52,36 @@ Service mode requires `mihomo_config` in `secrets/services/mihomo.yaml`. Desktop
 - Default: `true`
 - Meaning: enable proxy integration
 
-### `backend`
-
-- Type: `"mihomo"`
-- Default: `"mihomo"`
-- Meaning: select the proxy backend
-
-### `mode`
-
-- Type: `"service" | "desktop"`
-- Default: `"service"`
-- Meaning: choose between standalone Mihomo service mode and Clash Verge desktop mode
-
-### `enableWebui`
-
-- Type: `boolean`
-- Default: `true`
-- Meaning: enable the WebUI package in service mode
-
 ### `autoStart`
 
 - Type: `boolean`
 - Default: `false`
-- Meaning: auto-start the Mihomo daemon on Darwin in service mode
+- Meaning: start the proxy automatically on NixOS
 
-## Mode Behavior
+## Behavior
 
-### Service mode on NixOS
+### NixOS with `my.gui.enable = true`
+
+- Enables `programs.clash-verge`
+- Deploys `clash_config` to `~/.config/clash-verge/config.yaml`
+- Uses Clash Verge for runtime management
+
+### NixOS with `my.gui.enable = false`
 
 - Enables `services.mihomo`
-- Starts through systemd automatically
-- Uses the encrypted `mihomo_config` secret
-- Can expose WebUI at `http://localhost:9090/ui`
+- Deploys `clash_config` to `/var/lib/mihomo/config.yaml`
+- Exposes WebUI at `http://localhost:9090/ui`
+- Starts through systemd when `autoStart = true`
 
-### Service mode on Darwin
+### Darwin
 
-- Installs `mihomo`
-- Uses the encrypted `mihomo_config` secret
-- Supports WebUI at `http://localhost:9090/ui`
-- Runs manually by default, or via launchd when `autoStart = true`
-
-### Desktop mode
-
-- NixOS enables `programs.clash-verge`
-- Darwin installs the `clash-verge-rev` Homebrew cask
-- Does not enable the standalone Mihomo service
-- Does not use the encrypted `mihomo_config` deployment path
+- Installs the `clash-verge-rev` Homebrew cask
+- Deploys `clash_config` to `~/.config/clash-verge/config.yaml`
+- Does not branch on `my.gui.enable`
 
 ## Starting and Stopping
 
-### NixOS service mode
+### NixOS headless
 
 ```bash
 sudo systemctl stop mihomo
@@ -113,14 +90,7 @@ sudo systemctl status mihomo
 sudo journalctl -u mihomo -f
 ```
 
-### Darwin service mode
-
-```bash
-mihomo -d ~/.config/mihomo
-pkill mihomo
-```
-
-### Desktop mode
+### GUI hosts
 
 ```bash
 # NixOS
@@ -132,96 +102,79 @@ open -a "Clash Verge"
 
 ## Config and Logs
 
-### Service mode on NixOS
+### NixOS GUI
+
+- Config file: `~/.config/clash-verge/config.yaml`
+
+### NixOS headless
 
 - Config file: `/var/lib/mihomo/config.yaml`
 - Logs: `journalctl -u mihomo`
 
-### Service mode on Darwin
+### Darwin
 
-- Config file: `~/.config/mihomo/config.yaml`
-- Logs: `/var/log/mihomo.log` and `/var/log/mihomo-error.log`
+- Config file: `~/.config/clash-verge/config.yaml`
 
 ## Examples
 
-### NixOS service mode with WebUI
+### NixOS GUI
 
 ```nix
 {
+  my.gui.enable = true;
   my.networking.proxy = {
     enable = true;
-    mode = "service";
-    enableWebui = true;
   };
 }
 ```
 
-### Darwin service mode with manual start
+### NixOS headless with auto-start
 
 ```nix
 {
+  my.gui.enable = false;
   my.networking.proxy = {
     enable = true;
-    mode = "service";
-    autoStart = false;
-    enableWebui = true;
-  };
-}
-```
-
-### Darwin service mode with launchd auto-start
-
-```nix
-{
-  my.networking.proxy = {
-    enable = true;
-    mode = "service";
     autoStart = true;
-    enableWebui = true;
   };
 }
 ```
 
-### Desktop mode on either platform
+### Darwin
 
 ```nix
 {
   my.networking.proxy = {
     enable = true;
-    mode = "desktop";
   };
 }
 ```
 
 ## Migration
 
-If you were using `enableGui` before, switch to `mode`:
+If you were using the older Mihomo-specific docs, the current model is:
 
 ```nix
 my.networking.proxy = {
   enable = true;
-  mode = "service";  # or "desktop"
 };
 ```
 
-`enableGui = true` maps most closely to `mode = "desktop"` if your intent was to use Clash Verge.
+- On NixOS, GUI vs headless is determined by `my.gui.enable`
+- On Darwin, Clash Verge is always used
 
 ## Troubleshooting
 
-### Service mode failed to start
+### NixOS headless service failed to start
 
 ```bash
 # NixOS
 sudo journalctl -u mihomo -n 50
-
-# Darwin
-tail -50 /var/log/mihomo-error.log
 ```
 
 ### WebUI is unavailable
 
-- Confirm `mode = "service"`
-- Confirm `enableWebui = true`
+- Confirm `my.gui.enable = false` on NixOS
 - Open `http://localhost:9090/ui`
 
 ### Port conflict

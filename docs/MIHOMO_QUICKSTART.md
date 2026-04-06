@@ -11,8 +11,8 @@ Automatic proxy implementation based on environment:
   - GUI: `programs.clash-verge`
   - Headless: `services.mihomo` + metacubexd WebUI
 - **Darwin**:
-  - GUI: Clash Verge via Homebrew
-  - Headless: mihomo core via launchd
+  - Always uses Clash Verge via Homebrew
+  - Does not switch to a headless mihomo branch
 
 ## Quick Configuration
 
@@ -31,7 +31,7 @@ Automatic proxy implementation based on environment:
 {
   my.networking.proxy = {
     enable = true;
-    autoStart = true;  # Start on boot
+    autoStart = true;  # NixOS only
   };
 }
 ```
@@ -59,7 +59,7 @@ Automatic proxy implementation based on environment:
 
 ## Setup
 
-1. Ensure `secrets/services/mihomo.yaml` contains encrypted `mihomo_config`
+1. Ensure `secrets/services/clash.yaml` contains encrypted `clash_config`
 2. Rebuild system:
 
 ```bash
@@ -86,22 +86,18 @@ clash-verge
 open -a "Clash Verge"
 ```
 
-### Service Mode (`my.gui.enable = false`)
+### Service Mode (`my.gui.enable = false`, NixOS only)
 
 **NixOS:**
 
 - Service starts automatically via systemd
 - Manage: `sudo systemctl status clash-verge`
 
-**Darwin:**
-
-- Configure service mode in Clash Verge settings (one-time)
-- Clash Verge will run as background service
-
 ## Configuration Location
 
-- **NixOS**: `/var/lib/mihomo/config.yaml`
-- **Darwin**: `~/.config/mihomo/config.yaml`
+- **NixOS GUI**: `~/.config/clash-verge/config.yaml`
+- **NixOS headless**: `/var/lib/mihomo/config.yaml`
+- **Darwin**: `~/.config/clash-verge/config.yaml`
 
 ## More Information
 
