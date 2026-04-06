@@ -7,7 +7,6 @@
 let
   cfg = config.my.networking.proxy;
   inherit (lib.modules) mkIf;
-  guiEnabled = config.my.gui.enable;
 
   # Clash Verge config directory (user-specific)
   configDir = "${config.my.home}/.config/clash-verge";
@@ -29,7 +28,7 @@ in
     programs.clash-verge = {
       enable = true;
       inherit (cfg) autoStart;
-      serviceMode = !guiEnabled;
+      serviceMode = true;
       tunMode = true;
     };
   };
