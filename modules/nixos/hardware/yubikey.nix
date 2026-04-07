@@ -41,6 +41,10 @@ in
         enable = mkForce true;
         enableSSHSupport = mkForce true;
       };
+
+      # YubiKey touch detector - shows notification when YubiKey needs touch
+      # Official nixpkgs module: nixos/modules/programs/yubikey-touch-detector.nix
+      yubikey-touch-detector.enable = true;
     };
 
     security.pam = {

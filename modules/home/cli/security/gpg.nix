@@ -16,10 +16,17 @@ in
     enable = mkEnableOption "my security gpg" // {
       default = config.my.security.enable;
     };
+
     signGitCommits = mkOption {
       type = lib.types.bool;
       default = true;
       description = "Sign git commits with gpg.";
+    };
+
+    enableSshSupport = mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Enable SSH support in gpg-agent (use false if using FIDO2 SSH instead).";
     };
 
     key = mkOption {
@@ -27,6 +34,7 @@ in
       default = "776C7FC245E58F55";
       description = "The public key of my gpg.";
     };
+
     publicKeysPath = mkOption {
       type = path;
       default = "${self}/secrets/core/gpg-keys.pub";
@@ -124,7 +132,7 @@ in
 
     services.gpg-agent = {
       enable = true;
-      enableSshSupport = true;
+      inherit (cfg) enableSshSupport;
       pinentry.package =
         if pkgs.stdenv.hostPlatform.isDarwin then
           pkgs.pinentry_mac
