@@ -9,85 +9,12 @@ let
 in
 {
   config = mkIf gui.enable {
-    # Additional fontconfig XML rules for better CJK rendering
-    home.file.".config/fontconfig/conf.d/99-chinese-fonts.conf".text = ''
-      <?xml version="1.0"?>
-      <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
-      <fontconfig>
-        <!-- Prefer SC (Simplified Chinese) variants for Chinese locale -->
-        <match target="pattern">
-          <test qual="any" name="family">
-            <string>sans-serif</string>
-          </test>
-          <edit name="family" mode="prepend" binding="strong">
-            <string>LXGW WenKai</string>
-            <string>Sarasa Gothic SC</string>
-            <string>Noto Sans CJK SC</string>
-          </edit>
-        </match>
-
-        <match target="pattern">
-          <test qual="any" name="family">
-            <string>serif</string>
-          </test>
-          <edit name="family" mode="prepend" binding="strong">
-            <string>Noto Serif CJK SC</string>
-            <string>Source Han Serif SC</string>
-          </edit>
-        </match>
-
-        <match target="pattern">
-          <test qual="any" name="family">
-            <string>monospace</string>
-          </test>
-          <edit name="family" mode="prepend" binding="strong">
-            <string>Maple Mono NF CN</string>
-            <string>Sarasa Mono SC</string>
-          </edit>
-        </match>
-
-        <!-- Rendering quality settings for better appearance -->
-        <match target="font">
-          <test name="family" compare="contains">
-            <string>Noto Sans CJK</string>
-          </test>
-          <edit name="hinting" mode="assign">
-            <bool>true</bool>
-          </edit>
-          <edit name="hintstyle" mode="assign">
-            <const>hintslight</const>
-          </edit>
-          <edit name="antialias" mode="assign">
-            <bool>true</bool>
-          </edit>
-          <edit name="rgba" mode="assign">
-            <const>rgb</const>
-          </edit>
-        </match>
-
-        <match target="font">
-          <test name="family" compare="contains">
-            <string>LXGW WenKai</string>
-          </test>
-          <edit name="hinting" mode="assign">
-            <bool>true</bool>
-          </edit>
-          <edit name="hintstyle" mode="assign">
-            <const>hintslight</const>
-          </edit>
-          <edit name="antialias" mode="assign">
-            <bool>true</bool>
-          </edit>
-        </match>
-      </fontconfig>
-    '';
-
     fonts.fontconfig = {
       enable = true;
       defaultFonts = {
         monospace = [
-          "Maple Mono NF CN"
           "JetBrainsMono Nerd Font Mono"
+          "Maple Mono NF CN"
 
           # primary latin fallbacks
           "Source Code Pro"
