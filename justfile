@@ -84,7 +84,7 @@ install host target *args:
 [group('install')]
 [no-exit-message]
 disko host *args:
-    sudo nix run github:nix-community/disko -- \
+    sudo nix --extra-experimental-features "nix-command flakes" run github:nix-community/disko -- \
         --mode disko \
         --flake {{ flake }}#{{ host }}
 
