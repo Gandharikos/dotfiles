@@ -32,10 +32,6 @@ in
     }
     (mkIf guiLinux {
       catppuccin.cursors.enable = true;
-      catppuccin.fcitx5 = {
-        enable = true;
-        enableRounded = true;
-      };
 
       home.pointerCursor = {
         size = 24;
