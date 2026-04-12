@@ -18,33 +18,39 @@ in
       material-design-icons
       font-awesome
 
-      noto-fonts-color-emoji
-
+      # Latin fonts
       source-sans
       source-serif
+      inter
+
+      # Chinese fonts (macOS-like experience)
+      # LXGW WenKai: Modern Chinese font, closest open-source alternative to PingFang
+      lxgw-wenkai
+      # Sarasa Gothic: High-quality CJK font with excellent hinting
+      sarasa-gothic
+
+      # Fallback CJK fonts
       source-han-sans
       source-han-serif
-
-      # fonts for none latin languages
       noto-fonts-cjk-sans
       noto-fonts-cjk-serif
 
-      # nerdfonts
+      # Nerdfonts
       nerd-fonts.symbols-only
       nerd-fonts.fira-code
       nerd-fonts.jetbrains-mono
       nerd-fonts.iosevka
       nerd-fonts.caskaydia-cove
 
-      # maple-mono
+      # Maple Mono (Chinese-friendly monospace)
       maple-mono.variable
       maple-mono.truetype
       maple-mono.NF
       maple-mono.NF-CN
 
+      # Other fonts
       julia-mono
       dejavu_fonts
-      inter
       # inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd
     ];
   };
