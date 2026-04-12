@@ -44,14 +44,31 @@ in
       nvidia = {
         package = config.boot.kernelPackages.nvidiaPackages.beta;
 
+        # PRIME offload mode: Use integrated GPU by default, NVIDIA only when needed
+        # This significantly reduces power consumption on laptops
+        prime = {
+          offload = {
+            enable = true;
+            enableOffloadCmd = true; # Adds nvidia-offload command
+          };
+          # Bus IDs for hybrid graphics (check with `lspci | grep VGA`)
+          # AMD integrated GPU
+          amdgpuBusId = "PCI:65:0:0";
+          # NVIDIA dedicated GPU
+          nvidiaBusId = "PCI:64:0:0";
+        };
+
         powerManagement = {
           enable = true;
-          finegrained = false;
+          # Fine-grained power management: completely powers off GPU when not in use
+          # This can save 10-15W on laptops with hybrid graphics
+          finegrained = true;
         };
 
         open = false; # don't use the open drivers by default
         nvidiaSettings = false; # adds nvidia-settings to pkgs, so useless on nixos
-        nvidiaPersistenced = true;
+        # Disable persistence daemon when using fine-grained power management
+        nvidiaPersistenced = false;
       };
 
       graphics = {

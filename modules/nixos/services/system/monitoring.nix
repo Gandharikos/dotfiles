@@ -4,10 +4,9 @@ let
 in
 {
   services = {
-    # monitor and control temperature
-    thermald.enable = true;
+    # Note: thermal management (thermald) moved to hardware/power/thermal.nix
 
-    # enable smartd monitoering
+    # enable smartd monitoring
     smartd.enable = true;
 
     # Not using lvm
