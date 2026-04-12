@@ -18,10 +18,13 @@
       "thunderbolt"
       "nvme"
       "usb_storage"
+      "usbhid"
       "sd_mod"
+      "sd_mod"
+      "sdhci_pci"
     ];
     initrd.kernelModules = [ ];
-    kernelModules = [ "kvm-intel" ];
+    kernelModules = [ "kvm-amd" ];
     extraModulePackages = [ ];
   };
 
@@ -33,5 +36,5 @@
   # networking.interfaces.wlp0s20f3.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
