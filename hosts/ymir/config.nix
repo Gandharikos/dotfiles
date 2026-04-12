@@ -2,6 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./asus-dialpad.nix
     (import ../common/disko/luks-btrfs-tmpfs.nix { })
   ];
 
@@ -23,6 +24,7 @@
       zram.enable = true;
       printing.enable = true;
       fwupd.enable = true;
+      asus.enable = true;
       # samba.enable = true;
     };
     virtual.enable = true;

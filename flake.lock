@@ -1,5 +1,25 @@
 {
   "nodes": {
+    "asus-dialpad-driver": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1775738073,
+        "narHash": "sha256-D1mts9M7sUc2ZA83WTHfEg7fqGfknpleCpohZOXQqaI=",
+        "owner": "asus-linux-drivers",
+        "repo": "asus-dialpad-driver",
+        "rev": "a1979e4534986ba60bf14a69d1be6af9039e491a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "asus-linux-drivers",
+        "repo": "asus-dialpad-driver",
+        "type": "github"
+      }
+    },
     "blueprint": {
       "inputs": {
         "nixpkgs": [
@@ -1587,6 +1607,7 @@
     },
     "root": {
       "inputs": {
+        "asus-dialpad-driver": "asus-dialpad-driver",
         "catppuccin": "catppuccin",
         "darwin": "darwin",
         "dedsec-grub-theme": "dedsec-grub-theme",

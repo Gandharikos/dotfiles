@@ -116,6 +116,12 @@
       flake = false;
     };
 
+    # ASUS DialPad driver for ProArt/Zenbook laptops
+    asus-dialpad-driver = {
+      url = "github:asus-linux-drivers/asus-dialpad-driver";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # generate networking topology images
     nix-topology = {
       url = "github:oddlama/nix-topology";
