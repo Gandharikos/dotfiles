@@ -170,6 +170,7 @@ in
             ".config/google-chrome"
             ".cache/chromium"
             ".config/chromium"
+            ".local/share/pki"
           ];
         })
         (mkIf hm.gui.apps.obs.enable {
