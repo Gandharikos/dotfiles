@@ -58,12 +58,7 @@
 
   services.automatic-timezoned.enable = lib.mkForce false;
 
-  networking = {
-    nameservers = lib.mkForce [
-      "198.18.0.2"
-    ];
-    tcpcrypt.enable = lib.mkForce false;
-  };
+  networking.tcpcrypt.enable = lib.mkForce false;
 
   hm.my = {
     gui.browser.default = "google-chrome";
