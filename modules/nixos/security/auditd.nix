@@ -44,10 +44,6 @@ in
       '';
     };
 
-    monitorExecutables = mkEnableOption "Monitor all program executions (high overhead)" // {
-      default = false;
-    };
-
     autoPrune = {
       enable = mkEnableOption "Enable auto-pruning of audit logs via logrotate" // {
         default = true;
@@ -71,25 +67,6 @@ in
         inherit (cfg) backlogLimit;
         inherit (cfg) failureMode;
         rules = [
-          # Monitor critical system files
-          "-w /etc/passwd -p wa -k identity"
-          "-w /etc/shadow -p wa -k identity"
-          "-w /etc/group -p wa -k identity"
-          "-w /etc/gshadow -p wa -k identity"
-          "-w /etc/sudoers -p wa -k sudoers"
-          "-w /etc/sudoers.d/ -p wa -k sudoers"
-
-          # Monitor authentication and authorization
-          "-w /var/log/faillog -p wa -k logins"
-          "-w /var/log/lastlog -p wa -k logins"
-          "-w /var/log/tallylog -p wa -k logins"
-
-          # Monitor system configuration changes
-          "-w /etc/hosts -p wa -k network_config"
-          "-w /etc/hostname -p wa -k system_config"
-          "-w /etc/sysctl.conf -p wa -k system_config"
-        ]
-        ++ lib.optionals cfg.monitorExecutables [
           # High overhead: monitor all program executions
           "-a exit,always -F arch=b64 -S execve"
         ];
