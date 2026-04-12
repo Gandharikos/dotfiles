@@ -9,6 +9,7 @@ let
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.lists) optionals;
   inherit (lib.attrsets) optionalAttrs;
+  inherit (lib) removeAttrs;
   inherit (lib.meta) getExe';
   inherit (config.my.gui) desktop;
   inherit (config.my.theme)
@@ -20,6 +21,9 @@ let
   enable = desktop.wayland.enable && desktop.shell.default == "dank-material-shell";
   dmsSettingsFile = lib.my.relativeToConfig "dank-material-shell/settings.json";
   baseSettings = builtins.fromJSON (builtins.readFile dmsSettingsFile);
+  managedBaseSettings = removeAttrs baseSettings [
+    "customThemeFile"
+  ];
 
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
   uwsm = getExe' pkgs.uwsm "uwsm";
@@ -65,7 +69,7 @@ in
       enableAudioWavelength = true; # Audio visualizer (cava)
       enableCalendarEvents = false; # Calendar integration (khal)
       settings =
-        baseSettings
+        managedBaseSettings
         // optionalAttrs (wallpaper != null) {
           greeterWallpaperPath = toString wallpaper;
           greeterWallpaperFillMode = baseSettings.wallpaperFillMode or "Fill";
