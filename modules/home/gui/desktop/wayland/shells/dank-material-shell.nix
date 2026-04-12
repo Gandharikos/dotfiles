@@ -8,13 +8,18 @@
 let
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.lists) optionals;
+  inherit (lib.attrsets) optionalAttrs;
   inherit (lib.meta) getExe';
   inherit (config.my.gui) desktop;
-  inherit (config.my.theme) wallpaper;
+  inherit (config.my.theme)
+    avatar
+    wallpaper
+    ;
   inherit (config.my.keyboard) keys;
 
   enable = desktop.wayland.enable && desktop.shell.default == "dank-material-shell";
   dmsSettingsFile = lib.my.relativeToConfig "dank-material-shell/settings.json";
+  baseSettings = builtins.fromJSON (builtins.readFile dmsSettingsFile);
 
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
   uwsm = getExe' pkgs.uwsm "uwsm";
@@ -59,7 +64,15 @@ in
       enableVPN = true; # VPN management widget
       enableAudioWavelength = true; # Audio visualizer (cava)
       enableCalendarEvents = false; # Calendar integration (khal)
-      settings = builtins.fromJSON (builtins.readFile dmsSettingsFile);
+      settings =
+        baseSettings
+        // optionalAttrs (wallpaper != null) {
+          greeterWallpaperPath = toString wallpaper;
+          greeterWallpaperFillMode = baseSettings.wallpaperFillMode or "Fill";
+        };
+    };
+    home.file = optionalAttrs (avatar != null) {
+      ".face".source = avatar;
     };
     programs.lazyvim.extraPlugins = [
       pkgs.vimPlugins.base16-nvim
