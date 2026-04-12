@@ -25,8 +25,7 @@
       zram.enable = true;
       printing.enable = true;
       fwupd.enable = true;
-      # DISABLED: Potential conflict causing kernel panic
-      # asus.enable = true;
+      asus.enable = true;
       # samba.enable = true;
     };
     virtual.enable = true;
