@@ -12,7 +12,8 @@
       secureBoot = false;
       tmpOnTmpfs = false;
       enableKernelTweaks = true;
-      plymouth.enable = true;
+      # DISABLED: Potential conflict with NVIDIA/ASUS drivers
+      plymouth.enable = false;
 
       initrd = {
         enableTweaks = true;
@@ -24,7 +25,8 @@
       zram.enable = true;
       printing.enable = true;
       fwupd.enable = true;
-      asus.enable = true;
+      # DISABLED: Potential conflict causing kernel panic
+      # asus.enable = true;
       # samba.enable = true;
     };
     virtual.enable = true;

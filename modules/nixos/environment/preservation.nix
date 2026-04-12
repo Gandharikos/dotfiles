@@ -226,6 +226,9 @@ in
           directories = [
             ".claude"
           ];
+          files = [
+            ".claude.json"
+          ];
         })
         (mkIf hm.conda.enable {
           directories = [

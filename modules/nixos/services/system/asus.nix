@@ -25,7 +25,8 @@ in
 
     # Graphics switching for dual-GPU ASUS laptops
     # Manages NVIDIA/AMD discrete GPU power
-    services.supergfxd.enable = true;
+    # DISABLED: Causing kernel panic on boot
+    # services.supergfxd.enable = true;
 
     # Add asusctl CLI and GUI tools to system packages
     environment.systemPackages = with pkgs; [
