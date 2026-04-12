@@ -28,6 +28,16 @@
   # ssh-agent is used to pull my private secrets repo from github when deploying my nixos config.
   programs.ssh.startAgent = true;
 
+  # Enable SSH server for remote installation
+  services.openssh = {
+    enable = true;
+    settings = {
+      PermitRootLogin = "yes";
+      PasswordAuthentication = true;
+    };
+    openFirewall = true;
+  };
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [

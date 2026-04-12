@@ -38,7 +38,9 @@ in
       (builtins.readFile "${self}/secrets/core/id_ed25519.pub")
     ]
     ++
-      # Additional keys from secrets/core/keys/
-      (forEach (listFilesRecursive "${self}/secrets/core/keys") (key: builtins.readFile key));
+      # Additional keys from secrets/core/keys/ (only .pub files)
+      (forEach (lib.filter (path: lib.hasSuffix ".pub" (toString path)) (
+        listFilesRecursive "${self}/secrets/core/keys"
+      )) (key: builtins.readFile key));
   };
 }
