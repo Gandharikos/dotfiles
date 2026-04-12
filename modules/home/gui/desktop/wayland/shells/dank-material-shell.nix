@@ -14,6 +14,7 @@ let
   inherit (config.my.keyboard) keys;
 
   enable = desktop.wayland.enable && desktop.shell.default == "dank-material-shell";
+  dmsSettingsFile = lib.my.relativeToConfig "dank-material-shell/settings.json";
 
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
   uwsm = getExe' pkgs.uwsm "uwsm";
@@ -56,6 +57,7 @@ in
       enableVPN = true; # VPN management widget
       enableAudioWavelength = true; # Audio visualizer (cava)
       enableCalendarEvents = false; # Calendar integration (khal)
+      settings = builtins.fromJSON (builtins.readFile dmsSettingsFile);
     };
     programs.lazyvim.extraPlugins = [
       pkgs.vimPlugins.base16-nvim
