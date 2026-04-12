@@ -14,12 +14,11 @@
 
   boot = {
     initrd.availableKernelModules = [
+      "nvme"
       "xhci_pci"
       "thunderbolt"
-      "nvme"
       "usb_storage"
       "usbhid"
-      "sd_mod"
       "sd_mod"
       "sdhci_pci"
     ];
