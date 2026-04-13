@@ -31,6 +31,19 @@ in
   };
 
   config = mkIf cfg.enable {
+    # Grant btrbk user sudo permissions for btrfs commands
+    security.sudo-rs.extraRules = [
+      {
+        users = [ "btrbk" ];
+        commands = [
+          {
+            command = "ALL";
+            options = [ "NOPASSWD" ];
+          }
+        ];
+      }
+    ];
+
     # ... other dependencies ...
     services.btrbk.instances.btrbk = {
       # Trigger snapshots every half hour, providing an extremely powerful "time machine" capability.
