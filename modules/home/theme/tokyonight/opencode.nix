@@ -13,7 +13,8 @@ let
 in
 {
   config = mkIf enable {
-    programs.opencode.settings.theme = slug;
+    # OpenCode v1.2.15+ requires TUI settings in separate tui section
+    programs.opencode.tui.theme = slug;
 
     xdg.configFile."opencode/themes/${slug}.json".source = "${src}/extras/opencode/${slug}.json";
   };
