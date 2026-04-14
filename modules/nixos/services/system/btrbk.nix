@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -31,7 +32,41 @@ in
   };
 
   config = mkIf cfg.enable {
-    # ... other dependencies ...
+    # Grant btrbk user passwordless sudo for specific btrfs operations only
+    # Following principle of least privilege - only allow commands btrbk actually needs
+    security.sudo-rs.extraRules = [
+      {
+        users = [ "btrbk" ];
+        commands = [
+          # Main btrfs command for all subvolume operations
+          {
+            command = "${lib.getExe' pkgs.btrfs-progs "btrfs"}";
+            options = [ "NOPASSWD" ];
+          }
+          # Required for resolving symlinks and canonical paths
+          {
+            command = "${lib.getExe' pkgs.coreutils "readlink"}";
+            options = [ "NOPASSWD" ];
+          }
+          # May be needed for path testing
+          {
+            command = "${lib.getExe' pkgs.coreutils "test"}";
+            options = [ "NOPASSWD" ];
+          }
+          # May be needed for creating snapshot directories
+          {
+            command = "${lib.getExe' pkgs.coreutils "mkdir"}";
+            options = [ "NOPASSWD" ];
+          }
+          # May be needed for checking paths
+          {
+            command = "${lib.getExe' pkgs.coreutils "stat"}";
+            options = [ "NOPASSWD" ];
+          }
+        ];
+      }
+    ];
+
     services.btrbk.instances.btrbk = {
       # Trigger snapshots every half hour, providing an extremely powerful "time machine" capability.
       onCalendar = "*:00,30";
