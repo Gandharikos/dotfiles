@@ -31,6 +31,7 @@ in
   };
 
   config = mkIf cfg.enable {
+    # ... other dependencies ...
     services.btrbk.instances.btrbk = {
       # Trigger snapshots every half hour, providing an extremely powerful "time machine" capability.
       onCalendar = "*:00,30";
