@@ -168,11 +168,11 @@ decrypt host=`hostname -s`:
     sops -d --extract '["data"]' secrets/core/id_ed25519.yaml > ~/.ssh/id_ed25519
     chmod 600 ~/.ssh/id_ed25519
 
-    sudo mkdir -p /persist/etc/ssh
-    sops -d --extract '["data"]' secrets/core/{{ host }}.yaml | sudo tee /persist/etc/ssh/ssh_host_ed25519_key > /dev/null
-    sudo chmod 600 /persist/etc/ssh/ssh_host_ed25519_key
-    sudo cp secrets/core/{{ host }}.pub /persist/etc/ssh/ssh_host_ed25519_key.pub
-    sudo chmod 644 /persist/etc/ssh/ssh_host_ed25519_key.pub
+    sudo mkdir -p /etc/ssh
+    sops -d --extract '["data"]' secrets/core/{{ host }}.yaml | sudo tee /etc/ssh/ssh_host_ed25519_key > /dev/null
+    sudo chmod 600 /etc/ssh/ssh_host_ed25519_key
+    sudo cp secrets/core/{{ host }}.pub /etc/ssh/ssh_host_ed25519_key.pub
+    sudo chmod 644 /etc/ssh/ssh_host_ed25519_key.pub
 
 [group('secret')]
 init-remote host ip:
