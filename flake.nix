@@ -160,12 +160,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Generate configs
-    nixago = {
-      url = "github:nix-community/nixago";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     programs-sqlite.url = "github:wamserma/flake-programs-sqlite";
 
     catppuccin = {
