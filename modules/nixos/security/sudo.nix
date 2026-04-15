@@ -16,9 +16,8 @@ in
     # Wheel group can run any command, but needs password (except for specific commands below)
     wheelNeedsPassword = mkDefault false;
 
-    # Allow non-wheel users to execute sudo (needed for service users like btrbk)
     # Set to true for stricter security if you don't have service users needing sudo
-    execWheelOnly = mkDefault false;
+    execWheelOnly = mkDefault true;
 
     extraConfig = ''
       Defaults !lecture

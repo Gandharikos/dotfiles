@@ -33,33 +33,37 @@ in
 
   config = mkIf cfg.enable {
     # Grant btrbk user passwordless sudo for btrfs operations
-    security.sudo-rs.extraRules = [
-      {
-        users = [ "btrbk" ];
-        commands = [
-          {
-            command = lib.getExe' pkgs.btrfs-progs "btrfs";
-            options = [ "NOPASSWD" ];
-          }
-          {
-            command = lib.getExe' pkgs.coreutils "readlink";
-            options = [ "NOPASSWD" ];
-          }
-          {
-            command = lib.getExe' pkgs.coreutils "test";
-            options = [ "NOPASSWD" ];
-          }
-          {
-            command = lib.getExe' pkgs.coreutils "mkdir";
-            options = [ "NOPASSWD" ];
-          }
-          {
-            command = lib.getExe' pkgs.coreutils "stat";
-            options = [ "NOPASSWD" ];
-          }
-        ];
-      }
-    ];
+    security.sudo-rs = {
+      # Allow non-wheel users to execute sudo (needed for service users like btrbk)
+      execWheelOnly = false;
+      extraRules = [
+        {
+          users = [ "btrbk" ];
+          commands = [
+            {
+              command = lib.getExe' pkgs.btrfs-progs "btrfs";
+              options = [ "NOPASSWD" ];
+            }
+            {
+              command = lib.getExe' pkgs.coreutils "readlink";
+              options = [ "NOPASSWD" ];
+            }
+            {
+              command = lib.getExe' pkgs.coreutils "test";
+              options = [ "NOPASSWD" ];
+            }
+            {
+              command = lib.getExe' pkgs.coreutils "mkdir";
+              options = [ "NOPASSWD" ];
+            }
+            {
+              command = lib.getExe' pkgs.coreutils "stat";
+              options = [ "NOPASSWD" ];
+            }
+          ];
+        }
+      ];
+    };
 
     services.btrbk.instances.btrbk = {
       # Trigger snapshots every half hour, providing an extremely powerful "time machine" capability.
