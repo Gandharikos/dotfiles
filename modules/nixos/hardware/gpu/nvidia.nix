@@ -21,24 +21,26 @@ in
       blacklistedKernelModules = [ "snd_hda_codec_hdmi" ];
     };
 
-    environment.sessionVariables = {
-      LIBVA_DRIVER_NAME = "nvidia";
+    environment = {
+      sessionVariables = {
+        LIBVA_DRIVER_NAME = "nvidia";
 
-      # GBM_BACKEND = "nvidia-drm"; # breaks firefox apparently
-      WLR_DRM_DEVICES = mkDefault "/dev/dri/card1";
+        # GBM_BACKEND = "nvidia-drm"; # breaks firefox apparently
+        WLR_DRM_DEVICES = mkDefault "/dev/dri/card1";
+      };
+
+      systemPackages = with pkgs; [
+        # vulkan
+        vulkan-tools
+        vulkan-loader
+        vulkan-validation-layers
+        vulkan-extension-layer
+
+        # libva
+        libva
+        libva-utils
+      ];
     };
-
-    environment.systemPackages = with pkgs; [
-      # vulkan
-      vulkan-tools
-      vulkan-loader
-      vulkan-validation-layers
-      vulkan-extension-layer
-
-      # libva
-      libva
-      libva-utils
-    ];
 
     hardware = {
       nvidia = {
