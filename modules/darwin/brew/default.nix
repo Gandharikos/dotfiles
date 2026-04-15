@@ -111,6 +111,7 @@
       # "spotify" # music
       "1password" # password manager
       "1password-cli"
+      "clash-verge-rev"
       # "stats" # beautiful system monitor
       "eudic" # dictionary
       "ghostty" # terminal
