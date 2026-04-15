@@ -13,20 +13,16 @@ let
 
   cfg = config.my.networking.proxy;
 
+  # On NixOS: mihomo runs as a system service, config goes to /var/lib/mihomo/
+  # On Darwin: clash-verge includes mihomo core, config goes to user's home
   proxyConfigPath =
-    if isDarwin || config.my.gui.enable then
+    if isDarwin then
       "${config.my.home}/.config/clash-verge/config.yaml"
     else
       "/var/lib/mihomo/config.yaml";
-  proxyConfigOwner = if isDarwin || config.my.gui.enable then config.my.name else "mihomo";
-  proxyConfigGroup =
-    if isDarwin then
-      "staff"
-    else if config.my.gui.enable then
-      "users"
-    else
-      "mihomo";
-  proxyConfigMode = if isDarwin || config.my.gui.enable then "0600" else "0400";
+  proxyConfigOwner = if isDarwin then config.my.name else "mihomo";
+  proxyConfigGroup = if isDarwin then "staff" else "mihomo";
+  proxyConfigMode = if isDarwin then "0600" else "0400";
 
   proxySourceConfigPath =
     if isDarwin then
@@ -42,7 +38,7 @@ in
 
   options.my.networking.proxy = {
     enable = mkEnableOption "proxy service (mihomo or sing-box)" // {
-      default = true;
+      default = false;
     };
 
     autoStart = mkEnableOption "auto start proxy on boot (NixOS only)" // {
