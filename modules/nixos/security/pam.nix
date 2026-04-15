@@ -4,7 +4,6 @@
   ...
 }:
 let
-  sudoCfg = config.my.security.sudo;
   inherit (lib.modules) mkDefault;
   pamInclude = ''
     auth include login
@@ -45,25 +44,6 @@ in
           noAutostart = true;
           storeOnly = true;
         };
-        privilegeEscalationServices =
-          if sudoCfg.backend == "doas" then
-            {
-              doas = {
-                inherit ttyAudit;
-                setLoginUid = true;
-              };
-            }
-          else
-            {
-              sudo = {
-                inherit ttyAudit;
-                setLoginUid = true;
-              };
-              sudo-i = {
-                inherit ttyAudit;
-                setLoginUid = true;
-              };
-            };
       in
       {
         # Allow screen lockers such as Swaylock or gtklock) to also unlock the screen.
@@ -87,7 +67,16 @@ in
           inherit ttyAudit;
           setLoginUid = true;
         };
-      }
-      // privilegeEscalationServices;
+
+        sudo = {
+          inherit ttyAudit;
+          setLoginUid = true;
+        };
+
+        sudo-i = {
+          inherit ttyAudit;
+          setLoginUid = true;
+        };
+      };
   };
 }

@@ -7,17 +7,6 @@
 let
   inherit (lib.modules) mkIf mkForce;
   cfg = config.my.yubikey;
-  sudoCfg = config.my.security.sudo;
-  privilegeEscalationPamServices =
-    if sudoCfg.backend == "doas" then
-      {
-        doas.u2fAuth = true;
-      }
-    else
-      {
-        sudo.u2fAuth = true;
-        sudo-i.u2fAuth = true;
-      };
 in
 {
   config = mkIf cfg.enable {
@@ -57,6 +46,8 @@ in
       };
       services = {
         login.u2fAuth = true;
+        sudo.u2fAuth = true;
+        sudo-i.u2fAuth = true;
         # Attempt to auto-unlock gnome-keyring using u2f
         # NOTE: vscode uses gnome-keyring even if we aren't using gnome, which is why it's still here
         # This doesn't work
@@ -66,8 +57,7 @@ in
         #    session optional ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so auto_start
         #  '';
         #};
-      }
-      // privilegeEscalationPamServices;
+      };
     };
   };
 }

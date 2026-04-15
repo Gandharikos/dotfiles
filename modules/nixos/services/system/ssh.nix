@@ -10,17 +10,6 @@ let
   inherit (lib.strings) optionalString;
   persist = config.my.persistence.enable;
   cfg = config.my.services.ssh;
-  sudoCfg = config.my.security.sudo;
-  privilegeEscalationPamServices =
-    if sudoCfg.backend == "doas" then
-      {
-        doas.rssh = true;
-      }
-    else
-      {
-        sudo.rssh = true;
-        sudo-i.rssh = true;
-      };
 in
 {
   options.my.services.ssh = {
@@ -100,7 +89,10 @@ in
     # yubikey login / sudo
     security.pam = {
       rssh.enable = true;
-      services = privilegeEscalationPamServices;
+      services = {
+        sudo.rssh = true;
+        sudo-i.rssh = true;
+      };
     };
   };
 }
