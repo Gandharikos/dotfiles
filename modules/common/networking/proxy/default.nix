@@ -37,13 +37,8 @@ in
   imports = lib.my.scanPaths ./.;
 
   options.my.networking.proxy = {
-    enable = mkEnableOption "proxy service (mihomo or sing-box)" // {
-      default = false;
-    };
-
-    autoStart = mkEnableOption "auto start proxy on boot (NixOS only)" // {
-      default = false;
-    };
+    enable = mkEnableOption "proxy service (mihomo or sing-box)";
+    autoStart = mkEnableOption "auto start proxy on boot (NixOS only)";
 
     backend = mkOption {
       type = enum [
