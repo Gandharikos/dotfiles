@@ -24,8 +24,9 @@ in
 
       package = pkgs.llm-agents.opencode;
 
+      tui.theme = lib.mkDefault "opencode";
+
       settings = {
-        theme = lib.mkDefault "opencode";
         model = "anthropic/claude-sonnet-4-20250514";
         autoshare = false;
         autoupdate = false;
