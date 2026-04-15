@@ -452,11 +452,11 @@
           "enabled": true
         },
         {
-          "id": "notificationButton",
+          "id": "battery",
           "enabled": true
         },
         {
-          "id": "battery",
+          "id": "notificationButton",
           "enabled": true
         },
         {
