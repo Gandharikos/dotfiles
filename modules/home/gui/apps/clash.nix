@@ -7,6 +7,7 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (config.my) gui;
 
   cfg = config.my.gui.apps.clash;
@@ -41,7 +42,7 @@ in
 {
   options.my.gui.apps.clash = {
     enable = mkEnableOption "Clash Verge GUI" // {
-      default = config.my.gui.enable;
+      default = config.my.gui.enable && isLinux;
     };
   };
 
