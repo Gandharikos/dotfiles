@@ -136,6 +136,39 @@ let
             "5%-"
           ];
         };
+        "XF86KbdBrightnessUp" = {
+          allow-when-locked = true;
+          repeat = true;
+          action.spawn = brightnessctlCmd [
+            "--device=*::kbd_backlight"
+            "s"
+            "10%+"
+          ];
+        };
+        "XF86KbdBrightnessDown" = {
+          allow-when-locked = true;
+          repeat = true;
+          action.spawn = brightnessctlCmd [
+            "--device=*::kbd_backlight"
+            "s"
+            "10%-"
+          ];
+        };
+        "XF86KbdLightOnOff" = {
+          allow-when-locked = true;
+          action.spawn = [
+            "${getExe' pkgs.bash "bash"}"
+            "-c"
+            ''
+              current=$(${brightnessctl} --device="*::kbd_backlight" get)
+              if [ "$current" -eq 0 ]; then
+                ${brightnessctl} --device="*::kbd_backlight" set 100%
+              else
+                ${brightnessctl} --device="*::kbd_backlight" set 0
+              fi
+            ''
+          ];
+        };
       };
 in
 with config.my.keyboard.keys;
@@ -206,26 +239,6 @@ with config.my.keyboard.keys;
 
           # Hotkey overlay.
           "${modKey}+Slash".action.show-hotkey-overlay = [ ];
-
-          # Keyboard backlight.
-          "XF86KbdBrightnessUp" = {
-            allow-when-locked = true;
-            repeat = true;
-            action.spawn = brightnessctlCmd [
-              "--device=*::kbd_backlight"
-              "s"
-              "10%+"
-            ];
-          };
-          "XF86KbdBrightnessDown" = {
-            allow-when-locked = true;
-            repeat = true;
-            action.spawn = brightnessctlCmd [
-              "--device=*::kbd_backlight"
-              "s"
-              "10%-"
-            ];
-          };
         }
         screenshotBinds
         xf86FallbackBinds

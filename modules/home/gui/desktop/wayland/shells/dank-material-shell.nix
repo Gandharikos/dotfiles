@@ -10,7 +10,7 @@ let
   inherit (lib.lists) optionals;
   inherit (lib.attrsets) optionalAttrs;
   inherit (lib) removeAttrs;
-  inherit (lib.meta) getExe';
+  inherit (lib.meta) getExe' getExe;
   inherit (config.my.gui) desktop;
   inherit (config.my.theme)
     avatar
@@ -244,6 +244,48 @@ in
                 "decrement"
                 "5"
                 ""
+              ];
+            };
+            "XF86KbdLightOnOff" = {
+              allow-when-locked = true;
+              action.spawn = [
+                "${getExe pkgs.bash}"
+                "-c"
+                ''
+                  device=$(${dmsCmdStr} ipc call brightness list | ${getExe pkgs.ripgrep} -o '^[^:]+:[^:]+::kbd_backlight' | ${getExe' pkgs.coreutils "head"} -1)
+                  if [ -n "$device" ]; then
+                    current=$(${getExe pkgs.brightnessctl} --device="''${device#*:}" get)
+                    if [ "$current" -eq 0 ]; then
+                      ${dmsCmdStr} ipc call brightness set 100 "$device"
+                    else
+                      ${dmsCmdStr} ipc call brightness set 0 "$device"
+                    fi
+                  fi
+                ''
+              ];
+            };
+            "XF86KbdBrightnessUp" = {
+              allow-when-locked = true;
+              repeat = true;
+              action.spawn = [
+                "${getExe pkgs.bash}"
+                "-c"
+                ''
+                  device=$(${dmsCmdStr} ipc call brightness list | ${getExe pkgs.ripgrep} -o '^[^:]+:[^:]+::kbd_backlight' | ${getExe' pkgs.coreutils "head"} -1)
+                  [ -n "$device" ] && ${dmsCmdStr} ipc call brightness increment 10 "$device"
+                ''
+              ];
+            };
+            "XF86KbdBrightnessDown" = {
+              allow-when-locked = true;
+              repeat = true;
+              action.spawn = [
+                "${getExe pkgs.bash}"
+                "-c"
+                ''
+                  device=$(${dmsCmdStr} ipc call brightness list | ${getExe pkgs.ripgrep} -o '^[^:]+:[^:]+::kbd_backlight' | ${getExe' pkgs.coreutils "head"} -1)
+                  [ -n "$device" ] && ${dmsCmdStr} ipc call brightness decrement 10 "$device"
+                ''
               ];
             };
           };
