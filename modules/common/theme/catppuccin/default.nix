@@ -15,7 +15,7 @@ in
 {
   config = mkIf cfg.enable {
     my.theme = {
-      wallpaper = inputs.wallpapers.catppuccin.rocket-launch.path;
+      wallpaper = inputs.wallpapers.catppuccin.anime-japan.path;
       colorscheme = {
         inherit palette;
         slug = "catppuccin-${cfg.flavor}-${cfg.accent}";
