@@ -17,7 +17,6 @@
       gnumake
       just # use Justfile to simplify nix-darwin's commands
       neovim
-      nix-prefetch-git
       rsync
       uutils-coreutils-noprefix
       wget

@@ -26,6 +26,7 @@
             # package creation helpers
             nurl
             nix-init
+            nix-prefetch-git
           ]
           ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isLinux [
             inputs'.quickshell.packages.default

@@ -26,6 +26,7 @@ in
       nix-output-monitor # Better nix build output
       nh # Nix helper
       nurl # Generate nix fetcher calls
+      nix-prefetch-github # Fetch GitHub repo hash
       statix
     ];
 
