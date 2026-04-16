@@ -6,6 +6,7 @@
   ];
 
   my = {
+    theme.default = "catppuccin";
     security.auditd.enable = lib.mkForce false;
     boot = {
       secureBoot = false;
