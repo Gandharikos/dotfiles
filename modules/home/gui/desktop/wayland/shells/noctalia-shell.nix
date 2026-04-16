@@ -160,6 +160,15 @@ in
             "volume"
             "muteInput"
           ];
+          brightnessctl = getExe' pkgs.brightnessctl "brightnessctl";
+          kbdToggle = pkgs.writeShellScript "kbd-toggle" ''
+            current=$(${brightnessctl} --device="*::kbd_backlight" get)
+            if [ "$current" -eq 0 ]; then
+              ${brightnessctl} --device="*::kbd_backlight" set 100%
+            else
+              ${brightnessctl} --device="*::kbd_backlight" set 0
+            fi
+          '';
         in
         [
           ", XF86AudioPlay, Play/Pause, exec, ${playPause}"
@@ -168,6 +177,7 @@ in
           ", XF86AudioPrev, Return to Previous Track, exec, ${previous}"
           ", XF86AudioMute, Mute/Unmute Volume, exec, ${muteOutput}"
           ", XF86AudioMicMute, Mute/Unmute Microphone, exec, ${muteInput}"
+          ", XF86KbdLightOnOff, Toggle Keyboard Backlight, exec, ${kbdToggle}"
         ]
       );
 
@@ -189,12 +199,17 @@ in
             "brightness"
             "decrease"
           ];
+          brightnessctl = getExe' pkgs.brightnessctl "brightnessctl";
+          increaseKbdBrightness = "${brightnessctl} --device=*::kbd_backlight set +10%";
+          decreaseKbdBrightness = "${brightnessctl} --device=*::kbd_backlight set 10%-";
         in
         [
           ", XF86AudioRaiseVolume, Increase Volume, exec, ${increaseVolume}"
           ", XF86AudioLowerVolume, Decrease Volume, exec, ${decreaseVolume}"
           ", XF86MonBrightnessUp, Increase Brightness, exec, ${increaseBrightness}"
           ", XF86MonBrightnessDown, Decrease Brightness, exec, ${decreaseBrightness}"
+          ", XF86KbdBrightnessUp, Increase Keyboard Brightness, exec, ${increaseKbdBrightness}"
+          ", XF86KbdBrightnessDown, Decrease Keyboard Brightness, exec, ${decreaseKbdBrightness}"
         ]
       );
     };
@@ -276,6 +291,41 @@ in
               action.spawn = noctaliaArgs [
                 "brightness"
                 "decrease"
+              ];
+            };
+            "XF86KbdLightOnOff" = {
+              allow-when-locked = true;
+              action.spawn = [
+                (getExe' pkgs.bash "bash")
+                "-c"
+                ''
+                  current=$(${getExe' pkgs.brightnessctl "brightnessctl"} --device="*::kbd_backlight" get)
+                  if [ "$current" -eq 0 ]; then
+                    ${getExe' pkgs.brightnessctl "brightnessctl"} --device="*::kbd_backlight" set 100%
+                  else
+                    ${getExe' pkgs.brightnessctl "brightnessctl"} --device="*::kbd_backlight" set 0
+                  fi
+                ''
+              ];
+            };
+            "XF86KbdBrightnessUp" = {
+              allow-when-locked = true;
+              repeat = true;
+              action.spawn = [
+                (getExe' pkgs.brightnessctl "brightnessctl")
+                "--device=*::kbd_backlight"
+                "set"
+                "+10%"
+              ];
+            };
+            "XF86KbdBrightnessDown" = {
+              allow-when-locked = true;
+              repeat = true;
+              action.spawn = [
+                (getExe' pkgs.brightnessctl "brightnessctl")
+                "--device=*::kbd_backlight"
+                "set"
+                "10%-"
               ];
             };
           };
