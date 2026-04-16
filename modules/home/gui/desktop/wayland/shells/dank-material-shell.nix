@@ -141,8 +141,8 @@ in
         let
           increment_volume = dms' "audio increment 2";
           decrement_volume = dms' "audio decrement 2";
-          brightness_up = dms' "brightness increment 5 \"amdgpu_bl2\"";
-          brightness_down = dms' "brightness decrement 5 \"amdgpu_bl2\"";
+          brightness_up = dms' "brightness increment 5 \"\"";
+          brightness_down = dms' "brightness decrement 5 \"\"";
         in
         [
           ", XF86AudioRaiseVolume, Increase Volume, exec, ${increment_volume}"
@@ -233,7 +233,7 @@ in
                 "brightness"
                 "increment"
                 "5"
-                "amdgpu_bl2"
+                ""
               ];
             };
             "XF86MonBrightnessDown" = {
@@ -243,7 +243,7 @@ in
                 "brightness"
                 "decrement"
                 "5"
-                "amdgpu_bl2"
+                ""
               ];
             };
           };
