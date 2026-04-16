@@ -7,7 +7,6 @@
 }:
 let
   inherit (lib.attrsets) optionalAttrs;
-  inherit (lib.lists) optionals;
   inherit (lib.meta) getExe';
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.strings) escapeShellArgs;
@@ -60,9 +59,6 @@ in
 
       settings = settings // {
         general = settings.general // optionalAttrs (avatar != null) { avatarImage = toString avatar; };
-        colorSchemes = settings.colorSchemes // {
-          useWallpaperColors = wallpaper != null;
-        };
         wallpaper =
           settings.wallpaper
           // optionalAttrs (wallpaper != null) {
@@ -73,14 +69,6 @@ in
     };
 
     wayland.windowManager.hyprland.settings = with keys; {
-      exec-once = optionals (wallpaper != null) [
-        (noctalia [
-          "wallpaper"
-          "set"
-          (toString wallpaper)
-        ])
-      ];
-
       bindd =
         let
           launcher = noctalia [
@@ -214,16 +202,6 @@ in
     };
 
     programs.niri.settings = {
-      spawn-at-startup = optionals (wallpaper != null) [
-        {
-          command = noctaliaArgs [
-            "wallpaper"
-            "set"
-            (toString wallpaper)
-          ];
-        }
-      ];
-
       binds =
         let
           spawn = args: { action.spawn = noctaliaArgs args; };

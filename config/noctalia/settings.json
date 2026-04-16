@@ -91,7 +91,7 @@
         },
         {
           "clockColor": "none",
-          "customFont": "FiraCode Nerd Font Mono SemBd",
+          "customFont": "Inter Variable",
           "formatHorizontal": "HH:mm ddd, MMM dd",
           "formatVertical": "HH mm - dd MM",
           "id": "Clock",
@@ -244,10 +244,9 @@
     "manualSunrise": "06:30",
     "manualSunset": "18:30",
     "monitorForColors": "",
-    "predefinedScheme": "Catppuccin",
     "schedulingMode": "off",
     "syncGsettings": false,
-    "useWallpaperColors": true
+    "useWallpaperColors": false
   },
   "controlCenter": {
     "cards": [
@@ -601,9 +600,9 @@
   },
   "ui": {
     "boxBorderEnabled": false,
-    "fontDefault": "Sans Serif",
+    "fontDefault": "Inter Variable",
     "fontDefaultScale": 1,
-    "fontFixed": "monospace",
+    "fontFixed": "Fira Code",
     "fontFixedScale": 1,
     "panelBackgroundOpacity": 0.93,
     "panelsAttachedToBar": false,
