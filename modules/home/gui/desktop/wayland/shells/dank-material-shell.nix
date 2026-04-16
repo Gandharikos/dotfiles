@@ -7,7 +7,6 @@
 }:
 let
   inherit (lib.modules) mkIf mkForce;
-  inherit (lib.lists) optionals;
   inherit (lib.attrsets) optionalAttrs;
   inherit (lib.meta) getExe' getExe;
   inherit (config.my.gui) desktop;
@@ -69,13 +68,50 @@ in
     home.file = optionalAttrs (avatar != null) {
       ".face".source = avatar;
     };
+    systemd.user.services = optionalAttrs (wallpaper != null) {
+      dms-set-wallpaper = {
+        Unit = {
+          Description = "Set DMS wallpaper on startup";
+          Before = [ "dms.service" ];
+        };
+        Service = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.writeShellScript "dms-set-wallpaper" ''
+            session_file="$HOME/.local/state/DankMaterialShell/session.json"
+            wallpaper_path="${toString wallpaper}"
+
+            # Create directory if it doesn't exist
+            ${getExe' pkgs.coreutils "mkdir"} -p "$(${getExe' pkgs.coreutils "dirname"} "$session_file")"
+
+            # Check if wallpaper is already set correctly
+            if [ -f "$session_file" ]; then
+              current_wallpaper=$(${getExe pkgs.jq} -r '.wallpaperPath // empty' "$session_file")
+              if [ "$current_wallpaper" = "$wallpaper_path" ]; then
+                echo "Wallpaper already set to $wallpaper_path, skipping..."
+                exit 0
+              fi
+              # Update existing session.json (only wallpaperPath)
+              ${getExe pkgs.jq} --arg wp "$wallpaper_path" \
+                '.wallpaperPath = $wp' \
+                "$session_file" > "$session_file.tmp" && \
+              ${getExe' pkgs.coreutils "mv"} "$session_file.tmp" "$session_file"
+              echo "Wallpaper updated to $wallpaper_path"
+            else
+              # Create new session.json (only wallpaperPath)
+              echo '{"wallpaperPath":"'$wallpaper_path'"}' > "$session_file"
+              echo "Created session.json with wallpaper $wallpaper_path"
+            fi
+          ''}";
+        };
+        Install = {
+          WantedBy = [ "dms.service" ];
+        };
+      };
+    };
     programs.lazyvim.extraPlugins = [
       pkgs.vimPlugins.base16-nvim
     ];
     wayland.windowManager.hyprland.settings = with keys; {
-      exec-once = optionals (wallpaper != null) [
-        (dms' "wallpaper set ${toString wallpaper}")
-      ];
       bindd =
         let
           spotlight = dms' "spotlight toggle";
@@ -144,15 +180,6 @@ in
       );
     };
     programs.niri.settings = {
-      spawn-at-startup = optionals (wallpaper != null) [
-        {
-          command = dms' [
-            "wallpaper"
-            "set"
-            (toString wallpaper)
-          ];
-        }
-      ];
       binds =
         let
           spawn = args: { action.spawn = dms' args; };
