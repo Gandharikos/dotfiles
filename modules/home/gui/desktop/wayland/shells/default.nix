@@ -13,7 +13,7 @@ in
         "dank-material-shell"
         "noctalia-shell"
       ]);
-      default = "dank-material-shell";
+      default = "noctalia-shell";
       description = "The desktop shell to use.";
     };
   };
