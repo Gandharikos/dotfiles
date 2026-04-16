@@ -19,6 +19,8 @@ let
     ;
 
   enable = desktop.wayland.enable && desktop.shell.default == "noctalia-shell";
+  noctaliaSettingsFile = lib.my.relativeToConfig "noctalia/settings.json";
+  settings = builtins.fromJSON (builtins.readFile noctaliaSettingsFile);
 
   qsPkg = inputs.noctalia-qs.packages.${pkgs.stdenv.hostPlatform.system}.default;
   uwsm = getExe' pkgs.uwsm "uwsm";
@@ -56,42 +58,17 @@ in
         enable = true;
       };
 
-      settings = {
-        bar = {
-          density = "compact";
-        };
-        general = {
-          showChangelogOnStartup = false;
-          telemetryEnabled = false;
-        }
-        // optionalAttrs (avatar != null) {
-          avatarImage = toString avatar;
-          radiusRatio = 0.2;
-        };
-
-        location = {
-          name = "Shanghai";
-          monthBeforeDay = true;
-        };
-
-        appLauncher = {
-          enableClipboardHistory = true;
-        };
-
-        audio = {
-          volumeStep = 2;
-        };
-
-        brightness = {
-          brightnessStep = 5;
-        };
-
-        colorSchemes = {
+      settings = settings // {
+        general = settings.general // optionalAttrs (avatar != null) { avatarImage = toString avatar; };
+        colorSchemes = settings.colorSchemes // {
           useWallpaperColors = wallpaper != null;
         };
-      }
-      // optionalAttrs (wallpaper != null) {
-        wallpaper.directory = builtins.dirOf (toString wallpaper);
+        wallpaper =
+          settings.wallpaper
+          // optionalAttrs (wallpaper != null) {
+            enabled = true;
+            directory = builtins.dirOf (toString wallpaper);
+          };
       };
     };
 
@@ -385,6 +362,13 @@ in
           ];
         }
         // xf86Binds;
+    };
+
+    home.file.".cache/noctalia/wallpapers.json" = mkIf (wallpaper != null) {
+      text = builtins.toJSON {
+        defaultWallpaper = toString wallpaper;
+        wallpapers = { };
+      };
     };
   };
 }
