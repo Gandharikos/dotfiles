@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  inputs,
   ...
 }:
 let
@@ -13,12 +14,15 @@ let
 in
 {
   config = mkIf cfg.enable {
-    my.theme.colorscheme = {
-      inherit palette;
-      slug = "catppuccin-${cfg.flavor}-${cfg.accent}";
-      name = "Catppuccin ${flavorName}";
-      description = "A soothing pastel color scheme by Catppuccin.";
-      author = "Catppuccin";
+    my.theme = {
+      wallpaper = inputs.wallpapers.catppuccin.anime-landscape.path;
+      colorscheme = {
+        inherit palette;
+        slug = "catppuccin-${cfg.flavor}-${cfg.accent}";
+        name = "Catppuccin ${flavorName}";
+        description = "A soothing pastel color scheme by Catppuccin.";
+        author = "Catppuccin";
+      };
     };
   };
 }

@@ -23,6 +23,8 @@ in
         enable = true;
         inherit (cfg) flavor accent;
         wezterm.apply = true;
+        # Disable nvim integration - we configure it manually via LazyVim
+        nvim.enable = false;
       };
 
       home.sessionVariables = {
