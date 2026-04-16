@@ -22,14 +22,9 @@ in
         urgent.color = palette.red;
       };
       focus-ring = {
-        active.gradient = {
-          from = palette.blue;
-          to = accent;
-          angle = 45;
-          in' = "oklch longer hue";
-        };
-        inactive.color = palette.mantle;
-        urgent.color = palette.yellow;
+        active.color = accent;
+        inactive.color = palette.surface0;
+        urgent.color = palette.red;
       };
     };
   };
