@@ -134,6 +134,7 @@ in
           directories = [
             # keep-sorted start
             ".cache/DankMaterialShell"
+            ".cache/cliphist"
             ".cache/quickshell"
             ".config/DankMaterialShell"
             ".config/cava"
