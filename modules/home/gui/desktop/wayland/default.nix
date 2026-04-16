@@ -17,6 +17,7 @@ in
       brightnessctl
       brillo
       ffmpeg
+      gifski # GIF encoder
       glib
       gnome-characters
       gnome-connections
@@ -26,10 +27,13 @@ in
       gnome-photos
       gnome-shell-extensions
       gnome-tour
+      gpu-screen-recorder # GPU-accelerated screen recorder
       grim
+      imagemagick # Image manipulation
       playerctl
       slurp
       tesseract5
+      translate-shell # Translation tool
       # use more uwsm wrappers
       uwsm
       wf-recorder
@@ -38,6 +42,7 @@ in
       wl-clipboard-rs
       wl-screenrec
       wlr-randr
+      zbar # Barcode/QR code reader
       # keep-sorted end
     ];
   };
