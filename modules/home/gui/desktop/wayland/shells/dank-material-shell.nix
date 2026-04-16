@@ -49,8 +49,6 @@ in
     inputs.dms.homeModules.dank-material-shell
   ];
   config = mkIf enable {
-    xdg.configFile."DankMaterialShell/themes".source =
-      lib.my.relativeToConfig "dank-material-shell/themes";
     programs.dank-material-shell = {
       enable = true;
       systemd = {
