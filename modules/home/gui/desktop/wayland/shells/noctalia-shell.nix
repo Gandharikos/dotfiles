@@ -21,21 +21,19 @@ let
   noctaliaSettingsFile = lib.my.relativeToConfig "noctalia/settings.json";
   settings = builtins.fromJSON (builtins.readFile noctaliaSettingsFile);
 
-  qsPkg = inputs.noctalia-qs.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  noctaliaPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
   uwsm = getExe' pkgs.uwsm "uwsm";
-  qsExe = getExe' qsPkg "qs";
-  qsCmd = [
+  noctaliaExe = getExe' noctaliaPkg "noctalia-shell";
+  noctaliaCmd = [
     uwsm
     "app"
     "--"
-    qsExe
+    noctaliaExe
   ];
   noctaliaArgs =
     args:
-    qsCmd
+    noctaliaCmd
     ++ [
-      "-c"
-      "noctalia-shell"
       "ipc"
       "call"
     ]
