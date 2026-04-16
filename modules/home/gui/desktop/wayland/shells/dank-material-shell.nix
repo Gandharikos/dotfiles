@@ -67,6 +67,18 @@ in
         wallpaperPathDark = toString wallpaper;
       };
       inherit settings;
+
+      plugins = {
+        screen-recorder = {
+          enable = true;
+          src = pkgs.fetchFromGitHub {
+            owner = "arqueon";
+            repo = "dms-screen-recorder";
+            rev = "7206b590d69a165d30b5bbb66b033f1a15b49aff";
+            hash = "sha256-ndH8KHH+gzFIXWceqeUmy/w7oGj7ZvCEIacBfV1D+KU=";
+          };
+        };
+      };
     };
     home.file = optionalAttrs (avatar != null) {
       ".face".source = avatar;
@@ -91,6 +103,8 @@ in
           night_toggle = dms' "night toggle";
           inhibit = dms' "inhibit toggle";
           lock = dms' "lock toggle";
+          recorder_toggle = dms' "screen-recorder toggle";
+          recorder_save = dms' "screen-recorder saveReplay";
         in
         [
           "$mod, space, Toggle App Launcher, exec, ${spotlight}"
@@ -109,6 +123,8 @@ in
         ]
         ++ [
           "SUPER ALT, L, Toggle Lock, exec, ${lock}"
+          ", F10, Toggle Screen Recording, exec, ${recorder_toggle}"
+          "SHIFT, F10, Save Replay Buffer, exec, ${recorder_save}"
         ];
       binddl = mkForce (
         let
@@ -326,6 +342,14 @@ in
           "${modKey}+Alt+L".action.spawn = dms' [
             "lock"
             "toggle"
+          ];
+          "F10".action.spawn = dms' [
+            "screen-recorder"
+            "toggle"
+          ];
+          "Shift+F10".action.spawn = dms' [
+            "screen-recorder"
+            "saveReplay"
           ];
         }
         // xf86Binds;

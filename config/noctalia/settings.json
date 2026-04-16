@@ -97,6 +97,17 @@
           "id": "Clock",
           "tooltipFormat": "HH:mm ddd, MMM dd",
           "useCustomFont": true
+        },
+        {
+          "defaultSettings": {
+            "autoStartBreaks": false,
+            "autoStartWork": false,
+            "longBreakDuration": 15,
+            "sessionsBeforeLongBreak": 4,
+            "shortBreakDuration": 5,
+            "workDuration": 25
+          },
+          "id": "plugin:pomodoro"
         }
       ],
       "left": [
@@ -118,7 +129,7 @@
           "fontWeight": "bold",
           "groupedBorderOpacity": 1,
           "hideUnoccupied": false,
-          "iconScale": 0.8,
+          "iconScale": 1,
           "id": "Workspace",
           "labelMode": "none",
           "occupiedColor": "secondary",
@@ -135,7 +146,7 @@
         {
           "colorizeIcons": false,
           "hideMode": "hidden",
-          "iconScale": 0.8,
+          "iconScale": 1,
           "id": "Taskbar",
           "maxTaskbarWidth": 40,
           "onlyActiveWorkspaces": true,
@@ -144,9 +155,52 @@
           "showTitle": false,
           "smartWidth": true,
           "titleWidth": 120
+        },
+        {
+          "defaultSettings": {
+            "hideBackground": false,
+            "minimumThreshold": 10
+          },
+          "id": "plugin:catwalk"
         }
       ],
       "right": [
+        {
+          "defaultSettings": {
+            "compactMode": false,
+            "defaultPeerAction": "copy-ip",
+            "hideDisconnected": false,
+            "hideMullvadExitNodes": true,
+            "pingCount": 5,
+            "refreshInterval": 5000,
+            "showIpAddress": true,
+            "showPeerCount": true,
+            "sshUsername": "",
+            "taildropDownloadDir": "~/Downloads",
+            "taildropEnabled": true,
+            "taildropReceiveMode": "operator",
+            "terminalCommand": ""
+          },
+          "id": "plugin:tailscale"
+        },
+        {
+          "id": "plugin:screen-recorder"
+        },
+        {
+          "id": "plugin:todo"
+        },
+        {
+          "defaultSettings": {
+            "enableTodoIntegration": false,
+            "notecardsEnabled": true,
+            "pincardsEnabled": true,
+            "showCloseButton": true
+          },
+          "id": "plugin:clipper"
+        },
+        {
+          "id": "plugin:screen-toolkit"
+        },
         {
           "id": "KeepAwake"
         },
@@ -208,10 +262,6 @@
         },
         {
           "id": "ControlCenter"
-        },
-        {
-          "iconColor": "error",
-          "id": "SessionMenu"
         }
       ]
     }
@@ -244,6 +294,7 @@
     "manualSunrise": "06:30",
     "manualSunset": "18:30",
     "monitorForColors": "",
+    "predefinedScheme": "",
     "schedulingMode": "off",
     "syncGsettings": false,
     "useWallpaperColors": false
@@ -352,6 +403,7 @@
     "animationDisabled": false,
     "animationSpeed": 1,
     "autoStartAuth": false,
+    "avatarImage": "/nix/store/9gyzmdy4g61ksxwlbdq02dyrfd9z00kp-source/config/avatars/makima.jpg",
     "boxRadiusRatio": 1,
     "clockFormat": "hh\\nmm",
     "clockStyle": "custom",

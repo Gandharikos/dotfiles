@@ -135,10 +135,13 @@ in
             # keep-sorted start
             ".cache/DankMaterialShell"
             ".cache/cliphist"
+            ".cache/noctalia"
+            ".cache/noctalia-qs"
             ".cache/quickshell"
             ".config/DankMaterialShell"
             ".config/cava"
             ".config/dgop"
+            ".config/noctalia"
             ".local/share/color-schemes"
             ".local/state/DankMaterialShell"
             # keep-sorted end

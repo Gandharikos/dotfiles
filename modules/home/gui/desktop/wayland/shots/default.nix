@@ -23,9 +23,12 @@ in
         "hyprshot"
         "grimblast"
         "dank-material-shell"
+        "noctalia-shell"
       ]);
       default =
-        if desktop.shell.default == "dank-material-shell" then
+        if desktop.shell.default == "noctalia-shell" then
+          "noctalia-shell"
+        else if desktop.shell.default == "dank-material-shell" then
           "dank-material-shell"
         else if desktop.default == "hyprland" then
           "hyprshot"

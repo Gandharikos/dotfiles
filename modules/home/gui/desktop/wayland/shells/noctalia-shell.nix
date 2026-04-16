@@ -21,6 +21,9 @@ let
   noctaliaSettingsFile = lib.my.relativeToConfig "noctalia/settings.json";
   settings = builtins.fromJSON (builtins.readFile noctaliaSettingsFile);
 
+  noctaliaPluginsFile = lib.my.relativeToConfig "noctalia/plugins.json";
+  plugins = builtins.fromJSON (builtins.readFile noctaliaPluginsFile);
+
   noctaliaPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
   uwsm = getExe' pkgs.uwsm "uwsm";
   noctaliaExe = getExe' noctaliaPkg "noctalia-shell";
@@ -39,6 +42,12 @@ let
     ]
     ++ args;
   noctalia = args: escapeShellArgs (noctaliaArgs args);
+  noctaliaRecorder =
+    action:
+    escapeShellArgs (noctaliaArgs [
+      "plugin:screen-recorder"
+      action
+    ]);
 
   inherit (desktop) modKey;
 in
@@ -64,6 +73,8 @@ in
             directory = builtins.dirOf (toString wallpaper);
           };
       };
+
+      inherit plugins;
     };
 
     wayland.windowManager.hyprland.settings = with keys; {
@@ -136,6 +147,8 @@ in
           "ALT, Comma, Toggle Settings, exec, ${settings}"
           "$mod, Apostrophe, Toggle Notifications, exec, ${notifications}"
           "SUPER ALT, L, Lock Screen, exec, ${lock}"
+          ", F10, Toggle Screen Recording, exec, ${noctaliaRecorder "toggle"}"
+          "SHIFT, F10, Save Replay Buffer, exec, ${noctaliaRecorder "saveReplay"}"
         ];
 
       binddl = mkForce (
@@ -385,6 +398,14 @@ in
           "${modKey}+Alt+L".action.spawn = noctaliaArgs [
             "lockScreen"
             "lock"
+          ];
+          "F10".action.spawn = noctaliaArgs [
+            "plugin:screen-recorder"
+            "toggle"
+          ];
+          "Shift+F10".action.spawn = noctaliaArgs [
+            "plugin:screen-recorder"
+            "saveReplay"
           ];
         }
         // xf86Binds;
