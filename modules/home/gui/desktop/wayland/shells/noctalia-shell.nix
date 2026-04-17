@@ -158,7 +158,6 @@ in
           "$mod, Apostrophe, Toggle Notifications, exec, ${notifications}"
           "SUPER ALT, L, Lock Screen, exec, ${lock}"
           ", F10, Toggle Screen Recording, exec, ${noctaliaRecorder "toggle"}"
-          "SHIFT, F10, Save Replay Buffer, exec, ${noctaliaRecorder "saveReplay"}"
         ];
 
       binddl = mkForce (
@@ -412,10 +411,6 @@ in
           "F10".action.spawn = noctaliaArgs [
             "plugin:screen-recorder"
             "toggle"
-          ];
-          "Shift+F10".action.spawn = noctaliaArgs [
-            "plugin:screen-recorder"
-            "saveReplay"
           ];
         }
         // xf86Binds;
