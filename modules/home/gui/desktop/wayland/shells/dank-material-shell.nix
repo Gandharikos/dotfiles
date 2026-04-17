@@ -114,7 +114,7 @@ in
               hash = "sha256-NQ14YenDiNK2VqXQ3z7jAkatbSRtYJHhOhvv7AJlUD8=";
             };
           };
-          screen-recorder = {
+          screenRecorder = {
             enable = true;
             src = pkgs.fetchFromGitHub {
               owner = "arqueon";
@@ -148,8 +148,7 @@ in
           night_toggle = dms' "night toggle";
           inhibit = dms' "inhibit toggle";
           lock = dms' "lock toggle";
-          recorder_toggle = dms' "screen-recorder toggle";
-          recorder_save = dms' "screen-recorder saveReplay";
+          recorder_toggle = dms' "screenRecorder toggleRecording";
         in
         [
           "$mod, space, Toggle App Launcher, exec, ${spotlight}"
@@ -169,7 +168,6 @@ in
         ++ [
           "SUPER ALT, L, Toggle Lock, exec, ${lock}"
           ", F10, Toggle Screen Recording, exec, ${recorder_toggle}"
-          "SHIFT, F10, Save Replay Buffer, exec, ${recorder_save}"
         ];
       binddl = mkForce (
         let
@@ -389,12 +387,8 @@ in
             "toggle"
           ];
           "F10".action.spawn = dms' [
-            "screen-recorder"
-            "toggle"
-          ];
-          "Shift+F10".action.spawn = dms' [
-            "screen-recorder"
-            "saveReplay"
+            "screenRecorder"
+            "toggleRecording"
           ];
         }
         // xf86Binds;
