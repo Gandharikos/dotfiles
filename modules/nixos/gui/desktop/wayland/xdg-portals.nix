@@ -8,19 +8,17 @@ let
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf mkDefault;
   cfg = config.my.gui.desktop;
+  isNiri = cfg.default == "niri";
   portal =
     if cfg.default == "hyprland" then
       "hyprland"
-    else if cfg.default == "niri" then
+    else if isNiri then
       "gnome"
     else
       "wlr";
   extraPortals =
-    if cfg.default == "niri" then
-      [ pkgs.xdg-desktop-portal-gnome ]
-    else
-      [ pkgs.xdg-desktop-portal-wlr ];
-  wlrEnable = cfg.default != "niri";
+    if isNiri then [ pkgs.xdg-desktop-portal-gnome ] else [ pkgs.xdg-desktop-portal-wlr ];
+  wlrEnable = !isNiri;
   inherit (cfg.wayland) enable;
 in
 {
@@ -48,6 +46,14 @@ in
           };
         };
       };
+    };
+
+    # xdg-desktop-portal-gnome refuses to expose ScreenCast/Screenshot on non-GNOME
+    # compositors when GDK_BACKEND is set (reports "GDK backend forced via env var,
+    # Non-compatible display server, exposing settings only").
+    # Unset it so the portal can auto-detect and work correctly under Niri.
+    systemd.user.services.xdg-desktop-portal-gnome.serviceConfig = mkIf isNiri {
+      UnsetEnvironment = [ "GDK_BACKEND" ];
     };
   };
 }
