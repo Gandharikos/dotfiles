@@ -75,6 +75,17 @@
     "widgets": {
       "center": [
         {
+          "defaultSettings": {
+            "autoStartBreaks": false,
+            "autoStartWork": false,
+            "longBreakDuration": 15,
+            "sessionsBeforeLongBreak": 4,
+            "shortBreakDuration": 5,
+            "workDuration": 25
+          },
+          "id": "plugin:pomodoro"
+        },
+        {
           "compactMode": false,
           "hideMode": "hidden",
           "id": "MediaMini",
@@ -99,15 +110,7 @@
           "useCustomFont": true
         },
         {
-          "defaultSettings": {
-            "autoStartBreaks": false,
-            "autoStartWork": false,
-            "longBreakDuration": 15,
-            "sessionsBeforeLongBreak": 4,
-            "shortBreakDuration": 5,
-            "workDuration": 25
-          },
-          "id": "plugin:pomodoro"
+          "id": "plugin:weather-indicator"
         }
       ],
       "left": [
@@ -162,9 +165,7 @@
             "minimumThreshold": 10
           },
           "id": "plugin:catwalk"
-        }
-      ],
-      "right": [
+        },
         {
           "defaultSettings": {
             "compactMode": false,
@@ -182,10 +183,9 @@
             "terminalCommand": ""
           },
           "id": "plugin:tailscale"
-        },
-        {
-          "id": "plugin:screen-recorder"
-        },
+        }
+      ],
+      "right": [
         {
           "id": "plugin:todo"
         },
@@ -200,6 +200,9 @@
         },
         {
           "id": "plugin:screen-toolkit"
+        },
+        {
+          "id": "plugin:screen-recorder"
         },
         {
           "id": "KeepAwake"
@@ -552,8 +555,8 @@
     "overlayLayer": true
   },
   "plugins": {
-    "autoUpdate": false,
-    "notifyUpdates": true
+    "autoUpdate": true,
+    "notifyUpdates": false
   },
   "sessionMenu": {
     "countdownDuration": 10000,

@@ -19,10 +19,6 @@
       "enabled": true,
       "sourceUrl": "https://github.com/noctalia-dev/noctalia-plugins"
     },
-    "polkit-agent": {
-      "enabled": true,
-      "sourceUrl": "https://github.com/noctalia-dev/noctalia-plugins"
-    },
     "pomodoro": {
       "enabled": true,
       "sourceUrl": "https://github.com/noctalia-dev/noctalia-plugins"
@@ -35,15 +31,15 @@
       "enabled": true,
       "sourceUrl": "https://github.com/noctalia-dev/noctalia-plugins"
     },
-    "screenshot": {
-      "enabled": true,
-      "sourceUrl": "https://github.com/noctalia-dev/noctalia-plugins"
-    },
     "tailscale": {
       "enabled": true,
       "sourceUrl": "https://github.com/noctalia-dev/noctalia-plugins"
     },
     "todo": {
+      "enabled": true,
+      "sourceUrl": "https://github.com/noctalia-dev/noctalia-plugins"
+    },
+    "weather-indicator": {
       "enabled": true,
       "sourceUrl": "https://github.com/noctalia-dev/noctalia-plugins"
     }
