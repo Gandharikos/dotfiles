@@ -137,6 +137,7 @@ in
 
     # copy-mode-vi
     bind Escape copy-mode
+    bind -T copy-mode-vi Escape send-keys -X cancel
     bind -T copy-mode-vi v send-keys -X begin-selection
     bind -T copy-mode-vi ${h} send-keys -X cursor-left
     bind -T copy-mode-vi ${l} send-keys -X cursor-right
