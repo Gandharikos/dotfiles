@@ -65,7 +65,17 @@ in
       };
 
       settings = settings // {
-        general = settings.general // optionalAttrs (avatar != null) { avatarImage = toString avatar; };
+        general =
+          settings.general
+          // optionalAttrs (avatar != null) { avatarImage = toString avatar; }
+          // {
+            keybinds = settings.general.keybinds // {
+              keyLeft = settings.general.keybinds.keyLeft ++ [ "Ctrl+${keys.H}" ];
+              keyDown = settings.general.keybinds.keyDown ++ [ "Ctrl+${keys.J}" ];
+              keyUp = settings.general.keybinds.keyUp ++ [ "Ctrl+${keys.K}" ];
+              keyRight = settings.general.keybinds.keyRight ++ [ "Ctrl+${keys.L}" ];
+            };
+          };
         wallpaper =
           settings.wallpaper
           // optionalAttrs (wallpaper != null) {

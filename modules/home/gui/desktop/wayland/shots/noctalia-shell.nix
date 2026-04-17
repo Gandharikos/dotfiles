@@ -35,8 +35,7 @@ let
   noctaliaScreenshot =
     mode:
     escapeShellArgs (noctaliaIpc [
-      "plugin:screenshot"
-      "takeScreenshot"
+      "plugin:screen-toolkit"
       mode
     ]);
 in
@@ -44,26 +43,23 @@ in
   config = mkIf enable {
 
     wayland.windowManager.hyprland.settings.bindd = [
-      ", Print, Screenshot Region, exec, ${noctaliaScreenshot "region"}"
-      "CTRL, Print, Screenshot Focused Output, exec, ${noctaliaScreenshot "output"}"
-      "ALT, Print, Screenshot Focused Window, exec, ${noctaliaScreenshot "window"}"
+      ", Print, Screenshot Region, exec, ${noctaliaScreenshot "annotate"}"
+      "CTRL, Print, Screenshot Fullscreen, exec, ${noctaliaScreenshot "annotateFullscreen"}"
+      "ALT, Print, Screenshot Focused Window, exec, ${noctaliaScreenshot "annotateWindow"}"
     ];
 
     programs.niri.settings.binds = {
       "Print".action.spawn = noctaliaIpc [
-        "plugin:screenshot"
-        "takeScreenshot"
-        "region"
+        "plugin:screen-toolkit"
+        "annotate"
       ];
       "Ctrl+Print".action.spawn = noctaliaIpc [
-        "plugin:screenshot"
-        "takeScreenshot"
-        "output"
+        "plugin:screen-toolkit"
+        "annotateFullscreen"
       ];
       "Alt+Print".action.spawn = noctaliaIpc [
-        "plugin:screenshot"
-        "takeScreenshot"
-        "window"
+        "plugin:screen-toolkit"
+        "annotateWindow"
       ];
     };
   };
