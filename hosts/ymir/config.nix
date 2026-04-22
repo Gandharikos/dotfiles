@@ -55,11 +55,8 @@
   };
   # for surge
   time = {
-    timeZone = lib.mkForce "Asia/Shanghai";
     hardwareClockInLocalTime = lib.mkForce false;
   };
-
-  services.automatic-timezoned.enable = lib.mkForce false;
 
   networking.tcpcrypt.enable = lib.mkForce false;
 
