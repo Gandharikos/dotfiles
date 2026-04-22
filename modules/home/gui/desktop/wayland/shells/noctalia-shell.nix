@@ -61,7 +61,7 @@ in
       enable = true;
 
       systemd = {
-        enable = true;
+        enable = false;
       };
 
       settings = settings // {
@@ -88,6 +88,10 @@ in
     };
 
     wayland.windowManager.hyprland.settings = with keys; {
+      exec-once = [
+        (escapeShellArgs (noctaliaCmd ++ [ "--no-duplicate" ]))
+      ];
+
       bindd =
         let
           launcher = noctalia [
@@ -237,6 +241,12 @@ in
     };
 
     programs.niri.settings = {
+      spawn-at-startup = [
+        {
+          command = noctaliaCmd ++ [ "--no-duplicate" ];
+        }
+      ];
+
       binds =
         let
           spawn = args: { action.spawn = noctaliaArgs args; };

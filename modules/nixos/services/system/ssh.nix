@@ -26,11 +26,9 @@ in
 
       allowSFTP = true;
 
-      banner = ''
-        Welcome to ${config.networking.hostName} @ ${config.my.stateVersion}!
-      '';
-
       settings = {
+        Banner = "/etc/ssh/banner";
+
         # allow root login to remote deployments
         PermitRootLogin = "no";
 
@@ -85,6 +83,10 @@ in
         }
       ];
     };
+
+    environment.etc."ssh/banner".text = ''
+      Welcome to ${config.networking.hostName} @ ${config.my.stateVersion}!
+    '';
 
     # yubikey login / sudo
     security.pam = {
