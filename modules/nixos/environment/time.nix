@@ -55,9 +55,10 @@ in
           enable = true;
           enableCDMA = false;
           enable3G = false;
-          # https://github.com/NixOS/nixpkgs/issues/321121
-          geoProviderUrl = "https://api.positon.xyz/v1/geolocate?key=test";
-          submissionUrl = "https://api.positon.xyz/v2/geosubmit?key=test";
+          enableModemGPS = false;
+          enableNmea = false;
+          enableWifi = true;
+          # Use default geoclue provider
           submitData = !my.security.enable;
           appConfig.automatic-timezoned = {
             isAllowed = true;
