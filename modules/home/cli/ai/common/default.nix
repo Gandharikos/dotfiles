@@ -72,7 +72,6 @@ in
     opencode = {
       commands = aiCommands.toOpenCodeMarkdown;
       agents = aiAgents.toOpenCodeMarkdown;
-      renderAgents = aiAgents.toOpenCodeMarkdown;
     };
 
     mergeCommands = existingCommands: newCommands: existingCommands // newCommands;
