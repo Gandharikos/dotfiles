@@ -53,10 +53,6 @@
       backend = "kanata";
     };
   };
-  # for surge
-  time = {
-    hardwareClockInLocalTime = lib.mkForce false;
-  };
 
   networking.tcpcrypt.enable = lib.mkForce false;
 

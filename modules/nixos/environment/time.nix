@@ -14,7 +14,7 @@ let
 in
 {
   config = mkMerge [
-    { time.hardwareClockInLocalTime = true; }
+    # { time.hardwareClockInLocalTime = true; }
     (mkIf isServer {
       time.timeZone = mkForce "UTC";
     })
