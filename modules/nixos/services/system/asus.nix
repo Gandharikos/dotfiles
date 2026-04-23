@@ -28,6 +28,13 @@ in
     # On ephemeral-root systems this directory won't exist without this rule.
     systemd.tmpfiles.rules = [ "d /etc/asusd 0755 root root -" ];
 
+    # Ensure tmpfiles creates /etc/asusd before systemd applies ReadWritePaths
+    # for asusd.service, otherwise the unit fails early with 226/NAMESPACE.
+    systemd.services.asusd = {
+      after = [ "systemd-tmpfiles-setup.service" ];
+      requires = [ "systemd-tmpfiles-setup.service" ];
+    };
+
     # Persist asusd config (fan profiles, keyboard backlight, etc.) across reboots.
     # Only takes effect when preservation.enable = true.
     preservation.preserveAt."/persist".directories = [ "/etc/asusd" ];
