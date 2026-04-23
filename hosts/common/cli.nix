@@ -1,8 +1,6 @@
 {
   my = {
     # keep-sorted start block=yes newline_separated=yes
-    aichat.enable = true;
-
     atuin = {
       enable = true;
       autoLogin = true;

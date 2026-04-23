@@ -1,47 +1,9 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 let
-  inherit (lib) concatStringsSep mapAttrs mapAttrsToList;
+  aiCommands = import ./commands.nix { inherit lib; };
+  aiAgents = import ./agents.nix { inherit lib; };
 
-  aiCommands = import ./commands { inherit lib; };
-  aiAgents = import ./agents { inherit lib; };
-
-  convertCommandsToGemini =
-    commands:
-    mapAttrs (name: prompt: {
-      inherit prompt;
-      description =
-        let
-          lines = lib.splitString "\n" prompt;
-          descLine = lib.findFirst (line: lib.hasPrefix "description:" line) "" lines;
-        in
-        if descLine != "" then
-          lib.removePrefix "description: " (lib.trim descLine)
-        else
-          "AI command: ${name}";
-    }) commands;
-
-  convertAgentsToGemini =
-    agents:
-    mapAttrs (
-      name: agentText:
-      let
-        parts = lib.splitString "---" agentText;
-        mainContent = if lib.length parts >= 3 then lib.elemAt parts 2 else agentText;
-        frontmatter = if lib.length parts >= 2 then lib.elemAt parts 1 else "";
-        descMatch = lib.optionals (lib.hasInfix "description:" frontmatter) [
-          (lib.removePrefix "description: " (
-            lib.trim (
-              lib.head (lib.filter (line: lib.hasPrefix "description:" line) (lib.splitString "\n" frontmatter))
-            )
-          ))
-        ];
-        description = if descMatch != [ ] then lib.head descMatch else "AI agent: ${name}";
-      in
-      {
-        prompt = lib.trim mainContent;
-        inherit description;
-      }
-    ) agents;
+  base = ./base.md;
 
   renderEntries =
     title: entries:
@@ -52,35 +14,67 @@ let
       ---
 
     ''
-    + (concatStringsSep "\n\n" (
-      mapAttrsToList (entryName: content: ''
+    + (lib.concatStringsSep "\n\n" (
+      lib.mapAttrsToList (entryName: content: ''
         ## ${entryName}
         ${content}
       '') entries
     ));
 
-  shared = {
+  renderedSkills = {
+    "ai-commands" = renderEntries "ai-commands" aiCommands.commands;
+    "ai-agents" = renderEntries "ai-agents" aiAgents.agents;
+  };
+
+  mkSkillDir = content: pkgs.writeTextDir "SKILL.md" content;
+
+  skillEntries = lib.mapAttrsToList (name: content: {
+    inherit name;
+    path = mkSkillDir content;
+  }) renderedSkills;
+
+  skillsDir = pkgs.linkFarm "shared-ai-skills" skillEntries;
+
+  skills = renderedSkills;
+
+  inherit (aiCommands) commands;
+  inherit (aiAgents) agents;
+in
+{
+  _module.args.aiCommon = {
+    inherit
+      agents
+      base
+      commands
+      skills
+      skillsDir
+      ;
+
     claudeCode = {
-      commands = aiCommands;
-      agents = aiAgents;
+      commands = aiCommands.toClaudeMarkdown;
+      agents = aiAgents.toClaudeMarkdown;
+      inherit skillsDir;
     };
 
     geminiCli = {
-      commands = convertCommandsToGemini aiCommands;
-      agents = convertAgentsToGemini aiAgents;
+      commands = aiCommands.toGeminiCommands;
+      agents = aiAgents.toGeminiAgents;
+      inherit skills;
     };
 
     codex = {
-      customInstructions = builtins.readFile (lib.my.getFile "modules/home/cli/ai/common/base.md");
-      skills = {
-        "ai-commands" = renderEntries "ai-commands" aiCommands;
-        "ai-agents" = renderEntries "ai-agents" aiAgents;
-      };
+      context = base;
+      customInstructions = base;
+      inherit skillsDir;
+      inherit skills;
+    };
+
+    opencode = {
+      commands = aiCommands.toOpenCodeMarkdown;
+      agents = aiAgents.toOpenCodeMarkdown;
+      renderAgents = aiAgents.toOpenCodeMarkdown;
     };
 
     mergeCommands = existingCommands: newCommands: existingCommands // newCommands;
   };
-in
-{
-  _module.args.aiCommon = shared;
 }

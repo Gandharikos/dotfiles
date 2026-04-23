@@ -6,167 +6,66 @@
   ...
 }:
 let
-  cfg = config.my.claude-code;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  hooks = lib.my.importDir ./hooks { inherit pkgs; };
+  inherit (lib.attrsets) optionalAttrs;
+  cfg = config.my.claude-code;
+  hooks = lib.my.importDir ./hooks {
+    inherit
+      config
+      pkgs
+      ;
+  };
+  mcpModuleEnabled = config.my.mcp.enable or false;
   sharedAiTools = aiCommon;
+  claudeIcon = ./assets/claude.ico;
 in
 {
+  imports = [
+    ./permissions.nix
+  ];
+
   options.my.claude-code = {
     enable = mkEnableOption "claude-code";
   };
 
   config = mkIf cfg.enable {
+    # Install Claude icon for notifications
+    xdg.dataFile."icons/claude.ico".source = claudeIcon;
+
     programs.claude-code = {
       enable = true;
       package = pkgs.llm-agents.claude-code;
-      mcpServers = {
-        github = {
-          type = "stdio";
-          command = lib.getExe pkgs.github-mcp-server;
-          args = [
-            "stdio"
-          ];
-          env = {
-            GITHUB_PERSONAL_ACCESS_TOKEN = "$GITHUB_TOKEN";
-          };
-        };
-
-        socket = {
-          type = "http";
-          url = "https://mcp.socket.dev/";
-        };
-      };
+      enableMcpIntegration = mkIf mcpModuleEnabled true;
 
       settings = {
         theme = "dark";
         inherit hooks;
-        permissions = {
-          allow = [
-            # Safe read-only git commands
-            "Bash(git add:*)"
-            "Bash(git status)"
-            "Bash(git log:*)"
-            "Bash(git diff:*)"
-            "Bash(git show:*)"
-            "Bash(git branch:*)"
-            "Bash(git remote:*)"
-
-            # Safe Nix commands (mostly read-only)
-            "Bash(nix:*)"
-
-            # Safe file system operations
-            "Bash(ls:*)"
-            "Bash(find:*)"
-            "Bash(grep:*)"
-            "Bash(rg:*)"
-            "Bash(cat:*)"
-            "Bash(head:*)"
-            "Bash(tail:*)"
-            "Bash(mkdir:*)"
-            "Bash(chmod:*)"
-
-            # Safe system info commands
-            "Bash(systemctl list-units:*)"
-            "Bash(systemctl list-timers:*)"
-            "Bash(systemctl status:*)"
-            "Bash(journalctl:*)"
-            "Bash(dmesg:*)"
-            "Bash(env)"
-            "Bash(claude --version)"
-            "Bash(nh search:*)"
-
-            # Audio system (read-only)
-            "Bash(pactl list:*)"
-            "Bash(pw-top)"
-
-            # Core Claude Code tools
-            "Glob(*)"
-            "Grep(*)"
-            "LS(*)"
-            "Read(*)"
-            "Search(*)"
-            "Task(*)"
-            "TodoWrite(*)"
-
-            # Work MCP
-            "mcp__mulesoft-analyzer"
-
-            # GitHub tools (read-only)
-            "mcp__github__search_repositories"
-            "mcp__github__get_file_contents"
-
-            # Safe web fetch from trusted domains
-            "WebFetch(domain:wiki.hyprland.org)"
-            "WebFetch(domain:github.com)"
-            "WebFetch(domain:wiki.hypr.land)"
-            "WebFetch(domain:raw.githubusercontent.com)"
-          ];
-          ask = [
-            # Potentially destructive git commands
-            "Bash(git checkout:*)"
-            "Bash(git commit:*)"
-            "Bash(git merge:*)"
-            "Bash(git pull:*)"
-            "Bash(git push:*)"
-            "Bash(git rebase:*)"
-            "Bash(git reset:*)"
-            "Bash(git restore:*)"
-            "Bash(git stash:*)"
-            "Bash(git switch:*)"
-
-            # File deletion and modification
-            "Bash(cp:*)"
-            "Bash(mv:*)"
-            "Bash(rm:*)"
-
-            # System control operations
-            "Bash(systemctl disable:*)"
-            "Bash(systemctl enable:*)"
-            "Bash(systemctl mask:*)"
-            "Bash(systemctl reload:*)"
-            "Bash(systemctl restart:*)"
-            "Bash(systemctl start:*)"
-            "Bash(systemctl stop:*)"
-            "Bash(systemctl unmask:*)"
-
-            # Network operations
-            "Bash(curl:*)"
-            "Bash(ping:*)"
-            "Bash(rsync:*)"
-            "Bash(scp:*)"
-            "Bash(ssh:*)"
-            "Bash(wget:*)"
-
-            # Package management
-            "Bash(nixos-rebuild:*)"
-            "Bash(sudo:*)"
-
-            # Process management
-            "Bash(kill:*)"
-            "Bash(killall:*)"
-            "Bash(pkill:*)"
-          ];
-          deny = [ ];
-          defaultMode = "default";
-        };
-        model = "claude-sonnet-4-5";
         verbose = true;
         includeCoAuthoredBy = false;
 
+        gitAttribution = false;
         statusLine = {
           type = "command";
           command = "input=$(cat); echo \"[$(echo \"$input\" | jq -r '.model.display_name')] 📁 $(basename \"$(echo \"$input\" | jq -r '.workspace.current_dir')\")\"";
           padding = 0;
         };
+        attribution = {
+          commit = "";
+          pr = "";
+        };
+
+        env = {
+          USE_BUILTIN_RIPGREP = "0";
+        }
+        // optionalAttrs mcpModuleEnabled {
+          ENABLE_TOOL_SEARCH = "auto:5";
+        };
       };
 
-      inherit (sharedAiTools.claudeCode) agents;
-
-      inherit (sharedAiTools.claudeCode) commands;
-
-      memory.source = lib.my.getFile "modules/home/cli/ai/common/base.md";
+      inherit (sharedAiTools.claudeCode) agents commands;
+      inherit (sharedAiTools) skills;
+      context = sharedAiTools.base;
     };
   };
 }
