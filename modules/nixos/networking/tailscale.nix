@@ -87,6 +87,11 @@ in
         tailscaled-autoconnect = mkIf cfg.autoConnect {
           after = [ "sops-nix.service" ];
           wants = [ "sops-nix.service" ];
+          serviceConfig = {
+            # Global systemd defaults are 15s on this host, which is too short when Wi-Fi
+            # brings up the default route after tailscaled has already started.
+            TimeoutStartSec = "2min";
+          };
         };
       };
     };
