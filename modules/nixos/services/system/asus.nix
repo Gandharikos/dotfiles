@@ -23,6 +23,15 @@ in
     # - AniMe Matrix display (on supported models)
     services.asusd.enable = true;
 
+    # asusd.service uses ReadWritePaths=/etc/asusd/ with ProtectSystem=strict,
+    # which requires the directory to exist before systemd sets up the mount namespace.
+    # On ephemeral-root systems this directory won't exist without this rule.
+    systemd.tmpfiles.rules = [ "d /etc/asusd 0755 root root -" ];
+
+    # Persist asusd config (fan profiles, keyboard backlight, etc.) across reboots.
+    # Only takes effect when preservation.enable = true.
+    preservation.preserveAt."/persist".directories = [ "/etc/asusd" ];
+
     # Graphics switching for dual-GPU ASUS laptops
     # Manages NVIDIA/AMD discrete GPU power
     # DISABLED: Causing kernel panic on boot
