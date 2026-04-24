@@ -12,12 +12,13 @@ let
 in
 {
   config = mkIf enable {
+    home.packages = [ pkgs.catppuccin-kvantum ];
+
     qt = {
       enable = true;
       platformTheme.name = "qtct";
       style = {
-        package = pkgs.catppuccin-kvantum;
-        name = "Kvantum";
+        name = "kvantum";
       };
     };
   };

@@ -1,14 +1,41 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
+  inherit (lib.meta)
+    getExe
+    getExe'
+    ;
   inherit (config.my) gui;
   cfg = config.my.gui.apps.sioyek;
   enable = gui.enable && cfg.enable;
+  sioyekExe = getExe pkgs.sioyek;
+  envExe = getExe' pkgs.coreutils "env";
+  sioyekExec = "${envExe} QT_QPA_PLATFORM=xcb ${sioyekExe}";
+  sioyekDesktop = pkgs.makeDesktopItem {
+    name = "sioyek";
+    desktopName = "Sioyek";
+    comment = "PDF viewer for reading research papers and technical books";
+    exec = "${sioyekExec} %f";
+    icon = "sioyek-icon-linux";
+    terminal = false;
+    startupNotify = true;
+    categories = [
+      "Development"
+      "Viewer"
+    ];
+    mimeTypes = [ "application/pdf" ];
+    extraConfig = {
+      Keywords = "pdf;viewer;reader;research;";
+      StartupWMClass = "sioyek";
+      TryExec = sioyekExe;
+    };
+  };
 in
 {
   options.my.gui.apps.sioyek = {
@@ -18,6 +45,8 @@ in
   };
 
   config = mkIf enable {
+    home.shellAliases.sioyek = sioyekExec;
+
     programs.sioyek = with config.my.keyboard.keys; {
       enable = true;
       bindings = {
@@ -128,30 +157,14 @@ in
         show_doc_path = "1";
         single_click_selects_words = "1";
 
-        # Academic features
-        should_draw_highlight_outline = "1";
-        should_highlight_links = "1";
-
-        should_draw_portal_outline = "1";
-
         # Navigation
-        startup_commands = [ "toggle_horizontal_scroll_lock" ];
-        use_heuristic_if_text_not_found = "1";
-
-        # Search
-        should_highlight_searched_words = "1";
-
-        # Performance
-        prerender_next_page_count = "5";
-
-        # Ruler and visual aids
-        should_show_ruler = "0";
-
-        # Window behavior
-        fit_to_page_width = "1";
+        startup_commands = [
+          "toggle_horizontal_scroll_lock"
+          "fit_to_page_width"
+        ];
 
         # Synctex support for LaTeX
-        synctex_command = "nvim --headless -c \"VimtexInverseSearch %2 '%1'\"";
+        inverse_search_command = "nvim --headless -c \"VimtexInverseSearch %2 '%1'\"";
 
         # Misc
         check_for_updates_on_startup = "0";
@@ -161,6 +174,10 @@ in
       };
     };
 
-    xdg.mimeApps.defaultApplicationPackages = [ config.programs.sioyek.package ];
+    xdg.dataFile."applications/sioyek.desktop" = {
+      source = "${sioyekDesktop}/share/applications/sioyek.desktop";
+    };
+
+    xdg.mimeApps.defaultApplicationPackages = [ pkgs.sioyek ];
   };
 }

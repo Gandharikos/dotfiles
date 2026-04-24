@@ -2,6 +2,7 @@
   inputs,
   lib,
   config,
+  pkgs,
   ...
 }:
 let
@@ -25,7 +26,10 @@ in
       enable = true;
       settings = {
         gestures.hot-corners.enable = false;
-        xwayland-satellite.enable = true;
+        xwayland-satellite = {
+          enable = true;
+          path = lib.getExe pkgs.xwayland-satellite;
+        };
         prefer-no-csd = true;
         hotkey-overlay = {
           skip-at-startup = true;
