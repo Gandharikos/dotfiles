@@ -54,8 +54,6 @@
     };
   };
 
-  networking.tcpcrypt.enable = lib.mkForce false;
-
   hm.my = {
     gui.browser.default = "google-chrome";
     gui.terminal.size = 12;

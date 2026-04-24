@@ -72,7 +72,6 @@ in
       networkmanager.enable = mkForce false;
       nftables.enable = mkForce false;
       extraHosts = mkForce "";
-      tcpcrypt.enable = mkForce false;
     };
     # other
     services = {
