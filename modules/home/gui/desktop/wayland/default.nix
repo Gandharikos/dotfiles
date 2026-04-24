@@ -40,7 +40,6 @@ in
       wireplumber
       wl-clip-persist
       wl-clipboard-rs
-      wl-screenrec
       wlr-randr
       zbar # Barcode/QR code reader
       # keep-sorted end

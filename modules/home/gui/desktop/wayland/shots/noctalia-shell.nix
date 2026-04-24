@@ -16,8 +16,11 @@ let
   noctaliaEnabled = config.programs.noctalia-shell.enable or false;
   enable =
     desktop.wayland.enable && config.my.gui.desktop.shot.default == "noctalia-shell" && noctaliaEnabled;
+  screenshotPath = config.my.gui.desktop.shot.path;
   screenToolkitSettingsFile = lib.my.relativeToConfig "noctalia/plugins/screen-toolkit/settings.json";
-  screenToolkitSettings = builtins.fromJSON (builtins.readFile screenToolkitSettingsFile);
+  screenToolkitSettings = (builtins.fromJSON (builtins.readFile screenToolkitSettingsFile)) // {
+    inherit screenshotPath;
+  };
 
   noctaliaPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
   uwsm = getExe' pkgs.uwsm "uwsm";
