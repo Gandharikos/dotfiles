@@ -18,6 +18,7 @@ in
   config = mkMerge [
     (mkIf cfg.enable {
       home.packages = with pkgs; [
+        uv
         (python3.withPackages (
           ps: with ps; [
             jupyterlab
@@ -63,6 +64,7 @@ in
         PIP_LOG_FILE = "${config.xdg.stateHome}/pip/log";
         PYLINTHOME = "${config.xdg.dataHome}/pylint";
         PYLINTRC = "${config.xdg.configHome}/pylint/pylintrc";
+        UV_CACHE_DIR = "${config.xdg.cacheHome}/uv";
         WORKON_HOME = "${config.xdg.dataHome}/virtualenvs";
       };
     })

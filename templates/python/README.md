@@ -1,6 +1,6 @@
 <div align=center>
 
-# ❄️ nix-template-python-poetry 🐍
+# ❄️ nix-template-python-uv2nix 🐍
 
 [![NixOS](https://img.shields.io/badge/Made_for-Python-blue.svg?logo=python&style=for-the-badge)](https://www.python.org/)
 [![NixOS](https://img.shields.io/badge/Flakes-Nix-informational.svg?logo=nixos&style=for-the-badge)](https://nixos.org)
@@ -12,7 +12,7 @@ Minimal **Python** development template for **Nix**
 
 ## About
 
-This is a minimal template for Python development with Poetry.
+This is a minimal template for Python development with `uv` and `uv2nix`.
 
 ## Initialization
 
@@ -25,15 +25,16 @@ nix flake init -t github:Gandharikos/.dotfiles#python
 
 ## Usage
 
-- `nix develop`: opens up a `bash` shell with the poetry package
-- `nix build` : builds the Python project. Outputs the scripts defined in the `pyproject.toml` to
-  `./result/bin/<name>`
+- `nix develop`: opens a shell with the project virtualenv and `uv`
+- `nix build`: builds the Python project virtualenv. The script defined in `pyproject.toml` will be
+  available under `./result/bin/<name>`
 - `nix run`: runs the Python program.
-- `poetry run python -m package`: runs the python module using poetry
+- `python -m package`: runs the Python module inside the dev shell
+- `uv add <dependency>`: adds a dependency to `pyproject.toml`
+- `uv lock`: refreshes `uv.lock`
 
 ## Reference
 
 1. [wiki/Flakes](https://nixos.wiki/wiki/Flakes)
-2. [Poetry](https://python-poetry.org/) - used for python package management
-3. [Poetry2Nix](https://github.com/nix-community/poetry2nix) - used to convert poetry projects into
-   nix packages
+2. [uv](https://docs.astral.sh/uv/) - used for Python package management
+3. [uv2nix](https://pyproject-nix.github.io/uv2nix/) - used to convert uv projects into Nix packages
