@@ -34,14 +34,10 @@ in
       else
         mkForce (mapAttrs (_: v: v.outPath) flakeInputs);
     # automatically optimise /nix/store/  by removing hard links
-    optimise = {
-      automatic = true;
-      dates = [ "04:00" ];
-    };
+    optimise.automatic = true;
     gc = {
       automatic = true;
       options = "--delete-older-than 7d";
-      dates = "weekly";
     };
     # remove nix-channel related tools & configs, we use flakes instead.
     channel.enable = false;
