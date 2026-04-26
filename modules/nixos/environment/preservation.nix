@@ -242,11 +242,6 @@ in
             ".claude.json"
           ];
         })
-        (mkIf hm.conda.enable {
-          directories = [
-            ".conda"
-          ];
-        })
         (mkIf hm.langs.enable {
           directories = [
             "go"
