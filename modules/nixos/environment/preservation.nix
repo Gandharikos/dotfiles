@@ -107,6 +107,7 @@ in
             ".local/share/supermaven"
             ".local/state/home-manager"
             ".local/state/nix/profiles"
+            ".pixi"
             "Desktop"
             "Dev"
             "Documents"
