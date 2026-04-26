@@ -33,10 +33,15 @@ in
         attrValues (mapAttrs (k: v: "${k}=flake:${v.outPath}") flakeInputs)
       else
         mkForce (mapAttrs (_: v: v.outPath) flakeInputs);
-    optimise.automatic = true;
+    # automatically optimise /nix/store/  by removing hard links
+    optimise = {
+      automatic = true;
+      dates = [ "04:00" ];
+    };
     gc = {
       automatic = true;
       options = "--delete-older-than 7d";
+      dates = "weekly";
     };
     # remove nix-channel related tools & configs, we use flakes instead.
     channel.enable = false;
@@ -64,6 +69,9 @@ in
 
       # let the system decide the number of max jobs
       max-jobs = "auto";
+
+      # automatically optimise symlink
+      auto-optimise-store = true;
 
       # allow building from source if a substituter is missing the requested nar
       fallback = true;

@@ -160,8 +160,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    programs-sqlite.url = "github:wamserma/flake-programs-sqlite";
-
     catppuccin = {
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";

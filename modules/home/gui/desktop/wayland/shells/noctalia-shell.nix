@@ -20,7 +20,13 @@ let
   enable = desktop.wayland.enable && desktop.shell.default == "noctalia-shell";
   noctaliaSettingsFile = lib.my.relativeToConfig "noctalia/settings.json";
   settings = builtins.fromJSON (builtins.readFile noctaliaSettingsFile);
-  weatherIndicatorBarWidgetFile = lib.my.relativeToConfig "noctalia/plugins/weather-indicator/BarWidget.qml";
+  managedIdleSettings = [
+    "enabled"
+    "lockTimeout"
+    "screenOffTimeout"
+    "suspendTimeout"
+    "customCommands"
+  ];
 
   noctaliaPluginsFile = lib.my.relativeToConfig "noctalia/plugins.json";
   plugins = builtins.fromJSON (builtins.readFile noctaliaPluginsFile);
@@ -83,6 +89,7 @@ in
             enabled = true;
             directory = builtins.dirOf (toString wallpaper);
           };
+        idle = removeAttrs (settings.idle or { }) managedIdleSettings;
       };
 
       inherit plugins;
@@ -433,8 +440,5 @@ in
         wallpapers = { };
       };
     };
-
-    xdg.configFile."noctalia/plugins/weather-indicator/BarWidget.qml".source =
-      weatherIndicatorBarWidgetFile;
   };
 }

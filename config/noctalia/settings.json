@@ -249,7 +249,7 @@
         {
           "deviceNativePath": "__default__",
           "displayMode": "graphic-clean",
-          "hideIfIdle": false,
+          "hideIfIdle": true,
           "hideIfNotDetected": true,
           "id": "Battery",
           "showNoctaliaPerformance": true,
@@ -555,7 +555,7 @@
     "overlayLayer": true
   },
   "plugins": {
-    "autoUpdate": true,
+    "autoUpdate": false,
     "notifyUpdates": false
   },
   "sessionMenu": {
