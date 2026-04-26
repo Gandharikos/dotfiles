@@ -147,6 +147,12 @@ in
             # keep-sorted end
           ];
         })
+        (mkIf hm.gui.apps.anki.enable {
+          directories = [
+            ".cache/Anki"
+            ".local/share/Anki2"
+          ];
+        })
         (mkIf hm.gui.apps.discord.enable {
           directories = [
             # keep-sorted start
