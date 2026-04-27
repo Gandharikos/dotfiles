@@ -11,7 +11,7 @@ let
   inherit (config.my.theme.colorscheme) slug;
 in
 {
-  config = mkIf cfg.enable {
+  config = mkIf (cfg.enable && config.programs.zathura.enable) {
     programs.zathura.extraConfig = "include ${src + "/extras/zathura/" + slug + ".zathurarc"}";
   };
 }

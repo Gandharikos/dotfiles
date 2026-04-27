@@ -1,11 +1,13 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (config.my) gui;
   cfg = config.my.gui.apps.zathura;
   enable = gui.enable && cfg.enable;
@@ -13,7 +15,7 @@ in
 {
   options.my.gui.apps.zathura = {
     enable = mkEnableOption "Zathura" // {
-      default = true;
+      default = isLinux;
     };
   };
 

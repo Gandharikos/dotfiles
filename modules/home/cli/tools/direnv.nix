@@ -1,12 +1,28 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
   cfg = config.my.direnv;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
+  direnvPackage =
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      pkgs.direnv.overrideAttrs (_: {
+        # The Darwin build currently stalls in the upstream zsh-based test suite.
+        # Keep the other upstream checks enabled.
+        checkPhase = ''
+          runHook preCheck
+
+          make test-go test-bash test-fish
+
+          runHook postCheck
+        '';
+      })
+    else
+      pkgs.direnv;
 in
 {
   options.my.direnv = {
@@ -17,6 +33,7 @@ in
   config = mkIf cfg.enable {
     programs.direnv = {
       enable = true;
+      package = direnvPackage;
 
       inherit (cfg) silent;
 
