@@ -21,6 +21,7 @@ in
       enableDependencies = true;
 
       extras = {
+        ai.copilot.enable = true;
         ai.sidekick.enable = true;
 
         coding.mini-snippets.enable = true;

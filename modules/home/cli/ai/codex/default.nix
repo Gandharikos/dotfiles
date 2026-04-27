@@ -59,7 +59,7 @@ in
           persistence = "save-all";
         };
 
-        model = "gpt-5.4";
+        model = "gpt-5.5";
         model_reasoning_effort = "high";
         plan_mode_reasoning_effort = "xhigh";
         service_tier = "fast";

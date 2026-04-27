@@ -26,7 +26,7 @@
     "lazyvim.plugins.extras.ui.mini-indentscope",
     "lazyvim.plugins.extras.util.mini-hipatterns",
     "lazyvim.plugins.extras.util.dot",
-    "lazyvim.plugins.extras.ai.supermaven",
+    "lazyvim.plugins.extras.ai.copilot",
     "lazyvim.plugins.extras.vscode",
     "lazyvim.plugins.extras.editor.dial",
     "lazyvim.plugins.extras.coding.mini-surround",

@@ -1,7 +1,6 @@
 {
   nix = {
-    # NixOS uses systemd timer format for gc and optimise intervals
-    gc.interval = "weekly";
-    optimise.interval = [ { Hour = 4; } ];
+    # NixOS schedules optimise jobs with systemd calendar strings.
+    optimise.dates = [ "04:00" ];
   };
 }
