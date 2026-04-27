@@ -1,4 +1,5 @@
 {
+  self,
   inputs,
   config,
   lib,
@@ -14,6 +15,13 @@ in
   imports = [ inputs.nix4lazyvim.homeModules.default ];
 
   config = mkIf (cfg.enable && cfg.distro == "lazyvim") {
+    sops.secrets.github-copilot = {
+      sopsFile = "${self}/secrets/${config.my.name}/github-copilot";
+      path = "${config.home.homeDirectory}/.config/github-copilot/apps.json";
+      mode = "0600";
+      format = "binary";
+    };
+
     programs.lazyvim = {
       enable = true;
       neovim = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
