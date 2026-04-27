@@ -43,6 +43,7 @@ in
         enable = mkForce false;
         docker.enable = config.my.gui.enable;
       };
+      services.oomd.enable = mkForce false;
       persistence.enable = mkForce false;
       # TODO: so many things rely on yubikey, so It should enable no WSL too
       yubikey.enable = mkForce false;
