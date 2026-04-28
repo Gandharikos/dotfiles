@@ -31,8 +31,8 @@ in
   config = mkMerge [
     (mkIf cfg.enable {
       home.packages = with pkgs; [
-        clang
         gcc
+        llvmPackages.clang-tools
         bear
         cmake
         llvmPackages.libcxx

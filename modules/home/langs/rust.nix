@@ -2,12 +2,14 @@
   lib,
   config,
   inputs',
+  pkgs,
   ...
 }:
 let
   cfg = config.my.langs.rust;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkMerge mkIf;
+  inherit (lib.lists) optionals;
   inherit (config) xdg;
   fenixPkgs = inputs'.fenix.packages;
   rustToolchain = fenixPkgs.stable.withComponents [
@@ -29,6 +31,22 @@ in
       home.packages = [
         rustToolchain
         fenixPkgs.stable.rust-analyzer
+        pkgs.bacon
+        pkgs.cargo-audit
+        pkgs.cargo-deny
+        pkgs.cargo-edit
+        pkgs.cargo-expand
+        pkgs.cargo-generate
+        pkgs.cargo-llvm-cov
+        pkgs.cargo-nextest
+        pkgs.cargo-watch
+        pkgs.evcxr
+        pkgs.openssl
+        pkgs.pkg-config
+        pkgs.sccache
+      ]
+      ++ optionals pkgs.stdenv.hostPlatform.isLinux [
+        pkgs.mold
       ];
       home.shellAliases = {
         rs = "rustc";
@@ -37,9 +55,10 @@ in
     })
 
     (mkIf cfg.xdg.enable {
+      home.sessionPath = [ "${xdg.dataHome}/cargo/bin" ];
+
       home.sessionVariables = rec {
         CARGO_HOME = "${xdg.dataHome}/cargo";
-        PATH = [ "${CARGO_HOME}/bin" ];
         RUST_SRC_PATH = "${rustToolchain}/lib/rustlib/src/rust/library";
       };
     })
