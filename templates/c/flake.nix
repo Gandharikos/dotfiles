@@ -8,6 +8,7 @@
     {
       self,
       nixpkgs,
+      ...
     }:
     let
       # to work with older version of flakes

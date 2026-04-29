@@ -10,6 +10,7 @@
       nixpkgs,
       utils,
       naersk,
+      ...
     }:
     utils.lib.eachDefaultSystem (
       system:

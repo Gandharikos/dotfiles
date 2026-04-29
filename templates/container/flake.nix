@@ -5,6 +5,7 @@
     {
       self,
       nixpkgs,
+      ...
     }:
     {
       nixosConfigurations.container = nixpkgs.lib.nixosSystem {
