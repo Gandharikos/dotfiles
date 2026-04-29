@@ -70,7 +70,6 @@ in
       # System-level directories
       directories = [
         "/etc/nixos"
-        "/etc/nix"
         "/etc/NetworkManager/system-connections"
         "/var/db/sudo"
         # maybe we need more fine-grained
