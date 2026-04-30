@@ -1,19 +1,18 @@
 {
   config,
   lib,
-  # pkgs,
+  pkgs,
   inputs,
-  system,
   ...
 }:
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkDefault;
-  inherit (lib.meta) getExe hasAttrByPath;
-  inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.meta) getExe;
+  inherit (lib.attrsets) hasAttrByPath optionalAttrs;
 
   cfg = config.my.mcp;
-  mcpPkgs = inputs.mcp-servers-nix.packages.${system};
+  mcpPkgs = inputs.mcp-servers-nix.packages.${pkgs.stdenv.hostPlatform.system};
   hasTavilyApiKey = hasAttrByPath [ "sops" "secrets" "tavily_api_key" ] config;
 in
 {
@@ -23,6 +22,7 @@ in
 
   config = mkIf cfg.enable {
     sops.secrets.github_token = { };
+    sops.secrets.tavily_api_key = { };
     programs.mcp = {
       # MCP documentation
       # See: https://modelcontextprotocol.io/

@@ -45,6 +45,8 @@
 
     lazygit.enable = true;
 
+    mcp.enable = true;
+
     mux = {
       default = "tmux";
       autoStart = true;
