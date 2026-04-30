@@ -5,6 +5,7 @@
   ...
 }:
 let
+  inherit (lib.attrsets) optionalAttrs;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.modules) mkIf;
   inherit (lib.types) str bool;
@@ -82,7 +83,6 @@ in
         window-padding-x = terminal.padding;
         window-padding-y = terminal.padding;
         window-padding-balance = true;
-        window-decoration = false;
         # macos
         macos-titlebar-style = "hidden";
         macos-option-as-alt = "left";
@@ -120,6 +120,9 @@ in
           "ctrl+shift+s=write_screen_file:open"
           "ctrl+shift+w=close_surface"
         ];
+      }
+      // optionalAttrs isLinux {
+        window-decoration = false;
       };
     };
   };
