@@ -72,7 +72,7 @@ in
         # Theme
         cursor-invert-fg-bg = true;
         background-opacity = terminal.opacity;
-        background-blur = true;
+        background-blur = if isLinux then true else "macos-glass-clear";
         window-theme = "ghostty";
         # window
         gtk-single-instance = true;
