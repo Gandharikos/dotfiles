@@ -7,9 +7,17 @@
 let
   inherit (lib) mkIf;
   inherit (lib.my) isx86Linux;
+  lowLatencyQuantum = 32;
+  lowLatencyRate = 48000;
+  lowLatencyPeriod = "${toString lowLatencyQuantum}/${toString lowLatencyRate}";
 in
 {
   config = mkIf config.my.gui.enable {
+    environment.systemPackages = with pkgs; [
+      easyeffects
+      pwvucontrol
+    ];
+
     # pipewire is newer and just better
     services.pipewire = {
       enable = true;
@@ -48,6 +56,26 @@ in
             }
           ];
         };
+
+        "92-low-latency"."context.properties" = {
+          "default.clock.rate" = lowLatencyRate;
+          "default.clock.quantum" = lowLatencyQuantum;
+          "default.clock.min-quantum" = lowLatencyQuantum;
+          "default.clock.max-quantum" = lowLatencyQuantum;
+        };
+      };
+
+      extraConfig.pipewire-pulse."92-low-latency"."pulse.properties" = {
+        "pulse.min.req" = lowLatencyPeriod;
+        "pulse.default.req" = lowLatencyPeriod;
+        "pulse.max.req" = lowLatencyPeriod;
+        "pulse.min.quantum" = lowLatencyPeriod;
+        "pulse.max.quantum" = lowLatencyPeriod;
+      };
+
+      extraConfig.client."92-low-latency"."stream.properties" = {
+        "node.latency" = lowLatencyPeriod;
+        "resample.quality" = 1;
       };
     };
 
