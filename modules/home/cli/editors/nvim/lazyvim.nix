@@ -32,7 +32,6 @@ in
         ai.copilot.enable = true;
         ai.sidekick.enable = true;
 
-        coding.mini-snippets.enable = true;
         coding.neogen.enable = true;
         coding.yanky.enable = true;
         coding.mini-surround.enable = true;

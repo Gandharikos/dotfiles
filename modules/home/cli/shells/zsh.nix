@@ -138,7 +138,11 @@ in
           lg = "lazygit";
           lzd = "lazydocker";
           ipy = "ipython";
-          cc = "cc -Wall -Werror -Wextra";
+          cc = "cpp17";
+          cxx = "cpp17";
+          cxx20 = "cpp20";
+          cxxdbg = "cppdbg";
+          cpr = "cpprun";
           ns = "netstat -tunlp";
           # cd
           ".." = "cd ..";

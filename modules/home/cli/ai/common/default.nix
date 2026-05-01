@@ -2,6 +2,7 @@
 let
   aiCommands = import ./commands.nix { inherit lib; };
   aiAgents = import ./agents.nix { inherit lib; };
+  aiSkills = import ./skills.nix { inherit lib pkgs; };
 
   base = ./base.md;
 
@@ -21,21 +22,29 @@ let
       '') entries
     ));
 
-  renderedSkills = {
-    "ai-commands" = renderEntries "ai-commands" aiCommands.commands;
-    "ai-agents" = renderEntries "ai-agents" aiAgents.agents;
-  };
+  skillSpecs = {
+    "ai-commands" = {
+      content = renderEntries "ai-commands" aiCommands.commands;
+    };
+    "ai-agents" = {
+      content = renderEntries "ai-agents" aiAgents.agents;
+    };
+  }
+  // aiSkills.skills;
 
   mkSkillDir = content: pkgs.writeTextDir "SKILL.md" content;
+  getSkillContent = spec: if builtins.isAttrs spec then spec.content else spec;
+  getSkillPath =
+    spec: if builtins.isAttrs spec && spec ? path then spec.path else mkSkillDir (getSkillContent spec);
 
-  skillEntries = lib.mapAttrsToList (name: content: {
+  skillEntries = lib.mapAttrsToList (name: spec: {
     inherit name;
-    path = mkSkillDir content;
-  }) renderedSkills;
+    path = getSkillPath spec;
+  }) skillSpecs;
 
   skillsDir = pkgs.linkFarm "shared-ai-skills" skillEntries;
 
-  skills = renderedSkills;
+  skills = lib.mapAttrs (_: getSkillContent) skillSpecs;
 
   inherit (aiCommands) commands;
   inherit (aiAgents) agents;
