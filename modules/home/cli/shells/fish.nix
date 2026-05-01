@@ -69,8 +69,9 @@ in
         lg = "lazygit";
         lzd = "lazydocker";
         ipy = "ipython";
-        cc = "cpp17";
-        cxx = "cpp17";
+        cc = "cpp20";
+        cxx = "cpp20";
+        cxx17 = "cpp17";
         cxx20 = "cpp20";
         cxxdbg = "cppdbg";
         cpr = "cpprun";

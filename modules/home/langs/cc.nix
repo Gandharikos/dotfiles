@@ -30,7 +30,7 @@ let
     name = "cppdbg";
     runtimeInputs = [ pkgs.gcc ];
     text = ''
-      exec c++ -std=c++17 -Wall -Wextra -Wshadow -g -O0 -fsanitize=address,undefined -fno-omit-frame-pointer "$@"
+      exec c++ -std=c++20 -Wall -Wextra -Wshadow -g -O0 -fsanitize=address,undefined -fno-omit-frame-pointer "$@"
     '';
   };
 
@@ -50,7 +50,7 @@ let
       shift
       output_file="''${TMPDIR:-/tmp}/$(basename "''${source_file%.*}")"
 
-      c++ -std=c++17 -Wall -Wextra -O2 "$source_file" -o "$output_file"
+      c++ -std=c++20 -Wall -Wextra -O2 "$source_file" -o "$output_file"
       exec "$output_file" "$@"
     '';
   };
