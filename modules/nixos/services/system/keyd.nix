@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 let
@@ -77,10 +78,10 @@ in
             l = "right";
             backspace = "delete";
             # German umlauts
-            a = "macro(ä)";
-            u = "macro(ü)";
-            o = "macro(ö)";
-            s = "macro(ß)";
+            a = "ä";
+            u = "ü";
+            o = "ö";
+            s = "ß";
           };
 
           shift = {
@@ -92,10 +93,10 @@ in
 
           "tab_layer+shift" = {
             # German umlauts (uppercase)
-            a = "macro(Ä)";
-            u = "macro(Ü)";
-            o = "macro(Ö)";
-            s = "macro(ẞ)";
+            a = "Ä";
+            u = "Ü";
+            o = "Ö";
+            s = "ẞ";
           };
         };
       };
@@ -108,5 +109,7 @@ in
       MatchName=keyd virtual keyboard
       AttrKeyboardIntegration=internal
     '';
+
+    hm.home.file.".XCompose".source = "${pkgs.keyd}/share/keyd/keyd.compose";
   };
 }

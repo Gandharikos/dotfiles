@@ -50,7 +50,7 @@
     };
     keyboard = {
       layout = "qwerty";
-      backend = "kanata";
+      backend = "keyd";
     };
   };
 
