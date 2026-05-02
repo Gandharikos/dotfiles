@@ -2,6 +2,7 @@
   my.langs = {
     cc = {
       enable = true;
+      xdg.enable = true;
     };
     python = {
       enable = true;

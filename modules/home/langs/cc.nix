@@ -26,11 +26,19 @@ let
     '';
   };
 
+  cpp23 = pkgs.writeShellApplication {
+    name = "cpp23";
+    runtimeInputs = [ pkgs.gcc ];
+    text = ''
+      exec c++ -std=c++23 -Wall -Wextra -O2 "$@"
+    '';
+  };
+
   cppdbg = pkgs.writeShellApplication {
     name = "cppdbg";
     runtimeInputs = [ pkgs.gcc ];
     text = ''
-      exec c++ -std=c++20 -Wall -Wextra -Wshadow -g -O0 -fsanitize=address,undefined -fno-omit-frame-pointer "$@"
+      exec c++ -std=c++23 -Wall -Wextra -Wshadow -g -O0 -fsanitize=address,undefined -fno-omit-frame-pointer "$@"
     '';
   };
 
@@ -50,7 +58,7 @@ let
       shift
       output_file="''${TMPDIR:-/tmp}/$(basename "''${source_file%.*}")"
 
-      c++ -std=c++20 -Wall -Wextra -O2 "$source_file" -o "$output_file"
+      c++ -std=c++23 -Wall -Wextra -O2 "$source_file" -o "$output_file"
       exec "$output_file" "$@"
     '';
   };
@@ -92,13 +100,70 @@ in
         ++ [
           cpp17
           cpp20
+          cpp23
           cppdbg
           cpprun
         ];
+
+      programs.fish.shellAbbrs = {
+        cc = "cpp23";
+        cxx = "cpp23";
+        cxx17 = "cpp17";
+        cxx20 = "cpp20";
+        cxx23 = "cpp23";
+        cxxdbg = "cppdbg";
+        cpr = "cpprun";
+      };
+
+      programs.zsh.zsh-abbr.abbreviations = {
+        cc = "cpp23";
+        cxx = "cpp23";
+        cxx17 = "cpp17";
+        cxx20 = "cpp20";
+        cxx23 = "cpp23";
+        cxxdbg = "cppdbg";
+        cpr = "cpprun";
+      };
     })
 
     (mkIf cfg.xdg.enable {
-      # TODO
+      xdg.configFile."clangd/config.yaml".text = ''
+        If:
+          PathMatch: '.*\.(cc|cpp|cxx|c\+\+|hpp|hh|hxx|h\+\+)$'
+        CompileFlags:
+          Add: [-std=c++23, -Wall, -Wextra]
+        Diagnostics:
+          ClangTidy:
+            Add: [clang-analyzer-*, bugprone-*, performance-*, portability-*, modernize-*]
+            Remove: [modernize-use-trailing-return-type]
+      '';
+
+      home.file.".clang-format".text = ''
+        BasedOnStyle: LLVM
+        Standard: Latest
+        IndentWidth: 2
+        ColumnLimit: 100
+        AllowShortFunctionsOnASingleLine: Empty
+        DerivePointerAlignment: false
+        PointerAlignment: Left
+        SortIncludes: CaseSensitive
+      '';
+
+      home.file.".clang-tidy".text = ''
+        Checks: >
+          clang-diagnostic-*,
+          clang-analyzer-*,
+          bugprone-*,
+          performance-*,
+          portability-*,
+          modernize-*,
+          -modernize-use-trailing-return-type,
+          -readability-identifier-length,
+          -readability-magic-numbers
+        WarningsAsErrors: ""
+        HeaderFilterRegex: ""
+        FormatStyle: file
+      '';
     })
   ];
 }

@@ -1,0 +1,8 @@
+If:
+  PathMatch: '.*\.(cc|cpp|cxx|c\+\+|hpp|hh|hxx|h\+\+)$'
+CompileFlags:
+  Add: [-std=c++23, -Wall, -Wextra]
+Diagnostics:
+  ClangTidy:
+    Add: [clang-analyzer-*, bugprone-*, performance-*, portability-*, modernize-*]
+    Remove: [modernize-use-trailing-return-type]
