@@ -29,10 +29,35 @@ in
           main = {
             capslock = "overload(control, esc)";
             tab = "overload(tab_layer, tab)";
-            leftshift = "oneshot(shift)";
-            leftcontrol = "leftmeta";
-            leftmeta = "leftcontrol";
+            leftshift = "layer(shift)";
+            leftcontrol = "layer(meta)";
+            leftmeta = "layer(control)";
             rightalt = "rightmeta";
+            ";" = "apostrophe";
+            "'" = "semicolon";
+            "u+i" = "(";
+            "i+o" = ")";
+            "w+e" = "[";
+            "e+r" = "]";
+            "m+comma" = "_";
+            "comma+dot" = "=";
+            "j+k" = "-";
+            "k+l" = "+";
+            "q+a" = "!";
+            "w+s" = "@";
+            "e+d" = "#";
+            "r+f" = "$";
+            "t+g" = "%";
+            "y+h" = "^";
+            "u+j" = "&";
+            "i+k" = "*";
+            "o+l" = "grave";
+            "p+semicolon" = "backslash";
+            "q+w" = "esc";
+            "s+d" = "&";
+            "d+f" = "|";
+            "x+c" = "\"";
+            "c+v" = "!";
           };
 
           tab_layer = {
@@ -48,6 +73,13 @@ in
             u = "macro(ü)";
             o = "macro(ö)";
             s = "macro(ß)";
+          };
+
+          shift = {
+            comma = "semicolon";
+            dot = ":";
+            "u+i" = "<";
+            "i+o" = ">";
           };
 
           "tab_layer+shift" = {

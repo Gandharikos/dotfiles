@@ -33,6 +33,7 @@
       ;; Generated Kanata configuration
         (defcfg
           process-unmapped-keys yes
+          concurrent-tap-hold yes
           ${lib.optionalString isLinux ''
             linux-continue-if-no-devs-found yes
           ''}
@@ -52,13 +53,18 @@
       (defvar
         tapping-term 150
         quick-tap 125
+        chord-timeout 50
       )
 
       (defalias
         caps_word (caps-word 1000)
-        sft (one-shot $tapping-term lsft)
+        sft lsft
         escctrl (tap-hold-press $tapping-term $quick-tap esc lctl)
         smart_sft (tap-dance 200 (@sft @caps_word))
+        lp (fork S-, S-9 (lsft rsft))
+        rp (fork S-. S-0 (lsft rsft))
+        comma (fork , (unshift ;) (lsft rsft))
+        dot (fork . S-; (lsft rsft))
         tab-mod (tap-hold-press $tapping-term $quick-tap tab (layer-while-held tab_layer))
         ;; German umlauts with shift support
         ä (fork (unicode ä) (unicode Ä) (lsft rsft))
@@ -70,10 +76,36 @@
         ''}
       )
 
+      (defchordsv2
+        (u i) @lp  $chord-timeout all-released ()
+        (i o) @rp  $chord-timeout all-released ()
+        (w e) [    $chord-timeout all-released ()
+        (e r) ]    $chord-timeout all-released ()
+        (m ,) S--  $chord-timeout all-released ()
+        (, .) =    $chord-timeout all-released ()
+        (j k) -    $chord-timeout all-released ()
+        (k l) S-=  $chord-timeout all-released ()
+        (q a) S-1  $chord-timeout all-released ()
+        (w s) S-2  $chord-timeout all-released ()
+        (e d) S-3  $chord-timeout all-released ()
+        (r f) S-4  $chord-timeout all-released ()
+        (t g) S-5  $chord-timeout all-released ()
+        (y h) S-6  $chord-timeout all-released ()
+        (u j) S-7  $chord-timeout all-released ()
+        (i k) S-8  $chord-timeout all-released ()
+        (o l) grv  $chord-timeout all-released ()
+        (p ;) \    $chord-timeout all-released ()
+        (q w) esc  $chord-timeout all-released ()
+        (s d) S-7  $chord-timeout all-released ()
+        (d f) S-\  $chord-timeout all-released ()
+        (x c) S-'  $chord-timeout all-released ()
+        (c v) S-1  $chord-timeout all-released ()
+      )
+
       (deflayer base
         @tab-mod   _    _    _    _    _    _    _    _    _    _    _
-        @escctrl   _    _    _    _    _    _    _    _    _    _    _    _
-        @smart_sft _    _    _    _    _    _    _    _    _    _
+        @escctrl   _    _    _    _    _    _    _    _    _    '    ;    _
+        @smart_sft _    _    _    _    _    _    _    @comma @dot _
         ${baseBottomRow}
       )
 
