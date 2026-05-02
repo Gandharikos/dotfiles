@@ -45,7 +45,7 @@
       (defsrc
         tab  q    w    e    r    t    y    u    i    o    p bspc
         caps a    s    d    f    g    h    j    k    l    ;    '    ret
-        lsft z    x    c    v    b    n    m    ,    .    /
+        lsft z    x    c    v    b    n    m    ,    .    / rsft
         ${srcBottomRow}
       )
 
@@ -53,16 +53,17 @@
       (defvar
         tapping-term 150
         quick-tap 125
-        chord-timeout 50
+        oneshot-timeout 1000
+        chord-timeout 30
       )
 
       (defalias
         caps_word (caps-word 1000)
-        sft lsft
+        sft (one-shot $oneshot-timeout rsft)
         escctrl (tap-hold-press $tapping-term $quick-tap esc lctl)
         smart_sft (tap-dance 200 (@sft @caps_word))
-        lp (fork S-, S-9 (lsft rsft))
-        rp (fork S-. S-0 (lsft rsft))
+        lp (fork S-9 S-, (lsft rsft))
+        rp (fork S-0 S-. (lsft rsft))
         comma (fork , (unshift ;) (lsft rsft))
         dot (fork . S-; (lsft rsft))
         tab-mod (tap-hold-press $tapping-term $quick-tap tab (layer-while-held tab_layer))
@@ -96,23 +97,26 @@
         (o l) grv  $chord-timeout all-released ()
         (p ;) \    $chord-timeout all-released ()
         (q w) esc  $chord-timeout all-released ()
+        (a s) tab  $chord-timeout all-released ()
+        (l ;) ret  $chord-timeout all-released ()
+        (o p) bspc $chord-timeout all-released ()
         (s d) S-7  $chord-timeout all-released ()
         (d f) S-\  $chord-timeout all-released ()
-        (x c) S-'  $chord-timeout all-released ()
+        (x c) \    $chord-timeout all-released ()
         (c v) S-1  $chord-timeout all-released ()
       )
 
       (deflayer base
         @tab-mod   _    _    _    _    _    _    _    _    _    _    _
         @escctrl   _    _    _    _    _    _    _    _    _    '    ;    _
-        @smart_sft _    _    _    _    _    _    _    @comma @dot _
+        _          _    _    _    _    _    _    _    @comma @dot _ @smart_sft
         ${baseBottomRow}
       )
 
       (deflayer tab_layer
         _    C-f12 _    _    _    _    _    @ü   _    @ö    ${prtScKey} del
         _    @ä    @ß   _    _    _    left down up   right _    _    _
-        _    _     _    _    _    _    _    _    _    _     _
+        _    _     _    _    _    _    _    _    _    _     _    _
         _    _    _              _              _    _
       )
     '';

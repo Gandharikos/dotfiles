@@ -26,10 +26,15 @@ in
       keyboards.default = {
         ids = [ "*" ];
         settings = {
+          global = {
+            chord_timeout = "30";
+          };
+
           main = {
             capslock = "overload(control, esc)";
             tab = "overload(tab_layer, tab)";
-            leftshift = "layer(shift)";
+            leftshift = "overload(shift, macro(leftshift))";
+            rightshift = "oneshot(shift)";
             leftcontrol = "layer(meta)";
             leftmeta = "layer(control)";
             rightalt = "rightmeta";
@@ -54,9 +59,12 @@ in
             "o+l" = "grave";
             "p+semicolon" = "backslash";
             "q+w" = "esc";
+            "a+s" = "tab";
+            "l+semicolon" = "enter";
+            "o+p" = "backspace";
             "s+d" = "&";
             "d+f" = "|";
-            "x+c" = "\"";
+            "x+c" = "backslash";
             "c+v" = "!";
           };
 
