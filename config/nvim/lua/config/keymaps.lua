@@ -156,11 +156,13 @@ vim.api.nvim_create_autocmd({ "BufRead" }, {
   group = id,
   pattern = { "*" },
   callback = function()
-    vim.api.nvim_create_autocmd({ "InsertEnter", "BufModifiedSet" }, {
+    local bufnr = vim.api.nvim_get_current_buf()
+
+    vim.api.nvim_create_autocmd({ "InsertEnter", "TextChanged", "TextChangedI" }, {
       buffer = 0,
       once = true,
       callback = function()
-        persistbuffer()
+        persistbuffer(bufnr)
       end,
     })
   end,
