@@ -3,7 +3,7 @@
     machine.type = "laptop";
     keyboard = {
       layout = "qwerty";
-      backend = "kanata";
+      backend = "karabiner";
     };
   };
 }
