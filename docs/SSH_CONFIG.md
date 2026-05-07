@@ -126,7 +126,7 @@ ssh-keygen -t ed25519-sk -O resident -O verify-required -C "johnson@mimir" -f ~/
 ykman fido access change-pin
 
 # Copy public keys to project
-cp ~/.ssh/id_{aegis,janus,mimir}.pub ~/.dotfiles/secrets/core/keys/
+cp ~/.ssh/id_{aegis,janus,mimir}.pub ~/.dotfiles/secrets/johnson/core/keys/
 
 # Rebuild
 cd ~/.dotfiles && just switch
@@ -320,7 +320,7 @@ done
 # Backup public keys
 mkdir -p ~/Documents/ssh-backups
 cp ~/.ssh/id_*.pub ~/Documents/ssh-backups/
-cp ~/.dotfiles/secrets/core/keys/id_*.pub ~/Documents/ssh-backups/
+cp ~/.dotfiles/secrets/johnson/core/keys/id_*.pub ~/Documents/ssh-backups/
 
 # Document YubiKey purposes
 cat > ~/Documents/ssh-backups/mapping.txt <<EOF
@@ -339,7 +339,7 @@ EOF
 ├── modules/
 │   ├── common/my/yubikey.nix              # YubiKey identifiers config
 │   └── home/cli/security/ssh.nix          # Main SSH module
-├── secrets/core/
+├── secrets/johnson/core/
 │   ├── id_ed25519.pub                     # Regular SSH public key
 │   └── keys/
 │       ├── id_aegis.pub                   # Aegis FIDO2 public key
@@ -404,6 +404,6 @@ ykman fido access change-pin
 ## See Also
 
 - **Configuration Example:** `examples/ssh-config.nix`
-- **YubiKey Mapping:** `secrets/core/keys/YUBIKEYS.md`
+- **YubiKey Mapping:** `secrets/johnson/core/keys/YUBIKEYS.md`
 - **Module Source:** `modules/home/cli/security/ssh.nix`
 - **Setup Script:** `scripts/yubikey-ssh-setup.sh`
