@@ -5,7 +5,7 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  cfg = config.dot.gui.desktop.hyprland;
+  cfg = config.my.gui.desktop.hyprland;
 in
 {
   config = mkIf cfg.enable {

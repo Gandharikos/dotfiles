@@ -1,14 +1,15 @@
 {
+  config,
   lib,
   pkgs,
-  config,
+  osConfig,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  cfg = config.dot.theme.catppuccin;
-  enable = cfg.enable && config.dot.gui.enable && isLinux;
+  cfg = config.my.theme.catppuccin;
+  enable = cfg.enable && osConfig.dot.gui.enable && isLinux;
   themeName = "catppuccin-${cfg.flavor}-${cfg.accent}-standard";
 in
 {

@@ -7,10 +7,10 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.dot.zsh;
+  cfg = config.my.zsh;
 in
 {
-  options.dot.zsh = {
+  options.my.zsh = {
     enable = mkEnableOption "zsh" // {
       default = true;
     };

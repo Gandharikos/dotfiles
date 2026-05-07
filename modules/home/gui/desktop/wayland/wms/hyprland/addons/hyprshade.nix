@@ -9,12 +9,12 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe;
   inherit (lib.dot) uwsmApp;
-  cfg = config.dot.gui.desktop.hyprland;
+  cfg = config.my.gui.desktop.hyprland;
   hyprshade = getExe pkgs.hyprshade;
   hyprshadeAuto = uwsmApp pkgs hyprshade [ "auto" ];
 in
 {
-  options.dot.gui.desktop.hyprland.shade = {
+  options.my.gui.desktop.hyprland.shade = {
     enable = mkEnableOption "hyprshade";
   };
 

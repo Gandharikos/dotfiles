@@ -2,11 +2,13 @@
   lib,
   config,
   inputs,
+  themeNamespace ? "dot",
   ...
 }:
 let
   inherit (lib.modules) mkIf;
-  cfg = config.dot.theme.catppuccin;
+  namespace = themeNamespace;
+  cfg = config.${namespace}.theme.catppuccin;
   flavorName = lib.toSentenceCase cfg.flavor;
   rawPalette =
     (lib.importJSON "${config.catppuccin.sources.palette}/palette.json").${cfg.flavor}.colors;
@@ -14,7 +16,7 @@ let
 in
 {
   config = mkIf cfg.enable {
-    dot.theme = {
+    ${namespace}.theme = {
       wallpaper = inputs.wallpapers.catppuccin.anime-japan.path;
       colorscheme = {
         inherit palette;

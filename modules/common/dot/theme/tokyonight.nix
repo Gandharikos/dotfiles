@@ -11,7 +11,7 @@ in
 {
   options.dot.theme.tokyonight = {
     enable = mkEnableOption "Tokyonight theme" // {
-      default = dot.theme.default == "tokyonight";
+      default = dot.admin.theme.tokyonight.enable;
     };
 
     style = mkOption {
@@ -21,7 +21,7 @@ in
         "day"
         "moon"
       ];
-      default = "moon";
+      default = dot.admin.theme.tokyonight.style;
       description = "The style of tokyonight";
     };
   };

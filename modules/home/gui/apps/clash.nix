@@ -1,5 +1,6 @@
 {
   config,
+  osConfig,
   lib,
   pkgs,
   ...
@@ -8,13 +9,12 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.dot) gui;
 
-  cfg = config.dot.gui.apps.clash;
+  cfg = config.my.gui.apps.clash;
 
   # Enable when GUI is enabled and clash-verge is enabled
   # Note: This is just the GUI frontend. The mihomo core service is configured separately at the NixOS level.
-  enable = gui.enable && cfg.enable;
+  enable = osConfig.dot.gui.enable && cfg.enable;
 
   # Verge.yaml configuration using Nix attrset
   vergeConfig = {
@@ -40,9 +40,9 @@ let
   yamlFormat = pkgs.formats.yaml { };
 in
 {
-  options.dot.gui.apps.clash = {
+  options.my.gui.apps.clash = {
     enable = mkEnableOption "Clash Verge GUI" // {
-      default = config.dot.gui.enable && isLinux;
+      default = osConfig.dot.gui.enable && isLinux;
     };
   };
 

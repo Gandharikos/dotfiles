@@ -1,19 +1,19 @@
 {
   lib,
   config,
+  osConfig,
   pkgs,
   ...
 }:
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.dot) gui;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  cfg = config.dot.services.wluma;
-  enable = gui.enable && cfg.enable && isLinux;
+  cfg = config.my.services.wluma;
+  enable = osConfig.dot.gui.enable && cfg.enable && isLinux;
 in
 {
-  options.dot.services.wluma = {
+  options.my.services.wluma = {
     enable = mkEnableOption "wluma" // {
       default = true;
     };

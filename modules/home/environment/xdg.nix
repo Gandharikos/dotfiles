@@ -4,6 +4,7 @@
 #   https://www.freedesktop.org/wiki/Specifications/
 {
   config,
+  osConfig,
   pkgs,
   lib,
   ...
@@ -11,7 +12,7 @@
 let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv) isLinux;
-  inherit (config) dot;
+  inherit (config) my;
   home = config.home.homeDirectory;
   # define default applications for some url schemes.
   browser = [
@@ -63,11 +64,11 @@ let
   images = [ "image/*" ];
   associations =
     (lib.genAttrs editor (_: [
-      "${if dot.editor == "helix" then "Helix" else dot.editor}.desktop"
+      "${if my.editor == "helix" then "Helix" else my.editor}.desktop"
     ]))
     // (lib.genAttrs media (_: [ "mpv.desktop" ]))
     // (lib.genAttrs images (_: [ "viewnior.desktop" ]))
-    // (lib.genAttrs browser (_: [ "${dot.gui.browser.desktopId}" ]))
+    // (lib.genAttrs browser (_: [ "${my.gui.browser.desktopId}" ]))
     // {
       "application/pdf" = [ "org.pwmt.zathura.desktop" ];
       "x-scheme-handler/spotify" = [ "spotify.desktop" ];
@@ -123,7 +124,7 @@ in
     #   ls -l /run/current-system/sw/share/applications/
     # the user-level desktop entries can be list by command(user ryan):
     #  ls /etc/profiles/per-user/ryan/share/applications/
-    mimeApps = mkIf (dot.gui.enable && isLinux) {
+    mimeApps = mkIf (osConfig.dot.gui.enable && isLinux) {
       enable = true;
       # let `xdg-open` to open the url with the correct application.
       defaultApplications = associations;

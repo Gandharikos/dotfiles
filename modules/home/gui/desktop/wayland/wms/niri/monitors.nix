@@ -1,13 +1,14 @@
 {
   lib,
   config,
+  osConfig,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
   inherit (lib.attrsets) optionalAttrs;
-  inherit (config.dot.machine) monitors;
-  cfg = config.dot.gui.desktop.niri;
+  inherit (osConfig.dot.machine) monitors;
+  cfg = config.my.gui.desktop.niri;
 
   isResolution = value: builtins.match "^[0-9]+x[0-9]+(@[0-9.]+)?$" value != null;
   isPosition = value: builtins.match "^(-?[0-9]+)x(-?[0-9]+)$" value != null;

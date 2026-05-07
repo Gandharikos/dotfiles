@@ -3,6 +3,7 @@
   inputs,
   lib,
   config,
+  osConfig,
   pkgs,
   ...
 }:
@@ -12,24 +13,24 @@ let
   # inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (pkgs.stdenv.hostPlatform) system;
   inherit (config.home) homeDirectory;
-  inherit (config.dot) name gui;
-  cfg = config.dot.gui.apps.spotify;
-  enable = gui.enable && cfg.enable;
+  inherit (config.my) name;
+  cfg = config.my.gui.apps.spotify;
+  enable = osConfig.dot.gui.enable && cfg.enable;
 in
 {
   imports = [
     inputs.spicetify-nix.homeManagerModules.default
   ];
 
-  options.dot.gui.apps.spotify = {
+  options.my.gui.apps.spotify = {
     enable = mkEnableOption "Spotify" // {
       default = true;
     };
     spotify-player.enable = mkEnableOption "Spotify Player TUI" // {
-      default = config.dot.gui.apps.spotify.enable;
+      default = config.my.gui.apps.spotify.enable;
     };
     spicetify.enable = mkEnableOption "Spicetify" // {
-      default = config.dot.gui.apps.spotify.enable;
+      default = config.my.gui.apps.spotify.enable;
     };
   };
 

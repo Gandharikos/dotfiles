@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  osConfig,
   ...
 }:
 let
@@ -19,7 +20,7 @@ let
   inherit (lib.meta) getExe;
   inherit (lib.strings) escapeShellArgs hasInfix;
   inherit (lib.dot) withUWSMArgs;
-  inherit (config.dot.gui) desktop terminal;
+  inherit (config.my.gui) terminal;
   commandType = coercedTo str (
     value:
     if hasInfix " " value then
@@ -34,7 +35,7 @@ in
 {
   imports = lib.dot.scanPaths ./.;
 
-  options.dot.gui.terminal = {
+  options.my.gui.terminal = {
     name = mkOption {
       type = nullOr str;
       default = null;
@@ -47,7 +48,7 @@ in
         "kitty"
         "warp"
       ]);
-      default = if config.dot.gui.enable then "ghostty" else null;
+      default = if osConfig.dot.gui.enable then "ghostty" else null;
       description = "The terminal to use";
     };
 
@@ -56,7 +57,7 @@ in
       default =
         if terminal.default == null then
           [ ]
-        else if desktop.uwsm.enable then
+        else if osConfig.dot.gui.desktop.uwsm.enable then
           withUWSMArgs pkgs terminal.default
         else
           [
@@ -83,7 +84,7 @@ in
 
     size = mkOption {
       type = int;
-      default = if config.dot.machine.type == "laptop" then 15 else 12;
+      default = if osConfig.dot.machine.type == "laptop" then 15 else 12;
       description = ''
         The font size to use for the terminal. This is used by the
         `dot.gui.terminal` module to determine which font size to use.

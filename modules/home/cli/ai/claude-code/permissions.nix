@@ -6,10 +6,10 @@
 let
   inherit (lib) mkOption types mkIf;
 
-  cfg = config.dot.claude-code;
+  cfg = config.my.claude-code;
 in
 {
-  options.dot.claude-code.permissionProfile = mkOption {
+  options.my.claude-code.permissionProfile = mkOption {
     type = types.enum [
       "conservative"
       "standard"

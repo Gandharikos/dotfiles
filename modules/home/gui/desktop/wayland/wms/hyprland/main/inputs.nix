@@ -6,7 +6,7 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) elem optional;
-  cfg = config.dot.gui.desktop.hyprland;
+  cfg = config.my.gui.desktop.hyprland;
   hyprgrassEnabled = cfg.plugins.enable && elem "hyprgrass" cfg.plugins.list;
 in
 {

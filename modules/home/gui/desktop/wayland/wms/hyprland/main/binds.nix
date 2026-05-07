@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  osConfig,
   pkgs,
   ...
 }:
@@ -10,7 +11,7 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe getExe';
   inherit (lib.dot) uwsmApp uwsmScript;
-  inherit (config.dot.gui)
+  inherit (config.my.gui)
     desktop
     terminal
     browser
@@ -33,7 +34,7 @@ let
     ${getExe pkgs.grim} -g "$(${getExe pkgs.slurp})" - | ${getExe pkgs.tesseract} ${lang} - - | ${getExe' pkgs.wl-clipboard "wl-copy"}
   '';
 in
-with config.dot.keyboard.keys;
+with osConfig.dot.keyboard.keys;
 {
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland = {

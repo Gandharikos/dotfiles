@@ -1,15 +1,16 @@
 {
+  config,
   inputs,
   lib,
-  config,
+  osConfig,
   pkgs,
   ...
 }:
 let
   inherit (lib.modules) mkIf mkMerge;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  cfg = config.dot.theme.catppuccin;
-  guiLinux = config.dot.gui.enable && isLinux;
+  cfg = config.my.theme.catppuccin;
+  guiLinux = osConfig.dot.gui.enable && isLinux;
 in
 {
   imports = [

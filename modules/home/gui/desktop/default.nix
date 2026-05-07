@@ -1,6 +1,6 @@
 {
   lib,
-  config,
+  osConfig,
   pkgs,
   ...
 }:
@@ -9,12 +9,11 @@ let
   inherit (lib.options) mkOption;
   inherit (lib.types) int str;
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
-  inherit (config.dot.gui) desktop;
 in
 {
   imports = scanPaths ./.;
 
-  options.dot.gui.desktop = {
+  options.my.gui.desktop = {
     workspace = {
       number = mkOption {
         type = int;
@@ -27,7 +26,7 @@ in
       default =
         if isDarwin then
           "cmd-alt-ctrl"
-        else if desktop.default == "niri" then
+        else if osConfig.dot.gui.desktop.default == "niri" then
           "Mod"
         else
           "SUPER";

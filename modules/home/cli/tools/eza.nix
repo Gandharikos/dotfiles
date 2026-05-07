@@ -8,12 +8,12 @@ let
     tree = "eza --git --icons --tree";
     l = "eza -lah";
   };
-  cfg = config.dot.eza;
+  cfg = config.my.eza;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.dot.eza = {
+  options.my.eza = {
     enable = mkEnableOption "eza";
   };
 

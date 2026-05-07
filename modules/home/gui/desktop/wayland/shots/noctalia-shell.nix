@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  osConfig,
   pkgs,
   inputs,
   ...
@@ -11,12 +12,11 @@ let
     ;
   inherit (lib.modules) mkIf;
   inherit (lib.strings) escapeShellArgs;
-  inherit (config.dot.gui) desktop;
 
   noctaliaEnabled = config.programs.noctalia-shell.enable or false;
   enable =
-    desktop.wayland.enable
-    && config.dot.gui.desktop.shot.default == "noctalia-shell"
+    osConfig.dot.gui.desktop.wayland.enable
+    && config.my.gui.desktop.shot.default == "noctalia-shell"
     && noctaliaEnabled;
   screenshotPath = config.xdg.userDirs.extraConfig.SCREENSHOTS;
   screenToolkitSettingsFile = lib.dot.relativeToConfig "noctalia/plugins/screen-toolkit/settings.json";

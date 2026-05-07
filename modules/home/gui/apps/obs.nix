@@ -1,5 +1,6 @@
 {
   config,
+  osConfig,
   lib,
   pkgs,
   ...
@@ -7,13 +8,12 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  inherit (config.dot) gui;
-  cfg = config.dot.gui.apps.obs;
-  enable = gui.enable && cfg.enable;
+  cfg = config.my.gui.apps.obs;
+  enable = osConfig.dot.gui.enable && cfg.enable;
   # inherit (pkgs.stdenv.hostPlatform) isLinux;
 in
 {
-  options.dot.gui.apps.obs = {
+  options.my.gui.apps.obs = {
     enable = mkEnableOption "OBS" // {
       default = false;
     };

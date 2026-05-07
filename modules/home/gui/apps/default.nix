@@ -1,19 +1,18 @@
 {
   lib,
   pkgs,
-  config,
+  osConfig,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) optionals;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.dot) gui;
 in
 {
   imports = lib.dot.scanPaths ./.;
 
-  config = mkIf gui.enable {
+  config = mkIf osConfig.dot.gui.enable {
     home.packages =
       with pkgs;
       optionals isLinux [

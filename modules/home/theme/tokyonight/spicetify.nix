@@ -1,12 +1,12 @@
 {
+  config,
   lib,
   pkgs,
-  config,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
-  cfg = config.dot.theme.tokyonight;
+  cfg = config.my.theme.tokyonight;
 in
 {
   config = mkIf cfg.enable {

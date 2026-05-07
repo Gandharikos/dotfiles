@@ -1,36 +1,32 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  osConfig,
+  ...
+}:
 let
   inherit (lib.dot) scanPaths;
-  inherit (lib.options) mkOption mkEnableOption;
-  inherit (lib.types) str;
-  inherit (lib.modules) mkIf;
-  inherit (config.dot) theme;
+  inherit (lib.modules) mkDefault mkIf mkMerge;
+  inherit (osConfig.dot) theme;
 in
 {
-  imports = scanPaths ./.;
+  imports = [
+    ../../common/theme
+  ]
+  ++ scanPaths ./.;
 
-  options.dot.theme.general = {
-    transparent = mkEnableOption "Enable tmux transparent" // {
-      default = true;
-    };
-    pad = {
-      left = mkOption {
-        type = str;
-        default = "";
-        description = "The left padding of status bar";
+  config = mkMerge [
+    {
+      my.theme = {
+        avatar = mkDefault theme.avatar;
+        cursor = mkDefault theme.cursor;
       };
-      right = mkOption {
-        type = str;
-        default = "";
-        description = "The right padding of status bar";
+    }
+    (mkIf (config.my.theme.default != null) {
+      home.sessionVariables = {
+        COLORSCHEME = config.my.theme.colorscheme.slug;
+        COLORSCHEME_NAME = config.my.theme.default;
       };
-    };
-  };
-
-  config = mkIf (theme != null) {
-    home.sessionVariables = {
-      COLORSCHEME = theme.colorscheme.slug;
-      COLORSCHEME_NAME = theme.default;
-    };
-  };
+    })
+  ];
 }

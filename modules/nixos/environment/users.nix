@@ -1,11 +1,13 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 let
-  inherit (config.dot) name;
-  cfgUser = config.users.users."${config.dot.name}";
+  inherit (config.dot) enabledUser primaryUser users;
+  inherit (lib.attrsets) genAttrs;
+  cfgUser = config.users.users."${primaryUser}";
   ifTheyExist = groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
 in
 {
@@ -17,7 +19,6 @@ in
     defaultUserShell = pkgs.bashInteractive;
 
     groups = {
-      "${name}" = { };
       docker = { };
       wireshark = { };
       # for android platform tools's udev rules
@@ -27,34 +28,23 @@ in
       plugdev = { };
       # misc
       uinput = { };
-    };
-    users = {
-      "${name}" = {
+    }
+    // genAttrs enabledUser (_: { });
+    users =
+      genAttrs enabledUser (name: {
         # we have to use initialHashedPassword here when using tmpfs for /
-        inherit (config.dot) initialHashedPassword;
+        inherit (config.dot.users.${name}) initialHashedPassword;
         group = "users";
         # set isNormalUser to true to create a home directory
         isNormalUser = true;
-        extraGroups = [
-          # we need this to use `sudo -i`
-          "wheel"
-        ]
-        ++ ifTheyExist [
-          name
-          "users"
-          "git"
-          "networkmanager"
-          "docker"
-          "wireshark"
-          "adbusers"
-          "libvirtd"
-        ];
+        extraGroups = ifTheyExist users.${name}.groups;
+      })
+      // {
+        # root's ssh key are mainly used for remote deployment
+        root = {
+          inherit (cfgUser) initialHashedPassword;
+          openssh.authorizedKeys.keys = cfgUser.openssh.authorizedKeys.keys;
+        };
       };
-      # root's ssh key are mainly used for remote deployment
-      root = {
-        inherit (cfgUser) initialHashedPassword;
-        openssh.authorizedKeys.keys = cfgUser.openssh.authorizedKeys.keys;
-      };
-    };
   };
 }

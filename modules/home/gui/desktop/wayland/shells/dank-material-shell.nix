@@ -1,6 +1,7 @@
 {
   inputs,
   config,
+  osConfig,
   lib,
   pkgs,
   ...
@@ -9,14 +10,14 @@ let
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.attrsets) optionalAttrs;
   inherit (lib.meta) getExe' getExe;
-  inherit (config.dot.gui) desktop;
-  inherit (config.dot.theme)
+  inherit (config.my.gui) desktop;
+  inherit (config.my.theme)
     avatar
     wallpaper
     ;
-  inherit (config.dot.keyboard) keys;
+  inherit (osConfig.dot.keyboard) keys;
 
-  enable = desktop.wayland.enable && desktop.shell.default == "dank-material-shell";
+  enable = osConfig.dot.gui.desktop.wayland.enable && desktop.shell.default == "dank-material-shell";
   dmsSettingsFile = lib.dot.relativeToConfig "dank-material-shell/settings.json";
   settings = builtins.fromJSON (builtins.readFile dmsSettingsFile);
 

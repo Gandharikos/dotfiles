@@ -1,20 +1,20 @@
 {
   config,
+  osConfig,
   pkgs,
   lib,
-  self,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkOption mkEnableOption;
-  inherit (lib.types) str path;
-  cfg = config.dot.security.gpg;
+  inherit (lib.types) nullOr str path;
+  cfg = config.my.security.gpg;
 in
 {
-  options.dot.security.gpg = {
+  options.my.security.gpg = {
     enable = mkEnableOption "my security gpg" // {
-      default = config.dot.security.enable;
+      default = osConfig.dot.security.enable;
     };
 
     signGitCommits = mkOption {
@@ -30,14 +30,14 @@ in
     };
 
     key = mkOption {
-      type = str;
-      default = "776C7FC245E58F55";
+      type = nullOr str;
+      default = null;
       description = "The public key of my gpg.";
     };
 
     publicKeysPath = mkOption {
-      type = path;
-      default = "${self}/secrets/johnson/core/gpg-keys.pub";
+      type = nullOr path;
+      default = if config.my.secretsCore == null then null else "${config.my.secretsCore}/gpg-keys.pub";
       description = "The path to the public key of my gpg.";
     };
   };
@@ -46,6 +46,8 @@ in
       git = {
         signing = {
           signByDefault = cfg.signGitCommits;
+        }
+        // lib.optionalAttrs (cfg.key != null) {
           inherit (cfg) key;
         };
       };
@@ -63,7 +65,7 @@ in
         # If set `mutableKeys` to false, the path $GNUPGHOME/pubring.kbx will become an immutable link to the Nix store, denying modifications.
         # Thus we can only update pubring.kbx via home-manager
         mutableKeys = false;
-        publicKeys = [
+        publicKeys = lib.optionals (cfg.publicKeysPath != null) [
           # https://www.gnupg.org/pgh/en/manual/x334.html
           {
             source = cfg.publicKeysPath;

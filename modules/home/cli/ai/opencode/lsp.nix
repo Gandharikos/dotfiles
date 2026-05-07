@@ -8,7 +8,7 @@
   ...
 }:
 let
-  inherit (config.dot) name;
+  inherit (config.my) name;
   inherit (osConfig.networking) hostName;
 in
 {

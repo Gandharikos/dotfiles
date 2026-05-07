@@ -1,5 +1,6 @@
 {
   config,
+  osConfig,
   lib,
   pkgs,
   ...
@@ -7,15 +8,14 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  inherit (config.dot) gui;
-  cfg = config.dot.gui.apps.cloudflare-warp;
-  enable = gui.enable && cfg.enable;
+  cfg = config.my.gui.apps.cloudflare-warp;
+  enable = osConfig.dot.gui.enable && cfg.enable;
 in
 {
-  options.dot.gui.apps.cloudflare-warp = {
+  options.my.gui.apps.cloudflare-warp = {
     enable = mkEnableOption "Cloudflare Warp" // {
       default = false;
-      # config.dot.machine.type == "laptop"
+      # osConfig.dot.machine.type == "laptop"
       # && pkgs.stdenv.hostPlatform.isLinux;
     };
   };

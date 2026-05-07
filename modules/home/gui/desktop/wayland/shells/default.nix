@@ -7,7 +7,7 @@ in
 {
   imports = scanPaths ./.;
 
-  options.dot.gui.desktop.shell = {
+  options.my.gui.desktop.shell = {
     default = mkOption {
       type = nullOr (enum [
         "dank-material-shell"

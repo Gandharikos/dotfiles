@@ -5,8 +5,8 @@
 }:
 let
   inherit (lib.modules) mkIf mkMerge;
-  inherit (config.dot.theme.general) pad;
-  inherit (config.dot.theme) tokyonight colorscheme;
+  inherit (config.my.theme.general) pad;
+  inherit (config.my.theme) tokyonight colorscheme;
   inherit (colorscheme) palette slug;
   lang = icon: color: {
     symbol = icon;

@@ -1,21 +1,37 @@
-{ config, ... }:
+{
+  config,
+  lib,
+  osConfig,
+  pkgs,
+  ...
+}:
 let
-  username = config.dot.name;
-  homeDirectory = config.dot.home;
-  inherit (config.dot) stateVersion;
+  userOptions = lib.dot.mkUserOptions {
+    inherit (pkgs.stdenv.hostPlatform) isLinux;
+    config = config.my;
+    inferName = false;
+    name = "my";
+  };
+  username = config.my.name;
+  homeDirectory = config.my.home;
+  inherit (osConfig.dot) stateVersion;
 in
 {
-  news.display = "show";
+  options.my = userOptions;
 
-  # Home Manager needs a bit of information about you and the
-  # paths it should manage.
-  home = {
-    inherit username homeDirectory stateVersion;
-    sessionPath = [
-      "$HOME/.local/bin"
-      "/opt/homebrew/bin"
-    ];
+  config = {
+    news.display = "show";
+
+    # Home Manager needs a bit of information about you and the
+    # paths it should manage.
+    home = {
+      inherit username homeDirectory stateVersion;
+      sessionPath = [
+        "$HOME/.local/bin"
+        "/opt/homebrew/bin"
+      ];
+    };
+
+    programs.home-manager.enable = true;
   };
-
-  programs.home-manager.enable = true;
 }

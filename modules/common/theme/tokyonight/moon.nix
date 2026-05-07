@@ -2,6 +2,7 @@
   lib,
   config,
   inputs,
+  themeNamespace ? "dot",
   ...
 }:
 let
@@ -68,12 +69,13 @@ let
     warning = "#ffc777";
     yellow = "#ffc777";
   };
-  cfg = config.dot.theme.tokyonight;
+  namespace = themeNamespace;
+  cfg = config.${namespace}.theme.tokyonight;
   enable = cfg.enable && cfg.style == "moon";
 in
 {
   config = mkIf enable {
-    dot.theme = {
+    ${namespace}.theme = {
       wallpaper = inputs.wallpapers.tokyonight.tokyo-night-street.path;
       # I hated base16 scheme; so I made my own
       colorscheme = {

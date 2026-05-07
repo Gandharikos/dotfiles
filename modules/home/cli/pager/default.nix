@@ -13,7 +13,7 @@ let
 in
 {
   imports = lib.dot.scanPaths ./.;
-  options.dot = {
+  options.my = {
     pager = mkOption {
       type = str;
       default = "${less'} -FR";
@@ -28,8 +28,8 @@ in
 
   config = {
     home.sessionVariables = {
-      PAGER = config.dot.pager;
-      MANPAGER = config.dot.manpager;
+      PAGER = config.my.pager;
+      MANPAGER = config.my.manpager;
     };
   };
 }

@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  osConfig,
   ...
 }:
 let
@@ -16,10 +17,9 @@ let
   inherit (lib.meta) getExe;
   inherit (lib.strings) escapeShellArgs hasInfix;
   inherit (lib.dot) withUWSMArgs;
-  inherit (config.dot.gui) desktop fileManager;
-  inherit (config.dot) gui;
+  inherit (config.my.gui) fileManager;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  enable = gui.enable && isLinux;
+  enable = osConfig.dot.gui.enable && isLinux;
   commandType = coercedTo str (
     value:
     if hasInfix " " value then
@@ -34,7 +34,7 @@ in
 {
   imports = lib.dot.scanPaths ./.;
 
-  options.dot.gui.fileManager = {
+  options.my.gui.fileManager = {
     default = mkOption {
       type = enum [
         "cosmic-files"
@@ -52,7 +52,7 @@ in
     command = mkOption {
       type = commandType;
       default =
-        if desktop.uwsm.enable then
+        if osConfig.dot.gui.desktop.uwsm.enable then
           withUWSMArgs pkgs fileManager.default
         else
           [

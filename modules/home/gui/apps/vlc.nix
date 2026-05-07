@@ -1,5 +1,6 @@
 {
   config,
+  osConfig,
   lib,
   pkgs,
   ...
@@ -7,13 +8,12 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  inherit (config.dot) gui;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  cfg = config.dot.gui.apps.vlc;
-  enable = gui.enable && cfg.enable;
+  cfg = config.my.gui.apps.vlc;
+  enable = osConfig.dot.gui.enable && cfg.enable;
 in
 {
-  options.dot.gui.apps.vlc = {
+  options.my.gui.apps.vlc = {
     enable = mkEnableOption "VLC" // {
       default = isLinux;
     };

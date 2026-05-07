@@ -4,10 +4,12 @@
   ...
 }:
 let
-  inherit (config.dot) name theme;
-  inherit (config.hm.dot.gui) desktop;
+  inherit (config.dot) primaryUser theme;
+  name = primaryUser;
+  hmDesktop = config.home-manager.users.${config.dot.primaryUser}.my.gui.desktop;
+  inherit (config.dot.gui) desktop;
   inherit (lib.modules) mkIf;
-  dmsEnabled = desktop.wayland.enable && desktop.shell.default == "dank-material-shell";
+  dmsEnabled = desktop.wayland.enable && hmDesktop.shell.default == "dank-material-shell";
 in
 {
   # INFO: I don't want use this, but dms require it.

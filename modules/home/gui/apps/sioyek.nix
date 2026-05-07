@@ -1,5 +1,6 @@
 {
   config,
+  osConfig,
   lib,
   pkgs,
   ...
@@ -11,9 +12,8 @@ let
     getExe
     getExe'
     ;
-  inherit (config.dot) gui;
-  cfg = config.dot.gui.apps.sioyek;
-  enable = gui.enable && cfg.enable;
+  cfg = config.my.gui.apps.sioyek;
+  enable = osConfig.dot.gui.enable && cfg.enable;
   sioyekExe = getExe pkgs.sioyek;
   envExe = getExe' pkgs.coreutils "env";
   sioyekExec = "${envExe} QT_QPA_PLATFORM=xcb ${sioyekExe}";
@@ -38,7 +38,7 @@ let
   };
 in
 {
-  options.dot.gui.apps.sioyek = {
+  options.my.gui.apps.sioyek = {
     enable = mkEnableOption "Sioyek" // {
       default = true;
     };
@@ -47,7 +47,7 @@ in
   config = mkIf enable {
     home.shellAliases.sioyek = sioyekExec;
 
-    programs.sioyek = with config.dot.keyboard.keys; {
+    programs.sioyek = with osConfig.dot.keyboard.keys; {
       enable = true;
       bindings = {
         # === Vim-style Navigation ===

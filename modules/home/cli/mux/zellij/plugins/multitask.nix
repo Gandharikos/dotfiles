@@ -7,7 +7,7 @@
 let
   multitask = "${pkgs.dot.multitask}/bin/multitask.wasm";
   inherit (lib.meta) getExe;
-  shell = getExe (builtins.getAttr config.dot.shell pkgs);
+  shell = getExe (builtins.getAttr config.my.shell pkgs);
 in
 {
   programs.zellij.settings = {

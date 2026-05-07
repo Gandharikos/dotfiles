@@ -37,7 +37,7 @@ let
     ]
     ++ advertiseRoutesFlag
     ++ optionals isRoutingServer [
-      "--operator=${config.dot.name}"
+      "--operator=${config.dot.primaryUser}"
     ]
     ++ optionals cfg.autoConnect [
       "--auth-key=file:${config.sops.secrets.tailscale_authKey.path}"

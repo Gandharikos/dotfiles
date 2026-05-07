@@ -6,7 +6,7 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  inherit (config.dot) name;
+  name = config.dot.primaryUser;
   cfg = config.dot.gui._1password;
 in
 {

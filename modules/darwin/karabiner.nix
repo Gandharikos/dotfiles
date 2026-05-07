@@ -29,6 +29,10 @@ in
 
   config = mkIf cfg.enable {
     homebrew.casks = [ "karabiner-elements" ];
-    hm.xdg.configFile."karabiner/karabiner.json".source = cfg.configFile;
+    dot.users.${config.dot.primaryUser}.imports = [
+      {
+        xdg.configFile."karabiner/karabiner.json".source = cfg.configFile;
+      }
+    ];
   };
 }

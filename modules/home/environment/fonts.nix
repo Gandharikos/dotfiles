@@ -1,14 +1,13 @@
 {
-  config,
+  osConfig,
   lib,
   ...
 }:
 let
-  inherit (config.dot) gui;
   inherit (lib.modules) mkIf;
 in
 {
-  config = mkIf gui.enable {
+  config = mkIf osConfig.dot.gui.enable {
     fonts.fontconfig = {
       enable = true;
       defaultFonts = {

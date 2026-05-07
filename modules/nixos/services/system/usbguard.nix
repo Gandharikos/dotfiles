@@ -17,10 +17,7 @@ in
   };
   config = mkIf cfg.enable {
     services.usbguard = {
-      IPCAllowedUsers = [
-        "root"
-        "${config.dot.name}"
-      ];
+      IPCAllowedUsers = [ "root" ] ++ config.dot.enabledUser;
       presentDevicePolicy = "allow";
       rules = ''
         allow with-interface equals { 08:*:* }

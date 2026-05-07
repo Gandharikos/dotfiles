@@ -1,5 +1,5 @@
 {
-  config,
+  osConfig,
   lib,
   ...
 }:
@@ -21,7 +21,7 @@ in
       # LESSHISTFILE=-
       # LESSCOLORIZER=bat
     ''
-    + optionalString (config.dot.keyboard.layout == "colemak") ''
+    + optionalString (osConfig.dot.keyboard.layout == "colemak") ''
       #command
       n left-scroll
       o right-scroll

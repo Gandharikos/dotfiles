@@ -1,19 +1,19 @@
 {
   lib,
   config,
+  osConfig,
   pkgs,
   ...
 }:
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.dot) gui;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  cfg = config.dot.services.udiskie;
-  enable = gui.enable && cfg.enable && isLinux;
+  cfg = config.my.services.udiskie;
+  enable = osConfig.dot.gui.enable && cfg.enable && isLinux;
 in
 {
-  options.dot.services.udiskie = {
+  options.my.services.udiskie = {
     enable = mkEnableOption "udiskie" // {
       default = true;
     };

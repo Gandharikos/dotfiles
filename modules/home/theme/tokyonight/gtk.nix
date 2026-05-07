@@ -2,13 +2,14 @@
   lib,
   pkgs,
   config,
+  osConfig,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  cfg = config.dot.theme.tokyonight;
-  enable = cfg.enable && config.dot.gui.enable && isLinux;
+  cfg = config.my.theme.tokyonight;
+  enable = cfg.enable && osConfig.dot.gui.enable && isLinux;
   # preferDark =
   #   if cfg.style == "day"
   #   then 0

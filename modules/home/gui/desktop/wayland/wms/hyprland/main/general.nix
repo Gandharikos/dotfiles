@@ -5,8 +5,8 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  # inherit (config.dot.machine) hasHidpi;
-  cfg = config.dot.gui.desktop.hyprland;
+  # inherit (osConfig.dot.machine) hasHidpi;
+  cfg = config.my.gui.desktop.hyprland;
 in
 {
   config = mkIf cfg.enable {

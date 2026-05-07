@@ -8,7 +8,7 @@ let
     "fetch" = "fastfetch";
   };
   inherit (config.programs) kitty;
-  cfg = config.dot.fastfetch;
+  cfg = config.my.fastfetch;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   fetch_greeting = ''
@@ -18,7 +18,7 @@ let
   '';
 in
 {
-  options.dot.fastfetch = {
+  options.my.fastfetch = {
     enable = mkEnableOption "fastfetch";
     startOnLogin = mkEnableOption "fastfetch on login";
   };

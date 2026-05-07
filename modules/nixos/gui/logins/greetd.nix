@@ -9,7 +9,7 @@ let
   inherit (lib.meta) getExe;
   inherit (lib.strings) concatStringsSep;
   inherit (lib.options) mkEnableOption;
-  inherit (config.dot) name;
+  name = config.dot.primaryUser;
   inherit (config.dot.gui) desktop login;
   inherit (desktop) exec;
   inherit (login) autologin;

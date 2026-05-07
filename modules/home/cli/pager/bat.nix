@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.dot.bat;
+  cfg = config.my.bat;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe getExe';
@@ -20,7 +20,7 @@ let
   };
 in
 {
-  options.dot.bat = {
+  options.my.bat = {
     enable = mkEnableOption "bat";
   };
 
@@ -28,7 +28,7 @@ in
     # a cat(1) clone with syntax highlighting and Git integration.
     programs.bat = {
       enable = true;
-      config = { inherit (config.dot) pager; };
+      config = { inherit (config.my) pager; };
       extraPackages = with pkgs.bat-extras; [
         batdiff
         batman

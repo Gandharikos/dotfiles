@@ -1,15 +1,16 @@
 {
   config,
+  osConfig,
   lib,
   ...
 }:
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.dot.helix;
+  cfg = config.my.helix;
 in
 {
-  options.dot.helix = {
+  options.my.helix = {
     enable = mkEnableOption "helix" // {
       default = true;
     };
@@ -53,7 +54,7 @@ in
             hidden = false;
           };
         };
-        keys = mkIf (config.dot.keyboard.layout == "colemak") {
+        keys = mkIf (osConfig.dot.keyboard.layout == "colemak") {
           normal = {
             # motion
             n = "move_char_left";

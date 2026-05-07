@@ -56,7 +56,7 @@ in
         };
       };
     });
-    default = null;
+    default = config.dot.admin.theme.cursor;
   };
   config.assertions =
     let

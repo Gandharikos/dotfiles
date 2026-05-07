@@ -12,7 +12,7 @@ in
 {
   options.dot.flakePath = mkOption {
     type = str;
-    default = "/${if (_class == "nixos") then "home" else "Users"}/${config.dot.name}/.dotfiles";
+    default = "/${if (_class == "nixos") then "home" else "Users"}/${config.dot.primaryUser}/.dotfiles";
     description = "The path to the configuration";
   };
 

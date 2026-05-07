@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  osConfig,
   osClass,
   ...
 }:
@@ -19,7 +20,7 @@ let
     coercedTo
     ;
   inherit (lib.dot) scanPaths;
-  inherit (config.dot.gui) browser desktop;
+  inherit (config.my.gui) browser;
   commandType = coercedTo str (
     value:
     if hasInfix " " value then
@@ -34,14 +35,14 @@ in
 {
   imports = scanPaths ./.;
 
-  options.dot.gui.browser = {
+  options.my.gui.browser = {
     default = mkOption {
       type = nullOr (enum [
         "zen"
         "google-chrome"
         "firefox"
       ]);
-      default = if config.dot.gui.enable && osClass == "nixos" then "zen" else null;
+      default = if osConfig.dot.gui.enable && osClass == "nixos" then "zen" else null;
       description = "The browser to use";
     };
     desktopId = mkOption {
@@ -54,7 +55,7 @@ in
       default =
         if browser.default == null then
           [ ]
-        else if desktop.uwsm.enable then
+        else if osConfig.dot.gui.desktop.uwsm.enable then
           withUWSMArgs pkgs browser.default
         else
           [

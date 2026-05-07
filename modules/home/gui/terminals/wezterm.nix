@@ -1,19 +1,19 @@
 {
   lib,
   config,
+  osConfig,
   ...
 }:
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.dot) gui;
-  cfg = config.dot.gui.apps.wezterm;
-  enable = gui.enable && cfg.enable;
+  cfg = config.my.gui.apps.wezterm;
+  enable = osConfig.dot.gui.enable && cfg.enable;
 in
 {
-  options.dot.gui.apps.wezterm = {
+  options.my.gui.apps.wezterm = {
     enable = mkEnableOption "wezterm" // {
-      default = config.dot.gui.terminal.default == "wezterm";
+      default = config.my.gui.terminal.default == "wezterm";
     };
   };
 

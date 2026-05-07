@@ -1,10 +1,10 @@
 {
   pkgs,
-  config,
+  osConfig,
   ...
 }:
 {
-  programs.yazi = with config.dot.keyboard.keys; {
+  programs.yazi = with osConfig.dot.keyboard.keys; {
     plugins = { inherit (pkgs.yaziPlugins) smart-enter; };
     keymap.mgr.prepend_keymap = [
       {

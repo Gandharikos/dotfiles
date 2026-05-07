@@ -1,24 +1,24 @@
 {
   inputs,
   config,
+  osConfig,
   lib,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  inherit (config.dot) gui;
-  cfg = config.dot.gui.apps.discord;
-  enable = gui.enable && cfg.enable;
+  cfg = config.my.gui.apps.discord;
+  enable = osConfig.dot.gui.enable && cfg.enable;
 in
 {
   imports = [
     inputs.nixcord.homeModules.nixcord
   ];
 
-  options.dot.gui.apps.discord = {
+  options.my.gui.apps.discord = {
     enable = mkEnableOption "Discord" // {
-      default = config.dot.gui.enable;
+      default = osConfig.dot.gui.enable;
     };
   };
 

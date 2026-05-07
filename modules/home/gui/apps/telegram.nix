@@ -1,18 +1,18 @@
 {
   pkgs,
   config,
+  osConfig,
   lib,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  inherit (config.dot) gui;
-  cfg = config.dot.gui.apps.telegram;
-  enable = gui.enable && cfg.enable;
+  cfg = config.my.gui.apps.telegram;
+  enable = osConfig.dot.gui.enable && cfg.enable;
 in
 {
-  options.dot.gui.apps.telegram = {
+  options.my.gui.apps.telegram = {
     enable = mkEnableOption "Telegram";
   };
 

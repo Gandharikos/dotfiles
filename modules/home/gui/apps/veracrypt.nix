@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  osConfig,
   lib,
   ...
 }:
@@ -8,12 +9,11 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.dot) gui;
-  cfg = config.dot.gui.apps.veracrypt;
-  enable = gui.enable && cfg.enable;
+  cfg = config.my.gui.apps.veracrypt;
+  enable = osConfig.dot.gui.enable && cfg.enable;
 in
 {
-  options.dot.gui.apps.veracrypt = {
+  options.my.gui.apps.veracrypt = {
     enable = mkEnableOption "Veracrypt" // {
       default = isLinux;
     };

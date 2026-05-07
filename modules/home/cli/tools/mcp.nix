@@ -11,12 +11,12 @@ let
   inherit (lib.meta) getExe;
   inherit (lib.attrsets) hasAttrByPath optionalAttrs;
 
-  cfg = config.dot.mcp;
+  cfg = config.my.mcp;
   mcpPkgs = inputs.mcp-servers-nix.packages.${pkgs.stdenv.hostPlatform.system};
   hasTavilyApiKey = hasAttrByPath [ "sops" "secrets" "tavily_api_key" ] config;
 in
 {
-  options.dot.mcp = {
+  options.my.mcp = {
     enable = mkEnableOption "MCP (Model Context Protocol) servers";
   };
 

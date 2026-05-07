@@ -56,7 +56,7 @@ in
         ]
         ++ advertiseRoutesFlag
         ++ optionals isRoutingServer [
-          "--operator=${dot.name}"
+          "--operator=${dot.primaryUser}"
         ];
 
       # Modern NixOS prefers declarative state management via extraSetFlags over extraUpFlags
@@ -70,7 +70,7 @@ in
         ]
         ++ advertiseRoutesFlag
         ++ optionals isRoutingServer [
-          "--operator=${dot.name}"
+          "--operator=${dot.primaryUser}"
         ];
 
       # Graceful integration with Caddy to acquire certificates from the tailscale daemon

@@ -2,16 +2,17 @@
   lib,
   pkgs,
   config,
+  osConfig,
   ...
 }:
 let
   inherit (lib.strings) optionalString;
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
   inherit (lib.meta) getExe' getExe;
-  shell = getExe (builtins.getAttr config.dot.shell pkgs);
+  shell = getExe (builtins.getAttr config.my.shell pkgs);
 in
 {
-  programs.tmux.extraConfig = with config.dot.keyboard.keys; ''
+  programs.tmux.extraConfig = with osConfig.dot.keyboard.keys; ''
     # Fix colors and enable true color support and italics
     if 'infocmp -x tmux-256color > /dev/null 2>&1' 'set -g default-terminal "tmux-256color"'
     # sets

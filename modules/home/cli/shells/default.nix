@@ -1,7 +1,7 @@
 {
   lib,
   pkgs,
-  config,
+  osConfig,
   ...
 }:
 let
@@ -26,6 +26,6 @@ in
 
       weather = "${curl'} wttr.in";
     };
-    sessionVariables.KEYBOARD_LAYOUT = config.dot.keyboard.layout;
+    sessionVariables.KEYBOARD_LAYOUT = osConfig.dot.keyboard.layout;
   };
 }

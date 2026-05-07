@@ -9,12 +9,12 @@ let
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) nullOr enum;
   inherit (lib.modules) mkIf;
-  cfg = config.dot.neovim;
+  cfg = config.my.neovim;
 in
 {
   imports = [ ./lazyvim.nix ];
 
-  options.dot.neovim = {
+  options.my.neovim = {
     enable = mkEnableOption "neovim" // {
       default = true;
     };

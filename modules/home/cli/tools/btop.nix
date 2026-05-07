@@ -7,12 +7,12 @@ let
   shellAliases = {
     "top" = "btop";
   };
-  cfg = config.dot.btop;
+  cfg = config.my.btop;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.dot.btop = {
+  options.my.btop = {
     enable = mkEnableOption "btop";
   };
 

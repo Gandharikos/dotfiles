@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  osConfig,
   ...
 }:
 let
@@ -8,15 +9,15 @@ let
   inherit (lib.types) listOf enum;
   inherit (lib.modules) mkIf;
   inherit (lib.dot) scanPaths;
-  inherit (config.dot.gui) desktop;
+  inherit (config.my.gui) desktop;
   cfg = desktop.hyprland;
 in
 {
   imports = scanPaths ./.;
 
-  options.dot.gui.desktop.hyprland = {
+  options.my.gui.desktop.hyprland = {
     enable = mkEnableOption "Enable Hyprland" // {
-      default = desktop.wayland.enable && desktop.default == "hyprland";
+      default = osConfig.dot.gui.desktop.wayland.enable && osConfig.dot.gui.desktop.default == "hyprland";
       internal = true;
       readOnly = true;
     };

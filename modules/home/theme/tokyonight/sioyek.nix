@@ -6,7 +6,7 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.trivial) fromHexString;
-  inherit (config.dot.theme.colorscheme) palette;
+  inherit (config.my.theme.colorscheme) palette;
   hexToRgb =
     color:
     let
@@ -20,8 +20,8 @@ let
     ];
   hexToRgba = color: alpha: "${hexToRgb color} ${builtins.toString alpha}";
 
-  cfg = config.dot.theme.tokyonight;
-  enable = cfg.enable && config.dot.gui.apps.sioyek.enable;
+  cfg = config.my.theme.tokyonight;
+  enable = cfg.enable && config.my.gui.apps.sioyek.enable;
 in
 {
   config = mkIf enable {

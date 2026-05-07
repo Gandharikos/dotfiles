@@ -1,13 +1,14 @@
 {
   lib,
   config,
+  osConfig,
   ...
 }:
 let
   inherit (lib.lists) optionals;
   inherit (lib.modules) mkIf;
 
-  inherit (config.dot.gui) desktop;
+  inherit (config.my.gui) desktop;
   cfg = desktop.idle;
   inherit (cfg) timeout;
   inherit (cfg.commands)
@@ -22,7 +23,7 @@ let
     keyboardBacklightOn
     ;
 
-  enable = desktop.idle.default == "hypridle" && desktop.wayland.enable;
+  enable = desktop.idle.default == "hypridle" && osConfig.dot.gui.desktop.wayland.enable;
 in
 {
   config = mkIf enable {

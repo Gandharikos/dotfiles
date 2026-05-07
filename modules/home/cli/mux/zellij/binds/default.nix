@@ -1,7 +1,7 @@
 {
   lib,
   pkgs,
-  config,
+  osConfig,
   ...
 }:
 let
@@ -9,7 +9,7 @@ let
 in
 {
   imports = lib.dot.scanPaths ./.;
-  programs.zellij.settings.keybinds = with config.dot.keyboard.keys; {
+  programs.zellij.settings.keybinds = with osConfig.dot.keyboard.keys; {
     _props.clear-defaults = true;
     _children = [
       {

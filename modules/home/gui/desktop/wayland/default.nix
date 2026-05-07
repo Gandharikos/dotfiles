@@ -1,7 +1,7 @@
 {
   lib,
   pkgs,
-  config,
+  osConfig,
   ...
 }:
 let
@@ -10,7 +10,7 @@ in
 {
   imports = lib.dot.scanPaths ./.;
 
-  config = mkIf config.dot.gui.desktop.wayland.enable {
+  config = mkIf osConfig.dot.gui.desktop.wayland.enable {
     home.packages = with pkgs; [
       # keep-sorted start
       avizo

@@ -8,9 +8,9 @@
 let
   inherit (lib) mkDefault mkEnableOption mkIf;
 
-  cfg = config.dot.gemini-cli;
-  codexEnabled = config.dot.codex.enable or false;
-  mcpModuleEnabled = config.dot.mcp.enable or false;
+  cfg = config.my.gemini-cli;
+  codexEnabled = config.my.codex.enable or false;
+  mcpModuleEnabled = config.my.mcp.enable or false;
 
   sharedAiTools = aiCommon;
 in
@@ -19,7 +19,7 @@ in
     ./rules.nix
   ];
 
-  options.dot.gemini-cli = {
+  options.my.gemini-cli = {
     enable = mkEnableOption "gemini-cli";
   };
 

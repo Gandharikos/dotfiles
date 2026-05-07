@@ -22,9 +22,8 @@ in
       description = ''
         List of YubiKey names to use for SSH authentication.
 
-        Serial number mappings are documented in:
-        - secrets/johnson/core/keys/YUBIKEYS.md
-        - secrets/johnson/core/keys/identify-yubikey.sh
+        Serial number mappings are documented under the enabled user's
+        secrets core directory.
       '';
       example = [
         "foo"

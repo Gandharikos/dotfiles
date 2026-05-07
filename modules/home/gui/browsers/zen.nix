@@ -1,6 +1,7 @@
 {
   inputs,
   config,
+  osConfig,
   pkgs,
   lib,
   ...
@@ -10,24 +11,22 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe';
   inherit (lib.dot) uwsmAppArgs;
-  inherit (config.dot) gui;
-  inherit (config.dot.gui) desktop;
-  cfg = config.dot.gui.apps.zen;
-  enable = gui.enable && cfg.enable;
+  cfg = config.my.gui.apps.zen;
+  enable = osConfig.dot.gui.enable && cfg.enable;
   zenPkg = inputs.zen.packages.${pkgs.stdenv.hostPlatform.system}.beta;
 in
 {
   imports = [ inputs.zen.homeModules.beta ];
 
-  options.dot.gui.apps.zen = {
+  options.my.gui.apps.zen = {
     enable = mkEnableOption "zen browser" // {
-      default = config.dot.gui.browser.default == "zen";
+      default = config.my.gui.browser.default == "zen";
     };
   };
 
   config = mkIf enable {
-    dot.gui.apps.firefox.enable = lib.mkDefault true;
-    dot.gui.browser.desktopId = "org.mozilla.com.zen.browser.desktop";
+    my.gui.apps.firefox.enable = lib.mkDefault true;
+    my.gui.browser.desktopId = "org.mozilla.com.zen.browser.desktop";
     programs.zen-browser = {
       enable = true;
       nativeMessagingHosts = [ pkgs.firefoxpwa ];
@@ -57,8 +56,8 @@ in
         };
       };
     };
-    dot.gui.browser.command =
-      if desktop.uwsm.enable then
+    my.gui.browser.command =
+      if osConfig.dot.gui.desktop.uwsm.enable then
         uwsmAppArgs pkgs (getExe' zenPkg "zen") [ ]
       else
         [ (getExe' zenPkg "zen") ];

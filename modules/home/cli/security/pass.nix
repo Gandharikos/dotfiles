@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  osConfig,
   lib,
   ...
 }:
@@ -8,23 +9,23 @@ let
   passwordStoreDir = "${config.xdg.dataHome}/password-store";
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkOption;
-  inherit (lib.types) str;
-  cfg = config.dot.security;
+  inherit (lib.types) nullOr str;
+  inherit (config.my.security) gpg;
 in
 {
-  options.dot.security.gpg = {
+  options.my.security.gpg = {
     encrytionKey = mkOption {
-      type = str;
-      default = "6E714D9B24EF3018DB51E7892BE66A4F9E095541";
+      type = nullOr str;
+      default = null;
       description = "The encrytion key of my gpg.";
     };
     signatureKey = mkOption {
-      type = str;
-      default = "EC571D2B91912D528A9F3B00639746C15BE596AF";
+      type = nullOr str;
+      default = null;
       description = "The signature key of my gpg.";
     };
   };
-  config = mkIf cfg.enable {
+  config = mkIf osConfig.dot.security.enable {
     programs = {
       password-store = {
         enable = true;
@@ -42,16 +43,20 @@ in
           # Overrides the default gpg key identification set by init.
           # Hexadecimal key signature is recommended.
           # Multiple keys may be specified separated by spaces.
-          PASSWORD_STORE_KEY = lib.strings.concatStringsSep " " [
-            cfg.gpg.encrytionKey # E
-          ];
+          PASSWORD_STORE_KEY = lib.strings.concatStringsSep " " (
+            lib.optionals (gpg.encrytionKey != null) [
+              gpg.encrytionKey # E
+            ]
+          );
           # all .gpg-id files and non-system extension files must be signed using a detached signature using the GPG key specified by
           #   the full 40 character upper-case fingerprint in this variable.
           # If multiple fingerprints are specified, each separated by a whitespace character, then signatures must match at least one.
           # The init command will keep signatures of .gpg-id files up to date.
-          PASSWORD_STORE_SIGNING_KEY = lib.strings.concatStringsSep " " [
-            cfg.gpg.signatureKey # S
-          ];
+          PASSWORD_STORE_SIGNING_KEY = lib.strings.concatStringsSep " " (
+            lib.optionals (gpg.signatureKey != null) [
+              gpg.signatureKey # S
+            ]
+          );
           PASSWORD_STORE_CLIP_TIME = "60";
           PASSWORD_STORE_GENERATED_LENGTH = "15";
           PASSWORD_STORE_ENABLE_EXTENSIONS = "true";

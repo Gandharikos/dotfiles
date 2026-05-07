@@ -1,6 +1,7 @@
 {
-  lib,
   config,
+  lib,
+  osConfig,
   pkgs,
   ...
 }:
@@ -8,10 +9,10 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.dot) rgba gradient;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.dot.theme.colorscheme) palette;
+  inherit (config.my.theme.colorscheme) palette;
 
-  cfg = config.dot.theme.tokyonight;
-  enable = cfg.enable && config.dot.gui.enable && isLinux;
+  cfg = config.my.theme.tokyonight;
+  enable = cfg.enable && osConfig.dot.gui.enable && isLinux;
 in
 {
   config = mkIf enable {

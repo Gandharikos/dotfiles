@@ -1,17 +1,17 @@
 {
   config,
+  osConfig,
   lib,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  inherit (config.dot) gui;
-  cfg = config.dot.gui.apps.obsidian;
-  enable = gui.enable && cfg.enable;
+  cfg = config.my.gui.apps.obsidian;
+  enable = osConfig.dot.gui.enable && cfg.enable;
 in
 {
-  options.dot.gui.apps.obsidian = {
+  options.my.gui.apps.obsidian = {
     enable = mkEnableOption "Obsidian" // {
       default = true;
     };

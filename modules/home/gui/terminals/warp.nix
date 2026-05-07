@@ -1,5 +1,6 @@
 {
   config,
+  osConfig,
   pkgs,
   lib,
   ...
@@ -7,14 +8,13 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.dot) gui;
-  cfg = config.dot.gui.apps.warp;
-  enable = gui.enable && cfg.enable;
+  cfg = config.my.gui.apps.warp;
+  enable = osConfig.dot.gui.enable && cfg.enable;
 in
 {
-  options.dot.gui.apps.warp = {
+  options.my.gui.apps.warp = {
     enable = mkEnableOption "warp" // {
-      default = config.dot.gui.terminal.default == "warp";
+      default = config.my.gui.terminal.default == "warp";
     };
   };
 

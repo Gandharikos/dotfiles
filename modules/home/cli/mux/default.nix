@@ -6,7 +6,7 @@ in
 {
   imports = lib.dot.scanPaths ./.;
 
-  options.dot.mux = {
+  options.my.mux = {
     default = mkOption {
       type = enum [
         "tmux"

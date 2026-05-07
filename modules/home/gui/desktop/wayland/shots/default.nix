@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  osConfig,
   pkgs,
   ...
 }:
@@ -9,15 +10,15 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkOption;
   inherit (lib.types) enum str nullOr;
-  inherit (config.dot.gui) desktop;
+  inherit (config.my.gui) desktop;
   inherit (config.xdg.userDirs.extraConfig) SCREENSHOTS;
   wl-copy' = getExe' pkgs.wl-clipboard-rs "wl-copy";
-  screenshotPath = config.dot.gui.desktop.shot.path;
+  screenshotPath = config.my.gui.desktop.shot.path;
 in
 {
   imports = lib.dot.scanPaths ./.;
 
-  options.dot.gui.desktop.shot = {
+  options.my.gui.desktop.shot = {
     default = mkOption {
       type = nullOr (enum [
         "hyprshot"
@@ -30,9 +31,9 @@ in
           "noctalia-shell"
         else if desktop.shell.default == "dank-material-shell" then
           "dank-material-shell"
-        else if desktop.default == "hyprland" then
+        else if osConfig.dot.gui.desktop.default == "hyprland" then
           "hyprshot"
-        else if desktop.default == "niri" then
+        else if osConfig.dot.gui.desktop.default == "niri" then
           "grimblast"
         else
           null;
@@ -45,7 +46,7 @@ in
     };
   };
 
-  config = mkIf config.dot.gui.desktop.wayland.enable {
+  config = mkIf osConfig.dot.gui.desktop.wayland.enable {
     home = {
       file = {
         "${config.xdg.configHome}/satty/config.toml".text = ''

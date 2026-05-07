@@ -17,19 +17,19 @@ let
   # On Darwin: clash-verge includes mihomo core, config goes to user's home
   proxyConfigPath =
     if isDarwin then
-      "${config.dot.home}/.config/clash-verge/config.yaml"
+      "${config.dot.admin.home}/.config/clash-verge/config.yaml"
     else
       "/var/lib/mihomo/config.yaml";
-  proxyConfigOwner = if isDarwin then config.dot.name else "mihomo";
+  proxyConfigOwner = if isDarwin then config.dot.primaryUser else "mihomo";
   proxyConfigGroup = if isDarwin then "staff" else "mihomo";
   proxyConfigMode = if isDarwin then "0600" else "0400";
 
   proxySourceConfigPath =
     if isDarwin then
-      "${config.dot.home}/.config/sing-box/clash.yaml"
+      "${config.dot.admin.home}/.config/sing-box/clash.yaml"
     else
       "/run/secrets/proxy-source-config.yaml";
-  proxySourceConfigOwner = if isDarwin then config.dot.name else "root";
+  proxySourceConfigOwner = if isDarwin then config.dot.primaryUser else "root";
   proxySourceConfigGroup = if isDarwin then "staff" else "root";
   proxySourceConfigMode = if isDarwin then "0600" else "0400";
 in

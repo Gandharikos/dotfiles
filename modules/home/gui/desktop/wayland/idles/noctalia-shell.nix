@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  osConfig,
   pkgs,
   ...
 }:
@@ -8,11 +9,11 @@ let
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf;
   inherit (lib.strings) escapeShellArgs;
-  inherit (config.dot.gui) desktop;
+  inherit (config.my.gui) desktop;
 
   idleCfg = desktop.idle;
   enable =
-    desktop.wayland.enable
+    osConfig.dot.gui.desktop.wayland.enable
     && idleCfg.default == "noctalia-shell"
     && (config.programs.noctalia-shell.enable or false);
   brightnessctl = getExe pkgs.brightnessctl;

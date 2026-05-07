@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  osConfig,
   pkgs,
   ...
 }:
@@ -9,7 +10,7 @@ let
   inherit (lib.meta) getExe;
   inherit (lib.dot) uwsmScript uwsmScriptArgs;
   enable =
-    config.dot.gui.desktop.shot.default == "grimblast" && config.dot.gui.desktop.wayland.enable;
+    config.my.gui.desktop.shot.default == "grimblast" && osConfig.dot.gui.desktop.wayland.enable;
   grimblast = getExe pkgs.grimblast;
   satty = getExe pkgs.satty;
   areaShot = uwsmScript pkgs "grimblast-area-shot" ''

@@ -1,6 +1,7 @@
 {
   inputs,
   config,
+  osConfig,
   lib,
   pkgs,
   ...
@@ -10,14 +11,14 @@ let
   inherit (lib.meta) getExe';
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.strings) escapeShellArgs;
-  inherit (config.dot.gui) desktop;
-  inherit (config.dot.keyboard) keys;
-  inherit (config.dot.theme)
+  inherit (config.my.gui) desktop;
+  inherit (osConfig.dot.keyboard) keys;
+  inherit (config.my.theme)
     avatar
     wallpaper
     ;
 
-  enable = desktop.wayland.enable && desktop.shell.default == "noctalia-shell";
+  enable = osConfig.dot.gui.desktop.wayland.enable && desktop.shell.default == "noctalia-shell";
   noctaliaSettingsFile = lib.dot.relativeToConfig "noctalia/settings.json";
   settings = builtins.fromJSON (builtins.readFile noctaliaSettingsFile);
   managedIdleSettings = [

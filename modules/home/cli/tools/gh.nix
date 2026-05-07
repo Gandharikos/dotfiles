@@ -5,12 +5,12 @@
   ...
 }:
 let
-  cfg = config.dot.gh;
+  cfg = config.my.gh;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.dot.gh = {
+  options.my.gh = {
     enable = mkEnableOption "gh";
   };
 

@@ -7,10 +7,10 @@ let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 
-  cfg = config.dot.topgrade;
+  cfg = config.my.topgrade;
 in
 {
-  options.dot.topgrade = {
+  options.my.topgrade = {
     enable = mkEnableOption "topgrade";
   };
 

@@ -16,7 +16,7 @@ in
     enable = mkEnableOption "default ACME configuration";
     email = mkOption {
       type = str;
-      default = config.dot.email;
+      default = config.dot.admin.email;
       description = "Email address to use for ACME registration.";
     };
     staging = mkOption {

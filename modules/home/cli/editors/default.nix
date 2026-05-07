@@ -7,12 +7,12 @@ let
   inherit (lib.options) mkOption;
   inherit (lib.modules) mkDefault;
   inherit (lib.types) enum;
-  inherit (config.dot) editor;
+  inherit (config.my) editor;
 in
 {
   imports = lib.dot.scanPaths ./.;
 
-  options.dot.editor = mkOption {
+  options.my.editor = mkOption {
     type = enum [
       "nvim"
       "helix"

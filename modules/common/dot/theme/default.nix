@@ -26,7 +26,7 @@ in
         "tokyonight"
         "catppuccin"
       ]);
-      default = "tokyonight";
+      inherit (dot.admin.theme) default;
       description = "The theme to use";
     };
     colorscheme = {
@@ -58,12 +58,24 @@ in
     };
     avatar = mkOption {
       type = nullOr (coercedTo package toString path);
-      default = if dot.gui.enable then (relativeToConfig "avatars/makima.jpg") else null;
+      default =
+        if dot.admin.theme.avatar != null then
+          dot.admin.theme.avatar
+        else if dot.gui.enable then
+          (relativeToConfig "avatars/makima.jpg")
+        else
+          null;
       description = "The avatar of the user";
     };
     wallpaper = mkOption {
       type = nullOr (coercedTo package toString path);
-      default = if dot.gui.enable then ./nix.png else null;
+      default =
+        if dot.admin.theme.wallpaper != null then
+          dot.admin.theme.wallpaper
+        else if dot.gui.enable then
+          ./nix.png
+        else
+          null;
       description = "The wallpaper of the system";
     };
   };

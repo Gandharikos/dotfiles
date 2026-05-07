@@ -1,18 +1,19 @@
 {
   config,
+  osConfig,
   lib,
   ...
 }:
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkBefore;
-  cfg = config.dot.yazi;
+  cfg = config.my.yazi;
 in
-with config.dot.keyboard.keys;
+with osConfig.dot.keyboard.keys;
 {
   imports = lib.dot.scanPaths ./.;
 
-  options.dot.yazi = {
+  options.my.yazi = {
     enable = mkEnableOption "yazi";
   };
 

@@ -8,9 +8,9 @@ let
   inherit (lib.modules) mkIf mkAfter;
   inherit (lib.lists) elem;
   inherit (lib.dot) mkHyprWorkspaces;
-  inherit (config.dot.gui.desktop.hyprland) plugins;
+  inherit (config.my.gui.desktop.hyprland) plugins;
   enable = plugins.enable && elem "hyprsplit" plugins.list;
-  num_workspaces = config.dot.gui.desktop.workspace.number;
+  num_workspaces = config.my.gui.desktop.workspace.number;
 in
 {
   config = mkIf enable {

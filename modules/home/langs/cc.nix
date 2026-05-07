@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.dot.langs.cc;
+  cfg = config.my.langs.cc;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkMerge mkIf;
   inherit (builtins) isList elemAt;
@@ -76,7 +76,7 @@ let
     };
 in
 {
-  options.dot.langs.cc = {
+  options.my.langs.cc = {
     enable = mkEnableOption "C/C++ development environment";
     xdg.enable = mkEnableOption "C/C++ XDG environment variables";
   };

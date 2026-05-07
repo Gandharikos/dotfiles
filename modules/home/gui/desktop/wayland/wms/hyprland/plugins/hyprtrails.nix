@@ -7,7 +7,7 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) elem;
-  inherit (config.dot.gui.desktop.hyprland) plugins;
+  inherit (config.my.gui.desktop.hyprland) plugins;
   enable = plugins.enable && elem "hyprtails" plugins.list;
 in
 {

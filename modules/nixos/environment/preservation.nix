@@ -7,10 +7,10 @@
 }:
 let
   cfg = config.dot.persistence;
-  hm = config.hm.dot;
+  hm = config.home-manager.users.${config.dot.primaryUser}.my;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
-  inherit (config.dot) name;
+  name = config.dot.primaryUser;
 in
 {
   imports = [ inputs.preservation.nixosModules.default ];
@@ -130,7 +130,7 @@ in
           ];
           files = [ ];
         }
-        (mkIf hm.gui.enable {
+        (mkIf config.dot.gui.enable {
           directories = [
             # keep-sorted start
             ".cache/DankMaterialShell"
@@ -308,7 +308,7 @@ in
             ".config/pet"
           ];
         })
-        (mkIf hm.security.enable {
+        (mkIf config.dot.security.enable {
           directories = [
             {
               directory = ".ssh";

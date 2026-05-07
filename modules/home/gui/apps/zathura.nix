@@ -1,5 +1,6 @@
 {
   config,
+  osConfig,
   lib,
   pkgs,
   ...
@@ -8,19 +9,18 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.dot) gui;
-  cfg = config.dot.gui.apps.zathura;
-  enable = gui.enable && cfg.enable;
+  cfg = config.my.gui.apps.zathura;
+  enable = osConfig.dot.gui.enable && cfg.enable;
 in
 {
-  options.dot.gui.apps.zathura = {
+  options.my.gui.apps.zathura = {
     enable = mkEnableOption "Zathura" // {
       default = isLinux;
     };
   };
 
   config = mkIf enable {
-    programs.zathura = with config.dot.keyboard.keys; {
+    programs.zathura = with osConfig.dot.keyboard.keys; {
       enable = true;
       options = {
         # when selection text with mouse, copy to clipboard

@@ -1,6 +1,6 @@
 {
-  self,
   config,
+  osConfig,
   lib,
   pkgs,
   ...
@@ -9,13 +9,14 @@ let
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
   inherit (config.home) homeDirectory;
-  cfg = config.dot.ssh;
-  yubikeys = config.dot.yubikey.names;
+  cfg = config.my.ssh;
+  yubikeys = osConfig.dot.yubikey.names;
+  inherit (config.my) secretsCore;
 in
 {
-  options.dot.ssh = {
+  options.my.ssh = {
     enable = mkEnableOption "SSH configuration" // {
-      default = config.dot.security.enable;
+      default = osConfig.dot.security.enable;
     };
 
     enableFido2 = mkEnableOption "YubiKey FIDO2 SSH authentication" // {
@@ -24,7 +25,7 @@ in
         When enabled: Only FIDO2 keys are used (maximum security, must have YubiKey).
         When disabled: Only id_ed25519 is used (traditional SSH).
 
-        YubiKeys are automatically discovered from dot.yubikey.names.
+        YubiKeys are automatically discovered from osConfig.dot.yubikey.names.
       '';
     };
   };
@@ -111,8 +112,11 @@ in
         connect
       ];
 
-      # Link regular SSH public key
-      home.file.".ssh/id_ed25519.pub".source = "${self}/secrets/johnson/core/id_ed25519.pub";
+      home.file =
+        lib.optionalAttrs (secretsCore != null && builtins.pathExists "${secretsCore}/id_ed25519.pub")
+          {
+            ".ssh/id_ed25519.pub".source = "${secretsCore}/id_ed25519.pub";
+          };
     }
 
     # ===================================================================
@@ -128,12 +132,15 @@ in
       # Link FIDO2 public key files (only if they exist)
       home.file = mkMerge [
         # YubiKey identification helper script
-        {
-          ".local/bin/identify-yubikey" = {
-            source = "${self}/secrets/johnson/core/keys/identify-yubikey.sh";
-            executable = true;
-          };
-        }
+        (lib.optionalAttrs
+          (secretsCore != null && builtins.pathExists "${secretsCore}/keys/identify-yubikey.sh")
+          {
+            ".local/bin/identify-yubikey" = {
+              source = "${secretsCore}/keys/identify-yubikey.sh";
+              executable = true;
+            };
+          }
+        )
 
         # Link public key for each YubiKey (if file exists)
         (builtins.listToAttrs (
@@ -141,9 +148,9 @@ in
             map (
               name:
               let
-                pubKeyPath = "${self}/secrets/johnson/core/keys/id_${name}.pub";
+                pubKeyPath = "${secretsCore}/keys/id_${name}.pub";
               in
-              if builtins.pathExists pubKeyPath then
+              if secretsCore != null && builtins.pathExists pubKeyPath then
                 {
                   name = ".ssh/id_${name}.pub";
                   value = {

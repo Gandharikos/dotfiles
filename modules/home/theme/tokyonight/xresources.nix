@@ -1,15 +1,16 @@
 {
+  config,
   lib,
   pkgs,
-  config,
+  osConfig,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.dot.theme.colorscheme) palette;
-  inherit (config.dot.machine) monitors;
-  cfg = config.dot.theme.tokyonight;
+  inherit (config.my.theme.colorscheme) palette;
+  inherit (osConfig.dot.machine) monitors;
+  cfg = config.my.theme.tokyonight;
   # set dpi for 4k monitor
   hasHidpi = builtins.any (m: (m.scale or 1.0) > 1.0) monitors;
   dpi = if hasHidpi then 192 else 96;

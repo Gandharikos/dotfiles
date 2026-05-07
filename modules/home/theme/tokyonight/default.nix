@@ -1,11 +1,11 @@
 {
-  lib,
   config,
+  lib,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
-  cfg = config.dot.theme.tokyonight;
+  cfg = config.my.theme.tokyonight;
 in
 {
   imports = lib.dot.scanPaths ./.;

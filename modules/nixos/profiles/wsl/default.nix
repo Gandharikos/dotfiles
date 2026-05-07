@@ -48,9 +48,11 @@ in
       # TODO: so many things rely on yubikey, so It should enable no WSL too
       yubikey.enable = mkForce false;
     };
-    hm.dot = {
-      fastfetch.startOnLogin = mkDefault false;
-    };
+    dot.users.${config.dot.primaryUser}.imports = [
+      {
+        dot.fastfetch.startOnLogin = mkDefault false;
+      }
+    ];
     wsl = {
       enable = true;
       wslConf = {
@@ -58,7 +60,7 @@ in
         interop.appendWindowsPath = false;
         network.gnerateHosts = false;
       };
-      defaultUser = config.dot.name;
+      defaultUser = config.dot.primaryUser;
       startMenuLaunchers = true;
 
       interop = {

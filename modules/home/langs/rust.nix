@@ -6,7 +6,7 @@
   ...
 }:
 let
-  cfg = config.dot.langs.rust;
+  cfg = config.my.langs.rust;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkMerge mkIf;
   inherit (lib.lists) optionals;
@@ -21,7 +21,7 @@ let
   ];
 in
 {
-  options.dot.langs.rust = {
+  options.my.langs.rust = {
     enable = mkEnableOption "Rust development environment";
     xdg.enable = mkEnableOption "Rust XDG environment variables";
   };

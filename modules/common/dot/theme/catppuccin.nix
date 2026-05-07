@@ -11,7 +11,7 @@ in
 {
   options.dot.theme.catppuccin = {
     enable = mkEnableOption "Catppuccin theme" // {
-      default = dot.theme.default == "catppuccin";
+      default = dot.admin.theme.catppuccin.enable;
     };
 
     flavor = mkOption {
@@ -21,7 +21,7 @@ in
         "macchiato"
         "mocha"
       ];
-      default = "mocha";
+      default = dot.admin.theme.catppuccin.flavor;
       description = "The Catppuccin flavor to use.";
     };
 
@@ -42,7 +42,7 @@ in
         "teal"
         "yellow"
       ];
-      default = "mauve";
+      default = dot.admin.theme.catppuccin.accent;
       description = "The Catppuccin accent color to use.";
     };
   };

@@ -15,6 +15,10 @@ in
 
   config = mkIf isHeadless {
     dot.gui.enable = mkForce false;
-    hm.dot.gui.enable = mkForce false;
+    dot.users.${config.dot.primaryUser}.imports = [
+      {
+        dot.gui.enable = mkForce false;
+      }
+    ];
   };
 }

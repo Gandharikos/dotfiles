@@ -4,12 +4,12 @@
   ...
 }:
 let
-  cfg = config.dot.pet;
+  cfg = config.my.pet;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.dot.pet.enable = mkEnableOption "Pet tool";
+  options.my.pet.enable = mkEnableOption "Pet tool";
 
   config = mkIf cfg.enable {
     programs.pet = {

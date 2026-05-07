@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.dot.glow;
+  cfg = config.my.glow;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkDefault;
 
@@ -22,7 +22,7 @@ let
   };
 in
 {
-  options.dot.glow = {
+  options.my.glow = {
     enable = mkEnableOption "glow";
   };
   config = mkIf cfg.enable {

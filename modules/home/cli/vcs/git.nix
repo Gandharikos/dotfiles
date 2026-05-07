@@ -8,7 +8,7 @@ let
   shellAliases = {
     "g" = "git";
   };
-  cfg = config.dot.git;
+  cfg = config.my.git;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.types) nullOr enum;
@@ -22,7 +22,7 @@ let
   '';
 in
 {
-  options.dot.git = {
+  options.my.git = {
     enable = mkEnableOption "git";
     diff = mkOption {
       type = nullOr (enum [
@@ -69,11 +69,11 @@ in
         ];
         settings = {
           user = {
-            inherit (config.dot) email;
-            name = config.dot.fullName;
+            inherit (config.my) email;
+            name = config.my.fullName;
           };
 
-          safe.directory = [ "${config.dot.home}/.dotfiles" ];
+          safe.directory = [ "${config.my.home}/.dotfiles" ];
 
           color.ui = "auto";
           core.editor = "nvim";

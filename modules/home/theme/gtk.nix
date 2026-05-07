@@ -1,13 +1,14 @@
 {
   lib,
   config,
+  osConfig,
   pkgs,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  enable = config.dot.gui.enable && isLinux;
+  enable = osConfig.dot.gui.enable && isLinux;
 in
 {
   config = mkIf enable {

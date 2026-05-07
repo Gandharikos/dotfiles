@@ -9,14 +9,14 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.dot) relativeToConfig;
-  cfg = config.dot.neovim;
+  cfg = config.my.neovim;
 in
 {
   imports = [ inputs.nix4lazyvim.homeModules.default ];
 
   config = mkIf (cfg.enable && cfg.distro == "lazyvim") {
     sops.secrets.github-copilot = {
-      sopsFile = "${self}/secrets/${config.dot.name}/github-copilot";
+      sopsFile = "${self}/secrets/${config.my.name}/github-copilot";
       path = "${config.home.homeDirectory}/.config/github-copilot/apps.json";
       mode = "0600";
       format = "binary";

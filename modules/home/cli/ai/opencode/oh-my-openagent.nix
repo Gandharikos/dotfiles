@@ -6,7 +6,7 @@
   ...
 }:
 let
-  cfg = config.dot.opencode;
+  cfg = config.my.opencode;
   json = pkgs.formats.json { };
 
   mainModel = "openai/gpt-5.4";
@@ -24,7 +24,7 @@ let
   ];
 in
 {
-  options.dot.opencode.ohMyOpenAgent.settings = lib.mkOption {
+  options.my.opencode.ohMyOpenAgent.settings = lib.mkOption {
     inherit (json) type;
     default = { };
     description = ''

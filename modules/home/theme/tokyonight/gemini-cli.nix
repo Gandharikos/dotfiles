@@ -8,9 +8,9 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.attrsets) removeAttrs;
   src = pkgs.vimPlugins.tokyonight-nvim;
-  cfg = config.dot.theme.tokyonight;
-  enable = cfg.enable && config.dot.gemini-cli.enable;
-  inherit (config.dot.theme.colorscheme) slug;
+  cfg = config.my.theme.tokyonight;
+  enable = cfg.enable && config.my.gemini-cli.enable;
+  inherit (config.my.theme.colorscheme) slug;
 
   # Use builtins.fromJSON to avoid home-manager metadata
   rawTheme = builtins.fromJSON (builtins.readFile "${src}/extras/gemini_cli/${slug}.json");

@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  osConfig,
   pkgs,
   ...
 }:
@@ -10,14 +11,14 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.dot) uwsmAppArgs;
   modNum = lib.trivial.mod;
-  inherit (config.dot.gui)
+  inherit (config.my.gui)
     desktop
     terminal
     browser
     fileManager
     ;
 
-  cfg = config.dot.gui.desktop.niri;
+  cfg = config.my.gui.desktop.niri;
   inherit (desktop) modKey;
   modShift = "${modKey}+Shift";
   modCtrl = "${modKey}+Ctrl";
@@ -171,7 +172,7 @@ let
         };
       };
 in
-with config.dot.keyboard.keys;
+with osConfig.dot.keyboard.keys;
 {
   config = mkIf cfg.enable {
     programs.niri.settings = {

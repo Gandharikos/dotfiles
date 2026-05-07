@@ -1,5 +1,6 @@
 {
   config,
+  osConfig,
   lib,
   pkgs,
   ...
@@ -8,12 +9,11 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.dot) gui;
-  cfg = config.dot.gui.apps.anki;
-  enable = gui.enable && cfg.enable && isLinux;
+  cfg = config.my.gui.apps.anki;
+  enable = osConfig.dot.gui.enable && cfg.enable && isLinux;
 in
 {
-  options.dot.gui.apps.anki = {
+  options.my.gui.apps.anki = {
     enable = mkEnableOption "Anki";
   };
 
