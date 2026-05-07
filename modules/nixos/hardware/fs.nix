@@ -5,8 +5,15 @@
 }:
 let
   inherit (lib.modules) mkIf mkMerge;
-  inherit (lib.attrsets) filterAttrs;
-  hasBtrfs = (filterAttrs (_: v: v.fsType == "btrfs") config.fileSystems) != { };
+  inherit (lib.attrsets) attrNames filterAttrs hasAttr;
+  btrfsFileSystems = filterAttrs (_: v: v.fsType == "btrfs") config.fileSystems;
+  btrfsScrubTargets =
+    if hasAttr "/" btrfsFileSystems then
+      [ "/" ]
+    else if hasAttr "/btr_pool" btrfsFileSystems then
+      [ "/btr_pool" ]
+    else
+      attrNames btrfsFileSystems;
 in
 {
   config = mkMerge [
@@ -19,11 +26,11 @@ in
     }
 
     # clean btrfs devices
-    (mkIf hasBtrfs {
+    (mkIf (btrfsScrubTargets != [ ]) {
       services.btrfs.autoScrub = {
         enable = true;
         interval = "weekly";
-        fileSystems = [ "/" ];
+        fileSystems = btrfsScrubTargets;
       };
     })
   ];
