@@ -2,14 +2,11 @@
   config,
   pkgs,
   lib,
-  self,
   ...
 }:
 let
-  inherit (config.dot) name home;
-  inherit (lib.filesystem) listFilesRecursive;
-  inherit (lib.lists) forEach;
-  shell = builtins.getAttr config.dot.shell pkgs;
+  inherit (config.dot) enabledUser users;
+  inherit (lib.attrsets) genAttrs;
 in
 {
   environment = {
@@ -27,20 +24,11 @@ in
   };
 
   # Define a user account.
-  users.users."${name}" = {
+  users.users = genAttrs enabledUser (name: {
     # https://github.com/LnL7/nix-darwin/issues/1237 still have a bug
-    inherit home shell;
+    shell = builtins.getAttr users.${name}.shell pkgs;
+    inherit (users.${name}) home;
     description = name;
-
-    # Public Keys that can be used to login to all hosts;
-    openssh.authorizedKeys.keys = [
-      # Primary user key
-      (builtins.readFile "${self}/secrets/johnson/core/id_ed25519.pub")
-    ]
-    ++
-      # Additional keys from secrets/johnson/core/keys/ (only .pub files)
-      (forEach (lib.filter (path: lib.hasSuffix ".pub" (toString path)) (
-        listFilesRecursive "${self}/secrets/johnson/core/keys"
-      )) (key: builtins.readFile key));
-  };
+    openssh.authorizedKeys.keys = users.${name}.authorizedKeys;
+  });
 }

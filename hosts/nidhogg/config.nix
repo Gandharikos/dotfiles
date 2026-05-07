@@ -1,3 +1,6 @@
 {
-  dot.machine.type = "wsl";
+  dot = {
+    primaryUser = "johnson";
+    machine.type = "wsl";
+  };
 }

@@ -6,6 +6,7 @@
   ];
 
   dot = {
+    primaryUser = "johnson";
     boot = {
       secureBoot = false;
       tmpOnTmpfs = false;

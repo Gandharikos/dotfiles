@@ -1,8 +1,18 @@
 {
+  lib,
   pkgs,
   inputs,
+  self,
   ...
 }:
+let
+  userDirs = builtins.attrNames (
+    lib.filterAttrs (
+      name: type: type == "directory" && builtins.pathExists "${self}/users/${name}/default.nix"
+    ) (builtins.readDir "${self}/users")
+  );
+  primaryUser = builtins.head userDirs;
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -17,7 +27,7 @@
     };
   };
   users.users.root.password = "123456";
-  users.users.johnson = {
+  users.users.${primaryUser} = {
     isNormalUser = true;
     extraGroups = [
       "wheel"

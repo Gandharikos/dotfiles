@@ -17,6 +17,7 @@
       modules = [
         # import the class module, this contains the common configurations between all systems of the same class
         "${self}/modules/${class}/default.nix"
+        "${self}/users/default.nix"
       ]
       ++ (
         if class == "nixos" then
@@ -42,6 +43,7 @@
           inputs
           withSystem
           ; # Pass all the args that your modules need
+        themeNamespace = "dot";
       };
     };
   };

@@ -1,5 +1,7 @@
 {
-  dot.machine.type = "desktop";
-
-  dot.networking.tailscale.role = "exit-node";
+  dot = {
+    primaryUser = "johnson";
+    machine.type = "desktop";
+    networking.tailscale.role = "exit-node";
+  };
 }
