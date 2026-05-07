@@ -13,5 +13,6 @@ core.deepMerge [
     ./geometry.nix
     ./workspaces.nix
     ./commands.nix
+    ./users.nix
   ] arg)
 ]
