@@ -18,8 +18,6 @@ in
       with pkgs;
       optionals isLinux [
         calibre
-      ]
-      ++ [
         teams-for-linux
       ];
   };
