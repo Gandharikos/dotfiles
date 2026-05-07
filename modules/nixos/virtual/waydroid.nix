@@ -11,7 +11,7 @@ let
   weston' = getExe pkgs.weston;
   waydroid' = getExe pkgs.waydroid;
 
-  cfg = config.my.virtual.waydroid;
+  cfg = config.dot.virtual.waydroid;
 
   waydroid-ui = pkgs.writeShellScriptBin "waydroid-ui" ''
     export WAYLAND_DISPLAY=wayland-0
@@ -26,9 +26,9 @@ let
   '';
 in
 {
-  options.my.virtual.waydroid = {
+  options.dot.virtual.waydroid = {
     enable = mkEnableOption "Enable waydroid" // {
-      default = config.my.virtual.enable;
+      default = config.dot.virtual.enable;
     };
   };
 

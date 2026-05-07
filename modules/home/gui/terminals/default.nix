@@ -18,13 +18,13 @@ let
     ;
   inherit (lib.meta) getExe;
   inherit (lib.strings) escapeShellArgs hasInfix;
-  inherit (lib.my) withUWSMArgs;
-  inherit (config.my.gui) desktop terminal;
+  inherit (lib.dot) withUWSMArgs;
+  inherit (config.dot.gui) desktop terminal;
   commandType = coercedTo str (
     value:
     if hasInfix " " value then
       throw ''
-        `my.gui.terminal.command` accepts either an argv list or a single
+        `dot.gui.terminal.command` accepts either an argv list or a single
         program path. Use a list for commands with arguments.
       ''
     else
@@ -32,9 +32,9 @@ let
   ) (listOf str);
 in
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
-  options.my.gui.terminal = {
+  options.dot.gui.terminal = {
     name = mkOption {
       type = nullOr str;
       default = null;
@@ -47,7 +47,7 @@ in
         "kitty"
         "warp"
       ]);
-      default = if config.my.gui.enable then "ghostty" else null;
+      default = if config.dot.gui.enable then "ghostty" else null;
       description = "The terminal to use";
     };
 
@@ -77,16 +77,16 @@ in
       readOnly = true;
       description = ''
         The shell-escaped terminal command derived from
-        `my.gui.terminal.command`.
+        `dot.gui.terminal.command`.
       '';
     };
 
     size = mkOption {
       type = int;
-      default = if config.my.machine.type == "laptop" then 15 else 12;
+      default = if config.dot.machine.type == "laptop" then 15 else 12;
       description = ''
         The font size to use for the terminal. This is used by the
-        `my.gui.terminal` module to determine which font size to use.
+        `dot.gui.terminal` module to determine which font size to use.
       '';
     };
 
@@ -95,7 +95,7 @@ in
       default = "JetBrainsMono Nerd Font Mono";
       description = ''
         The font to use for the terminal. This is used by the
-        `my.gui.terminal` module to determine which font to use.
+        `dot.gui.terminal` module to determine which font to use.
       '';
     };
 
@@ -104,7 +104,7 @@ in
       default = 5;
       description = ''
         The padding to use for the terminal. This is used by the
-        `my.gui.terminal` module to determine which padding to use.
+        `dot.gui.terminal` module to determine which padding to use.
       '';
     };
 
@@ -113,7 +113,7 @@ in
       default = 0.85;
       description = ''
         The opacity to use for the terminal. This is used by the
-        `my.gui.terminal` module to determine which opacity to use.
+        `dot.gui.terminal` module to determine which opacity to use.
       '';
     };
   };

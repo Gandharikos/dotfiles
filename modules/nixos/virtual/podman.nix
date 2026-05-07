@@ -5,16 +5,16 @@
   ...
 }:
 let
-  cfg = config.my.virtual.podman;
+  cfg = config.dot.virtual.podman;
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.options) mkEnableOption;
 in
 {
-  options.my.virtual.podman = {
+  options.dot.virtual.podman = {
     enable = mkEnableOption "Podman";
   };
   config = mkIf cfg.enable {
-    my.virtual.docker.enable = mkForce false;
+    dot.virtual.docker.enable = mkForce false;
     environment.systemPackages = with pkgs; [
       podman-compose
       podman-desktop
@@ -43,7 +43,7 @@ in
 
         # Enable Nvidia support for Podman if the Nvidia drivers are found
         # in the list of xserver.videoDrivers.
-        enableNvidia = builtins.any (driver: driver == "nvidia") config.my.machine.gpu;
+        enableNvidia = builtins.any (driver: driver == "nvidia") config.dot.machine.gpu;
 
         # Prune images and containers periodically
         autoPrune = {

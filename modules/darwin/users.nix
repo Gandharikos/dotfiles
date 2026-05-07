@@ -4,5 +4,5 @@ let
 in
 {
   networking.computerName = hostName;
-  system.primaryUser = config.my.name;
+  system.primaryUser = config.dot.name;
 }

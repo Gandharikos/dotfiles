@@ -4,12 +4,12 @@
   ...
 }:
 let
-  cfg = config.my.numbat;
+  cfg = config.dot.numbat;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.numbat = {
+  options.dot.numbat = {
     enable = mkEnableOption "numbat";
   };
   config = mkIf cfg.enable {

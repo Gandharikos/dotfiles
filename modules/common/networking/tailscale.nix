@@ -4,7 +4,7 @@ let
   inherit (lib.types) enum listOf str;
 in
 {
-  options.my.networking.tailscale = {
+  options.dot.networking.tailscale = {
     enable = mkEnableOption "Enable Tailscale" // {
       default = true;
     };

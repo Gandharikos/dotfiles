@@ -6,7 +6,7 @@
     (import ../common/disko/luks-btrfs-tmpfs.nix { })
   ];
 
-  my = {
+  dot = {
     security.auditd.enable = lib.mkForce false;
     boot = {
       secureBoot = false;
@@ -54,7 +54,7 @@
     };
   };
 
-  hm.my = {
+  hm.dot = {
     gui.browser.default = "google-chrome";
     gui.terminal.size = 12;
     gui.apps = {

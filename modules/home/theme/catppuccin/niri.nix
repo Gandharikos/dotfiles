@@ -7,9 +7,9 @@
 let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.my.theme.colorscheme) palette;
-  cfg = config.my.theme.catppuccin;
-  enable = cfg.enable && config.my.gui.enable && isLinux && config.my.gui.desktop.niri.enable;
+  inherit (config.dot.theme.colorscheme) palette;
+  cfg = config.dot.theme.catppuccin;
+  enable = cfg.enable && config.dot.gui.enable && isLinux && config.dot.gui.desktop.niri.enable;
   accent = palette.${cfg.accent};
 in
 {

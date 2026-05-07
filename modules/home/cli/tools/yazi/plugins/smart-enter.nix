@@ -4,7 +4,7 @@
   ...
 }:
 {
-  programs.yazi = with config.my.keyboard.keys; {
+  programs.yazi = with config.dot.keyboard.keys; {
     plugins = { inherit (pkgs.yaziPlugins) smart-enter; };
     keymap.mgr.prepend_keymap = [
       {

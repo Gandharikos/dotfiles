@@ -20,12 +20,12 @@ let
     package
     ;
 
-  cfg = config.my.boot;
+  cfg = config.dot.boot;
 in
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
-  options.my.boot = {
+  options.dot.boot = {
     enableKernelTweaks = mkEnableOption "security and performance related kernel parameters";
     tmpOnTmpfs = mkEnableOption "`/tmp` living on tmpfs. false means it will be cleared manually on each reboot";
 

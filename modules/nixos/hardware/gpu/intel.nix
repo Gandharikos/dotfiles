@@ -7,7 +7,7 @@
 let
   inherit (lib.modules) mkIf;
   inherit (builtins) attrValues;
-  inherit (config.my) machine;
+  inherit (config.dot) machine;
 in
 {
   config = mkIf (machine.gpu == "intel" || machine.gpu == "hybrid-nv") {

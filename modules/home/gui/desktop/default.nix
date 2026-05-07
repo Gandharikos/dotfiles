@@ -5,16 +5,16 @@
   ...
 }:
 let
-  inherit (lib.my) scanPaths;
+  inherit (lib.dot) scanPaths;
   inherit (lib.options) mkOption;
   inherit (lib.types) int str;
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
-  inherit (config.my.gui) desktop;
+  inherit (config.dot.gui) desktop;
 in
 {
   imports = scanPaths ./.;
 
-  options.my.gui.desktop = {
+  options.dot.gui.desktop = {
     workspace = {
       number = mkOption {
         type = int;

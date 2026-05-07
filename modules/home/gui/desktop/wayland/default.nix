@@ -8,9 +8,9 @@ let
   inherit (lib.modules) mkIf;
 in
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
-  config = mkIf config.my.gui.desktop.wayland.enable {
+  config = mkIf config.dot.gui.desktop.wayland.enable {
     home.packages = with pkgs; [
       # keep-sorted start
       avizo

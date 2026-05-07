@@ -9,10 +9,10 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkOption;
   inherit (lib.types) str;
-  cfg = config.my.security;
+  cfg = config.dot.security;
 in
 {
-  options.my.security.gpg = {
+  options.dot.security.gpg = {
     encrytionKey = mkOption {
       type = str;
       default = "6E714D9B24EF3018DB51E7892BE66A4F9E095541";

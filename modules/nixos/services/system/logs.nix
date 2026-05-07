@@ -5,7 +5,7 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  isServer = config.my.machine.type == "server";
+  isServer = config.dot.machine.type == "server";
 in
 {
   config = mkIf isServer {

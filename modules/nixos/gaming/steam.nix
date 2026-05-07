@@ -8,10 +8,10 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
 
-  cfg = config.my.game.steam;
+  cfg = config.dot.game.steam;
 in
 {
-  options.my.game = {
+  options.dot.game = {
     steam = {
       enable = mkEnableOption "Enable Steam";
     };

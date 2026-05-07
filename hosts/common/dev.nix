@@ -1,5 +1,5 @@
 {
-  my.langs = {
+  dot.langs = {
     cc = {
       enable = true;
       xdg.enable = true;

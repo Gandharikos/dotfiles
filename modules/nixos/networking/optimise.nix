@@ -7,10 +7,10 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
 
-  cfg = config.my.networking;
+  cfg = config.dot.networking;
 in
 {
-  options.my.networking.optimizeTcp = mkEnableOption "Enable tcp optimizations";
+  options.dot.networking.optimizeTcp = mkEnableOption "Enable tcp optimizations";
 
   config = mkIf cfg.optimizeTcp {
     boot = {

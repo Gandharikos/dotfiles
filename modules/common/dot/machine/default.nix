@@ -2,12 +2,12 @@
 let
   inherit (lib.options) mkOption;
   inherit (lib.types) enum nullOr;
-  inherit (lib.my) scanPaths;
+  inherit (lib.dot) scanPaths;
 in
 {
   imports = scanPaths ./.;
   # hardware
-  options.my.machine = {
+  options.dot.machine = {
     type = mkOption {
       type = enum [
         "workstation"

@@ -6,7 +6,7 @@
 }:
 let
   inherit (lib.modules) mkIf mkForce;
-  cfg = config.my.yubikey;
+  cfg = config.dot.yubikey;
 in
 {
   config = mkIf cfg.enable {
@@ -41,7 +41,7 @@ in
         enable = true;
         settings = {
           cue = true; # Tells user they need to press the button
-          authFile = "${config.my.home}/.config/Yubico/u2f_keys";
+          authFile = "${config.dot.home}/.config/Yubico/u2f_keys";
         };
       };
       services = {

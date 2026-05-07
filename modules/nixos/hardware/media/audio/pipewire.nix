@@ -6,10 +6,10 @@
 }:
 let
   inherit (lib) mkIf;
-  inherit (lib.my) isx86Linux;
+  inherit (lib.dot) isx86Linux;
 in
 {
-  config = mkIf config.my.gui.enable {
+  config = mkIf config.dot.gui.enable {
     # pipewire is newer and just better
     services.pipewire = {
       enable = true;

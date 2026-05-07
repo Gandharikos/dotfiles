@@ -5,8 +5,8 @@
   ...
 }:
 let
-  cfg = config.my.zellij;
-  autoStart = config.my.mux.autoStart && config.my.mux.default == "zellij";
+  cfg = config.dot.zellij;
+  autoStart = config.dot.mux.autoStart && config.dot.mux.default == "zellij";
   inherit (lib)
     mkEnableOption
     mkIf
@@ -16,14 +16,14 @@ let
     ;
   inherit (lib.modules) mkDefault;
 
-  shell = getExe (builtins.getAttr config.my.shell pkgs);
+  shell = getExe (builtins.getAttr config.dot.shell pkgs);
 in
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
-  options.my.zellij = {
+  options.dot.zellij = {
     enable = mkEnableOption "Zellij" // {
-      default = config.my.mux.default == "zellij";
+      default = config.dot.mux.default == "zellij";
     };
     template = mkOption {
       internal = true;

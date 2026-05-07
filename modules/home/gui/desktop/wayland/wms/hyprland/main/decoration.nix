@@ -5,8 +5,8 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (lib.my) vec2;
-  cfg = config.my.gui.desktop.hyprland;
+  inherit (lib.dot) vec2;
+  cfg = config.dot.gui.desktop.hyprland;
 in
 {
   config = mkIf cfg.enable {

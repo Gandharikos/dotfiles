@@ -1,5 +1,5 @@
 {
-  my.machine.type = "desktop";
+  dot.machine.type = "desktop";
 
-  my.networking.tailscale.role = "exit-node";
+  dot.networking.tailscale.role = "exit-node";
 }

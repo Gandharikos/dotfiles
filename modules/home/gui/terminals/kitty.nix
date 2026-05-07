@@ -6,20 +6,20 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.my) gui;
-  inherit (config.my.gui) terminal;
-  cfg = config.my.gui.apps.kitty;
+  inherit (config.dot) gui;
+  inherit (config.dot.gui) terminal;
+  cfg = config.dot.gui.apps.kitty;
   enable = gui.enable && cfg.enable;
 in
 {
-  options.my.gui.apps.kitty = {
+  options.dot.gui.apps.kitty = {
     enable = mkEnableOption "kitty" // {
       default = terminal.default == "kitty";
     };
   };
 
   config = mkIf enable {
-    programs.kitty = with config.my.keyboard.keys; {
+    programs.kitty = with config.dot.keyboard.keys; {
       enable = true;
       font = {
         name = terminal.font;

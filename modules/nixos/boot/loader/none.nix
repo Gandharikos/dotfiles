@@ -5,7 +5,7 @@
 }:
 let
   inherit (lib.modules) mkIf mkForce;
-  cfg = config.my.boot;
+  cfg = config.dot.boot;
 in
 {
   config = mkIf (cfg.loader == "none") {

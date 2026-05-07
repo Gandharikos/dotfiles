@@ -1,13 +1,13 @@
 { lib, ... }:
 let
-  inherit (lib.my) scanPaths;
+  inherit (lib.dot) scanPaths;
   inherit (lib.options) mkOption;
   inherit (lib.types) enum nullOr;
 in
 {
   imports = scanPaths ./.;
 
-  options.my.gui.desktop.shell = {
+  options.dot.gui.desktop.shell = {
     default = mkOption {
       type = nullOr (enum [
         "dank-material-shell"

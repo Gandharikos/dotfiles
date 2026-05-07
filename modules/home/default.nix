@@ -1,5 +1,5 @@
 { lib, ... }:
 {
   _class = "homeManager";
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 }

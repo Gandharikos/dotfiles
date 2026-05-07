@@ -14,7 +14,7 @@ let
     ;
 in
 {
-  options.my.theme.cursor = mkOption {
+  options.dot.theme.cursor = mkOption {
     description = ''
       Attributes defining the systemwide XCursor theme, with an optional
       Hyprcursor theme for Hyprland.
@@ -60,7 +60,7 @@ in
   };
   config.assertions =
     let
-      inherit (config.my.theme) cursor;
+      inherit (config.dot.theme) cursor;
     in
     [
       {
@@ -75,9 +75,9 @@ in
             )
           );
         message = ''
-          Error: `my.theme.cursor` is only partially defined. Set either none or
-          all of the base `my.theme.cursor` options, plus a complete optional
-          `my.theme.cursor.hyprcursor` theme if you enable one.
+          Error: `dot.theme.cursor` is only partially defined. Set either none or
+          all of the base `dot.theme.cursor` options, plus a complete optional
+          `dot.theme.cursor.hyprcursor` theme if you enable one.
         '';
       }
     ];

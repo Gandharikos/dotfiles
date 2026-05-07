@@ -5,12 +5,12 @@
   ...
 }:
 let
-  inherit (config) my;
+  inherit (config) dot;
   inherit (lib.modules) mkIf mkDefault mkBefore;
   inherit (lib.lists) optionals;
   inherit (lib.strings) concatStringsSep;
 
-  cfg = config.my.networking.tailscale;
+  cfg = config.dot.networking.tailscale;
   isClient = cfg.role == "client";
   isSubnetRouter = builtins.elem cfg.role [
     "subnet-router"
@@ -56,7 +56,7 @@ in
         ]
         ++ advertiseRoutesFlag
         ++ optionals isRoutingServer [
-          "--operator=${my.name}"
+          "--operator=${dot.name}"
         ];
 
       # Modern NixOS prefers declarative state management via extraSetFlags over extraUpFlags
@@ -70,7 +70,7 @@ in
         ]
         ++ advertiseRoutesFlag
         ++ optionals isRoutingServer [
-          "--operator=${my.name}"
+          "--operator=${dot.name}"
         ];
 
       # Graceful integration with Caddy to acquire certificates from the tailscale daemon
@@ -99,7 +99,7 @@ in
     assertions = [
       {
         assertion = !isSubnetRouter || cfg.advertiseRoutes != [ ];
-        message = "Tailscale roles `subnet-router` and `router-exit-node` require `my.networking.tailscale.advertiseRoutes` to be non-empty.";
+        message = "Tailscale roles `subnet-router` and `router-exit-node` require `dot.networking.tailscale.advertiseRoutes` to be non-empty.";
       }
     ];
   };

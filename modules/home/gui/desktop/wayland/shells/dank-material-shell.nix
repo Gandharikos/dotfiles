@@ -9,18 +9,18 @@ let
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.attrsets) optionalAttrs;
   inherit (lib.meta) getExe' getExe;
-  inherit (config.my.gui) desktop;
-  inherit (config.my.theme)
+  inherit (config.dot.gui) desktop;
+  inherit (config.dot.theme)
     avatar
     wallpaper
     ;
-  inherit (config.my.keyboard) keys;
+  inherit (config.dot.keyboard) keys;
 
   enable = desktop.wayland.enable && desktop.shell.default == "dank-material-shell";
-  dmsSettingsFile = lib.my.relativeToConfig "dank-material-shell/settings.json";
+  dmsSettingsFile = lib.dot.relativeToConfig "dank-material-shell/settings.json";
   settings = builtins.fromJSON (builtins.readFile dmsSettingsFile);
 
-  dmsSessionFile = lib.my.relativeToConfig "dank-material-shell/session.json";
+  dmsSessionFile = lib.dot.relativeToConfig "dank-material-shell/session.json";
   sessionSettings = builtins.fromJSON (builtins.readFile dmsSessionFile);
 
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;

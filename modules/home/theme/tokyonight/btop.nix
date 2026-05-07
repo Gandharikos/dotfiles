@@ -6,11 +6,11 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (config.my.theme.general) transparent;
+  inherit (config.dot.theme.general) transparent;
   src = pkgs.vimPlugins.tokyonight-nvim;
-  cfg = config.my.theme.tokyonight;
-  enable = cfg.enable && config.my.btop.enable;
-  inherit (config.my.theme.colorscheme) slug;
+  cfg = config.dot.theme.tokyonight;
+  enable = cfg.enable && config.dot.btop.enable;
+  inherit (config.dot.theme.colorscheme) slug;
 in
 {
   config = mkIf enable {

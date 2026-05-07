@@ -23,17 +23,17 @@ let
       ;
     osClass = _class;
   };
-  inherit (config) my;
+  inherit (config) dot;
 in
 {
   imports = [
-    (lib.mkAliasOptionModule [ "hm" ] [ "home-manager" "users" config.my.name ])
+    (lib.mkAliasOptionModule [ "hm" ] [ "home-manager" "users" config.dot.name ])
   ];
 
   hm = {
     imports = [ ../home ];
-    my = {
-      inherit (my)
+    dot = {
+      inherit (dot)
         name
         fullName
         email
@@ -43,9 +43,9 @@ in
         theme
         ;
 
-      # We do not inherit `my` directly from `config` because NixOS declares options that should not flow into home-manager.
+      # We do not inherit `dot` directly from `config` because NixOS declares options that should not flow into home-manager.
       machine = {
-        inherit (my.machine)
+        inherit (dot.machine)
           type
           gpu
           cpu
@@ -53,14 +53,14 @@ in
           ;
       };
       gui = {
-        inherit (my.gui) enable;
+        inherit (dot.gui) enable;
         desktop = {
-          inherit (my.gui.desktop) type default exec;
+          inherit (dot.gui.desktop) type default exec;
         };
       };
 
       security = {
-        inherit (my.security) enable;
+        inherit (dot.security) enable;
       };
     };
   };
@@ -73,6 +73,6 @@ in
     verbose = true;
 
     # common options defined both user level and system level
-    sharedModules = [ ./my ];
+    sharedModules = [ ./dot ];
   };
 }

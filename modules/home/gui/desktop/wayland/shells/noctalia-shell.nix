@@ -10,15 +10,15 @@ let
   inherit (lib.meta) getExe';
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.strings) escapeShellArgs;
-  inherit (config.my.gui) desktop;
-  inherit (config.my.keyboard) keys;
-  inherit (config.my.theme)
+  inherit (config.dot.gui) desktop;
+  inherit (config.dot.keyboard) keys;
+  inherit (config.dot.theme)
     avatar
     wallpaper
     ;
 
   enable = desktop.wayland.enable && desktop.shell.default == "noctalia-shell";
-  noctaliaSettingsFile = lib.my.relativeToConfig "noctalia/settings.json";
+  noctaliaSettingsFile = lib.dot.relativeToConfig "noctalia/settings.json";
   settings = builtins.fromJSON (builtins.readFile noctaliaSettingsFile);
   managedIdleSettings = [
     "enabled"
@@ -28,7 +28,7 @@ let
     "customCommands"
   ];
 
-  noctaliaPluginsFile = lib.my.relativeToConfig "noctalia/plugins.json";
+  noctaliaPluginsFile = lib.dot.relativeToConfig "noctalia/plugins.json";
   plugins = builtins.fromJSON (builtins.readFile noctaliaPluginsFile);
 
   noctaliaPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;

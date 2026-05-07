@@ -12,13 +12,13 @@ let
   inherit (lib.lists) optionals;
   inherit (lib.meta) getExe;
   inherit (pkgs.stdenv.hostPlatform) isLinux isDarwin;
-  cfg = config.my.fish;
-  isColemak = config.my.keyboard.layout == "colemak";
+  cfg = config.dot.fish;
+  isColemak = config.dot.keyboard.layout == "colemak";
 in
 {
-  options.my.fish = {
+  options.dot.fish = {
     enable = mkEnableOption "fish" // {
-      default = config.my.shell == "fish";
+      default = config.dot.shell == "fish";
     };
   };
 

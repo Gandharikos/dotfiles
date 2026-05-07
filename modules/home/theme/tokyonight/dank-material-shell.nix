@@ -6,11 +6,11 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (config.my.theme.colorscheme)
+  inherit (config.dot.theme.colorscheme)
     slug
     palette
     ;
-  cfg = config.my.theme.tokyonight;
+  cfg = config.dot.theme.tokyonight;
   dmsEnabled = config.programs.dank-material-shell.enable or false;
   theme = {
     primary = palette.blue;

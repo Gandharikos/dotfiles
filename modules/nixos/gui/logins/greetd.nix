@@ -9,14 +9,14 @@ let
   inherit (lib.meta) getExe;
   inherit (lib.strings) concatStringsSep;
   inherit (lib.options) mkEnableOption;
-  inherit (config.my) name;
-  inherit (config.my.gui) desktop login;
+  inherit (config.dot) name;
+  inherit (config.dot.gui) desktop login;
   inherit (desktop) exec;
   inherit (login) autologin;
-  persist = config.my.persistence.enable;
+  persist = config.dot.persistence.enable;
 in
 {
-  options.my.gui.login.autologin =
+  options.dot.gui.login.autologin =
     mkEnableOption ''
       Whether to enable passwordless login. This is generally useful on systems with
       FDE (Full Disk Encryption) enabled. It is a security risk for systems without FDE.

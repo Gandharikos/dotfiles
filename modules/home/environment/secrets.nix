@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (config.my) home name;
+  inherit (config.dot) home name;
 in
 {
   imports = [

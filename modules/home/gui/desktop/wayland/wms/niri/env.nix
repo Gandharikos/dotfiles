@@ -5,7 +5,7 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  cfg = config.my.gui.desktop.niri;
+  cfg = config.dot.gui.desktop.niri;
 in
 {
   config = mkIf cfg.enable {

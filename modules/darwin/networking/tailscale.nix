@@ -10,7 +10,7 @@ let
   inherit (lib.lists) optionals;
   inherit (lib.strings) concatStringsSep escapeShellArgs;
 
-  cfg = config.my.networking.tailscale;
+  cfg = config.dot.networking.tailscale;
   isClient = cfg.role == "client";
   isSubnetRouter = builtins.elem cfg.role [
     "subnet-router"
@@ -37,7 +37,7 @@ let
     ]
     ++ advertiseRoutesFlag
     ++ optionals isRoutingServer [
-      "--operator=${config.my.name}"
+      "--operator=${config.dot.name}"
     ]
     ++ optionals cfg.autoConnect [
       "--auth-key=file:${config.sops.secrets.tailscale_authKey.path}"
@@ -96,7 +96,7 @@ in
     assertions = [
       {
         assertion = !isSubnetRouter || cfg.advertiseRoutes != [ ];
-        message = "Tailscale roles `subnet-router` and `router-exit-node` require `my.networking.tailscale.advertiseRoutes` to be non-empty.";
+        message = "Tailscale roles `subnet-router` and `router-exit-node` require `dot.networking.tailscale.advertiseRoutes` to be non-empty.";
       }
     ];
   };

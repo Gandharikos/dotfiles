@@ -7,8 +7,8 @@
 let
   inherit (lib.modules) mkIf;
   src = pkgs.vimPlugins.tokyonight-nvim;
-  cfg = config.my.theme.tokyonight;
-  inherit (config.my.theme.colorscheme) slug;
+  cfg = config.dot.theme.tokyonight;
+  inherit (config.dot.theme.colorscheme) slug;
   enable = cfg.enable && config.programs.wezterm.enable;
 in
 {

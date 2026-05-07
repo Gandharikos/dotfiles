@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.my.langs.r;
+  cfg = config.dot.langs.r;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
 
@@ -60,7 +60,7 @@ let
   ];
 in
 {
-  options.my.langs.r = {
+  options.dot.langs.r = {
     enable = mkEnableOption "R development environment";
     xdg.enable = mkEnableOption "R XDG environment variables";
   };

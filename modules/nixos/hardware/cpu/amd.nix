@@ -4,7 +4,7 @@
   ...
 }:
 let
-  inherit (config.my) machine;
+  inherit (config.dot) machine;
   inherit (lib.modules) mkIf;
 in
 {

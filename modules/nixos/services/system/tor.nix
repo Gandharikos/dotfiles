@@ -6,11 +6,11 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.my) gui;
-  cfg = config.my.services.tor;
+  inherit (config.dot) gui;
+  cfg = config.dot.services.tor;
 in
 {
-  options.my.services.tor = {
+  options.dot.services.tor = {
     enable = mkEnableOption "Enable Tor" // {
       default = gui.enable;
     };

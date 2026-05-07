@@ -8,8 +8,8 @@
 let
   inherit (lib) mkDefault mkEnableOption mkIf;
   sharedAiTools = aiCommon;
-  cfg = config.my.opencode;
-  mcpModuleEnabled = config.my.mcp.enable or false;
+  cfg = config.dot.opencode;
+  mcpModuleEnabled = config.dot.mcp.enable or false;
 
   defaultAgent = "dotfiles-expert";
   mainModel = "openai/gpt-5.4";
@@ -17,9 +17,9 @@ let
   quickModel = "openai/gpt-5.3-codex-spark";
 in
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
-  options.my.opencode = {
+  options.dot.opencode = {
     enable = mkEnableOption "OpenCode configuration";
   };
 

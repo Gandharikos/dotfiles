@@ -8,8 +8,8 @@ let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkAfter;
   inherit (lib.meta) getExe;
-  inherit (lib.my) uwsmScript;
-  cfg = config.my.gui.desktop.hyprland;
+  inherit (lib.dot) uwsmScript;
+  cfg = config.dot.gui.desktop.hyprland;
   hyprshell' = getExe pkgs.hyprshell;
   hyprshellInit = uwsmScript pkgs "hyprshell-init" ''
     exec ${hyprshell'} init --show-title --size-factor 5.5 --workspaces-per-row 5
@@ -24,7 +24,7 @@ let
   '';
 in
 {
-  options.my.gui.desktop.hyprland.switch = {
+  options.dot.gui.desktop.hyprland.switch = {
     enable = mkEnableOption "hyprswitch" // {
       default = cfg.enable;
     };

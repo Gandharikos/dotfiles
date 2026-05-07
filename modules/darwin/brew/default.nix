@@ -18,7 +18,7 @@
     mutableTaps = false;
 
     # we need a user to install packages for
-    user = config.my.name;
+    user = config.dot.name;
 
     # to truly be declarative, we need to specify the exact revision of homebrew-core
     #

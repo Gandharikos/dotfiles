@@ -5,7 +5,7 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (config.my.gui.desktop.wayland) enable;
+  inherit (config.dot.gui.desktop.wayland) enable;
 in
 {
   config = mkIf enable {

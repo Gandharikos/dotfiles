@@ -7,11 +7,11 @@ let
   inherit (lib.options) mkOption;
   inherit (lib.types) listOf str;
   inherit (lib.attrsets) genAttrs;
-  inherit (config.my.machine) ethernetDevices;
+  inherit (config.dot.machine) ethernetDevices;
 in
 {
   # run `ip a` to find out
-  options.my.machine.ethernetDevices = mkOption {
+  options.dot.machine.ethernetDevices = mkOption {
     type = listOf str;
     default = [ ];
     description = "The network devices of the system";

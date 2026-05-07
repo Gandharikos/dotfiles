@@ -6,8 +6,8 @@
 }:
 let
   inherit (lib.lists) optionals;
-  isGui = config.my.gui.enable;
-  # isServer = config.my.machine.machine == "server";
+  isGui = config.dot.gui.enable;
+  # isServer = config.dot.machine.machine == "server";
 in
 {
   networking.networkmanager = {
@@ -18,16 +18,16 @@ in
       "interface-name:br-*"
       "interface-name:rndis*"
     ]
-    ++ optionals config.my.networking.tailscale.enable [ "interface-name:tailscale*" ]
-    ++ optionals config.my.virtual.podman.enable [
+    ++ optionals config.dot.networking.tailscale.enable [ "interface-name:tailscale*" ]
+    ++ optionals config.dot.virtual.podman.enable [
       "interface-name:docker*"
       "interface-name:podman*"
       "interface-name:cni-podman*"
     ]
-    # ++ optionals config.my.virtual.kvm.enable [
+    # ++ optionals config.dot.virtual.kvm.enable [
     #   "interface-name:virbr*"
     # ]
-    ++ optionals config.my.virtual.waydroid.enable [
+    ++ optionals config.dot.virtual.waydroid.enable [
       "interface-name:waydroid*"
     ];
 

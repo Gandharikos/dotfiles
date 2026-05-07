@@ -7,7 +7,7 @@
 }:
 let
   inherit (lib.modules) mkIf mkDefault mkForce;
-  isWsl = config.my.machine.type == "wsl";
+  isWsl = config.dot.machine.type == "wsl";
 in
 {
   imports = [
@@ -15,7 +15,7 @@ in
   ];
 
   config = mkIf isWsl {
-    my = {
+    dot = {
       machine = {
         gpu = null;
         cpu = null;
@@ -41,14 +41,14 @@ in
       };
       virtual = {
         enable = mkForce false;
-        docker.enable = config.my.gui.enable;
+        docker.enable = config.dot.gui.enable;
       };
       services.oomd.enable = mkForce false;
       persistence.enable = mkForce false;
       # TODO: so many things rely on yubikey, so It should enable no WSL too
       yubikey.enable = mkForce false;
     };
-    hm.my = {
+    hm.dot = {
       fastfetch.startOnLogin = mkDefault false;
     };
     wsl = {
@@ -58,7 +58,7 @@ in
         interop.appendWindowsPath = false;
         network.gnerateHosts = false;
       };
-      defaultUser = config.my.name;
+      defaultUser = config.dot.name;
       startMenuLaunchers = true;
 
       interop = {
@@ -67,7 +67,7 @@ in
       };
 
       # enable integration with Docker Desktop (needed to be installed)
-      docker-desktop.enable = config.my.gui.enable;
+      docker-desktop.enable = config.dot.gui.enable;
     };
     networking = {
       networkmanager.enable = mkForce false;

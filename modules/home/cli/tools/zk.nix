@@ -5,12 +5,12 @@
   ...
 }:
 let
-  cfg = config.my.zk;
+  cfg = config.dot.zk;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.zk = {
+  options.dot.zk = {
     enable = mkEnableOption "zk";
   };
   config = mkIf cfg.enable {
@@ -61,14 +61,14 @@ in
 
         # Need to specify the theme or else glow will not output color
         tool = {
-          inherit (config.my) editor shell pager;
+          inherit (config.dot) editor shell pager;
           fzf-preview = "${lib.getExe pkgs.glow} --style ${config.home.sessionVariables.GLAMOUR_STYLE} {-1}";
         };
 
         alias =
           let
             # Respect the user's preferred shell when forwarding arguments.
-            argsVar = if config.my.shell == "fish" then "$argv" else "$@";
+            argsVar = if config.dot.shell == "fish" then "$argv" else "$@";
           in
           {
             list = "zk list --quiet -f oneline ${argsVar}";
@@ -122,7 +122,7 @@ in
           };
         };
 
-        extra.author = config.my.name;
+        extra.author = config.dot.name;
       };
     };
   };

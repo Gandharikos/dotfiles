@@ -7,10 +7,10 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.typst;
+  cfg = config.dot.typst;
 in
 {
-  options.my.typst = {
+  options.dot.typst = {
     enable = mkEnableOption "typst";
   };
 

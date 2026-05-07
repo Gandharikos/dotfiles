@@ -4,12 +4,12 @@
   ...
 }:
 let
-  cfg = config.my.ripgrep;
+  cfg = config.dot.ripgrep;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.ripgrep = {
+  options.dot.ripgrep = {
     enable = mkEnableOption "ripgrep";
   };
 

@@ -6,14 +6,14 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.my) gui;
-  cfg = config.my.gui.apps.wezterm;
+  inherit (config.dot) gui;
+  cfg = config.dot.gui.apps.wezterm;
   enable = gui.enable && cfg.enable;
 in
 {
-  options.my.gui.apps.wezterm = {
+  options.dot.gui.apps.wezterm = {
     enable = mkEnableOption "wezterm" // {
-      default = config.my.gui.terminal.default == "wezterm";
+      default = config.dot.gui.terminal.default == "wezterm";
     };
   };
 
@@ -25,7 +25,7 @@ in
 
     xdg.configFile."wezterm" = {
       recursive = true;
-      source = lib.my.relativeToConfig "wezterm";
+      source = lib.dot.relativeToConfig "wezterm";
     };
   };
 }

@@ -11,32 +11,32 @@ let
   inherit (lib) mkIf mkMerge;
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
-  cfg = config.my.networking.proxy;
+  cfg = config.dot.networking.proxy;
 
   # On NixOS: mihomo runs as a system service, config goes to /var/lib/mihomo/
   # On Darwin: clash-verge includes mihomo core, config goes to user's home
   proxyConfigPath =
     if isDarwin then
-      "${config.my.home}/.config/clash-verge/config.yaml"
+      "${config.dot.home}/.config/clash-verge/config.yaml"
     else
       "/var/lib/mihomo/config.yaml";
-  proxyConfigOwner = if isDarwin then config.my.name else "mihomo";
+  proxyConfigOwner = if isDarwin then config.dot.name else "mihomo";
   proxyConfigGroup = if isDarwin then "staff" else "mihomo";
   proxyConfigMode = if isDarwin then "0600" else "0400";
 
   proxySourceConfigPath =
     if isDarwin then
-      "${config.my.home}/.config/sing-box/clash.yaml"
+      "${config.dot.home}/.config/sing-box/clash.yaml"
     else
       "/run/secrets/proxy-source-config.yaml";
-  proxySourceConfigOwner = if isDarwin then config.my.name else "root";
+  proxySourceConfigOwner = if isDarwin then config.dot.name else "root";
   proxySourceConfigGroup = if isDarwin then "staff" else "root";
   proxySourceConfigMode = if isDarwin then "0600" else "0400";
 in
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
-  options.my.networking.proxy = {
+  options.dot.networking.proxy = {
     enable = mkEnableOption "proxy service (mihomo or sing-box)";
     autoStart = mkEnableOption "auto start proxy on boot (NixOS only)";
 

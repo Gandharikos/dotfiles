@@ -14,5 +14,5 @@
   # This should be change to the version of the NixOS and Home-manager release
   # that the configuration was generated with
   # https://nixos.org/manual/nixos/unstable/release-notes.html
-  system.stateVersion = if (_class == "nixos") then config.my.stateVersion else 6;
+  system.stateVersion = if (_class == "nixos") then config.dot.stateVersion else 6;
 }

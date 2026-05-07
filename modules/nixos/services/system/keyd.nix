@@ -7,11 +7,11 @@
 let
   inherit (lib.options) mkOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.services.keyd;
-  kbCfg = config.my.keyboard;
+  cfg = config.dot.services.keyd;
+  kbCfg = config.dot.keyboard;
 in
 {
-  options.my.services.keyd = {
+  options.dot.services.keyd = {
     enable = mkOption {
       type = lib.types.bool;
       default = kbCfg.backend == "keyd";

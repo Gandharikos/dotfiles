@@ -8,7 +8,7 @@ let
   inherit (lib.attrsets) attrByPath;
   inherit (lib.strings) optionalString;
   persist = attrByPath [
-    "my"
+    "dot"
     "persistence"
     "enable"
   ] false config;

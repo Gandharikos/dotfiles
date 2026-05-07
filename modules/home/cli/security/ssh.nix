@@ -9,13 +9,13 @@ let
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
   inherit (config.home) homeDirectory;
-  cfg = config.my.ssh;
-  yubikeys = config.my.yubikey.names;
+  cfg = config.dot.ssh;
+  yubikeys = config.dot.yubikey.names;
 in
 {
-  options.my.ssh = {
+  options.dot.ssh = {
     enable = mkEnableOption "SSH configuration" // {
-      default = config.my.security.enable;
+      default = config.dot.security.enable;
     };
 
     enableFido2 = mkEnableOption "YubiKey FIDO2 SSH authentication" // {
@@ -24,7 +24,7 @@ in
         When enabled: Only FIDO2 keys are used (maximum security, must have YubiKey).
         When disabled: Only id_ed25519 is used (traditional SSH).
 
-        YubiKeys are automatically discovered from my.yubikey.names.
+        YubiKeys are automatically discovered from dot.yubikey.names.
       '';
     };
   };
@@ -55,7 +55,7 @@ in
             # - If FIDO2 disabled: Only use id_ed25519
             identityFile =
               if cfg.enableFido2 then
-                # FIDO2 mode: Only YubiKey keys (from my.yubikey.identifiers)
+                # FIDO2 mode: Only YubiKey keys (from dot.yubikey.identifiers)
                 (map (name: "${homeDirectory}/.ssh/id_${name}") yubikeys)
               else
                 # Traditional mode: Only regular key

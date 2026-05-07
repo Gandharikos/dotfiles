@@ -23,7 +23,7 @@ let
     else
       { };
 
-  myPackagesOverlay =
+  dotPackagesOverlay =
     final: prev:
     let
       directory = ../packages;
@@ -33,7 +33,7 @@ let
       };
     in
     {
-      my = prev.lib.fix (
+      dot = prev.lib.fix (
         self:
         prev.lib.mapAttrs (
           _name: func: final.callPackage func (self // { inherit inputs; })
@@ -44,8 +44,8 @@ in
 {
   flake = {
     overlays = dynamicOverlaysSet // {
-      default = myPackagesOverlay;
-      my = myPackagesOverlay;
+      default = dotPackagesOverlay;
+      dot = dotPackagesOverlay;
     };
   };
 }

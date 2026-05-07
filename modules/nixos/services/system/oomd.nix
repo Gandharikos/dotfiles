@@ -6,12 +6,12 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkDefault mkIf;
-  cfg = config.my.services.oomd;
+  cfg = config.dot.services.oomd;
 in
 {
-  options.my.services.oomd = {
+  options.dot.services.oomd = {
     enable = mkEnableOption "oomd" // {
-      default = !config.my.services.earlyoom.enable;
+      default = !config.dot.services.earlyoom.enable;
     };
   };
   config = mkIf cfg.enable {

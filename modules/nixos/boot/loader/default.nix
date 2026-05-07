@@ -5,8 +5,8 @@ let
   inherit (lib.types) enum;
 in
 {
-  imports = lib.my.scanPaths ./.;
-  options.my.boot.loader = mkOption {
+  imports = lib.dot.scanPaths ./.;
+  options.dot.boot.loader = mkOption {
     type = enum [
       "none"
       "grub"

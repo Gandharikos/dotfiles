@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.my.atuin;
+  cfg = config.dot.atuin;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkMerge mkForce;
   inherit (lib.meta) getExe getExe';
@@ -36,12 +36,12 @@ let
   '';
 in
 {
-  options.my.atuin = {
+  options.dot.atuin = {
     enable = mkEnableOption "atuin";
     enableDesktop = mkEnableOption "atuin desktop" // {
       internal = true;
       readOnly = true;
-      default = config.my.gui.enable;
+      default = config.dot.gui.enable;
     };
     autoLogin = mkEnableOption "atuin auto login";
   };

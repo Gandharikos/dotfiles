@@ -4,12 +4,12 @@
   ...
 }:
 let
-  cfg = config.my.tealdeer;
+  cfg = config.dot.tealdeer;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.tealdeer = {
+  options.dot.tealdeer = {
     enable = mkEnableOption "tealdeer";
   };
 

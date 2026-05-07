@@ -5,8 +5,8 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (config.my.theme.colorscheme) palette;
-  cfg = config.my.theme.catppuccin;
+  inherit (config.dot.theme.colorscheme) palette;
+  cfg = config.dot.theme.catppuccin;
   accent = palette.${cfg.accent};
 in
 {

@@ -15,7 +15,7 @@ let
   ];
   browserMatches = builtins.map (appId: { "app-id" = "^${appId}$"; }) browserAppIds;
   pipTitle = "^(Picture-in-Picture|Picture in picture)$";
-  cfg = config.my.gui.desktop.niri;
+  cfg = config.dot.gui.desktop.niri;
 in
 {
   config = mkIf cfg.enable {

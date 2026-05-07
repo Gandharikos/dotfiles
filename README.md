@@ -981,7 +981,7 @@ Pre-commit hooks will automatically:
 
 - Use 2-space indentation (enforced by nixfmt)
 - Follow existing naming conventions:
-  - Module options: `my.category.subcategory.option`
+  - Module options: `dot.category.subcategory.option`
   - Functions: `camelCase`
   - Attributes: `kebab-case` or `camelCase` depending on context
 - Add comments for complex logic:
@@ -998,7 +998,7 @@ Pre-commit hooks will automatically:
     ...
   }: let
     inherit (lib) mkIf;
-    cfg = config.my.example;
+    cfg = config.dot.example;
   in {
     # Configuration here
   }
@@ -1059,9 +1059,9 @@ Pre-commit hooks will automatically:
      ...
    }: let
      inherit (lib) mkEnableOption mkIf;
-     cfg = config.my.category.module;
+     cfg = config.dot.category.module;
    in {
-     options.my.category.module = {
+     options.dot.category.module = {
        enable = mkEnableOption "module description";
        # Additional options
      };
@@ -1113,7 +1113,7 @@ just build hostname
 just switch hostname
 
 # Test specific module
-nix eval .#nixosConfigurations.hostname.config.my.module
+nix eval .#nixosConfigurations.hostname.config.dot.module
 ```
 
 **Offline testing:**

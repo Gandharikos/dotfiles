@@ -4,7 +4,7 @@
   ...
 }:
 let
-  enable = config.my.machine.type == "workstation";
+  enable = config.dot.machine.type == "workstation";
 in
 {
   services.scx = {

@@ -21,7 +21,7 @@ in
       # LESSHISTFILE=-
       # LESSCOLORIZER=bat
     ''
-    + optionalString (config.my.keyboard.layout == "colemak") ''
+    + optionalString (config.dot.keyboard.layout == "colemak") ''
       #command
       n left-scroll
       o right-scroll

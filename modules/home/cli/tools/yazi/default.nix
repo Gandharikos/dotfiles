@@ -6,13 +6,13 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkBefore;
-  cfg = config.my.yazi;
+  cfg = config.dot.yazi;
 in
-with config.my.keyboard.keys;
+with config.dot.keyboard.keys;
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
-  options.my.yazi = {
+  options.dot.yazi = {
     enable = mkEnableOption "yazi";
   };
 

@@ -11,7 +11,7 @@
 let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv) isLinux;
-  inherit (config) my;
+  inherit (config) dot;
   home = config.home.homeDirectory;
   # define default applications for some url schemes.
   browser = [
@@ -63,11 +63,11 @@ let
   images = [ "image/*" ];
   associations =
     (lib.genAttrs editor (_: [
-      "${if my.editor == "helix" then "Helix" else my.editor}.desktop"
+      "${if dot.editor == "helix" then "Helix" else dot.editor}.desktop"
     ]))
     // (lib.genAttrs media (_: [ "mpv.desktop" ]))
     // (lib.genAttrs images (_: [ "viewnior.desktop" ]))
-    // (lib.genAttrs browser (_: [ "${my.gui.browser.desktopId}" ]))
+    // (lib.genAttrs browser (_: [ "${dot.gui.browser.desktopId}" ]))
     // {
       "application/pdf" = [ "org.pwmt.zathura.desktop" ];
       "x-scheme-handler/spotify" = [ "spotify.desktop" ];
@@ -123,7 +123,7 @@ in
     #   ls -l /run/current-system/sw/share/applications/
     # the user-level desktop entries can be list by command(user ryan):
     #  ls /etc/profiles/per-user/ryan/share/applications/
-    mimeApps = mkIf (my.gui.enable && isLinux) {
+    mimeApps = mkIf (dot.gui.enable && isLinux) {
       enable = true;
       # let `xdg-open` to open the url with the correct application.
       defaultApplications = associations;

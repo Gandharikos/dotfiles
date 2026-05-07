@@ -7,7 +7,7 @@
 let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
   inherit (lib.strings) optionalString;
-  isColemak = config.my.keyboard.layout == "colemak";
+  isColemak = config.dot.keyboard.layout == "colemak";
 
   clipboardCmd = if isDarwin then "pbcopy" else "${pkgs.wl-clipboard}/bin/wl-copy";
 in
@@ -68,7 +68,7 @@ in
     }
     # {
     #   plugin = smart-splits;
-    #   extraConfig = with config.my.keyboard.keys; ''
+    #   extraConfig = with config.dot.keyboard.keys; ''
     #     set -g @smart-splits_no_wrap \'\'
     #     set -g @smart-splits_move_left_key  'C-${h}' # key-mapping for navigation.
     #     set -g @smart-splits_move_down_key  'C-${j}' #  --"--

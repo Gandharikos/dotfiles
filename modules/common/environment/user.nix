@@ -6,10 +6,10 @@
   ...
 }:
 let
-  inherit (config.my) name home;
+  inherit (config.dot) name home;
   inherit (lib.filesystem) listFilesRecursive;
   inherit (lib.lists) forEach;
-  shell = builtins.getAttr config.my.shell pkgs;
+  shell = builtins.getAttr config.dot.shell pkgs;
 in
 {
   environment = {

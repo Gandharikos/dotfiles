@@ -8,7 +8,7 @@
 let
   inherit (lib.modules) mkIf mkForce mkDefault;
   inherit (lib.options) mkEnableOption;
-  cfg = config.my.boot;
+  cfg = config.dot.boot;
 in
 {
   # How to enter setup mode - msi motherboard
@@ -24,10 +24,10 @@ in
     inputs.lanzaboote.nixosModules.lanzaboote
   ];
 
-  options.my.boot.secureBoot = mkEnableOption "secure boot";
+  options.dot.boot.secureBoot = mkEnableOption "secure boot";
 
   config = mkIf cfg.secureBoot {
-    my.boot.loader = mkForce "none";
+    dot.boot.loader = mkForce "none";
 
     environment.systemPackages = [
       # For debugging and troubleshooting Secure Boot.

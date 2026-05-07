@@ -11,7 +11,7 @@
 
     ### **Module Organization:**
     - **Platform separation**: `modules/nixos/`, `modules/darwin/`, `modules/home/`
-    - **Common modules**: Shared via `lib.my.getFile "modules/common/..."`
+    - **Common modules**: Shared via `lib.dot.getFile "modules/common/..."`
     - **Suite-based grouping**: Related functionality in `suites/` modules
     - **Archetype profiles**: High-level configurations in `archetypes/`
     - **Auto-discovery**: Modules automatically discovered via `importModulesRecursive`

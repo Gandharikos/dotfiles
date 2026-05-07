@@ -7,13 +7,13 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.my) gui;
+  inherit (config.dot) gui;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  cfg = config.my.services.wluma;
+  cfg = config.dot.services.wluma;
   enable = gui.enable && cfg.enable && isLinux;
 in
 {
-  options.my.services.wluma = {
+  options.dot.services.wluma = {
     enable = mkEnableOption "wluma" // {
       default = true;
     };

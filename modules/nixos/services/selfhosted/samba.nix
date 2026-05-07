@@ -5,12 +5,12 @@
   ...
 }:
 let
-  cfg = config.my.services.samba;
+  cfg = config.dot.services.samba;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.services.samba = {
+  options.dot.services.samba = {
     enable = mkEnableOption "Enable Samba";
   };
   # TODO: completed this

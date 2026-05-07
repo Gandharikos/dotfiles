@@ -5,7 +5,7 @@
     (import ../common/disko/luks-btrfs-tmpfs.nix { })
   ];
 
-  my = {
+  dot = {
     boot = {
       secureBoot = false;
       tmpOnTmpfs = false;

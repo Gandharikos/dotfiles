@@ -7,7 +7,7 @@
 let
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf;
-  enable = config.my.gui.desktop.wayland.enable && !config.services.desktopManager.cosmic.enable;
+  enable = config.dot.gui.desktop.wayland.enable && !config.services.desktopManager.cosmic.enable;
 in
 {
   config = mkIf enable {

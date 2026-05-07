@@ -7,13 +7,13 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.my) gui;
+  inherit (config.dot) gui;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  cfg = config.my.services.udiskie;
+  cfg = config.dot.services.udiskie;
   enable = gui.enable && cfg.enable && isLinux;
 in
 {
-  options.my.services.udiskie = {
+  options.dot.services.udiskie = {
     enable = mkEnableOption "udiskie" // {
       default = true;
     };

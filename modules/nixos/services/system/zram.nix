@@ -4,12 +4,12 @@
   ...
 }:
 let
-  cfg = config.my.services.zram;
+  cfg = config.dot.services.zram;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.services.zram = {
+  options.dot.services.zram = {
     enable = mkEnableOption "Enable zram swap";
   };
   config = mkIf cfg.enable {

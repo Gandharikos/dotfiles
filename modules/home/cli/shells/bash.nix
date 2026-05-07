@@ -6,10 +6,10 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.my.bash;
+  cfg = config.dot.bash;
 in
 {
-  options.my.bash = {
+  options.dot.bash = {
     enable = mkEnableOption "bash" // {
       default = true;
     };

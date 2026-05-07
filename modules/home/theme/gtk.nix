@@ -7,7 +7,7 @@
 let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  enable = config.my.gui.enable && isLinux;
+  enable = config.dot.gui.enable && isLinux;
 in
 {
   config = mkIf enable {

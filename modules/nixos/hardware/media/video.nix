@@ -4,7 +4,7 @@
   ...
 }:
 let
-  inherit (lib.my) isx86Linux;
+  inherit (lib.dot) isx86Linux;
 in
 {
   hardware.graphics = {

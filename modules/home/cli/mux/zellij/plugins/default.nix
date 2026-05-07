@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
   programs.zellij.settings.plugins = {
     compact-bar = {
       _props = {

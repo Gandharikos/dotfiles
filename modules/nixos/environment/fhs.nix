@@ -5,12 +5,12 @@
   ...
 }:
 let
-  cfg = config.my.fhs;
+  cfg = config.dot.fhs;
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
 in
 {
-  options.my.fhs = {
+  options.dot.fhs = {
     enable = mkEnableOption "Enable FHS environment";
   };
 

@@ -6,7 +6,7 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  cfg = config.my.theme.tokyonight;
+  cfg = config.dot.theme.tokyonight;
 in
 {
   config = mkIf cfg.enable {

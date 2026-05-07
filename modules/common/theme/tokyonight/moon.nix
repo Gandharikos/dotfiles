@@ -68,12 +68,12 @@ let
     warning = "#ffc777";
     yellow = "#ffc777";
   };
-  cfg = config.my.theme.tokyonight;
+  cfg = config.dot.theme.tokyonight;
   enable = cfg.enable && cfg.style == "moon";
 in
 {
   config = mkIf enable {
-    my.theme = {
+    dot.theme = {
       wallpaper = inputs.wallpapers.tokyonight.tokyo-night-street.path;
       # I hated base16 scheme; so I made my own
       colorscheme = {

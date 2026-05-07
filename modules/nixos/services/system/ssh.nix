@@ -8,11 +8,11 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (lib.strings) optionalString;
-  persist = config.my.persistence.enable;
-  cfg = config.my.services.ssh;
+  persist = config.dot.persistence.enable;
+  cfg = config.dot.services.ssh;
 in
 {
-  options.my.services.ssh = {
+  options.dot.services.ssh = {
     enable = mkEnableOption "ssh" // {
       default = true;
     };
@@ -67,7 +67,7 @@ in
         IgnoreRhosts = "yes";
         MaxAuthTries = 3;
 
-        AllowUsers = [ config.my.name ];
+        AllowUsers = [ config.dot.name ];
       };
       openFirewall = true;
       hostKeys = [
@@ -85,7 +85,7 @@ in
     };
 
     environment.etc."ssh/banner".text = ''
-      Welcome to ${config.networking.hostName} @ ${config.my.stateVersion}!
+      Welcome to ${config.networking.hostName} @ ${config.dot.stateVersion}!
     '';
 
     # yubikey login / sudo

@@ -5,7 +5,7 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (config.my.theme) tokyonight colorscheme;
+  inherit (config.dot.theme) tokyonight colorscheme;
 
   cfg = tokyonight;
   enable = cfg.enable && config.console.enable;

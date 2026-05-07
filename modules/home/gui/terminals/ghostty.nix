@@ -10,9 +10,9 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.types) str bool;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.my) gui;
-  inherit (config.my.gui) terminal;
-  cfg = config.my.gui.apps.ghostty;
+  inherit (config.dot) gui;
+  inherit (config.dot.gui) terminal;
+  cfg = config.dot.gui.apps.ghostty;
   enable = gui.enable && cfg.enable;
   ghostty-shaders = pkgs.stdenv.mkDerivation {
     name = "ghostty-shaders";
@@ -29,7 +29,7 @@ let
   };
 in
 {
-  options.my.gui.apps.ghostty = {
+  options.dot.gui.apps.ghostty = {
     enable = mkEnableOption "ghostty" // {
       default = terminal.default == "ghostty";
     };
@@ -51,7 +51,7 @@ in
   config = mkIf enable {
     xdg.configFile."ghostty/shaders".source = ghostty-shaders;
 
-    programs.ghostty = with config.my.keyboard.keys; {
+    programs.ghostty = with config.dot.keyboard.keys; {
       enable = true;
       # NOTE: It's broken on macOS, so you should to install it by brew.
       # See: https://github.com/NixOS/nixpkgs/issues/388984

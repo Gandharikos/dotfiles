@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.my.nix-index;
+  cfg = config.dot.nix-index;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
@@ -14,7 +14,7 @@ in
     inputs.nix-index-database.homeModules.nix-index
   ];
 
-  options.my.nix-index = {
+  options.dot.nix-index = {
     enable = mkEnableOption "nix-index";
   };
 

@@ -4,12 +4,12 @@
   ...
 }:
 let
-  cfg = config.my.nix-your-shell;
+  cfg = config.dot.nix-your-shell;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.nix-your-shell = {
+  options.dot.nix-your-shell = {
     enable = mkEnableOption "nix-your-shell";
   };
 

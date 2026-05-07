@@ -12,8 +12,8 @@ let
   bat' = getExe pkgs.bat;
 in
 {
-  imports = lib.my.scanPaths ./.;
-  options.my = {
+  imports = lib.dot.scanPaths ./.;
+  options.dot = {
     pager = mkOption {
       type = str;
       default = "${less'} -FR";
@@ -28,8 +28,8 @@ in
 
   config = {
     home.sessionVariables = {
-      PAGER = config.my.pager;
-      MANPAGER = config.my.manpager;
+      PAGER = config.dot.pager;
+      MANPAGER = config.dot.manpager;
     };
   };
 }

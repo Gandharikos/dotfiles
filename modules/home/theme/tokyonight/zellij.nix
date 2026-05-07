@@ -6,17 +6,17 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (config.my.theme.colorscheme) slug;
-  enable = cfg.enable && config.my.zellij.enable;
-  inherit (config.my.theme) tokyonight colorscheme;
+  inherit (config.dot.theme.colorscheme) slug;
+  enable = cfg.enable && config.dot.zellij.enable;
+  inherit (config.dot.theme) tokyonight colorscheme;
   inherit (colorscheme) palette;
-  inherit (config.my.theme.general) transparent pad;
+  inherit (config.dot.theme.general) transparent pad;
   cfg = tokyonight;
-  zjstatusWasm = "${pkgs.my.zjstatus}/bin/zjstatus.wasm";
+  zjstatusWasm = "${pkgs.dot.zjstatus}/bin/zjstatus.wasm";
 in
 {
   config = mkIf enable {
-    my.zellij.template = {
+    dot.zellij.template = {
       default_tab_template = {
         _children = [
           {

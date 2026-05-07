@@ -10,7 +10,7 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe;
   inherit (lib.strings) escapeShellArgs hasInfix;
-  inherit (lib.my) withUWSMArgs;
+  inherit (lib.dot) withUWSMArgs;
   inherit (lib.types)
     enum
     nullOr
@@ -18,13 +18,13 @@ let
     listOf
     coercedTo
     ;
-  inherit (lib.my) scanPaths;
-  inherit (config.my.gui) browser desktop;
+  inherit (lib.dot) scanPaths;
+  inherit (config.dot.gui) browser desktop;
   commandType = coercedTo str (
     value:
     if hasInfix " " value then
       throw ''
-        `my.gui.browser.command` accepts either an argv list or a single
+        `dot.gui.browser.command` accepts either an argv list or a single
         program path. Use a list for commands with arguments.
       ''
     else
@@ -34,14 +34,14 @@ in
 {
   imports = scanPaths ./.;
 
-  options.my.gui.browser = {
+  options.dot.gui.browser = {
     default = mkOption {
       type = nullOr (enum [
         "zen"
         "google-chrome"
         "firefox"
       ]);
-      default = if config.my.gui.enable && osClass == "nixos" then "zen" else null;
+      default = if config.dot.gui.enable && osClass == "nixos" then "zen" else null;
       description = "The browser to use";
     };
     desktopId = mkOption {
@@ -75,7 +75,7 @@ in
       readOnly = true;
       description = ''
         The shell-escaped browser command derived from
-        `my.gui.browser.command`.
+        `dot.gui.browser.command`.
       '';
     };
   };

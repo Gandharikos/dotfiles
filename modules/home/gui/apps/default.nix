@@ -8,10 +8,10 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) optionals;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.my) gui;
+  inherit (config.dot) gui;
 in
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
   config = mkIf gui.enable {
     home.packages =

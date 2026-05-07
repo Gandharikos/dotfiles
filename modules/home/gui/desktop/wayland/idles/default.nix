@@ -16,8 +16,8 @@ let
     ;
   inherit (lib.meta) getExe getExe';
   inherit (lib.strings) escapeShellArgs;
-  inherit (config.my.gui) desktop;
-  cfg = config.my.gui.desktop.idle;
+  inherit (config.dot.gui) desktop;
+  cfg = config.dot.gui.desktop.idle;
 
   # Command executables
   loginctl' = getExe' pkgs.systemd "loginctl";
@@ -133,9 +133,9 @@ let
   ];
 in
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
-  options.my.gui.desktop.idle = {
+  options.dot.gui.desktop.idle = {
     default = mkOption {
       type = nullOr (enum [
         "hypridle"
@@ -143,11 +143,11 @@ in
         "noctalia-shell"
       ]);
       default =
-        if config.my.gui.desktop.shell.default == "noctalia-shell" then
+        if config.dot.gui.desktop.shell.default == "noctalia-shell" then
           "noctalia-shell"
-        else if config.my.gui.desktop.default == "hyprland" then
+        else if config.dot.gui.desktop.default == "hyprland" then
           "hypridle"
-        else if config.my.gui.desktop.default == "niri" then
+        else if config.dot.gui.desktop.default == "niri" then
           "swayidle"
         else
           null;

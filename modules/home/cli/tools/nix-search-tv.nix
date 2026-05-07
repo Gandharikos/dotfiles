@@ -8,10 +8,10 @@ let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (lib.lists) optionals;
-  cfg = config.my.nix-search-tv;
+  cfg = config.dot.nix-search-tv;
 in
 {
-  options.my.nix-search-tv = {
+  options.dot.nix-search-tv = {
     enable = mkEnableOption "nix-search-tv";
   };
 

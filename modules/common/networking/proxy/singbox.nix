@@ -363,7 +363,7 @@ let
   mkSingBoxGenerateConfig = args: mkSingBoxGenerateConfigImpl (builtins.removeAttrs args [ "pkgs" ]);
 in
 {
-  options.my.networking.proxy.singBox = {
+  options.dot.networking.proxy.singBox = {
     extraOutbounds = mkOption {
       type = listOf attrs;
       default = [ ];

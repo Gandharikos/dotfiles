@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  monocleWasm = "file:${pkgs.my.monocle}/bin/monocle.wasm";
+  monocleWasm = "file:${pkgs.dot.monocle}/bin/monocle.wasm";
   launchMonocle = {
     LaunchOrFocusPlugin = {
       _args = [ monocleWasm ];

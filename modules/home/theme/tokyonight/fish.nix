@@ -7,10 +7,10 @@
 let
   inherit (lib.modules) mkIf;
   src = pkgs.vimPlugins.tokyonight-nvim;
-  cfg = config.my.theme.tokyonight;
-  fishCfg = config.my.fish;
+  cfg = config.dot.theme.tokyonight;
+  fishCfg = config.dot.fish;
   enable = cfg.enable && fishCfg.enable;
-  inherit (config.my.theme.colorscheme) slug;
+  inherit (config.dot.theme.colorscheme) slug;
 in
 {
   config = mkIf enable {

@@ -6,12 +6,12 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (lib.my) capitalize;
+  inherit (lib.dot) capitalize;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  cfg = config.my.theme.tokyonight;
-  inherit (config.my.theme.colorscheme) palette;
+  cfg = config.dot.theme.tokyonight;
+  inherit (config.dot.theme.colorscheme) palette;
 
-  enable = cfg.enable && config.my.gui.enable && isLinux;
+  enable = cfg.enable && config.dot.gui.enable && isLinux;
   themeName = "Tokyonight-${capitalize cfg.style}";
 
   iniFormat = pkgs.formats.ini { };
@@ -33,7 +33,7 @@ let
   # Catppuccin uses flat design without rounded corners or shadows by default
   # So we don't generate SVG files, just use solid colors
 
-  themeFile = iniFormat.generate "fcitx5-${config.my.theme.colorscheme.slug}-theme.conf" {
+  themeFile = iniFormat.generate "fcitx5-${config.dot.theme.colorscheme.slug}-theme.conf" {
     Metadata = {
       Name = themeName;
       Version = 0.1;

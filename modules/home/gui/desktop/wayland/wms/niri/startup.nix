@@ -7,9 +7,9 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe' getExe;
-  inherit (lib.my) uwsmAppArgs withUWSMArgs withUWSMArgs';
+  inherit (lib.dot) uwsmAppArgs withUWSMArgs withUWSMArgs';
   inherit (config) gtk;
-  cfg = config.my.gui.desktop.niri;
+  cfg = config.dot.gui.desktop.niri;
 
   gsettings = getExe' pkgs.glib "gsettings";
   gnomeSchema = "org.gnome.desktop.interface";

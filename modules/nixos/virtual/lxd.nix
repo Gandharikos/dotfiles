@@ -6,14 +6,14 @@
   ...
 }:
 let
-  cfg = config.my.virtual.lxd;
+  cfg = config.dot.virtual.lxd;
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
 in
 {
-  options.my.virtual.lxd = {
+  options.dot.virtual.lxd = {
     enable = mkEnableOption "Enable LXD" // {
-      default = config.my.virtual.enable;
+      default = config.dot.virtual.enable;
     };
   };
 

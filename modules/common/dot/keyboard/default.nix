@@ -12,7 +12,7 @@ let
     addCheck
     str
     ;
-  cfg = config.my.keyboard;
+  cfg = config.dot.keyboard;
   letters = lib.stringToCharacters "abcdefghijklmnopqrstuvwxyz";
   upperLetters = lib.stringToCharacters "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   char = addCheck str (s: builtins.stringLength s == 1);
@@ -25,7 +25,7 @@ let
     };
 in
 {
-  options.my.keyboard = {
+  options.dot.keyboard = {
     # Note: I need to use general keyboard layout for my laptop and for Enterprise desktop
     layout = mkOption {
       type = enum [
@@ -49,7 +49,7 @@ in
     keys = lib.genAttrs (letters ++ upperLetters) mkLetterOption;
   };
 
-  options.my.services = {
+  options.dot.services = {
     kanata = {
       enable = mkOption {
         type = lib.types.bool;
@@ -75,7 +75,7 @@ in
       ];
     }
     (mkIf (cfg.layout == "colemak") {
-      my.keyboard.keys = {
+      dot.keyboard.keys = {
         h = "n";
         j = "e";
         k = "i";

@@ -1,4 +1,4 @@
 { lib, ... }:
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 }

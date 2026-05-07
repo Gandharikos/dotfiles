@@ -6,15 +6,15 @@
   ...
 }:
 let
-  inherit (lib.my) scanPaths;
+  inherit (lib.dot) scanPaths;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.my.gui) desktop;
+  inherit (config.dot.gui) desktop;
   cfg = desktop.niri;
 in
 {
   imports = [ inputs.niri.homeModules.niri ] ++ scanPaths ./.;
-  options.my.gui.desktop.niri = {
+  options.dot.gui.desktop.niri = {
     enable = mkEnableOption "Enable Niri" // {
       default = desktop.wayland.enable && desktop.default == "niri";
       internal = true;

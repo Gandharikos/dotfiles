@@ -22,6 +22,6 @@ in
         });
       '';
     };
-    soteria.enable = config.my.gui.enable && !config.my.gui.desktop.cosmic.enable;
+    soteria.enable = config.dot.gui.enable && !config.dot.gui.desktop.cosmic.enable;
   };
 }

@@ -4,7 +4,7 @@
   ...
 }:
 let
-  inherit (lib.my) scanPaths relativeToConfig;
+  inherit (lib.dot) scanPaths relativeToConfig;
   inherit (lib.options) mkOption;
   inherit (lib.types)
     enum
@@ -15,12 +15,12 @@ let
     coercedTo
     attrs
     ;
-  inherit (config) my;
+  inherit (config) dot;
 in
 {
   imports = scanPaths ./.;
 
-  options.my.theme = {
+  options.dot.theme = {
     default = mkOption {
       type = nullOr (enum [
         "tokyonight"
@@ -58,12 +58,12 @@ in
     };
     avatar = mkOption {
       type = nullOr (coercedTo package toString path);
-      default = if my.gui.enable then (relativeToConfig "avatars/makima.jpg") else null;
+      default = if dot.gui.enable then (relativeToConfig "avatars/makima.jpg") else null;
       description = "The avatar of the user";
     };
     wallpaper = mkOption {
       type = nullOr (coercedTo package toString path);
-      default = if my.gui.enable then ./nix.png else null;
+      default = if dot.gui.enable then ./nix.png else null;
       description = "The wallpaper of the system";
     };
   };

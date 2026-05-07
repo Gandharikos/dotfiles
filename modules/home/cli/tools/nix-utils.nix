@@ -5,12 +5,12 @@
   ...
 }:
 let
-  cfg = config.my.nix-utils;
+  cfg = config.dot.nix-utils;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.nix-utils = {
+  options.dot.nix-utils = {
     enable = mkEnableOption "nix-utils" // {
       default = true;
     };

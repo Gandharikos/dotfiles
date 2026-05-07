@@ -6,7 +6,7 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (config.my.gui.desktop.xorg) enable;
+  inherit (config.dot.gui.desktop.xorg) enable;
 in
 {
   config = mkIf enable {

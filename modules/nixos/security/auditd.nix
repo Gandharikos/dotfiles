@@ -4,7 +4,7 @@
   ...
 }:
 let
-  cfg = config.my.security.auditd;
+  cfg = config.dot.security.auditd;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.modules) mkIf;
   inherit (lib.types)
@@ -14,9 +14,9 @@ let
     ;
 in
 {
-  options.my.security.auditd = {
+  options.dot.security.auditd = {
     enable = mkEnableOption "Enable auditd" // {
-      default = config.my.security.enable;
+      default = config.dot.security.enable;
     };
 
     backlogLimit = mkOption {

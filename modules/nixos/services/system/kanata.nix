@@ -6,9 +6,9 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  cfg = config.my.services.kanata;
+  cfg = config.dot.services.kanata;
   kanataConfig =
-    (import ../../../common/my/keyboard/kanata.nix { inherit lib pkgs; }).mkKanataConfig
+    (import ../../../common/dot/keyboard/kanata.nix { inherit lib pkgs; }).mkKanataConfig
       { };
 in
 {

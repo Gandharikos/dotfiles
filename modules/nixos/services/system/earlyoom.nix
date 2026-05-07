@@ -10,12 +10,12 @@ let
   inherit (lib.types) listOf str;
 
   inherit (builtins) concatStringsSep;
-  cfg = config.my.services.earlyoom;
+  cfg = config.dot.services.earlyoom;
 in
 {
-  options.my.services.earlyoom = {
+  options.dot.services.earlyoom = {
     enable = mkEnableOption "earlyoom" // {
-      default = config.my.gui.enable;
+      default = config.dot.gui.enable;
     };
     avoid = mkOption {
       type = listOf str;

@@ -9,12 +9,14 @@ let
   inherit (lib.meta) getExe';
   inherit (lib.modules) mkIf;
   inherit (lib.strings) escapeShellArgs;
-  inherit (lib.my) uwsmAppArgs;
-  inherit (config.my.gui) desktop;
+  inherit (lib.dot) uwsmAppArgs;
+  inherit (config.dot.gui) desktop;
 
   dmsEnabled = config.programs.dank-material-shell.enable or false;
   enable =
-    desktop.wayland.enable && config.my.gui.desktop.shot.default == "dank-material-shell" && dmsEnabled;
+    desktop.wayland.enable
+    && config.dot.gui.desktop.shot.default == "dank-material-shell"
+    && dmsEnabled;
 
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
   dmsExe = getExe' dmsPkg "dms";

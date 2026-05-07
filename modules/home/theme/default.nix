@@ -1,15 +1,15 @@
 { lib, config, ... }:
 let
-  inherit (lib.my) scanPaths;
+  inherit (lib.dot) scanPaths;
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.types) str;
   inherit (lib.modules) mkIf;
-  inherit (config.my) theme;
+  inherit (config.dot) theme;
 in
 {
   imports = scanPaths ./.;
 
-  options.my.theme.general = {
+  options.dot.theme.general = {
     transparent = mkEnableOption "Enable tmux transparent" // {
       default = true;
     };

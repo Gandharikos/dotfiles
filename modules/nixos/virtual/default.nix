@@ -1,8 +1,8 @@
 { lib, ... }:
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
-  options.my.virtual = {
+  options.dot.virtual = {
     enable = lib.mkEnableOption "Virtualisation";
   };
 }

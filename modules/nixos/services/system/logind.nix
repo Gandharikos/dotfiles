@@ -7,8 +7,8 @@ let
   inherit (lib.options) mkOption;
   inherit (lib.modules) mkIf;
   inherit (lib.types) enum;
-  isLaptop = config.my.machine.type == "laptop";
-  cfg = config.my.services.logind;
+  isLaptop = config.dot.machine.type == "laptop";
+  cfg = config.dot.services.logind;
   lidActions = [
     "ignore"
     "poweroff"
@@ -23,7 +23,7 @@ let
   ];
 in
 {
-  options.my.services.logind = {
+  options.dot.services.logind = {
     lidSwitch = mkOption {
       type = enum lidActions;
       default = "suspend";
@@ -58,7 +58,7 @@ in
     };
 
     # https://wiki.debian.org/Suspend#Disable_suspend_and_hibernation
-    systemd.sleep.settings.Sleep = mkIf (!config.my.gui.enable) {
+    systemd.sleep.settings.Sleep = mkIf (!config.dot.gui.enable) {
       AllowSuspend = false;
       AllowHibernation = false;
       AllowSuspendThenHibernate = false;

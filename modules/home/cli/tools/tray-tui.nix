@@ -6,10 +6,10 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.tray-tui;
+  cfg = config.dot.tray-tui;
 in
 {
-  options.my.tray-tui = {
+  options.dot.tray-tui = {
     enable = mkEnableOption "tray-tui";
   };
 

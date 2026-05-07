@@ -9,12 +9,12 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.types) str path;
-  cfg = config.my.security.gpg;
+  cfg = config.dot.security.gpg;
 in
 {
-  options.my.security.gpg = {
+  options.dot.security.gpg = {
     enable = mkEnableOption "my security gpg" // {
-      default = config.my.security.enable;
+      default = config.dot.security.enable;
     };
 
     signGitCommits = mkOption {

@@ -1,5 +1,5 @@
 {
-  my = {
+  dot = {
     machine.type = "laptop";
     keyboard = {
       layout = "qwerty";

@@ -6,12 +6,12 @@
 let
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.types) enum;
-  inherit (config) my;
+  inherit (config) dot;
 in
 {
-  options.my.theme.tokyonight = {
+  options.dot.theme.tokyonight = {
     enable = mkEnableOption "Tokyonight theme" // {
-      default = my.theme.default == "tokyonight";
+      default = dot.theme.default == "tokyonight";
     };
 
     style = mkOption {

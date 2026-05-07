@@ -4,12 +4,12 @@
   ...
 }:
 let
-  cfg = config.my.starship;
+  cfg = config.dot.starship;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.starship = {
+  options.dot.starship = {
     enable = mkEnableOption "starship";
   };
 

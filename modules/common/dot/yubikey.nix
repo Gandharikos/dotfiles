@@ -7,7 +7,7 @@ let
   inherit (lib.types) listOf str;
 in
 {
-  options.my.yubikey = {
+  options.dot.yubikey = {
     enable = mkEnableOption "YubiKey support" // {
       default = true;
     };

@@ -1,8 +1,8 @@
 { lib, ... }:
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
-  options.my.langs = {
+  options.dot.langs = {
     enable = lib.mkEnableOption "development environment" // {
       default = true;
     };

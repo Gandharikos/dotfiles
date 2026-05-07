@@ -6,7 +6,7 @@
   ...
 }:
 let
-  cfg = config.my.networking.proxy;
+  cfg = config.dot.networking.proxy;
   inherit (lib) mkIf mkForce;
   generateConfig = proxyCommon.mkSingBoxGenerateConfig {
     name = "generate-sing-box-config";

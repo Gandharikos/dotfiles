@@ -4,8 +4,8 @@
   ...
 }:
 let
-  inherit (config.my) name;
-  cfgUser = config.users.users."${config.my.name}";
+  inherit (config.dot) name;
+  cfgUser = config.users.users."${config.dot.name}";
   ifTheyExist = groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
 in
 {
@@ -31,7 +31,7 @@ in
     users = {
       "${name}" = {
         # we have to use initialHashedPassword here when using tmpfs for /
-        inherit (config.my) initialHashedPassword;
+        inherit (config.dot) initialHashedPassword;
         group = "users";
         # set isNormalUser to true to create a home directory
         isNormalUser = true;

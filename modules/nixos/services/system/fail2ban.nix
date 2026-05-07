@@ -6,10 +6,10 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.my.services.fail2ban;
+  cfg = config.dot.services.fail2ban;
 in
 {
-  options.my.services.fail2ban = {
+  options.dot.services.fail2ban = {
     enable = mkEnableOption "fail2ban" // {
       default = true;
     };

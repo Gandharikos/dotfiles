@@ -8,10 +8,10 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
 
-  cfg = config.my.services.logrotate;
+  cfg = config.dot.services.logrotate;
 in
 {
-  options.my.services.logrotate = {
+  options.dot.services.logrotate = {
     enable = mkEnableOption "logrotate";
   };
 

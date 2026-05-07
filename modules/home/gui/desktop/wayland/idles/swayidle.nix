@@ -7,7 +7,7 @@ let
   inherit (lib.lists) optionals;
   inherit (lib.modules) mkIf;
 
-  inherit (config.my.gui) desktop;
+  inherit (config.dot.gui) desktop;
   cfg = desktop.idle;
   inherit (cfg) timeout;
   inherit (cfg.commands)

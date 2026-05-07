@@ -6,25 +6,25 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (lib.my) capitalize;
+  inherit (lib.dot) capitalize;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.my.theme) tokyonight colorscheme;
+  inherit (config.dot.theme) tokyonight colorscheme;
   cfg = tokyonight;
-  enable = cfg.enable && config.my.gui.enable && isLinux;
+  enable = cfg.enable && config.dot.gui.enable && isLinux;
   xcursorName = "Bibata-Tokyonight-${capitalize cfg.style}";
   hyprcursorName = "${xcursorName}-Hyprcursor";
-  xcursorPackage = pkgs.my.bibata-xcursor.override {
+  xcursorPackage = pkgs.dot.bibata-xcursor.override {
     cursorThemeName = xcursorName;
     inherit (colorscheme.palette.cursor) baseColor outlineColor watchBackgroundColor;
   };
-  hyprcursorPackage = pkgs.my.bibata-hyprcursor.override {
+  hyprcursorPackage = pkgs.dot.bibata-hyprcursor.override {
     cursorThemeName = hyprcursorName;
     inherit (colorscheme.palette.cursor) baseColor outlineColor watchBackgroundColor;
   };
 in
 {
   config = mkIf enable {
-    my.theme.cursor = {
+    dot.theme.cursor = {
       name = xcursorName;
       package = xcursorPackage;
       size = 24;

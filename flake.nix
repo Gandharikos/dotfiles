@@ -10,7 +10,7 @@
     }:
     let
       lib = inputs.nixpkgs.lib.extend (
-        final: _: { my = import ./lib { lib = final; }; } // home-manager.lib
+        final: _: { dot = import ./lib { lib = final; }; } // home-manager.lib
       );
       specialArgs = { inherit lib; };
     in

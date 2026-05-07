@@ -8,11 +8,11 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (lib.meta) getExe';
-  cfg = config.my.virtual.distrobox;
+  cfg = config.dot.virtual.distrobox;
   distrobox' = getExe' pkgs.distrobox "distrobox";
 in
 {
-  options.my.virtual.distrobox = {
+  options.dot.virtual.distrobox = {
     enable = mkEnableOption "Enable distrobox";
   };
 

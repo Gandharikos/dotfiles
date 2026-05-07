@@ -4,7 +4,7 @@
 
 Automatic proxy implementation based on environment:
 
-- Mode is automatically determined by `my.gui.enable`:
+- Mode is automatically determined by `dot.gui.enable`:
   - **`gui.enable = true`**: Clash Verge GUI (desktop environments)
   - **`gui.enable = false`**: mihomo core + WebUI (servers/headless)
 - **NixOS**:
@@ -20,8 +20,8 @@ Automatic proxy implementation based on environment:
 
 ```nix
 {
-  my.networking.proxy.enable = true;
-  # Mode auto-determined by my.gui.enable
+  dot.networking.proxy.enable = true;
+  # Mode auto-determined by dot.gui.enable
 }
 ```
 
@@ -29,7 +29,7 @@ Automatic proxy implementation based on environment:
 
 ```nix
 {
-  my.networking.proxy = {
+  dot.networking.proxy = {
     enable = true;
     autoStart = true;  # NixOS only
   };
@@ -40,8 +40,8 @@ Automatic proxy implementation based on environment:
 
 ```nix
 {
-  my.gui.enable = false;  # Service mode
-  my.networking.proxy = {
+  dot.gui.enable = false;  # Service mode
+  dot.networking.proxy = {
     enable = true;
     autoStart = true;
   };
@@ -52,8 +52,8 @@ Automatic proxy implementation based on environment:
 
 ```nix
 {
-  my.gui.enable = true;  # GUI mode
-  my.networking.proxy.enable = true;
+  dot.gui.enable = true;  # GUI mode
+  dot.networking.proxy.enable = true;
 }
 ```
 
@@ -72,7 +72,7 @@ darwin-rebuild switch --flake .
 
 ## Usage
 
-### GUI Mode (`my.gui.enable = true`)
+### GUI Mode (`dot.gui.enable = true`)
 
 **NixOS:**
 
@@ -86,7 +86,7 @@ clash-verge
 open -a "Clash Verge"
 ```
 
-### Service Mode (`my.gui.enable = false`, NixOS only)
+### Service Mode (`dot.gui.enable = false`, NixOS only)
 
 **NixOS:**
 

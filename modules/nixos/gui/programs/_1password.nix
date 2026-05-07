@@ -6,13 +6,13 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  inherit (config.my) name;
-  cfg = config.my.gui._1password;
+  inherit (config.dot) name;
+  cfg = config.dot.gui._1password;
 in
 {
-  options.my.gui._1password = {
+  options.dot.gui._1password = {
     enable = mkEnableOption "1Password" // {
-      default = config.my.gui.enable;
+      default = config.dot.gui.enable;
     };
   };
 

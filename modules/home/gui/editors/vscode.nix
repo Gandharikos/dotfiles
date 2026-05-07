@@ -7,12 +7,12 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.my) gui;
-  cfg = config.my.gui.apps.vscode;
+  inherit (config.dot) gui;
+  cfg = config.dot.gui.apps.vscode;
   enable = gui.enable && cfg.enable;
 in
 {
-  options.my.gui.apps.vscode = {
+  options.dot.gui.apps.vscode = {
     enable = mkEnableOption "Visual Studio Code" // {
       default = true;
     };
@@ -42,7 +42,7 @@ in
           davidanson.vscode-markdownlint
         ];
         userSettings = {
-          "vscode-neovim.neovimExecutablePaths.darwin" = "/etc/profiles/per-user/${config.my.name}/bin/nvim";
+          "vscode-neovim.neovimExecutablePaths.darwin" = "/etc/profiles/per-user/${config.dot.name}/bin/nvim";
           # "vscode-neovim.neovimInitPath" = "~/.config/nvim/vscode/init.vim";
         };
       };

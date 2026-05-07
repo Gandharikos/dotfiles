@@ -12,8 +12,8 @@ let
   # inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (pkgs.stdenv.hostPlatform) system;
   inherit (config.home) homeDirectory;
-  inherit (config.my) name gui;
-  cfg = config.my.gui.apps.spotify;
+  inherit (config.dot) name gui;
+  cfg = config.dot.gui.apps.spotify;
   enable = gui.enable && cfg.enable;
 in
 {
@@ -21,15 +21,15 @@ in
     inputs.spicetify-nix.homeManagerModules.default
   ];
 
-  options.my.gui.apps.spotify = {
+  options.dot.gui.apps.spotify = {
     enable = mkEnableOption "Spotify" // {
       default = true;
     };
     spotify-player.enable = mkEnableOption "Spotify Player TUI" // {
-      default = config.my.gui.apps.spotify.enable;
+      default = config.dot.gui.apps.spotify.enable;
     };
     spicetify.enable = mkEnableOption "Spicetify" // {
-      default = config.my.gui.apps.spotify.enable;
+      default = config.dot.gui.apps.spotify.enable;
     };
   };
 

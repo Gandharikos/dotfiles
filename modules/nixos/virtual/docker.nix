@@ -4,14 +4,14 @@
   ...
 }:
 let
-  cfg = config.my.virtual.docker;
+  cfg = config.dot.virtual.docker;
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
 in
 {
-  options.my.virtual.docker = {
+  options.dot.virtual.docker = {
     enable = mkEnableOption "Docker" // {
-      default = config.my.virtual.enable;
+      default = config.dot.virtual.enable;
     };
   };
   config = mkIf cfg.enable {

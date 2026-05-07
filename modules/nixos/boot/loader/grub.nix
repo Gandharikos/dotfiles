@@ -8,14 +8,14 @@ let
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.options) mkOption;
   inherit (lib.types) nullOr str;
-  cfg = config.my.boot;
+  cfg = config.dot.boot;
 in
 {
   imports = [
     inputs.dedsec-grub-theme.nixosModule
   ];
 
-  options.my.boot.grub = {
+  options.dot.boot.grub = {
     device = mkOption {
       type = nullOr str;
       default = "nodev";

@@ -6,9 +6,9 @@
   ...
 }:
 let
-  cfg = config.my.networking.proxy;
+  cfg = config.dot.networking.proxy;
   inherit (lib) mkIf;
-  configDir = "${config.my.home}/.config/sing-box";
+  configDir = "${config.dot.home}/.config/sing-box";
   generateConfig = proxyCommon.mkSingBoxGenerateConfig {
     name = "generate-sing-box-config";
     inherit pkgs;
@@ -23,9 +23,9 @@ in
     environment.systemPackages = [ pkgs.sing-box ];
 
     system.activationScripts.postActivation.text = lib.mkAfter ''
-      install -d -m 0700 -o ${config.my.name} -g staff ${configDir}
+      install -d -m 0700 -o ${config.dot.name} -g staff ${configDir}
       ${lib.getExe generateConfig}
-      chown ${config.my.name}:staff ${configDir}/config.json
+      chown ${config.dot.name}:staff ${configDir}/config.json
       chmod 0600 ${configDir}/config.json
     '';
   };

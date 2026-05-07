@@ -6,10 +6,10 @@
 }:
 let
   inherit (lib.modules) mkIf mkMerge;
-  inherit (config.my.theme) cursor;
+  inherit (config.dot.theme) cursor;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  hyprlandEnabled = config.my.gui.desktop.hyprland.enable;
-  enable = cursor != null && config.my.gui.enable && isLinux;
+  hyprlandEnabled = config.dot.gui.desktop.hyprland.enable;
+  enable = cursor != null && config.dot.gui.enable && isLinux;
 in
 {
   config = mkIf enable (mkMerge [

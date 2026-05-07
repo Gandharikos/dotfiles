@@ -5,12 +5,12 @@
   ...
 }:
 let
-  cfg = config.my.jujutsu;
+  cfg = config.dot.jujutsu;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.jujutsu = {
+  options.dot.jujutsu = {
     enable = mkEnableOption "jujutsu";
   };
 
@@ -89,7 +89,7 @@ in
           diff-formatter = "git";
         };
         user = {
-          inherit (config.my) email name;
+          inherit (config.dot) email name;
         };
       };
     };

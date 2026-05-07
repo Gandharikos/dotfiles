@@ -51,6 +51,6 @@ in
     in
     # 返回一个 attrset，动态定义了 `${key}.source`
     {
-      "${key}".source = lib.my.relativeToConfig sourcePath;
+      "${key}".source = lib.dot.relativeToConfig sourcePath;
     };
 }

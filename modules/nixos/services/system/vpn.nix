@@ -7,12 +7,12 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.my.services.vpn;
+  cfg = config.dot.services.vpn;
 in
 {
-  options.my.services.vpn = {
+  options.dot.services.vpn = {
     enable = mkEnableOption "VPN" // {
-      default = config.my.gui.enable;
+      default = config.dot.gui.enable;
     };
   };
   config = mkIf cfg.enable {

@@ -68,12 +68,12 @@ let
     warning = "#8c6c3e";
     yellow = "#8c6c3e";
   };
-  cfg = config.my.theme.tokyonight;
+  cfg = config.dot.theme.tokyonight;
   enable = cfg.enable && cfg.style == "day";
 in
 {
   config = mkIf enable {
-    my.theme = {
+    dot.theme = {
       wallpaper = inputs.wallpapers.tokyonight.japan-city-river.path;
       # I hated base16 scheme, so I made my own
       colorscheme = {

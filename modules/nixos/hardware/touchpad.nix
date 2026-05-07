@@ -1,7 +1,7 @@
 { lib, config, ... }:
 let
   inherit (lib) mkIf;
-  isLaptop = config.my.machine.type == "laptop";
+  isLaptop = config.dot.machine.type == "laptop";
 in
 {
   config = mkIf isLaptop {

@@ -7,10 +7,10 @@ let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 
-  cfg = config.my.jjui;
+  cfg = config.dot.jjui;
 in
 {
-  options.my.jjui = {
+  options.dot.jjui = {
     enable = mkEnableOption "jjui";
   };
 

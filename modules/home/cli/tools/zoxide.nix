@@ -4,12 +4,12 @@
   ...
 }:
 let
-  cfg = config.my.zoxide;
+  cfg = config.dot.zoxide;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.zoxide = {
+  options.dot.zoxide = {
     enable = mkEnableOption "zoxide";
   };
 

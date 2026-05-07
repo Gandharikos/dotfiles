@@ -5,7 +5,7 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (config.my) machine;
+  inherit (config.dot) machine;
 in
 {
   config = mkIf (machine.type == "laptop") {

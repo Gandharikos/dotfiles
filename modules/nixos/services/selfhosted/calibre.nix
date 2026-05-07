@@ -4,13 +4,13 @@
   ...
 }:
 let
-  cfg = config.my.services.calibre;
+  cfg = config.dot.services.calibre;
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) port;
 in
 {
-  options.my.services.calibre = {
+  options.dot.services.calibre = {
     enable = mkEnableOption "calibre";
     port = mkOption {
       type = port;

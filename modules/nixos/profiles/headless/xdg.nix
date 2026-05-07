@@ -6,7 +6,7 @@
 let
   inherit (lib.attrsets) mapAttrs;
   inherit (lib.modules) mkIf mkForce;
-  isHeadless = !config.my.gui.enable;
+  isHeadless = !config.dot.gui.enable;
 in
 {
   config = mkIf isHeadless {

@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  cfg = config.my.networking;
+  cfg = config.dot.networking;
 in
 {
   # enable wireless database, it helps keeping wifi speedy

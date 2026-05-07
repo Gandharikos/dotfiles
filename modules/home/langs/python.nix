@@ -5,12 +5,12 @@
   ...
 }:
 let
-  cfg = config.my.langs.python;
+  cfg = config.dot.langs.python;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
 in
 {
-  options.my.langs.python = {
+  options.dot.langs.python = {
     enable = mkEnableOption "Python development environment";
     xdg.enable = mkEnableOption "Python XDG environment variables";
   };

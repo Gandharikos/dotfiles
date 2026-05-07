@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.my.networking.proxy;
+  cfg = config.dot.networking.proxy;
   inherit (lib.modules) mkIf;
   configFile = config.sops.secrets.proxy_config.path;
 in

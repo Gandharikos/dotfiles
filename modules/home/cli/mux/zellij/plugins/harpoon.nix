@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  harpoonWasm = "file:${pkgs.my.harpoon}/bin/harpoon.wasm";
+  harpoonWasm = "file:${pkgs.dot.harpoon}/bin/harpoon.wasm";
   launchHarpoon = {
     LaunchOrFocusPlugin = {
       _args = [ harpoonWasm ];

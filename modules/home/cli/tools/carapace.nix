@@ -7,10 +7,10 @@ let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 
-  cfg = config.my.carapace;
+  cfg = config.dot.carapace;
 in
 {
-  options.my.carapace = {
+  options.dot.carapace = {
     enable = mkEnableOption "carapace";
   };
 

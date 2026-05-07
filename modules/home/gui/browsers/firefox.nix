@@ -7,14 +7,14 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.my) gui;
-  cfg = config.my.gui.apps.firefox;
+  inherit (config.dot) gui;
+  cfg = config.dot.gui.apps.firefox;
   enable = gui.enable && cfg.enable;
 in
 {
-  options.my.gui.apps.firefox = {
+  options.dot.gui.apps.firefox = {
     enable = mkEnableOption "firefox" // {
-      default = config.my.gui.browser.default == "firefox";
+      default = config.dot.gui.browser.default == "firefox";
     };
   };
 

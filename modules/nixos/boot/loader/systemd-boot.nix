@@ -8,10 +8,10 @@ let
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.options) mkEnableOption mkPackageOption;
   inherit (lib.attrsets) optionalAttrs;
-  cfg = config.my.boot;
+  cfg = config.dot.boot;
 in
 {
-  options.my.boot.memtest = {
+  options.dot.boot.memtest = {
     enable = mkEnableOption "memtest86+";
     package = mkPackageOption pkgs "memtest86plus" { };
   };

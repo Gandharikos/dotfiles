@@ -6,11 +6,11 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.trivial) fromHexString;
-  inherit (config.my.theme.colorscheme) palette;
+  inherit (config.dot.theme.colorscheme) palette;
   hexToRgb =
     color:
     let
-      hex = lib.my.removeHashtag color;
+      hex = lib.dot.removeHashtag color;
       channel = start: builtins.toString ((fromHexString (builtins.substring start 2 hex)) / 255.0);
     in
     lib.concatStringsSep " " [
@@ -20,8 +20,8 @@ let
     ];
   hexToRgba = color: alpha: "${hexToRgb color} ${builtins.toString alpha}";
 
-  cfg = config.my.theme.tokyonight;
-  enable = cfg.enable && config.my.gui.apps.sioyek.enable;
+  cfg = config.dot.theme.tokyonight;
+  enable = cfg.enable && config.dot.gui.apps.sioyek.enable;
 in
 {
   config = mkIf enable {

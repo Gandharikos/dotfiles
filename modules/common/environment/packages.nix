@@ -22,7 +22,7 @@
       wget
       # keep-sorted end
     ]
-    ++ lib.optionals config.my.yubikey.enable [
+    ++ lib.optionals config.dot.yubikey.enable [
       yubikey-manager # CLI-based authenticator tool, accessed via `ykman`
       yubikey-personalization
       age-plugin-yubikey

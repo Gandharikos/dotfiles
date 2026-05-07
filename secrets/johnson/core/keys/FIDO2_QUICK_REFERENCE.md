@@ -57,7 +57,7 @@ cat ~/.ssh/id_aegis.pub | gh ssh-key add - --title "YubiKey Aegis"
 ## Enable in Config
 
 ```nix
-my.security.ssh-fido2 = {
+dot.security.ssh-fido2 = {
   enable = true;
   yubikeys = [ "aegis" "janus" "mimir" ];
 };

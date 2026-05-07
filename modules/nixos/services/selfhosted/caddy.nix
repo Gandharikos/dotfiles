@@ -5,13 +5,13 @@
   ...
 }:
 let
-  inherit (config) my;
-  cfg = config.my.services.caddy;
+  inherit (config) dot;
+  cfg = config.dot.services.caddy;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.services.caddy = {
+  options.dot.services.caddy = {
     enable = mkEnableOption "Enable Caddy";
   };
 
@@ -25,7 +25,7 @@ in
     services = {
       caddy = {
         enable = true;
-        inherit (my) email;
+        inherit (dot) email;
         globalConfig = ''
           servers {
             trusted_proxies cloudflare {

@@ -5,7 +5,7 @@
     (import ../common/disko/luks-btrfs-tmpfs.nix { })
   ];
 
-  my = {
+  dot = {
     theme.default = "catppuccin";
     security.auditd.enable = lib.mkForce false;
     boot = {
@@ -59,7 +59,7 @@
 
   services.automatic-timezoned.enable = lib.mkForce false;
 
-  hm.my = {
+  hm.dot = {
     gui.browser.default = "google-chrome";
     gui.terminal.size = 12;
     gui.apps = {

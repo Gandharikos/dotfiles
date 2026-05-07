@@ -6,7 +6,7 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (config.my.gui.login.sddm) enable;
+  inherit (config.dot.gui.login.sddm) enable;
 in
 {
   config = mkIf enable {

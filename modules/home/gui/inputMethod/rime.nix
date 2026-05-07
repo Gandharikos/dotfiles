@@ -9,10 +9,10 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.types) str;
 
-  cfg = config.my.gui.rime;
+  cfg = config.dot.gui.rime;
 in
 {
-  options.my.gui.rime = {
+  options.dot.gui.rime = {
     enable = mkEnableOption "rime" // {
       default = true;
     };

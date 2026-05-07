@@ -8,7 +8,7 @@ let
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf;
   inherit (lib.strings) escapeShellArgs;
-  inherit (config.my.gui) desktop;
+  inherit (config.dot.gui) desktop;
 
   idleCfg = desktop.idle;
   enable =

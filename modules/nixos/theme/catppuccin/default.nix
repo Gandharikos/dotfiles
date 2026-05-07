@@ -8,7 +8,7 @@
 let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  cfg = config.my.theme.catppuccin;
+  cfg = config.dot.theme.catppuccin;
 in
 {
   imports = [ inputs.catppuccin.nixosModules.catppuccin ];
@@ -17,7 +17,7 @@ in
     catppuccin = {
       enable = true;
       inherit (cfg) flavor accent;
-      cursors.enable = config.my.gui.enable && isLinux;
+      cursors.enable = config.dot.gui.enable && isLinux;
       grub.enable = false;
       plymouth.enable = false;
     };

@@ -4,12 +4,12 @@
   ...
 }:
 let
-  cfg = config.my.fd;
+  cfg = config.dot.fd;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.fd = {
+  options.dot.fd = {
     enable = mkEnableOption "fd";
   };
 

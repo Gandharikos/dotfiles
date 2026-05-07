@@ -9,7 +9,7 @@ let
   curl' = getExe pkgs.curl;
 in
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
   config.home = {
     shellAliases = {
       syslog = "journalctl -f";
@@ -26,6 +26,6 @@ in
 
       weather = "${curl'} wttr.in";
     };
-    sessionVariables.KEYBOARD_LAYOUT = config.my.keyboard.layout;
+    sessionVariables.KEYBOARD_LAYOUT = config.dot.keyboard.layout;
   };
 }

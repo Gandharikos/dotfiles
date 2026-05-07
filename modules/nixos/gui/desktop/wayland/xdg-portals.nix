@@ -7,7 +7,7 @@
 let
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf mkDefault;
-  cfg = config.my.gui.desktop;
+  cfg = config.dot.gui.desktop;
   isNiri = cfg.default == "niri";
   portal =
     if cfg.default == "hyprland" then

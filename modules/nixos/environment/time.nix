@@ -4,8 +4,8 @@
   ...
 }:
 let
-  inherit (config) my;
-  inherit (config.my.machine) type;
+  inherit (config) dot;
+  inherit (config.dot.machine) type;
   inherit (lib.modules) mkForce mkMerge mkIf;
   isMobile = type == "mobile" || type == "laptop";
   isHost = type == "desktop" || type == "workstation";
@@ -59,7 +59,7 @@ in
           enableNmea = false;
           enableWifi = true;
           # Use default geoclue provider
-          submitData = !my.security.enable;
+          submitData = !dot.security.enable;
           appConfig.automatic-timezoned = {
             isAllowed = true;
             isSystem = true;

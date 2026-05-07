@@ -7,8 +7,8 @@
 let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  cfg = config.my.theme.catppuccin;
-  enable = cfg.enable && config.my.gui.enable && isLinux;
+  cfg = config.dot.theme.catppuccin;
+  enable = cfg.enable && config.dot.gui.enable && isLinux;
   themeName = "catppuccin-${cfg.flavor}-${cfg.accent}-standard";
 in
 {

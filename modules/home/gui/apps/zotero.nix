@@ -7,12 +7,12 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  inherit (config.my) gui;
-  cfg = config.my.gui.apps.zotero;
+  inherit (config.dot) gui;
+  cfg = config.dot.gui.apps.zotero;
   enable = gui.enable && cfg.enable;
 in
 {
-  options.my.gui.apps.zotero = {
+  options.dot.gui.apps.zotero = {
     enable = mkEnableOption "Zotero" // {
       default = false;
     };

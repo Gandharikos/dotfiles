@@ -4,13 +4,13 @@
   ...
 }:
 let
-  cfg = config.my.services.jellyfin;
+  cfg = config.dot.services.jellyfin;
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) int;
 in
 {
-  options.my.services.jellyfin = {
+  options.dot.services.jellyfin = {
     enable = mkEnableOption "jellyfin";
     port = mkOption {
       type = int;

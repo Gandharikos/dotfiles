@@ -6,12 +6,12 @@
 let
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) enum;
-  inherit (lib.my) scanPaths;
+  inherit (lib.dot) scanPaths;
 in
 {
   imports = scanPaths ./.;
 
-  options.my.gui.login = {
+  options.dot.gui.login = {
     default = mkOption {
       type = enum [
         "greetd"
@@ -23,19 +23,19 @@ in
     };
 
     greetd.enable = mkEnableOption "greetd login manager" // {
-      default = config.my.gui.enable && config.my.gui.login.default == "greetd";
+      default = config.dot.gui.enable && config.dot.gui.login.default == "greetd";
       internal = true;
       readOnly = true;
     };
 
     sddm.enable = mkEnableOption "sddm login manager" // {
-      default = config.my.gui.enable && config.my.gui.login.default == "sddm";
+      default = config.dot.gui.enable && config.dot.gui.login.default == "sddm";
       internal = true;
       readOnly = true;
     };
 
     cosmicGreeter.enable = mkEnableOption "cosmic-greeter login manager" // {
-      default = config.my.gui.enable && config.my.gui.login.default == "cosmic-greeter";
+      default = config.dot.gui.enable && config.dot.gui.login.default == "cosmic-greeter";
       internal = true;
       readOnly = true;
     };

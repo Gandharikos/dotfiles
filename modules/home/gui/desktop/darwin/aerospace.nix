@@ -5,15 +5,15 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (lib.my) mkAerospaceWorkspaces;
-  inherit (config.my) gui;
+  inherit (lib.dot) mkAerospaceWorkspaces;
+  inherit (config.dot) gui;
   cfg = gui.desktop;
   inherit (cfg.workspace) number;
 
   # Use modKey directly from config
   inherit (cfg) modKey; # Use as-is for "cmd-alt-ctrl" or other combinations
 in
-with config.my.keyboard.keys;
+with config.dot.keyboard.keys;
 {
   config = mkIf (gui.enable && cfg.type == "darwin" && cfg.default == "aerospace") {
     programs.aerospace = {

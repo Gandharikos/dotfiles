@@ -6,8 +6,8 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  cfg = config.my.theme.tokyonight;
-  inherit (config.my.theme.colorscheme) palette slug;
+  cfg = config.dot.theme.tokyonight;
+  inherit (config.dot.theme.colorscheme) palette slug;
 in
 {
   config = mkIf cfg.enable {

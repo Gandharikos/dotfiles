@@ -6,7 +6,7 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.attrsets) genAttrs;
-  inherit (config.my) gui;
+  inherit (config.dot) gui;
 in
 {
   config = mkIf gui.enable {

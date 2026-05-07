@@ -7,11 +7,11 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkForce;
-  inherit (config.my.gui) desktop;
+  inherit (config.dot.gui) desktop;
   cfg = desktop.hyprland;
 in
 {
-  options.my.gui.desktop.hyprland = {
+  options.dot.gui.desktop.hyprland = {
     enable = mkEnableOption "Enable Hyprland" // {
       default = desktop.wayland.enable && desktop.default == "hyprland";
       internal = true;

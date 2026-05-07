@@ -8,7 +8,7 @@
   ...
 }:
 let
-  inherit (config.my) name;
+  inherit (config.dot) name;
   inherit (osConfig.networking) hostName;
 in
 {
@@ -23,7 +23,7 @@ in
           };
           options = {
             nixos = {
-              expr = "(builtins.getFlake \"/home/${name}/.dotfiles\").nixosConfigurations.my.options";
+              expr = "(builtins.getFlake \"/home/${name}/.dotfiles\").nixosConfigurations.dot.options";
             };
             home-manager = {
               expr = "(builtins.getFlake \"/home/${name}/.dotfiles\").homeConfigurations.\"${name}@${hostName}\".options";

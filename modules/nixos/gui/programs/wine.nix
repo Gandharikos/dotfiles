@@ -6,12 +6,12 @@
 }:
 let
   inherit (lib.lists) optional;
-  cfg = config.my.gui.wine;
-  waylandEnabled = config.my.gui.desktop.wayland.enable;
+  cfg = config.dot.gui.wine;
+  waylandEnabled = config.dot.gui.desktop.wayland.enable;
 in
 {
-  options.my.gui.wine = lib.my.mkProgram pkgs "wine" {
-    enable.default = config.my.game.enable;
+  options.dot.gui.wine = lib.dot.mkProgram pkgs "wine" {
+    enable.default = config.dot.game.enable;
     package.default =
       if waylandEnabled then pkgs.wineWowPackages.waylandFull else pkgs.wineWowPackages.stableFull;
   };

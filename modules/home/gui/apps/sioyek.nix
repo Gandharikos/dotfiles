@@ -11,8 +11,8 @@ let
     getExe
     getExe'
     ;
-  inherit (config.my) gui;
-  cfg = config.my.gui.apps.sioyek;
+  inherit (config.dot) gui;
+  cfg = config.dot.gui.apps.sioyek;
   enable = gui.enable && cfg.enable;
   sioyekExe = getExe pkgs.sioyek;
   envExe = getExe' pkgs.coreutils "env";
@@ -38,7 +38,7 @@ let
   };
 in
 {
-  options.my.gui.apps.sioyek = {
+  options.dot.gui.apps.sioyek = {
     enable = mkEnableOption "Sioyek" // {
       default = true;
     };
@@ -47,7 +47,7 @@ in
   config = mkIf enable {
     home.shellAliases.sioyek = sioyekExec;
 
-    programs.sioyek = with config.my.keyboard.keys; {
+    programs.sioyek = with config.dot.keyboard.keys; {
       enable = true;
       bindings = {
         # === Vim-style Navigation ===

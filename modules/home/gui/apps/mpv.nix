@@ -8,12 +8,12 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.my) gui;
-  cfg = config.my.gui.apps.mpv;
+  inherit (config.dot) gui;
+  cfg = config.dot.gui.apps.mpv;
   enable = gui.enable && cfg.enable;
 in
 {
-  options.my.gui.apps.mpv = {
+  options.dot.gui.apps.mpv = {
     enable = mkEnableOption "support for mpv" // {
       default = isLinux;
     };

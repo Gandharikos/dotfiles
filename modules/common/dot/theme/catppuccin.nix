@@ -6,12 +6,12 @@
 let
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) enum;
-  inherit (config) my;
+  inherit (config) dot;
 in
 {
-  options.my.theme.catppuccin = {
+  options.dot.theme.catppuccin = {
     enable = mkEnableOption "Catppuccin theme" // {
-      default = my.theme.default == "catppuccin";
+      default = dot.theme.default == "catppuccin";
     };
 
     flavor = mkOption {

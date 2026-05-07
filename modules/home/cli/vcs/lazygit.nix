@@ -8,13 +8,13 @@ let
   shellAliases = {
     "lg" = "lazygit";
   };
-  cfg = config.my.lazygit;
+  cfg = config.dot.lazygit;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
-with config.my.keyboard.keys;
+with config.dot.keyboard.keys;
 {
-  options.my.lazygit = {
+  options.dot.lazygit = {
     enable = mkEnableOption "lazygit";
   };
 
@@ -196,7 +196,7 @@ with config.my.keyboard.keys;
             toggleTreeView = "`";
             openMergeOptions = "M";
             openStatusFilter = "<c-b>";
-            ignoreFile = if config.my.keyboard.layout == "colemak" then "i" else "I";
+            ignoreFile = if config.dot.keyboard.layout == "colemak" then "i" else "I";
           };
           branches = {
             copyPullRequestURL = "<c-y>";
@@ -211,7 +211,7 @@ with config.my.keyboard.keys;
             fetchRemote = "f";
             createPullRequest = o;
             viewPullRequestOptions = O;
-            viewGitFlowOptions = if config.my.keyboard.layout == "colemak" then "I" else "i";
+            viewGitFlowOptions = if config.dot.keyboard.layout == "colemak" then "I" else "i";
           };
           commits = {
             squashDown = "s";

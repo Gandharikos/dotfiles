@@ -1,3 +1,3 @@
 {
-  my.machine.type = "wsl";
+  dot.machine.type = "wsl";
 }

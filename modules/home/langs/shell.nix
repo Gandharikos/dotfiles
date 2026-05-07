@@ -5,12 +5,12 @@
   ...
 }:
 let
-  cfg = config.my.langs.shell;
+  cfg = config.dot.langs.shell;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkMerge mkIf;
 in
 {
-  options.my.langs.shell = {
+  options.dot.langs.shell = {
     enable = mkEnableOption "Shell development environment";
     xdg.enable = mkEnableOption "Shell XDG environment variables";
   };

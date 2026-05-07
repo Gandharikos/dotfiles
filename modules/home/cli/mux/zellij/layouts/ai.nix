@@ -5,7 +5,7 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (config.my.zellij) template;
+  inherit (config.dot.zellij) template;
 in
 {
   config = mkIf (builtins.hasAttr "default_tab_template" template) {

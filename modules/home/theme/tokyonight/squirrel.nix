@@ -6,9 +6,9 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  cfg = config.my.theme.tokyonight;
-  rimeCfg = config.my.gui.rime;
-  inherit (config.my.theme.colorscheme) palette;
+  cfg = config.dot.theme.tokyonight;
+  rimeCfg = config.dot.gui.rime;
+  inherit (config.dot.theme.colorscheme) palette;
 
   # Convert #RRGGBB to 0xBBGGRR
   toRimeColor =

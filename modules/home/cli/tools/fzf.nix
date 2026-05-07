@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.my.fzf;
+  cfg = config.dot.fzf;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkAfter;
   inherit (lib.meta) getExe;
@@ -16,7 +16,7 @@ let
   eza_opts = concatStringsSep " " config.programs.eza.extraOptions;
 in
 {
-  options.my.fzf = {
+  options.dot.fzf = {
     enable = mkEnableOption "fzf";
   };
 
@@ -76,7 +76,7 @@ in
           "--scrollbar=│"
         ]
         ++ (
-          if (config.my.keyboard.layout == "colemak") then
+          if (config.dot.keyboard.layout == "colemak") then
             [
               "--bind=ctrl-e:down,ctrl-i:up"
             ]

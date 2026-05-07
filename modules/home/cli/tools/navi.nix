@@ -7,10 +7,10 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
 
-  cfg = config.my.navi;
+  cfg = config.dot.navi;
 in
 {
-  options.my.navi = {
+  options.dot.navi = {
     enable = mkEnableOption "navi";
   };
 

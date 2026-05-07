@@ -7,10 +7,10 @@ let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 
-  cfg = config.my.pay-respects;
+  cfg = config.dot.pay-respects;
 in
 {
-  options.my.pay-respects = {
+  options.dot.pay-respects = {
     enable = mkEnableOption "pay-respects";
   };
 

@@ -1,5 +1,5 @@
 {
-  my = {
+  dot = {
     # keep-sorted start block=yes newline_separated=yes
     atuin = {
       enable = true;

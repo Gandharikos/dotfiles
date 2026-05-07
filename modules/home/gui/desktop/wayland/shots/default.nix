@@ -9,15 +9,15 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkOption;
   inherit (lib.types) enum str nullOr;
-  inherit (config.my.gui) desktop;
+  inherit (config.dot.gui) desktop;
   inherit (config.xdg.userDirs.extraConfig) SCREENSHOTS;
   wl-copy' = getExe' pkgs.wl-clipboard-rs "wl-copy";
-  screenshotPath = config.my.gui.desktop.shot.path;
+  screenshotPath = config.dot.gui.desktop.shot.path;
 in
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
-  options.my.gui.desktop.shot = {
+  options.dot.gui.desktop.shot = {
     default = mkOption {
       type = nullOr (enum [
         "hyprshot"
@@ -45,7 +45,7 @@ in
     };
   };
 
-  config = mkIf config.my.gui.desktop.wayland.enable {
+  config = mkIf config.dot.gui.desktop.wayland.enable {
     home = {
       file = {
         "${config.xdg.configHome}/satty/config.toml".text = ''

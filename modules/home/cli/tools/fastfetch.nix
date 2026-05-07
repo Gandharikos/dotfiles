@@ -8,7 +8,7 @@ let
     "fetch" = "fastfetch";
   };
   inherit (config.programs) kitty;
-  cfg = config.my.fastfetch;
+  cfg = config.dot.fastfetch;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   fetch_greeting = ''
@@ -18,7 +18,7 @@ let
   '';
 in
 {
-  options.my.fastfetch = {
+  options.dot.fastfetch = {
     enable = mkEnableOption "fastfetch";
     startOnLogin = mkEnableOption "fastfetch on login";
   };
@@ -160,6 +160,6 @@ in
       inherit shellAliases;
     };
 
-    xdg.configFile."fastfetch/pngs".source = lib.my.relativeToConfig "fastfetch/pngs";
+    xdg.configFile."fastfetch/pngs".source = lib.dot.relativeToConfig "fastfetch/pngs";
   };
 }

@@ -8,7 +8,7 @@ let
   inherit (lib.lists) singleton optionals;
   inherit (lib.trivial) const;
 
-  inherit (config.my) gui;
+  inherit (config.dot) gui;
   cfg = config.programs.ccache;
 in
 {

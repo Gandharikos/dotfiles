@@ -13,10 +13,10 @@ Unified SSH configuration module supporting:
 
 ### Step 1: Configure YubiKeys
 
-YubiKey names are defined in `modules/common/my/yubikey.nix`:
+YubiKey names are defined in `modules/common/dot/yubikey.nix`:
 
 ```nix
-my.yubikey = {
+dot.yubikey = {
   enable = true;
   names = [
     "aegis" # YubiKey 5C Nano (Serial: 29642951) - Portable
@@ -32,13 +32,13 @@ Edit `hosts/tyr/default.nix` (or your host config):
 
 ```nix
 {
-  my.ssh = {
+  dot.ssh = {
     enable = true;
     enableFido2 = true;  # true=FIDO2 only, false=traditional
   };
 
   # Disable GPG SSH support (important!)
-  my.security.gpg = {
+  dot.security.gpg = {
     enable = true;
     enableSshSupport = false;
   };
@@ -69,20 +69,20 @@ ssh -T git@github.com
 ### Option 1: FIDO2 Only (Maximum Security)
 
 ```nix
-my.ssh.enableFido2 = true;
+dot.ssh.enableFido2 = true;
 ```
 
 **Characteristics:**
 
 - ⭐⭐⭐⭐⭐ Maximum security
 - ⚠️ Must have YubiKey to SSH
-- ✅ Keys from my.yubikey.names
+- ✅ Keys from dot.yubikey.names
 - ✅ Suitable for production environments
 
 **Key trial order:**
 
 ```
-Keys from my.yubikey.names (in order):
+Keys from dot.yubikey.names (in order):
 1. ~/.ssh/id_aegis  (FIDO2)
 2. ~/.ssh/id_janus  (FIDO2)
 3. ~/.ssh/id_mimir  (FIDO2)
@@ -92,7 +92,7 @@ Keys from my.yubikey.names (in order):
 ### Option 2: Traditional SSH Keys
 
 ```nix
-my.ssh.enableFido2 = false;
+dot.ssh.enableFido2 = false;
 ```
 
 **Characteristics:**
@@ -273,7 +273,7 @@ sudo systemctl restart pcscd
 
 ```bash
 # Ensure GPG config has
-my.security.gpg.enableSshSupport = false;
+dot.security.gpg.enableSshSupport = false;
 
 # Restart GPG agent
 gpgconf --kill gpg-agent
@@ -337,7 +337,7 @@ EOF
 ```
 ~/.dotfiles/
 ├── modules/
-│   ├── common/my/yubikey.nix              # YubiKey identifiers config
+│   ├── common/dot/yubikey.nix             # YubiKey identifiers config
 │   └── home/cli/security/ssh.nix          # Main SSH module
 ├── secrets/johnson/core/
 │   ├── id_ed25519.pub                     # Regular SSH public key

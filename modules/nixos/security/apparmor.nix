@@ -5,14 +5,14 @@
   ...
 }:
 let
-  cfg = config.my.security.apparmor;
+  cfg = config.dot.security.apparmor;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.security.apparmor = {
+  options.dot.security.apparmor = {
     enable = mkEnableOption "Enable AppArmor" // {
-      default = config.my.security.enable;
+      default = config.dot.security.enable;
     };
   };
 

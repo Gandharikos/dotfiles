@@ -7,19 +7,19 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.services.usbguard;
+  cfg = config.dot.services.usbguard;
 in
 {
-  options.my.services.usbguard = {
+  options.dot.services.usbguard = {
     enable = mkEnableOption "Enable USBGuard" // {
-      default = config.my.security.enable;
+      default = config.dot.security.enable;
     };
   };
   config = mkIf cfg.enable {
     services.usbguard = {
       IPCAllowedUsers = [
         "root"
-        "${config.my.name}"
+        "${config.dot.name}"
       ];
       presentDevicePolicy = "allow";
       rules = ''

@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  programs.zellij.settings.keybinds._children = with config.my.keyboard.keys; [
+  programs.zellij.settings.keybinds._children = with config.dot.keyboard.keys; [
     {
       shared_except = {
         _args = [

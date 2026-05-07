@@ -6,8 +6,8 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (config.my.theme) tokyonight colorscheme;
-  inherit (config.my.theme.general) transparent pad;
+  inherit (config.dot.theme) tokyonight colorscheme;
+  inherit (config.dot.theme.general) transparent pad;
   inherit (colorscheme) palette;
   cfg = tokyonight;
 in

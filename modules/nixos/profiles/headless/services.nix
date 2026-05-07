@@ -5,7 +5,7 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  isHeadless = !config.my.gui.enable;
+  isHeadless = !config.dot.gui.enable;
 in
 {
   config = mkIf isHeadless {

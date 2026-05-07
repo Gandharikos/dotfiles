@@ -4,8 +4,8 @@
   ...
 }:
 let
-  inherit (config.my) name theme;
-  inherit (config.hm.my.gui) desktop;
+  inherit (config.dot) name theme;
+  inherit (config.hm.dot.gui) desktop;
   inherit (lib.modules) mkIf;
   dmsEnabled = desktop.wayland.enable && desktop.shell.default == "dank-material-shell";
 in

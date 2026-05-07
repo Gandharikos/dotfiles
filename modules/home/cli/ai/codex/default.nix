@@ -6,7 +6,7 @@
   ...
 }:
 let
-  cfg = config.my.codex;
+  cfg = config.dot.codex;
   inherit (lib)
     getExe
     getExe'
@@ -17,7 +17,7 @@ let
     ;
 in
 {
-  options.my.codex = {
+  options.dot.codex = {
     enable = mkEnableOption "codex";
   };
 

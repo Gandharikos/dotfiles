@@ -11,7 +11,7 @@ let
   inherit (lib.meta) getExe';
   notify-send' = getExe' pkgs.libnotify "notify-send";
 
-  hyprlandEnabled = config.my.gui.desktop.hyprland.enable;
+  hyprlandEnabled = config.dot.gui.desktop.hyprland.enable;
 
   programs = makeBinPath (builtins.attrValues { inherit (pkgs) hyprland coreutils systemd; });
 
@@ -35,10 +35,10 @@ let
       ${notify-send'} -a 'Gamemode' 'Optimizations deactivated'
   '';
 
-  cfg = config.my.game;
+  cfg = config.dot.game;
 in
 {
-  options.my.game = {
+  options.dot.game = {
     enable = mkEnableOption "Gamescope compositing manager";
   };
 

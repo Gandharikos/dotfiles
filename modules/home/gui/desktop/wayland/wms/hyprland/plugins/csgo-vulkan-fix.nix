@@ -9,12 +9,12 @@ let
   inherit (lib.types) int;
   inherit (lib.modules) mkIf;
   inherit (lib.lists) elem;
-  inherit (config.my.gui.desktop.hyprland) plugins;
+  inherit (config.dot.gui.desktop.hyprland) plugins;
   enable = plugins.enable && elem "csgo-vulkan-fix" plugins.list;
-  cfg = config.my.gui.desktop.hyprland.cs2fix;
+  cfg = config.dot.gui.desktop.hyprland.cs2fix;
 in
 {
-  options.my.gui.desktop.hyprland.cs2fix = {
+  options.dot.gui.desktop.hyprland.cs2fix = {
     enable = mkEnableOption "Enable csgo-vulkan-fix" // {
       default = enable;
     };

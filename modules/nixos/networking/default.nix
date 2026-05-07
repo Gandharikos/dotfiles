@@ -5,14 +5,14 @@
 }:
 let
   inherit (lib) mkIf mkDefault mkForce;
-  isWSL = config.my.machine.type == "wsl";
-  isProxy = config.my.networking.proxy.enable;
+  isWSL = config.dot.machine.type == "wsl";
+  isProxy = config.dot.networking.proxy.enable;
   inherit (lib.options) mkEnableOption;
-  cfg = config.my.networking;
+  cfg = config.dot.networking;
 in
 {
-  imports = lib.my.scanPaths ./.;
-  options.my.networking = {
+  imports = lib.dot.scanPaths ./.;
+  options.dot.networking = {
     enableIPv6 = mkEnableOption "Enable IPv6 supprot" // {
       default = true;
     };

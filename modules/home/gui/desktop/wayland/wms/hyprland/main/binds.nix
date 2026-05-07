@@ -5,12 +5,12 @@
   ...
 }:
 let
-  inherit (lib.my) mkHyprWorkspaces mkHyprMoveTo;
+  inherit (lib.dot) mkHyprWorkspaces mkHyprMoveTo;
   inherit (lib.lists) elem optionals;
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe getExe';
-  inherit (lib.my) uwsmApp uwsmScript;
-  inherit (config.my.gui)
+  inherit (lib.dot) uwsmApp uwsmScript;
+  inherit (config.dot.gui)
     desktop
     terminal
     browser
@@ -33,7 +33,7 @@ let
     ${getExe pkgs.grim} -g "$(${getExe pkgs.slurp})" - | ${getExe pkgs.tesseract} ${lang} - - | ${getExe' pkgs.wl-clipboard "wl-copy"}
   '';
 in
-with config.my.keyboard.keys;
+with config.dot.keyboard.keys;
 {
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland = {

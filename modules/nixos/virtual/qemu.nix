@@ -5,17 +5,17 @@
   ...
 }:
 let
-  cfg = config.my.virtual.qemu;
-  isIntel = config.my.machine.cpu == "intel";
-  isAmd = config.my.machine.cpu == "amd";
+  cfg = config.dot.virtual.qemu;
+  isIntel = config.dot.machine.cpu == "intel";
+  isAmd = config.dot.machine.cpu == "amd";
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (lib.lists) optionals;
 in
 {
-  options.my.virtual.qemu = {
+  options.dot.virtual.qemu = {
     enable = mkEnableOption "Enable qemu" // {
-      default = config.my.virtual.enable;
+      default = config.dot.virtual.enable;
     };
   };
 

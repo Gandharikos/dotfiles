@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.my.direnv;
+  cfg = config.dot.direnv;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   direnvPackage =
@@ -25,7 +25,7 @@ let
       pkgs.direnv;
 in
 {
-  options.my.direnv = {
+  options.dot.direnv = {
     enable = mkEnableOption "direnv";
     silent = mkEnableOption "silent";
   };

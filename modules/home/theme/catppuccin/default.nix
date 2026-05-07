@@ -8,14 +8,14 @@
 let
   inherit (lib.modules) mkIf mkMerge;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  cfg = config.my.theme.catppuccin;
-  guiLinux = config.my.gui.enable && isLinux;
+  cfg = config.dot.theme.catppuccin;
+  guiLinux = config.dot.gui.enable && isLinux;
 in
 {
   imports = [
     inputs.catppuccin.homeModules.catppuccin
   ]
-  ++ lib.my.scanPaths ./.;
+  ++ lib.dot.scanPaths ./.;
 
   config = mkIf cfg.enable (mkMerge [
     {

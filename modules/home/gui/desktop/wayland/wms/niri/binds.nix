@@ -8,16 +8,16 @@ let
   inherit (lib.lists) foldl';
   inherit (lib.meta) getExe getExe';
   inherit (lib.modules) mkIf;
-  inherit (lib.my) uwsmAppArgs;
+  inherit (lib.dot) uwsmAppArgs;
   modNum = lib.trivial.mod;
-  inherit (config.my.gui)
+  inherit (config.dot.gui)
     desktop
     terminal
     browser
     fileManager
     ;
 
-  cfg = config.my.gui.desktop.niri;
+  cfg = config.dot.gui.desktop.niri;
   inherit (desktop) modKey;
   modShift = "${modKey}+Shift";
   modCtrl = "${modKey}+Ctrl";
@@ -171,7 +171,7 @@ let
         };
       };
 in
-with config.my.keyboard.keys;
+with config.dot.keyboard.keys;
 {
   config = mkIf cfg.enable {
     programs.niri.settings = {

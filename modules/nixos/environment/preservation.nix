@@ -6,16 +6,16 @@
   ...
 }:
 let
-  cfg = config.my.persistence;
-  hm = config.hm.my;
+  cfg = config.dot.persistence;
+  hm = config.hm.dot;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
-  inherit (config.my) name;
+  inherit (config.dot) name;
 in
 {
   imports = [ inputs.preservation.nixosModules.default ];
 
-  options.my.persistence = {
+  options.dot.persistence = {
     enable = mkEnableOption "persistence"; # must use tmpfs for /
   };
 
@@ -210,12 +210,12 @@ in
             ".config/vlc"
           ];
         })
-        (mkIf config.my.gui._1password.enable {
+        (mkIf config.dot.gui._1password.enable {
           directories = [
             ".config/1Password"
           ];
         })
-        (mkIf config.my.gui.fcitx5.enable {
+        (mkIf config.dot.gui.fcitx5.enable {
           directories = [
             ".config/fcitx"
             ".config/fcitx5"

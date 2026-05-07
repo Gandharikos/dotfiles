@@ -5,7 +5,7 @@
 **NixOS (Layered Architecture):**
 
 - System layer: `services.mihomo` runs as a system service (provides API and TUN mode)
-- User layer: Clash Verge GUI (Home Manager) connects to mihomo API when `my.gui.enable = true`
+- User layer: Clash Verge GUI (Home Manager) connects to mihomo API when `dot.gui.enable = true`
 - Both GUI and headless modes share the same mihomo core service
 - WebUI available at `http://localhost:9090/ui`
 
@@ -20,8 +20,8 @@
 
 ```nix
 {
-  my.gui.enable = true;
-  my.networking.proxy = {
+  dot.gui.enable = true;
+  dot.networking.proxy = {
     enable = true;
   };
 }
@@ -31,8 +31,8 @@
 
 ```nix
 {
-  my.gui.enable = false;
-  my.networking.proxy = {
+  dot.gui.enable = false;
+  dot.networking.proxy = {
     enable = true;
     autoStart = true;
   };
@@ -43,7 +43,7 @@
 
 ```nix
 {
-  my.networking.proxy = {
+  dot.networking.proxy = {
     enable = true;
   };
 }
@@ -78,7 +78,7 @@ The module expects encrypted `clash_config` in `secrets/services/clash.yaml`.
 - Handles TUN mode with elevated privileges
 - Starts through systemd when `autoStart = true`
 
-**GUI Frontend (when `my.gui.enable = true`):**
+**GUI Frontend (when `dot.gui.enable = true`):**
 
 - Installs Clash Verge via Home Manager
 - Runs as user application (no elevated privileges)
@@ -151,14 +151,14 @@ open -a "Clash Verge"
 ```nix
 {
   # Enable GUI and proxy
-  my.gui.enable = true;
-  my.networking.proxy = {
+  dot.gui.enable = true;
+  dot.networking.proxy = {
     enable = true;
     autoStart = true;  # Start mihomo service on boot
   };
 
   # Clash Verge GUI is automatically enabled via Home Manager
-  # when my.gui.enable = true
+  # when dot.gui.enable = true
 }
 ```
 
@@ -167,8 +167,8 @@ open -a "Clash Verge"
 ```nix
 {
   # Headless server
-  my.gui.enable = false;
-  my.networking.proxy = {
+  dot.gui.enable = false;
+  dot.networking.proxy = {
     enable = true;
     autoStart = true;
   };
@@ -181,7 +181,7 @@ open -a "Clash Verge"
 
 ```nix
 {
-  my.networking.proxy = {
+  dot.networking.proxy = {
     enable = true;
   };
 

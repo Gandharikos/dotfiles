@@ -7,9 +7,9 @@
 let
   inherit (lib.modules) mkIf;
   src = pkgs.vimPlugins.tokyonight-nvim;
-  cfg = config.my.theme.tokyonight;
-  enable = cfg.enable && config.my.opencode.enable;
-  inherit (config.my.theme.colorscheme) slug;
+  cfg = config.dot.theme.tokyonight;
+  enable = cfg.enable && config.dot.opencode.enable;
+  inherit (config.dot.theme.colorscheme) slug;
 in
 {
   config = mkIf enable {

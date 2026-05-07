@@ -11,13 +11,15 @@ let
     ;
   inherit (lib.modules) mkIf;
   inherit (lib.strings) escapeShellArgs;
-  inherit (config.my.gui) desktop;
+  inherit (config.dot.gui) desktop;
 
   noctaliaEnabled = config.programs.noctalia-shell.enable or false;
   enable =
-    desktop.wayland.enable && config.my.gui.desktop.shot.default == "noctalia-shell" && noctaliaEnabled;
+    desktop.wayland.enable
+    && config.dot.gui.desktop.shot.default == "noctalia-shell"
+    && noctaliaEnabled;
   screenshotPath = config.xdg.userDirs.extraConfig.SCREENSHOTS;
-  screenToolkitSettingsFile = lib.my.relativeToConfig "noctalia/plugins/screen-toolkit/settings.json";
+  screenToolkitSettingsFile = lib.dot.relativeToConfig "noctalia/plugins/screen-toolkit/settings.json";
   screenToolkitSettings = (builtins.fromJSON (builtins.readFile screenToolkitSettingsFile)) // {
     inherit screenshotPath;
   };

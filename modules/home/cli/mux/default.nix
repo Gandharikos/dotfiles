@@ -4,9 +4,9 @@ let
   inherit (lib.types) enum bool;
 in
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
-  options.my.mux = {
+  options.dot.mux = {
     default = mkOption {
       type = enum [
         "tmux"

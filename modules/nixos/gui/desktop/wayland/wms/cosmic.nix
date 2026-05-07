@@ -7,11 +7,11 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.my.gui) desktop;
+  inherit (config.dot.gui) desktop;
   cfg = desktop.cosmic;
 in
 {
-  options.my.gui.desktop.cosmic = {
+  options.dot.gui.desktop.cosmic = {
     enable = mkEnableOption "Enable Hyprland" // {
       default = desktop.wayland.enable && desktop.default == "cosmic";
       internal = true;
@@ -28,6 +28,6 @@ in
       pkgs.cosmic-store
     ];
 
-    my.gui.login.default = "cosmic-greeter";
+    dot.gui.login.default = "cosmic-greeter";
   };
 }

@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.my) scanPaths;
+  inherit (lib.dot) scanPaths;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.types) enum str singleLineStr;
@@ -13,7 +13,7 @@ in
 {
   imports = scanPaths ./.;
 
-  options.my = {
+  options.dot = {
     name = mkOption {
       type = str;
       default = "johnson";
@@ -52,7 +52,7 @@ in
       type = str;
       default =
         let
-          user = config.my.name;
+          user = config.dot.name;
         in
         if isLinux then "/home/${user}" else "/Users/${user}";
       description = "The user home directory";

@@ -5,12 +5,12 @@
   ...
 }:
 let
-  cfg = config.my.services.asus;
+  cfg = config.dot.services.asus;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.services.asus = {
+  options.dot.services.asus = {
     enable = mkEnableOption "Enable ASUS laptop support";
   };
 

@@ -7,12 +7,12 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.my.services.fprint;
+  cfg = config.dot.services.fprint;
 in
 {
-  options.my.services.fprint = {
+  options.dot.services.fprint = {
     enable = mkEnableOption "Enable fingerprint login" // {
-      default = config.my.security.enable;
+      default = config.dot.security.enable;
     };
   };
 

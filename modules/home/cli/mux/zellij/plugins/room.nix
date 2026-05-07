@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  roomWasm = "file:${pkgs.my.room}/bin/room.wasm";
+  roomWasm = "file:${pkgs.dot.room}/bin/room.wasm";
   launchRoom = {
     LaunchOrFocusPlugin = {
       _args = [ roomWasm ];

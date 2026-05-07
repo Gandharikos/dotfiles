@@ -69,12 +69,12 @@ let
     warning = yellow;
     yellow = "#e0af68";
   };
-  cfg = config.my.theme.tokyonight;
+  cfg = config.dot.theme.tokyonight;
   enable = cfg.enable && cfg.style == "storm";
 in
 {
   config = mkIf enable {
-    my.theme = {
+    dot.theme = {
       wallpaper = inputs.wallpapers.tokyonight.tokyo-night-street-rain.path;
       # I hated base16 scheme, so I made my own
       colorscheme = {

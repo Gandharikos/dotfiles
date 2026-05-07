@@ -5,11 +5,11 @@
   ...
 }:
 let
-  vimZellijNavigatorUri = "file:${pkgs.my.vim-zellij-navigator}/bin/vim-zellij-navigator.wasm";
+  vimZellijNavigatorUri = "file:${pkgs.dot.vim-zellij-navigator}/bin/vim-zellij-navigator.wasm";
 in
 {
-  imports = lib.my.scanPaths ./.;
-  programs.zellij.settings.keybinds = with config.my.keyboard.keys; {
+  imports = lib.dot.scanPaths ./.;
+  programs.zellij.settings.keybinds = with config.dot.keyboard.keys; {
     _props.clear-defaults = true;
     _children = [
       {

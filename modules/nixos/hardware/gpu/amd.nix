@@ -5,7 +5,7 @@
   ...
 }:
 let
-  isAmd = config.my.machine.gpu == "amd";
+  isAmd = config.dot.machine.gpu == "amd";
   inherit (lib.modules) mkIf;
 in
 {

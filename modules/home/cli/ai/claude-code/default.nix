@@ -9,14 +9,14 @@ let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
   inherit (lib.attrsets) optionalAttrs;
-  cfg = config.my.claude-code;
-  hooks = lib.my.importDir ./hooks {
+  cfg = config.dot.claude-code;
+  hooks = lib.dot.importDir ./hooks {
     inherit
       config
       pkgs
       ;
   };
-  mcpModuleEnabled = config.my.mcp.enable or false;
+  mcpModuleEnabled = config.dot.mcp.enable or false;
   sharedAiTools = aiCommon;
   claudeIcon = ./assets/claude.ico;
 in
@@ -25,7 +25,7 @@ in
     ./permissions.nix
   ];
 
-  options.my.claude-code = {
+  options.dot.claude-code = {
     enable = mkEnableOption "claude-code";
   };
 

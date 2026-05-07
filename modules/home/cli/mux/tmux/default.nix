@@ -8,19 +8,19 @@ let
   shellAliases = {
     "t" = "tmux";
   };
-  cfg = config.my.tmux;
-  autoStart = config.my.mux.autoStart && config.my.mux.default == "tmux";
+  cfg = config.dot.tmux;
+  autoStart = config.dot.mux.autoStart && config.dot.mux.default == "tmux";
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkBefore;
   inherit (lib.meta) getExe;
-  shell = getExe (builtins.getAttr config.my.shell pkgs);
+  shell = getExe (builtins.getAttr config.dot.shell pkgs);
 in
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
-  options.my.tmux = {
+  options.dot.tmux = {
     enable = mkEnableOption "tmux" // {
-      default = config.my.mux.default == "tmux";
+      default = config.dot.mux.default == "tmux";
     };
   };
 

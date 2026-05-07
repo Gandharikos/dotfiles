@@ -5,7 +5,7 @@
 {
   home.sessionVariables = {
     SYSTEMD_PAGERSECURE = "true";
-    FLAKE = osConfig.my.flakePath;
+    FLAKE = osConfig.dot.flakePath;
     DO_NOT_TRACK = 1;
   };
 }

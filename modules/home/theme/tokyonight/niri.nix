@@ -7,10 +7,10 @@
 let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (config.my.theme.colorscheme) palette;
+  inherit (config.dot.theme.colorscheme) palette;
 
-  cfg = config.my.theme.tokyonight;
-  enable = cfg.enable && config.my.gui.enable && isLinux;
+  cfg = config.dot.theme.tokyonight;
+  enable = cfg.enable && config.dot.gui.enable && isLinux;
 in
 {
   config = mkIf enable {

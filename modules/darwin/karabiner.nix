@@ -6,12 +6,12 @@
 let
   inherit (lib.options) mkOption;
   inherit (lib.modules) mkIf;
-  inherit (lib.my) relativeToConfig;
-  cfg = config.my.services.karabiner;
-  kbCfg = config.my.keyboard;
+  inherit (lib.dot) relativeToConfig;
+  cfg = config.dot.services.karabiner;
+  kbCfg = config.dot.keyboard;
 in
 {
-  options.my.services.karabiner = {
+  options.dot.services.karabiner = {
     enable = mkOption {
       type = lib.types.bool;
       default = kbCfg.backend == "karabiner";

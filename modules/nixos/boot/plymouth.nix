@@ -10,18 +10,18 @@ let
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) str package;
 
-  cfg = config.my.boot.plymouth;
+  cfg = config.dot.boot.plymouth;
   plymouth' = getExe' pkgs.plymouth "plymouth";
 in
 {
-  options.my.boot.plymouth = {
+  options.dot.boot.plymouth = {
     enable = mkEnableOption "plymouth boot splash" // {
       default = true;
     };
 
     playFullAnimation = mkEnableOption "Wait for the boot animation to finish playing before opening login shell.";
     themesPackage = mkOption {
-      default = pkgs.my.plymouth-themes.override { inherit (cfg) themeName; };
+      default = pkgs.dot.plymouth-themes.override { inherit (cfg) themeName; };
       type = package;
     };
     themeName = mkOption {

@@ -10,9 +10,9 @@ let
 
 in
 {
-  options.my.flakePath = mkOption {
+  options.dot.flakePath = mkOption {
     type = str;
-    default = "/${if (_class == "nixos") then "home" else "Users"}/${config.my.name}/.dotfiles";
+    default = "/${if (_class == "nixos") then "home" else "Users"}/${config.dot.name}/.dotfiles";
     description = "The path to the configuration";
   };
 
@@ -20,7 +20,7 @@ in
     SYSTEMD_PAGERSECURE = "true";
 
     # Some programs like `nh` use the FLAKE env var to determine the flake path
-    FLAKE = config.my.flakePath;
-    NH_FLAKE = config.my.flakePath;
+    FLAKE = config.dot.flakePath;
+    NH_FLAKE = config.dot.flakePath;
   };
 }

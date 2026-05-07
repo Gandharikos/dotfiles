@@ -4,12 +4,12 @@
   ...
 }:
 let
-  cfg = config.my.services.printing;
+  cfg = config.dot.services.printing;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
 in
 {
-  options.my.services.printing = {
+  options.dot.services.printing = {
     enable = mkEnableOption "Enable printing";
   };
 

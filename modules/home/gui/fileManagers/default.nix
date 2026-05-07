@@ -15,16 +15,16 @@ let
     ;
   inherit (lib.meta) getExe;
   inherit (lib.strings) escapeShellArgs hasInfix;
-  inherit (lib.my) withUWSMArgs;
-  inherit (config.my.gui) desktop fileManager;
-  inherit (config.my) gui;
+  inherit (lib.dot) withUWSMArgs;
+  inherit (config.dot.gui) desktop fileManager;
+  inherit (config.dot) gui;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   enable = gui.enable && isLinux;
   commandType = coercedTo str (
     value:
     if hasInfix " " value then
       throw ''
-        `my.gui.fileManager.command` accepts either an argv list or a single
+        `dot.gui.fileManager.command` accepts either an argv list or a single
         program path. Use a list for commands with arguments.
       ''
     else
@@ -32,9 +32,9 @@ let
   ) (listOf str);
 in
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
-  options.my.gui.fileManager = {
+  options.dot.gui.fileManager = {
     default = mkOption {
       type = enum [
         "cosmic-files"
@@ -73,7 +73,7 @@ in
       readOnly = true;
       description = ''
         The shell-escaped file manager command derived from
-        `my.gui.fileManager.command`.
+        `dot.gui.fileManager.command`.
       '';
     };
   };

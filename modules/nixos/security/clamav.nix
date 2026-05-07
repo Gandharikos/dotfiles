@@ -20,12 +20,12 @@ let
 
   notify-send' = getExe' pkgs.libnotify "notify-send";
 
-  cfg = config.my.security.clamav;
+  cfg = config.dot.security.clamav;
 in
 {
-  options.my.security.clamav = {
+  options.dot.security.clamav = {
     enable = mkEnableOption "Enable ClamAV daemon." // {
-      default = config.my.security.enable;
+      default = config.dot.security.enable;
     };
 
     daemon = {

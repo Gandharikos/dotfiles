@@ -7,8 +7,8 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe;
-  inherit (lib.my) uwsmScript uwsmScriptArgs;
-  enable = config.my.gui.desktop.shot.default == "hyprshot" && config.my.gui.desktop.wayland.enable;
+  inherit (lib.dot) uwsmScript uwsmScriptArgs;
+  enable = config.dot.gui.desktop.shot.default == "hyprshot" && config.dot.gui.desktop.wayland.enable;
   hyprshot = getExe pkgs.hyprshot;
   satty = getExe pkgs.satty;
   regionShot = uwsmScript pkgs "hyprshot-region-shot" ''

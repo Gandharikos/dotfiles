@@ -8,13 +8,13 @@ let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkAfter;
   inherit (lib.meta) getExe;
-  inherit (lib.my) uwsmApp;
-  cfg = config.my.gui.desktop.hyprland;
+  inherit (lib.dot) uwsmApp;
+  cfg = config.dot.gui.desktop.hyprland;
   hyprnome' = getExe pkgs.hyprnome;
   hyprnomeCmd = args: uwsmApp pkgs hyprnome' args;
 in
 {
-  options.my.gui.desktop.hyprland.nome = {
+  options.dot.gui.desktop.hyprland.nome = {
     enable = mkEnableOption "hyprnome" // {
       default = cfg.enable;
     };

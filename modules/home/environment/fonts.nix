@@ -4,7 +4,7 @@
   ...
 }:
 let
-  inherit (config.my) gui;
+  inherit (config.dot) gui;
   inherit (lib.modules) mkIf;
 in
 {

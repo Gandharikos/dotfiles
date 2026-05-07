@@ -1,8 +1,8 @@
 { config, ... }:
 let
-  username = config.my.name;
-  homeDirectory = config.my.home;
-  inherit (config.my) stateVersion;
+  username = config.dot.name;
+  homeDirectory = config.dot.home;
+  inherit (config.dot) stateVersion;
 in
 {
   news.display = "show";

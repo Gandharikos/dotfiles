@@ -7,12 +7,12 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  cfg = config.my.emacs;
+  cfg = config.dot.emacs;
 in
 {
-  options.my.emacs = {
+  options.dot.emacs = {
     enable = mkEnableOption "Enable Emacs" // {
-      default = config.my.editor == "emacs";
+      default = config.dot.editor == "emacs";
     };
   };
 
@@ -29,7 +29,7 @@ in
         let
           editor = "emacsclient -t";
         in
-        mkIf (config.my.editor == "emacs") {
+        mkIf (config.dot.editor == "emacs") {
           EDITOR = editor;
           VISUAL = editor;
           GIT_EDITOR = editor;

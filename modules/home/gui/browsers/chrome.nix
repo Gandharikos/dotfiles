@@ -7,14 +7,14 @@
 let
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  inherit (config.my) gui;
-  cfg = config.my.gui.apps.chrome;
+  inherit (config.dot) gui;
+  cfg = config.dot.gui.apps.chrome;
   enable = gui.enable && cfg.enable;
 in
 {
-  options.my.gui.apps.chrome = {
+  options.dot.gui.apps.chrome = {
     enable = mkEnableOption "chrome" // {
-      default = config.my.gui.browser.default == "google-chrome";
+      default = config.dot.gui.browser.default == "google-chrome";
     };
   };
 

@@ -1,6 +1,6 @@
 { lib, pkgs, ... }:
 {
-  imports = lib.my.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
   home.packages = with pkgs; [
     pixi
   ];

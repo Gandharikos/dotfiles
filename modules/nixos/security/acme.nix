@@ -12,11 +12,11 @@ let
   cfg = config.khanelinix.security.acme;
 in
 {
-  options.my.security.acme = {
+  options.dot.security.acme = {
     enable = mkEnableOption "default ACME configuration";
     email = mkOption {
       type = str;
-      default = config.my.email;
+      default = config.dot.email;
       description = "Email address to use for ACME registration.";
     };
     staging = mkOption {

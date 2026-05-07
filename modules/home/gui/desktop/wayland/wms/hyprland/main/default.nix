@@ -7,14 +7,14 @@ let
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) listOf enum;
   inherit (lib.modules) mkIf;
-  inherit (lib.my) scanPaths;
-  inherit (config.my.gui) desktop;
+  inherit (lib.dot) scanPaths;
+  inherit (config.dot.gui) desktop;
   cfg = desktop.hyprland;
 in
 {
   imports = scanPaths ./.;
 
-  options.my.gui.desktop.hyprland = {
+  options.dot.gui.desktop.hyprland = {
     enable = mkEnableOption "Enable Hyprland" // {
       default = desktop.wayland.enable && desktop.default == "hyprland";
       internal = true;

@@ -7,12 +7,12 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  inherit (config.my) gui;
-  cfg = config.my.gui.apps.telegram;
+  inherit (config.dot) gui;
+  cfg = config.dot.gui.apps.telegram;
   enable = gui.enable && cfg.enable;
 in
 {
-  options.my.gui.apps.telegram = {
+  options.dot.gui.apps.telegram = {
     enable = mkEnableOption "Telegram";
   };
 
