@@ -2,7 +2,7 @@ set shell := ["bash", "-c"]
 export NIX_CONFIG := "experimental-features = nix-command flakes"
 
 flake := env('FLAKE', justfile_directory())
-remote_user := env('REMOTE_USER', 'johnson')
+user := `whoami`
 rebuild := if os() == "macos" { "sudo darwin-rebuild" } else { "nixos-rebuild" }
 system-args := if os() == "macos" { "--show-trace -L -v" } else { "--show-trace -L -v --sudo" }
 
@@ -162,16 +162,16 @@ add program:
 # ------------------------------------------------------------------------------
 
 [group('secret')]
-decrypt host=`hostname -s`:
+init-local host=`hostname -s`:
     #!/usr/bin/env bash
     mkdir -p ~/.ssh
-    sops -d --extract '["data"]' secrets/core/id_ed25519.yaml > ~/.ssh/id_ed25519
+    sops -d --extract '["data"]' secrets/{{ user }}/core/id_ed25519.yaml > ~/.ssh/id_ed25519
     chmod 600 ~/.ssh/id_ed25519
 
     sudo mkdir -p /etc/ssh
-    sops -d --extract '["data"]' secrets/core/{{ host }}.yaml | sudo tee /etc/ssh/ssh_host_ed25519_key > /dev/null
+    sops -d --extract '["data"]' secrets/{{ user }}/core/{{ host }}.yaml | sudo tee /etc/ssh/ssh_host_ed25519_key > /dev/null
     sudo chmod 600 /etc/ssh/ssh_host_ed25519_key
-    sudo cp secrets/core/{{ host }}.pub /etc/ssh/ssh_host_ed25519_key.pub
+    sudo cp secrets/{{ user }}/core/{{ host }}.pub /etc/ssh/ssh_host_ed25519_key.pub
     sudo chmod 644 /etc/ssh/ssh_host_ed25519_key.pub
 
 [group('secret')]
@@ -182,33 +182,27 @@ init-remote host ip:
     tmp_dir="$(mktemp -d /tmp/keys-{{ host }}.XXXXXX)"
     trap 'rm -rf "$tmp_dir"' EXIT
 
-    sops -d --extract '["data"]' secrets/core/id_ed25519.yaml > "$tmp_dir/id_ed25519"
-    cp secrets/core/id_ed25519.pub "$tmp_dir/id_ed25519.pub"
-    sops -d --extract '["data"]' secrets/core/{{ host }}.yaml > "$tmp_dir/ssh_host_ed25519_key"
-    cp secrets/core/{{ host }}.pub "$tmp_dir/ssh_host_ed25519_key.pub"
+    sops -d --extract '["data"]' secrets/{{ user }}/core/id_ed25519.yaml > "$tmp_dir/id_ed25519"
+    cp secrets/{{ user }}/core/id_ed25519.pub "$tmp_dir/id_ed25519.pub"
+    sops -d --extract '["data"]' secrets/{{ user }}/core/{{ host }}.yaml > "$tmp_dir/ssh_host_ed25519_key"
+    cp secrets/{{ user }}/core/{{ host }}.pub "$tmp_dir/ssh_host_ed25519_key.pub"
 
     chmod 600 "$tmp_dir/id_ed25519" "$tmp_dir/ssh_host_ed25519_key"
 
-    ssh {{ remote_user }}@{{ ip }} "mkdir -p ~/.ssh && chmod 700 ~/.ssh"
-    scp "$tmp_dir/id_ed25519" "$tmp_dir/id_ed25519.pub" {{ remote_user }}@{{ ip }}:~/.ssh/
-    scp "$tmp_dir/ssh_host_ed25519_key" "$tmp_dir/ssh_host_ed25519_key.pub" {{ remote_user }}@{{ ip }}:~/
+    ssh {{ user }}@{{ ip }} "mkdir -p ~/.ssh && chmod 700 ~/.ssh"
+    scp "$tmp_dir/id_ed25519" "$tmp_dir/id_ed25519.pub" {{ user }}@{{ ip }}:~/.ssh/
+    scp "$tmp_dir/ssh_host_ed25519_key" "$tmp_dir/ssh_host_ed25519_key.pub" {{ user }}@{{ ip }}:~/
 
-    ssh -t {{ remote_user }}@{{ ip }} "sudo mkdir -p /etc/ssh /persist/etc/ssh && \
-      sudo cp ~/ssh_host_ed25519_key /etc/ssh/ssh_host_ed25519_key && \
-      sudo cp ~/ssh_host_ed25519_key.pub /etc/ssh/ssh_host_ed25519_key.pub && \
-      sudo cp ~/ssh_host_ed25519_key /persist/etc/ssh/ssh_host_ed25519_key && \
-      sudo cp ~/ssh_host_ed25519_key.pub /persist/etc/ssh/ssh_host_ed25519_key.pub && \
-      sudo chmod 600 /etc/ssh/ssh_host_ed25519_key /persist/etc/ssh/ssh_host_ed25519_key && \
-      sudo chmod 644 /etc/ssh/ssh_host_ed25519_key.pub /persist/etc/ssh/ssh_host_ed25519_key.pub && \
+    ssh -t {{ user }}@{{ ip }} "sudo install -d -m 755 /etc/ssh && \
+      sudo install -m 600 ~/ssh_host_ed25519_key /etc/ssh/ssh_host_ed25519_key && \
+      sudo install -m 644 ~/ssh_host_ed25519_key.pub /etc/ssh/ssh_host_ed25519_key.pub && \
       rm ~/ssh_host_ed25519_key*"
 
-    ssh -t {{ remote_user }}@{{ ip }} "sudo mkdir -p /nix/var/nix/profiles/per-user/{{ remote_user }} /persist/nix/var/nix/profiles/per-user/{{ remote_user }} && \
-      sudo chown {{ remote_user }}:users /nix/var/nix/profiles/per-user/{{ remote_user }} /persist/nix/var/nix/profiles/per-user/{{ remote_user }} && \
-      sudo chmod 755 /nix/var/nix/profiles/per-user/{{ remote_user }} /persist/nix/var/nix/profiles/per-user/{{ remote_user }}"
+    ssh -t {{ user }}@{{ ip }} "sudo mkdir -p /nix/var/nix/profiles/per-user/{{ user }} && \
+      sudo chown {{ user }}:users /nix/var/nix/profiles/per-user/{{ user }} && \
+      sudo chmod 755 /nix/var/nix/profiles/per-user/{{ user }}"
 
-    ssh {{ remote_user }}@{{ ip }} "mkdir -p ~/.ssh /persist/home/{{ remote_user }}/.ssh && chmod 700 ~/.ssh /persist/home/{{ remote_user }}/.ssh"
-    scp "$tmp_dir/id_ed25519" "$tmp_dir/id_ed25519.pub" {{ remote_user }}@{{ ip }}:~/.ssh/
-    ssh {{ remote_user }}@{{ ip }} "cp ~/.ssh/id_ed25519* /persist/home/{{ remote_user }}/.ssh/ && chmod 600 ~/.ssh/id_ed25519 /persist/home/{{ remote_user }}/.ssh/id_ed25519"
+    ssh {{ user }}@{{ ip }} "chmod 600 ~/.ssh/id_ed25519 && chmod 644 ~/.ssh/id_ed25519.pub"
 
 # ------------------------------------------------------------------------------
 # utils
