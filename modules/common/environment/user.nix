@@ -35,12 +35,12 @@ in
     # Public Keys that can be used to login to all hosts;
     openssh.authorizedKeys.keys = [
       # Primary user key
-      (builtins.readFile "${self}/secrets/core/id_ed25519.pub")
+      (builtins.readFile "${self}/secrets/johnson/core/id_ed25519.pub")
     ]
     ++
-      # Additional keys from secrets/core/keys/ (only .pub files)
+      # Additional keys from secrets/johnson/core/keys/ (only .pub files)
       (forEach (lib.filter (path: lib.hasSuffix ".pub" (toString path)) (
-        listFilesRecursive "${self}/secrets/core/keys"
+        listFilesRecursive "${self}/secrets/johnson/core/keys"
       )) (key: builtins.readFile key));
   };
 }

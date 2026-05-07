@@ -24,17 +24,17 @@ creation_rules:
           - *loki
         pgp:
           - *johnson
+  # Core bootstrap secrets: only PGP keys needed
+  - path_regex: ^(\./)?secrets/johnson/core/.*
+    key_groups:
+      - pgp:
+          - *johnson
   # User-specific secrets: only user keys needed
-  - path_regex: ^(\./)?secrets/johnson/
+  - path_regex: ^(\./)?secrets/johnson/[^/]+\.(ya?ml|json|env|ini)$
     key_groups:
       - age:
           - *johnson_age
         pgp:
-          - *johnson
-  # Core secrets: only pgp keys needed
-  - path_regex: ^(\./)?secrets/core/.*
-    key_groups:
-      - pgp:
           - *johnson
   # Default secrets: all keys for backward compatibility
   - path_regex: ^(\./)?secrets/(?:[^/]+/)*[^/]+(?:\.(?:ya?ml|json|ini|env))?$

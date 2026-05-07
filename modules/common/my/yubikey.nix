@@ -23,8 +23,8 @@ in
         List of YubiKey names to use for SSH authentication.
 
         Serial number mappings are documented in:
-        - secrets/core/keys/YUBIKEYS.md
-        - secrets/core/keys/identify-yubikey.sh
+        - secrets/johnson/core/keys/YUBIKEYS.md
+        - secrets/johnson/core/keys/identify-yubikey.sh
       '';
       example = [
         "foo"

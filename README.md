@@ -769,8 +769,8 @@ sops -d secrets/services/example.yaml
 
 The `secrets/` directory is organized by purpose:
 
-- `secrets/core/`: Core system secrets (SSH host keys, machine IDs)
 - `secrets/johnson/`: User-specific secrets
+  - `core/`: Johnson-owned bootstrap secrets (SSH host keys, GPG public keys, YubiKey metadata)
   - SSH keys and configurations
   - GPG keys and trust database
   - Personal credentials

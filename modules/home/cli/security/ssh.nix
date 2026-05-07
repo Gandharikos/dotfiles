@@ -112,7 +112,7 @@ in
       ];
 
       # Link regular SSH public key
-      home.file.".ssh/id_ed25519.pub".source = "${self}/secrets/core/id_ed25519.pub";
+      home.file.".ssh/id_ed25519.pub".source = "${self}/secrets/johnson/core/id_ed25519.pub";
     }
 
     # ===================================================================
@@ -130,7 +130,7 @@ in
         # YubiKey identification helper script
         {
           ".local/bin/identify-yubikey" = {
-            source = "${self}/secrets/core/keys/identify-yubikey.sh";
+            source = "${self}/secrets/johnson/core/keys/identify-yubikey.sh";
             executable = true;
           };
         }
@@ -141,7 +141,7 @@ in
             map (
               name:
               let
-                pubKeyPath = "${self}/secrets/core/keys/id_${name}.pub";
+                pubKeyPath = "${self}/secrets/johnson/core/keys/id_${name}.pub";
               in
               if builtins.pathExists pubKeyPath then
                 {

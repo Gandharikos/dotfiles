@@ -37,7 +37,7 @@ in
 
     publicKeysPath = mkOption {
       type = path;
-      default = "${self}/secrets/core/gpg-keys.pub";
+      default = "${self}/secrets/johnson/core/gpg-keys.pub";
       description = "The path to the public key of my gpg.";
     };
   };
