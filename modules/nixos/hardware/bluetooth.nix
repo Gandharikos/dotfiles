@@ -28,7 +28,7 @@ in
       enable = true;
       disabledPlugins = [ "sap" ];
       settings.General = {
-        JustWorksPepairing = "always";
+        JustWorksRepairing = "always";
         MultiProfile = "multiple";
       };
     };
