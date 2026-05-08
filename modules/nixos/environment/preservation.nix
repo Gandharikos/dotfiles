@@ -188,6 +188,12 @@ in
             ".config/obs-studio"
           ];
         })
+        (mkIf hm.gui.apps.spotify.enable {
+          directories = [
+            ".cache/spotify"
+            ".config/spotify"
+          ];
+        })
         (mkIf hm.gui.apps.spotify.spotify-player.enable {
           directories = [
             ".cache/spotify-player"
