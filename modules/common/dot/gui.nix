@@ -6,7 +6,7 @@
 }:
 let
   inherit (lib.options) mkOption mkEnableOption;
-  inherit (lib.types) enum str;
+  inherit (lib.types) enum nullOr str;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   inherit (lib.meta) getExe;
   inherit (config) dot;
@@ -78,6 +78,15 @@ in
         else
           "aerospace";
       description = "The default window manager limited by desktop.type";
+    };
+
+    shell = mkOption {
+      type = nullOr (enum [
+        "dank-material-shell"
+        "noctalia-shell"
+      ]);
+      default = if isLinux && dot.gui.desktop.wayland.enable then "noctalia-shell" else null;
+      description = "The desktop shell to use.";
     };
 
     uwsm.enable = mkEnableOption "UWSM-managed desktop session" // {

@@ -110,10 +110,7 @@ in
       AttrKeyboardIntegration=internal
     '';
 
-    dot.users.${config.dot.primaryUser}.imports = [
-      {
-        home.file.".XCompose".source = "${pkgs.keyd}/share/keyd/keyd.compose";
-      }
-    ];
+    dot.users.${config.dot.primaryUser}.home.home.file.".XCompose".source =
+      "${pkgs.keyd}/share/keyd/keyd.compose";
   };
 }

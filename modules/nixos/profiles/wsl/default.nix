@@ -48,11 +48,7 @@ in
       # TODO: so many things rely on yubikey, so It should enable no WSL too
       yubikey.enable = mkForce false;
     };
-    dot.users.${config.dot.primaryUser}.imports = [
-      {
-        dot.fastfetch.startOnLogin = mkDefault false;
-      }
-    ];
+    dot.users.${config.dot.primaryUser}.home.my.fastfetch.startOnLogin = mkDefault false;
     wsl = {
       enable = true;
       wslConf = {

@@ -7,10 +7,126 @@
 }:
 let
   cfg = config.dot.persistence;
-  hm = config.home-manager.users.${config.dot.primaryUser}.my;
+  inherit (config.dot) enabledUser users;
+  inherit (lib.attrsets) genAttrs;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
-  name = config.dot.primaryUser;
+  mkUserPersistence =
+    name:
+    let
+      userCfg = users.${name};
+    in
+    mkMerge [
+      {
+        inherit (userCfg.persistence) commonMountOptions;
+        directories = [
+          # keep-sorted start
+          ".cache/fish"
+          ".cache/nix"
+          ".cache/nixpkgs-review"
+          ".cache/pre-commit"
+          ".dotfiles"
+          ".local/bin"
+          ".local/share/fish"
+          ".local/share/nix"
+          ".local/share/supermaven"
+          ".local/state/home-manager"
+          ".local/state/nix/profiles"
+          ".pixi"
+          "Desktop"
+          "Dev"
+          "Documents"
+          "Downloads"
+          "Media"
+          "Misc"
+          "Public"
+          # keep-sorted end
+          {
+            directory = ".docker";
+            mode = "0700";
+          }
+          {
+            directory = ".config/sops";
+            mode = "0700";
+          }
+          {
+            directory = ".secrets";
+            mode = "0700";
+          }
+        ];
+        files = [ ];
+      }
+      (mkIf config.dot.gui.enable {
+        directories = [
+          # keep-sorted start
+          ".cache/DankMaterialShell"
+          ".cache/cliphist"
+          ".cache/noctalia"
+          ".cache/noctalia-qs"
+          ".cache/quickshell"
+          ".config/DankMaterialShell"
+          ".config/cava"
+          ".config/dgop"
+          ".config/noctalia"
+          ".local/share/color-schemes"
+          ".local/state/DankMaterialShell"
+          # keep-sorted end
+        ];
+      })
+      (mkIf config.dot.gui._1password.enable {
+        directories = [
+          ".config/1Password"
+        ];
+      })
+      (mkIf config.dot.gui.fcitx5.enable {
+        directories = [
+          ".config/fcitx"
+          ".config/fcitx5"
+          ".local/share/fcitx5"
+          ".cache/fcitx5"
+        ];
+      })
+      (mkIf config.dot.security.enable {
+        directories = [
+          {
+            directory = ".ssh";
+            mode = "0700";
+          }
+          {
+            directory = ".local/share/password-store";
+            mode = "0700";
+          }
+          {
+            # gnome keyrings
+            directory = ".local/share/keyrings";
+            mode = "0700";
+          }
+        ];
+      })
+      {
+        inherit (userCfg.persistence) directories;
+        inherit (userCfg.persistence) files;
+      }
+    ];
+  mkUserTmpfiles =
+    name:
+    let
+      inherit (users.${name}) homeDirectory;
+      permission = {
+        user = name;
+        group = lib.mkForce name;
+        mode = lib.mkForce "0750";
+      };
+    in
+    {
+      "${homeDirectory}/.config".d = permission;
+      "${homeDirectory}/.cache".d = permission;
+      "${homeDirectory}/.local".d = permission;
+      "${homeDirectory}/.local/share".d = permission;
+      "${homeDirectory}/.local/state".d = permission;
+      "${homeDirectory}/.local/state/nix".d = permission;
+      "${homeDirectory}/.terraform.d".d = permission;
+    };
 in
 {
   imports = [ inputs.preservation.nixosModules.default ];
@@ -88,285 +204,7 @@ in
       ];
 
       # User-level persistence (replaces home-manager persistence module)
-      users.${name} = mkMerge [
-        {
-          commonMountOptions = [
-            "x-gvfs-hide"
-          ];
-          directories = [
-            # keep-sorted start
-            ".cache/fish"
-            ".cache/nix"
-            ".cache/nixpkgs-review"
-            ".cache/pre-commit"
-            ".dotfiles"
-            ".local/bin"
-            ".local/share/fish"
-            ".local/share/nix"
-            ".local/share/supermaven"
-            ".local/state/home-manager"
-            ".local/state/nix/profiles"
-            ".pixi"
-            "Desktop"
-            "Dev"
-            "Documents"
-            "Downloads"
-            "Media"
-            "Misc"
-            "Public"
-            # keep-sorted end
-            {
-              directory = ".docker";
-              mode = "0700";
-            }
-            {
-              directory = ".config/sops";
-              mode = "0700";
-            }
-            {
-              directory = ".secrets";
-              mode = "0700";
-            }
-          ];
-          files = [ ];
-        }
-        (mkIf config.dot.gui.enable {
-          directories = [
-            # keep-sorted start
-            ".cache/DankMaterialShell"
-            ".cache/cliphist"
-            ".cache/noctalia"
-            ".cache/noctalia-qs"
-            ".cache/quickshell"
-            ".config/DankMaterialShell"
-            ".config/cava"
-            ".config/dgop"
-            ".config/noctalia"
-            ".local/share/color-schemes"
-            ".local/state/DankMaterialShell"
-            # keep-sorted end
-          ];
-        })
-        (mkIf hm.gui.apps.anki.enable {
-          directories = [
-            ".cache/Anki"
-            ".local/share/Anki2"
-          ];
-        })
-        (mkIf hm.gui.apps.discord.enable {
-          directories = [
-            # keep-sorted start
-            ".config/Discord"
-            ".config/discord"
-            ".config/vencord"
-            ".config/vesktop"
-            # keep-sorted end
-          ];
-        })
-        (mkIf hm.gui.apps."cloudflare-warp".enable {
-          directories = [
-            ".local/share/warp"
-          ];
-        })
-        (mkIf hm.gui.apps.firefox.enable {
-          directories = [
-            ".cache/mozilla/firefox"
-            ".mozilla/firefox"
-          ];
-        })
-        (mkIf hm.gui.apps.chrome.enable {
-          directories = [
-            ".cache/google-chrome"
-            ".config/google-chrome"
-            ".cache/chromium"
-            ".config/chromium"
-            ".local/share/pki"
-          ];
-        })
-        (mkIf hm.gui.apps.obs.enable {
-          directories = [
-            ".config/obs-studio"
-          ];
-        })
-        (mkIf hm.gui.apps.spotify.enable {
-          directories = [
-            ".cache/spotify"
-            ".config/spotify"
-          ];
-        })
-        (mkIf hm.gui.apps.spotify.spotify-player.enable {
-          directories = [
-            ".cache/spotify-player"
-          ];
-        })
-        (mkIf hm.gui.apps.wezterm.enable {
-          directories = [
-            ".cache/wezterm"
-            ".local/share/wezterm"
-          ];
-        })
-        (mkIf hm.gui.apps.zen.enable {
-          directories = [
-            ".cache/zen"
-            ".config/zen"
-          ];
-        })
-        (mkIf hm.gui.apps.vlc.enable {
-          directories = [
-            ".config/vlc"
-          ];
-        })
-        (mkIf config.dot.gui._1password.enable {
-          directories = [
-            ".config/1Password"
-          ];
-        })
-        (mkIf config.dot.gui.fcitx5.enable {
-          directories = [
-            ".config/fcitx"
-            ".config/fcitx5"
-            ".local/share/fcitx5"
-            ".cache/fcitx5"
-          ];
-        })
-        (mkIf hm.atuin.enable {
-          directories = [
-            ".local/share/atuin"
-          ];
-        })
-        (mkIf hm.bat.enable {
-          directories = [
-            ".cache/bat"
-          ];
-        })
-        (mkIf hm.claude-code.enable {
-          directories = [
-            ".claude"
-          ];
-          files = [
-            ".claude.json"
-          ];
-        })
-        (mkIf hm.langs.enable {
-          directories = [
-            "go"
-          ];
-        })
-        (mkIf hm.langs.node.enable {
-          directories = [
-            ".npm"
-          ];
-        })
-        (mkIf hm.langs.python.enable {
-          directories = [
-            ".cache/uv"
-            ".local/pipx"
-            ".local/share/uv"
-          ];
-        })
-        (mkIf hm.langs.rust.enable {
-          directories = [
-            ".cargo"
-          ];
-        })
-        (mkIf hm.codex.enable {
-          directories = [
-            ".codex"
-          ];
-        })
-        (mkIf hm.direnv.enable {
-          directories = [
-            ".local/share/direnv/allow"
-          ];
-        })
-        (mkIf hm.fastfetch.enable {
-          directories = [
-            ".cache/fastfetch"
-          ];
-        })
-        (mkIf hm."gemini-cli".enable {
-          directories = [
-            ".gemini"
-          ];
-        })
-        (mkIf hm.gh.enable {
-          directories = [
-            ".config/gh"
-          ];
-        })
-        (mkIf hm.lazygit.enable {
-          directories = [
-            ".local/state/lazygit"
-          ];
-        })
-        (mkIf hm.navi.enable {
-          directories = [
-            ".local/share/navi"
-          ];
-        })
-        (mkIf hm.opencode.enable {
-          directories = [
-            ".config/opencode"
-          ];
-        })
-        (mkIf hm.pet.enable {
-          directories = [
-            ".config/pet"
-          ];
-        })
-        (mkIf config.dot.security.enable {
-          directories = [
-            {
-              directory = ".ssh";
-              mode = "0700";
-            }
-            {
-              directory = ".local/share/password-store";
-              mode = "0700";
-            }
-            {
-              # gnome keyrings
-              directory = ".local/share/keyrings";
-              mode = "0700";
-            }
-          ];
-        })
-        (mkIf hm.security.gpg.enable {
-          directories = [
-            {
-              directory = ".gnupg";
-              mode = "0700";
-            }
-          ];
-        })
-        (mkIf hm.tealdeer.enable {
-          directories = [
-            ".cache/tealdeer"
-          ];
-        })
-        (mkIf hm.tmux.enable {
-          directories = [
-            ".tmux"
-            ".local/share/tmux"
-          ];
-        })
-        (mkIf hm.yazi.enable {
-          directories = [
-            ".local/state/yazi"
-          ];
-        })
-        (mkIf hm.zellij.enable {
-          directories = [
-            ".cache/zellij"
-            ".local/share/zellij"
-          ];
-        })
-        (mkIf hm.zoxide.enable {
-          directories = [
-            ".local/share/zoxide"
-          ];
-        })
-      ];
+      users = genAttrs enabledUser mkUserPersistence;
     };
     # Create some directories with custom permissions.
     #
@@ -381,23 +219,7 @@ in
     # Note that immediate parent directories of persisted files can also be
     # configured with ownership and permissions from the `parent` settings if
     # `configureParent = true` is set for the file.
-    systemd.tmpfiles.settings.preservation =
-      let
-        permission = {
-          user = name;
-          group = lib.mkForce name;
-          mode = lib.mkForce "0750";
-        };
-      in
-      {
-        "/home/${name}/.config".d = permission;
-        "/home/${name}/.cache".d = permission;
-        "/home/${name}/.local".d = permission;
-        "/home/${name}/.local/share".d = permission;
-        "/home/${name}/.local/state".d = permission;
-        "/home/${name}/.local/state/nix".d = permission;
-        "/home/${name}/.terraform.d".d = permission;
-      };
+    systemd.tmpfiles.settings.preservation = mkMerge (map mkUserTmpfiles enabledUser);
 
     # systemd-machine-id-commit.service would fail but it is not relevant
     # in this specific setup for a persistent machine-id so we disable it

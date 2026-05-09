@@ -27,7 +27,7 @@ in
   users.users = genAttrs enabledUser (name: {
     # https://github.com/LnL7/nix-darwin/issues/1237 still have a bug
     shell = builtins.getAttr users.${name}.shell pkgs;
-    inherit (users.${name}) home;
+    home = users.${name}.homeDirectory;
     description = name;
     openssh.authorizedKeys.keys = users.${name}.authorizedKeys;
   });

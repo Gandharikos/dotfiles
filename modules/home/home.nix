@@ -13,7 +13,7 @@ let
     name = "my";
   };
   username = config.my.name;
-  homeDirectory = config.my.home;
+  inherit (config.my) homeDirectory;
   inherit (osConfig.dot) stateVersion;
 in
 {

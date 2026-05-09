@@ -17,7 +17,7 @@ let
   # On Darwin: clash-verge includes mihomo core, config goes to user's home
   proxyConfigPath =
     if isDarwin then
-      "${config.dot.admin.home}/.config/clash-verge/config.yaml"
+      "${config.dot.admin.homeDirectory}/.config/clash-verge/config.yaml"
     else
       "/var/lib/mihomo/config.yaml";
   proxyConfigOwner = if isDarwin then config.dot.primaryUser else "mihomo";
@@ -26,7 +26,7 @@ let
 
   proxySourceConfigPath =
     if isDarwin then
-      "${config.dot.admin.home}/.config/sing-box/clash.yaml"
+      "${config.dot.admin.homeDirectory}/.config/sing-box/clash.yaml"
     else
       "/run/secrets/proxy-source-config.yaml";
   proxySourceConfigOwner = if isDarwin then config.dot.primaryUser else "root";

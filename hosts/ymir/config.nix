@@ -58,20 +58,18 @@
     };
   };
 
-  dot.users.${config.dot.primaryUser}.imports = [
-    {
-      my = {
-        gui.browser.default = "google-chrome";
-        gui.terminal.size = 12;
-        gui.apps = {
-          anki.enable = true;
-          chrome.enable = true;
-          firefox.enable = lib.mkForce false;
-          zen.enable = lib.mkForce false;
-        };
+  dot.users.${config.dot.primaryUser}.home = {
+    my = {
+      gui.browser.default = "google-chrome";
+      gui.terminal.size = 12;
+      gui.apps = {
+        anki.enable = true;
+        chrome.enable = true;
+        firefox.enable = lib.mkForce false;
+        zen.enable = lib.mkForce false;
       };
-    }
-  ];
+    };
+  };
 
   home-manager.sharedModules = [
     {

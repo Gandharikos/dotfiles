@@ -48,10 +48,16 @@ let
         };
     in
     {
-      inherit (userCfg) imports;
-      my = (removeAttrs userCfg [ "theme" ]) // {
-        theme = themeInput;
-      };
+      imports = [ userCfg.home ];
+      my =
+        (removeAttrs userCfg [
+          "home"
+          "persistence"
+          "theme"
+        ])
+        // {
+          theme = themeInput;
+        };
     };
 in
 {

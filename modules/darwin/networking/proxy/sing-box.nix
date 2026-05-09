@@ -8,7 +8,7 @@
 let
   cfg = config.dot.networking.proxy;
   inherit (lib) mkIf;
-  configDir = "${config.dot.admin.home}/.config/sing-box";
+  configDir = "${config.dot.admin.homeDirectory}/.config/sing-box";
   generateConfig = proxyCommon.mkSingBoxGenerateConfig {
     name = "generate-sing-box-config";
     inherit pkgs;

@@ -1,4 +1,8 @@
-{ lib, ... }:
+{
+  lib,
+  osConfig,
+  ...
+}:
 let
   inherit (lib.dot) scanPaths;
   inherit (lib.options) mkOption;
@@ -13,7 +17,7 @@ in
         "dank-material-shell"
         "noctalia-shell"
       ]);
-      default = "noctalia-shell";
+      default = osConfig.dot.gui.desktop.shell;
       description = "The desktop shell to use.";
     };
   };

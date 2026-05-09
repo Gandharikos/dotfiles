@@ -5,6 +5,7 @@ let
   inherit (lib.lists) forEach optionals;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types)
+    anything
     attrs
     coercedTo
     deferredModule
@@ -230,7 +231,7 @@ let
         type = singleLineStr;
         description = "The user's initial hashed password.";
       };
-      home = mkOption {
+      homeDirectory = mkOption {
         internal = true;
         type = str;
         default = if isLinux then "/home/${config.name}" else "/Users/${config.name}";
@@ -270,11 +271,6 @@ let
         description = "SSH public keys authorized for this user.";
       };
       theme = mkThemeOptions config.theme;
-      imports = mkOption {
-        type = listOf deferredModule;
-        default = [ ];
-        description = "Home Manager modules imported for this user.";
-      };
     };
 in
 {
@@ -288,14 +284,41 @@ in
     submodule (
       { name, config, ... }:
       {
-        options = mkUserOptions {
-          inherit
-            config
-            inferName
-            isLinux
-            name
-            ;
-        };
+        options =
+          (mkUserOptions {
+            inherit
+              config
+              inferName
+              isLinux
+              name
+              ;
+          })
+          // {
+            home = mkOption {
+              type = deferredModule;
+              default = { };
+              description = "Home Manager module for this user.";
+            };
+            persistence = {
+              commonMountOptions = mkOption {
+                type = listOf str;
+                default = [
+                  "x-gvfs-hide"
+                ];
+                description = "Common mount options for this user's preserved home paths.";
+              };
+              directories = mkOption {
+                type = listOf anything;
+                default = [ ];
+                description = "Home directories to persist for this user.";
+              };
+              files = mkOption {
+                type = listOf anything;
+                default = [ ];
+                description = "Home files to persist for this user.";
+              };
+            };
+          };
       }
     );
 }

@@ -73,7 +73,7 @@ in
             name = config.my.fullName;
           };
 
-          safe.directory = [ "${config.my.home}/.dotfiles" ];
+          safe.directory = [ "${config.my.homeDirectory}/.dotfiles" ];
 
           color.ui = "auto";
           core.editor = "nvim";

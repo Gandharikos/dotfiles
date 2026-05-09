@@ -41,7 +41,7 @@ in
         enable = true;
         settings = {
           cue = true; # Tells user they need to press the button
-          authFile = "${config.dot.admin.home}/.config/Yubico/u2f_keys";
+          authFile = "${config.dot.admin.homeDirectory}/.config/Yubico/u2f_keys";
         };
       };
       services = {
