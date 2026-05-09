@@ -6,7 +6,12 @@
 }:
 let
   inherit (config) dot;
-  inherit (lib.modules) mkIf mkDefault mkBefore;
+  inherit (lib.modules)
+    mkIf
+    mkDefault
+    mkBefore
+    mkForce
+    ;
   inherit (lib.lists) optionals;
   inherit (lib.strings) concatStringsSep;
 
@@ -87,11 +92,21 @@ in
         tailscaled-autoconnect = mkIf cfg.autoConnect {
           after = [ "sops-nix.service" ];
           wants = [ "sops-nix.service" ];
+          wantedBy = mkForce [ ];
           serviceConfig = {
             # Global systemd defaults are 15s on this host, which is too short when Wi-Fi
             # brings up the default route after tailscaled has already started.
             TimeoutStartSec = "2min";
           };
+        };
+      };
+      timers.tailscaled-autoconnect = mkIf cfg.autoConnect {
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          # The service still orders after sops-nix.service; this only keeps the
+          # autoconnect attempt out of graphical.target's critical path.
+          OnBootSec = "30s";
+          Unit = "tailscaled-autoconnect.service";
         };
       };
     };
