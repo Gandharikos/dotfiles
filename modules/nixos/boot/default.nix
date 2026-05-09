@@ -119,7 +119,12 @@ in
           verbose = false;
 
           # enable systemd in initrd (experimental)
-          systemd.enable = true;
+          systemd = {
+            enable = true;
+            storePaths = [
+              pkgs.pcsclite.lib
+            ];
+          };
 
           kernelModules = [
             "nvme"
