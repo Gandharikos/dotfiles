@@ -69,4 +69,10 @@
       };
     }
   ];
+
+  home-manager.sharedModules = [
+    {
+      programs.niri.settings.debug.render-drm-device = "/dev/dri/by-path/pci-0000:65:00.0-render";
+    }
+  ];
 }
