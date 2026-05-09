@@ -8,7 +8,10 @@
 
   dot = {
     primaryUser = "johnson";
-    security.auditd.enable = lib.mkForce false;
+    security = {
+      auditd.enable = lib.mkForce false;
+      fixWebcam = true;
+    };
     boot = {
       secureBoot = false;
       tmpOnTmpfs = false;
