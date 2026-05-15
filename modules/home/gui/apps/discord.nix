@@ -34,7 +34,6 @@ in
           alwaysExpandRoles.enable = true;
           betterGifAltText.enable = true;
           betterGifPicker.enable = true;
-          betterNotesBox.enable = true;
           betterRoleDot.enable = true;
           betterUploadButton.enable = true;
           betterSessions.enable = true;
