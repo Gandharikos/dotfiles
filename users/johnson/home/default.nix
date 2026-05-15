@@ -3,6 +3,7 @@
   imports = [
     ./cli.nix
     ./dev.nix
+    ./mail.nix
   ];
 
   my.security.gpg = {

@@ -56,6 +56,10 @@ in
       (mkIf my.atuin.enable [
         ".local/share/atuin"
       ])
+      (mkIf my.aerc.enable [
+        ".cache/aerc"
+        ".local/share/aerc"
+      ])
       (mkIf my.bat.enable [
         ".cache/bat"
       ])
