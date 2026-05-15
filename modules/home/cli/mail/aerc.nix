@@ -36,20 +36,40 @@ in
       enable = true;
       extraConfig = {
         general = {
+          default-menu-cmd = "${getExe pkgs.fzf}";
+          enable-osc8 = true;
+          pgp-provider = "gpg";
           unsafe-accounts-conf = true;
         };
         ui = {
-          border-char-horizontal = " ";
-          border-char-vertical = " ";
           dirlist-tree = true;
           empty-message = "(no messages)";
           mouse-enabled = true;
           new-message-bell = true;
           styleset-name = "default";
           timestamp-format = "2006-01-02 15:04";
+          sort = "-r arrival";
+          spinner = "◜,◠,◝,◞,◡,◟";
+          tab-title-account = "{{.Account}} {{if .Unread}}({{.Unread}}){{end}}";
+          fuzzy-complete = true;
+          msglist-scroll-offset = 5;
+          thread-prefix-dummy = "┬";
+          thread-prefix-first-child = "┬";
+          thread-prefix-folded = "+";
+          thread-prefix-has-siblings = "├";
+          thread-prefix-indent = "";
+          thread-prefix-last-sibling = "╰";
+          thread-prefix-limb = "─";
+          thread-prefix-lone = " ";
+          thread-prefix-orphan = "┌";
+          thread-prefix-stem = "│";
+          thread-prefix-tip = "";
+          thread-prefix-unfolded = "";
+          threading-enabled = true;
         };
         viewer = {
           pager = config.my.pager;
+          header-layout = "From|To,Cc|Bcc,Date,Subject,DKIM+|SPF+|DMARC+";
         };
         filters = {
           "text/plain" = "${aercFilter}/colorize";
