@@ -166,7 +166,7 @@
     };
 
     nixporn = {
-      url = "path:/home/johnson/Dev/Projects/nixporn";
+      url = "github:Gandharikos/nixporn";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

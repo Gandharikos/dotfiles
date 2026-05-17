@@ -1245,14 +1245,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1779011827,
-        "narHash": "sha256-rQLUSH7vbPMkBHp2PV65q/utzFO28dwuWq3T1GOG8Do=",
-        "path": "/home/johnson/Dev/Projects/nixporn",
-        "type": "path"
+        "lastModified": 1779018868,
+        "narHash": "sha256-5+PyQ+XAxpncCqVf8wmV9HtWhTKgUBoSq/JGh7rHf+4=",
+        "owner": "Gandharikos",
+        "repo": "nixporn",
+        "rev": "f6a49e2759d639ccedda0d54de51c464be7ea0d5",
+        "type": "github"
       },
       "original": {
-        "path": "/home/johnson/Dev/Projects/nixporn",
-        "type": "path"
+        "owner": "Gandharikos",
+        "repo": "nixporn",
+        "type": "github"
       }
     },
     "noctalia": {
