@@ -10,6 +10,8 @@
 
     bat.enable = true;
 
+    broot.enable = true;
+
     btop.enable = true;
 
     carapace.enable = true;
