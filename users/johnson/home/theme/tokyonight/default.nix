@@ -7,27 +7,11 @@
   ...
 }:
 let
-  inherit (lib.dot) capitalize;
   inherit (lib.modules) mkDefault mkIf mkMerge;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
 
   cfg = config.nixporn.colorschemes.tokyonight;
   cursorEnable = config.nixporn.colorscheme == "tokyonight" && osConfig.dot.gui.enable && isLinux;
-  hyprlandEnabled = config.my.gui.desktop.hyprland.enable;
-  bibata = config.nixporn.cursors.bibata;
-
-  xcursorName = "Bibata-Tokyonight-${capitalize cfg.style}";
-  hyprcursorName = "${xcursorName}-Hyprcursor";
-
-  xcursorPackage = pkgs.dot.bibata-xcursor.override {
-    cursorThemeName = xcursorName;
-    inherit (bibata) baseColor outlineColor watchBackgroundColor;
-  };
-
-  hyprcursorPackage = pkgs.dot.bibata-hyprcursor.override {
-    cursorThemeName = hyprcursorName;
-    inherit (bibata) baseColor outlineColor watchBackgroundColor;
-  };
 
   tokyonightCursor = palette: {
     day = {
@@ -72,25 +56,14 @@ in
 
       home.sessionVariables.COLORSCHEME_STYLE = cfg.style;
     })
-    (mkIf cursorEnable (mkMerge [
-      {
-        home.pointerCursor = {
-          name = xcursorName;
-          package = xcursorPackage;
-          size = 24;
-          gtk.enable = true;
-          x11.enable = true;
-        };
-      }
-      (mkIf hyprlandEnabled {
-        home = {
-          packages = [ hyprcursorPackage ];
-          sessionVariables = {
-            HYPRCURSOR_THEME = hyprcursorName;
-            HYPRCURSOR_SIZE = "24";
-          };
-        };
-      })
-    ]))
+    (mkIf cursorEnable {
+      home.pointerCursor = {
+        size = 24;
+        gtk.enable = true;
+        x11.enable = true;
+      };
+
+      home.sessionVariables.HYPRCURSOR_SIZE = "24";
+    })
   ];
 }

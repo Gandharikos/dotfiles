@@ -515,8 +515,6 @@ An extensive collection of Zellij plugins for enhanced terminal multiplexing:
 
 ### Desktop & Theming
 
-- `bibata-hyprcursor`: Bibata cursor theme with hyprcursor support
-- `bibata-xcursor`: Bibata cursor theme for X11/Wayland
 - `plymouth-themes`: Custom Plymouth boot splash themes
 
 ### Applications
