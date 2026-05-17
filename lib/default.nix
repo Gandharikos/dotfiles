@@ -9,7 +9,6 @@ core.deepMerge [
     ./paths.nix
     ./modules.nix
     ./hardware.nix
-    ./theme.nix
     ./geometry.nix
     ./workspaces.nix
     ./commands.nix
