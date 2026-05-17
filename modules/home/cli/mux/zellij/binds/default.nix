@@ -87,7 +87,7 @@ in
                         { name._args = [ "move_focus_or_tab" ]; }
                         { payload._args = [ "left" ]; }
                         { move_mod._args = [ "ctrl" ]; }
-                        { use_arrow_keys.args = [ "false" ]; }
+                        { use_arrow_keys._args = [ "false" ]; }
                       ];
                     };
                   }
@@ -105,7 +105,7 @@ in
                         { name._args = [ "move_focus" ]; }
                         { payload._args = [ "down" ]; }
                         { move_mod._args = [ "ctrl" ]; }
-                        { use_arrow_keys.args = [ "false" ]; }
+                        { use_arrow_keys._args = [ "false" ]; }
                       ];
                     };
                   }
@@ -123,7 +123,7 @@ in
                         { name._args = [ "move_focus" ]; }
                         { payload._args = [ "up" ]; }
                         { move_mod._args = [ "ctrl" ]; }
-                        { use_arrow_keys.args = [ "false" ]; }
+                        { use_arrow_keys._args = [ "false" ]; }
                       ];
                     };
                   }
@@ -141,7 +141,7 @@ in
                         { name._args = [ "move_focus_or_tab" ]; }
                         { payload._args = [ "right" ]; }
                         { move_mod._args = [ "ctrl" ]; }
-                        { use_arrow_keys.args = [ "false" ]; }
+                        { use_arrow_keys._args = [ "false" ]; }
                       ];
                     };
                   }
