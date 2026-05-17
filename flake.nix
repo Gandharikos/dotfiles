@@ -10,7 +10,12 @@
     }:
     let
       lib = inputs.nixpkgs.lib.extend (
-        final: _: { dot = import ./lib { lib = final; }; } // home-manager.lib
+        final: _:
+        {
+          dot = import ./lib { lib = final; };
+          nixporn = inputs.nixporn.lib.nixporn;
+        }
+        // home-manager.lib
       );
       specialArgs = { inherit lib; };
     in
@@ -160,8 +165,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    catppuccin = {
-      url = "github:catppuccin/nix";
+    nixporn = {
+      url = "path:/home/johnson/Dev/Projects/nixporn";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

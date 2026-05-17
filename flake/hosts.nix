@@ -43,7 +43,6 @@
           inputs
           withSystem
           ; # Pass all the args that your modules need
-        themeNamespace = "dot";
       };
     };
   };

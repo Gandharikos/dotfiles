@@ -118,26 +118,6 @@
         "type": "github"
       }
     },
-    "catppuccin": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1778713713,
-        "narHash": "sha256-LzY4fRKC8gO6oXv5MDBDZtiteRMAyOooAz4GhMNdFkk=",
-        "owner": "catppuccin",
-        "repo": "nix",
-        "rev": "22ec04550dce30e65d53e3693e398176d05b6004",
-        "type": "github"
-      },
-      "original": {
-        "owner": "catppuccin",
-        "repo": "nix",
-        "type": "github"
-      }
-    },
     "crane": {
       "locked": {
         "lastModified": 1778106249,
@@ -1258,6 +1238,23 @@
         "type": "github"
       }
     },
+    "nixporn": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1779011827,
+        "narHash": "sha256-rQLUSH7vbPMkBHp2PV65q/utzFO28dwuWq3T1GOG8Do=",
+        "path": "/home/johnson/Dev/Projects/nixporn",
+        "type": "path"
+      },
+      "original": {
+        "path": "/home/johnson/Dev/Projects/nixporn",
+        "type": "path"
+      }
+    },
     "noctalia": {
       "inputs": {
         "nixpkgs": [
@@ -1404,7 +1401,6 @@
     "root": {
       "inputs": {
         "asus-dialpad-driver": "asus-dialpad-driver",
-        "catppuccin": "catppuccin",
         "darwin": "darwin",
         "dedsec-grub-theme": "dedsec-grub-theme",
         "devshell": "devshell",
@@ -1433,6 +1429,7 @@
         "nixos-anywhere": "nixos-anywhere",
         "nixos-generators": "nixos-generators",
         "nixpkgs": "nixpkgs_2",
+        "nixporn": "nixporn",
         "noctalia": "noctalia",
         "noctalia-qs": "noctalia-qs",
         "nvidia-patch": "nvidia-patch",

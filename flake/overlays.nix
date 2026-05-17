@@ -46,6 +46,7 @@ in
     overlays = dynamicOverlaysSet // {
       default = dotPackagesOverlay;
       dot = dotPackagesOverlay;
+      nixporn = inputs.nixporn.overlays.default;
     };
   };
 }
