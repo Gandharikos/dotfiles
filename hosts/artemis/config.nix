@@ -35,7 +35,7 @@
 
     machine = {
       type = "desktop";
-      cpu = "intel";
+      cpu = "amd";
       gpu = "intel";
       hasBluetooth = true;
       hasPrinter = false;
