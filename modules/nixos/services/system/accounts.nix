@@ -4,7 +4,7 @@
   ...
 }:
 let
-  inherit (config.dot) primaryUser theme;
+  inherit (config.dot) primaryUser;
   name = primaryUser;
   inherit (config.dot.gui) desktop;
   inherit (lib.modules) mkIf;
@@ -19,7 +19,7 @@ in
       # Ensure the icons directory exists
       "d /var/lib/AccountsService/icons 0755 root root -"
       # Place the avatar image in the correct location
-      "L+ /var/lib/AccountsService/icons/${name} - - - - ${theme.avatar}"
+      "L+ /var/lib/AccountsService/icons/${name} - - - - ${config.nixporn.avatar}"
     ];
 
     # Create the user configuration file for AccountsService

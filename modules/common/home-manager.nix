@@ -22,42 +22,20 @@ let
       lib
       ;
     osClass = _class;
-    themeNamespace = "my";
   };
   inherit (config) dot;
-  inherit (lib.attrsets) genAttrs optionalAttrs removeAttrs;
+  inherit (lib.attrsets) genAttrs removeAttrs;
   primaryHomeModule =
     user: _:
     let
       userCfg = dot.users.${user};
-      themeInput =
-        removeAttrs userCfg.theme [
-          "avatar"
-          "colorscheme"
-          "cursor"
-          "wallpaper"
-        ]
-        // optionalAttrs (userCfg.theme.avatar != null) {
-          inherit (userCfg.theme) avatar;
-        }
-        // optionalAttrs (userCfg.theme.cursor != null) {
-          inherit (userCfg.theme) cursor;
-        }
-        // optionalAttrs (userCfg.theme.wallpaper != null) {
-          inherit (userCfg.theme) wallpaper;
-        };
     in
     {
       imports = [ userCfg.home ];
-      my =
-        (removeAttrs userCfg [
-          "home"
-          "persistence"
-          "theme"
-        ])
-        // {
-          theme = themeInput;
-        };
+      my = removeAttrs userCfg [
+        "home"
+        "persistence"
+      ];
     };
 in
 {

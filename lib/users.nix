@@ -6,184 +6,15 @@ let
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types)
     anything
-    attrs
-    coercedTo
     deferredModule
     enum
-    int
     listOf
     nullOr
-    package
     path
     singleLineStr
     str
     submodule
     ;
-  cursorType = submodule {
-    options = {
-      name = mkOption {
-        description = "The cursor name within the package.";
-        type = nullOr str;
-        default = null;
-      };
-      package = mkOption {
-        description = "Package providing the cursor theme.";
-        type = nullOr package;
-        default = null;
-      };
-      size = mkOption {
-        description = "The cursor size.";
-        type = nullOr int;
-        default = null;
-      };
-      hyprcursor = mkOption {
-        description = "Optional Hyprcursor theme for Hyprland sessions.";
-        type = nullOr (submodule {
-          options = {
-            name = mkOption {
-              description = "The Hyprcursor theme name within the package.";
-              type = nullOr str;
-              default = null;
-            };
-            package = mkOption {
-              description = "Package providing the Hyprcursor theme.";
-              type = nullOr package;
-              default = null;
-            };
-          };
-        });
-        default = null;
-      };
-    };
-  };
-  mkThemeOptions = config: {
-    default = mkOption {
-      type = nullOr (enum [
-        "tokyonight"
-        "catppuccin"
-      ]);
-      default = "tokyonight";
-      description = "The theme to use.";
-    };
-    colorscheme = {
-      slug = mkOption {
-        type = nullOr str;
-        default = null;
-        description = "The slug of the colorscheme.";
-      };
-      name = mkOption {
-        type = nullOr str;
-        default = null;
-        description = "The name of the colorscheme.";
-      };
-      author = mkOption {
-        type = nullOr str;
-        default = null;
-        description = "The author of the colorscheme.";
-      };
-      description = mkOption {
-        type = nullOr str;
-        default = null;
-        description = "The description of the colorscheme.";
-      };
-      palette = mkOption {
-        type = nullOr attrs;
-        default = null;
-        description = "The palette of the colorscheme.";
-      };
-    };
-    avatar = mkOption {
-      type = nullOr (coercedTo package toString path);
-      default = null;
-      description = "The avatar of the user.";
-    };
-    wallpaper = mkOption {
-      type = nullOr (coercedTo package toString path);
-      default = null;
-      description = "The wallpaper of the user.";
-    };
-    cursor = mkOption {
-      description = ''
-        Attributes defining the XCursor theme, with an optional Hyprcursor
-        theme for Hyprland.
-      '';
-      type = nullOr cursorType;
-      default = null;
-    };
-    tokyonight = {
-      enable = mkEnableOption "Tokyonight theme" // {
-        default = config.default == "tokyonight";
-      };
-      style = mkOption {
-        type = enum [
-          "night"
-          "storm"
-          "day"
-          "moon"
-        ];
-        default = "moon";
-        description = "The style of tokyonight.";
-      };
-    };
-    catppuccin = {
-      enable = mkEnableOption "Catppuccin theme" // {
-        default = config.default == "catppuccin";
-      };
-      flavor = mkOption {
-        type = enum [
-          "latte"
-          "frappe"
-          "macchiato"
-          "mocha"
-        ];
-        default = "mocha";
-        description = "The Catppuccin flavor to use.";
-      };
-      accent = mkOption {
-        type = enum [
-          "blue"
-          "flamingo"
-          "green"
-          "lavender"
-          "maroon"
-          "mauve"
-          "peach"
-          "pink"
-          "red"
-          "rosewater"
-          "sapphire"
-          "sky"
-          "teal"
-          "yellow"
-        ];
-        default = "mauve";
-        description = "The Catppuccin accent color to use.";
-      };
-    };
-    general = {
-      transparent = mkEnableOption "Enable transparent theme surfaces" // {
-        default = true;
-      };
-      pad = {
-        left = mkOption {
-          type = str;
-          default = "";
-          description = "The left padding of status bar.";
-        };
-        right = mkOption {
-          type = str;
-          default = "";
-          description = "The right padding of status bar.";
-        };
-      };
-    };
-  };
-  themeType = submodule (
-    { config, ... }:
-    {
-      options = mkThemeOptions config;
-    }
-  );
   mkUserOptions =
     {
       isLinux,
@@ -270,11 +101,10 @@ let
           );
         description = "SSH public keys authorized for this user.";
       };
-      theme = mkThemeOptions config.theme;
     };
 in
 {
-  inherit mkThemeOptions mkUserOptions themeType;
+  inherit mkUserOptions;
 
   mkUserType =
     {

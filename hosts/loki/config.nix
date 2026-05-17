@@ -7,7 +7,6 @@
 
   dot = {
     primaryUser = "johnson";
-    theme.default = "catppuccin";
     security.auditd.enable = lib.mkForce false;
     boot = {
       secureBoot = false;
@@ -51,6 +50,8 @@
       backend = "kanata";
     };
   };
+
+  nixporn.colorscheme = "catppuccin";
 
   # for surge
   time = {

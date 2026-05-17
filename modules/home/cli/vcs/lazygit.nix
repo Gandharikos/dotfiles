@@ -38,20 +38,6 @@ with osConfig.dot.keyboard.keys;
           language = "auto";
           timeFormat = "02 Jan 06 15:04 MST";
           nerdFontsVersion = 3;
-          theme = {
-            lightTheme = false;
-            activeBorderColor = [
-              "green"
-              "bold"
-            ];
-            inactiveBorderColor = [ "black" ];
-            optionsTextColor = [ "white" ];
-            selectedLineBgColor = [ "reverse" ];
-            selectedRangeBgColor = [ "blue" ];
-            cherryPickedCommitBgColor = [ "cyan" ];
-            cherryPickedCommitFgColor = [ "blue" ];
-            unstagedChangesColor = [ "red" ];
-          };
           commitLength.show = true;
           skipNoStagedFilesWarning = false;
           showListFooter = true;

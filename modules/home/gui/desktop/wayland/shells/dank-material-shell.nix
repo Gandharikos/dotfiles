@@ -11,10 +11,7 @@ let
   inherit (lib.attrsets) optionalAttrs;
   inherit (lib.meta) getExe' getExe;
   inherit (config.my.gui) desktop;
-  inherit (config.my.theme)
-    avatar
-    wallpaper
-    ;
+  inherit (config.nixporn) avatar wallpaper;
   inherit (osConfig.dot.keyboard) keys;
 
   enable = osConfig.dot.gui.desktop.wayland.enable && desktop.shell.default == "dank-material-shell";

@@ -13,10 +13,7 @@ let
   inherit (lib.strings) escapeShellArgs;
   inherit (config.my.gui) desktop;
   inherit (osConfig.dot.keyboard) keys;
-  inherit (config.my.theme)
-    avatar
-    wallpaper
-    ;
+  inherit (config.nixporn) avatar wallpaper;
 
   enable = osConfig.dot.gui.desktop.wayland.enable && desktop.shell.default == "noctalia-shell";
   noctaliaSettingsFile = lib.dot.relativeToConfig "noctalia/settings.json";
