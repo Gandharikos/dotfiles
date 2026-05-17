@@ -4,19 +4,23 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf mkMerge;
-  inherit (config.my.theme.general) pad;
-  inherit (config.my.theme) tokyonight colorscheme;
-  inherit (colorscheme) palette slug;
+  inherit (lib.modules) mkDefault mkIf mkMerge;
+  inherit (config.nixporn) palette;
+  inherit (config.nixporn.colorschemes.tokyonight) slug;
+  pad = {
+    left = "";
+    right = "";
+  };
   lang = icon: color: {
     symbol = icon;
     format = "[$symbol ](${color})";
   };
   os = icon: fg: "[${icon} ](fg:${fg})";
-  cfg = tokyonight;
 in
 {
-  config = mkIf cfg.enable {
+  config = mkIf (config.nixporn.colorscheme == "tokyonight") {
+    nixporn.starship.enable = mkDefault false;
+
     programs.starship.settings =
       let
         pad_style = "fg:gray";
@@ -27,8 +31,8 @@ in
       mkMerge [
         {
           palette = slug;
-          palettes.${slug} = with palette; {
-            inherit
+          palettes.${slug} = {
+            inherit (palette)
               bg
               fg
               red
@@ -37,9 +41,9 @@ in
               blue
               magenta
               cyan
-              white
               ;
-            gray = bg_highlight;
+            inherit (palette.ansi) white;
+            gray = palette.bg_highlight;
           };
           username = {
             style_user = "bold blue";

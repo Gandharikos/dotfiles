@@ -7,10 +7,9 @@
 let
   inherit (lib.modules) mkIf;
   src = pkgs.vimPlugins.tokyonight-nvim;
-  cfg = config.my.theme.tokyonight;
-  enable = cfg.enable && config.my.gui.apps.discord.enable;
-  inherit (config.my.theme.general) transparent;
-  inherit (config.my.theme.colorscheme) slug;
+  enable = config.nixporn.colorscheme == "tokyonight" && config.my.gui.apps.discord.enable;
+  transparent = config.nixporn.transparent;
+  inherit (config.nixporn.colorschemes.tokyonight) slug;
   discordTheme = builtins.replaceStrings [ "\${pink}" ] [ "var(--guild-boosting-pink)" ] (
     builtins.readFile "${src}/extras/discord/${slug}.css"
   );

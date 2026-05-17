@@ -4,6 +4,7 @@
     ./cli.nix
     ./dev.nix
     ./mail.nix
+    ./theme
   ];
 
   my.security.gpg = {

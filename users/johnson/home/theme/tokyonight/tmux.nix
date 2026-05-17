@@ -5,14 +5,18 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf;
-  inherit (config.my.theme) tokyonight colorscheme;
-  inherit (config.my.theme.general) transparent pad;
-  inherit (colorscheme) palette;
-  cfg = tokyonight;
+  inherit (lib.modules) mkDefault mkIf;
+  inherit (config.nixporn) palette;
+  transparent = config.nixporn.transparent;
+  pad = {
+    left = "";
+    right = "";
+  };
 in
 {
-  config = mkIf cfg.enable {
+  config = mkIf (config.nixporn.colorscheme == "tokyonight") {
+    nixporn.tmux.enable = mkDefault false;
+
     programs.tmux.plugins = with pkgs.tmuxPlugins; [
       {
         plugin = mode-indicator;

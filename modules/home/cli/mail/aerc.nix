@@ -46,7 +46,6 @@ in
           empty-message = "(no messages)";
           mouse-enabled = true;
           new-message-bell = true;
-          styleset-name = "default";
           timestamp-format = "2006-01-02 15:04";
           sort = "-r arrival";
           spinner = "◜,◠,◝,◞,◡,◟";

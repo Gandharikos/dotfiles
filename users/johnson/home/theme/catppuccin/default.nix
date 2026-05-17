@@ -1,6 +1,6 @@
 {
-  config,
   inputs,
+  config,
   lib,
   osConfig,
   pkgs,
@@ -9,23 +9,17 @@
 let
   inherit (lib.modules) mkIf mkMerge;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  cfg = config.my.theme.catppuccin;
+  cfg = config.nixporn.colorschemes.catppuccin;
   guiLinux = osConfig.dot.gui.enable && isLinux;
 in
 {
-  imports = [
-    inputs.catppuccin.homeModules.catppuccin
-  ]
-  ++ lib.dot.scanPaths ./.;
+  imports = lib.dot.scanPaths ./.;
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf (config.nixporn.colorscheme == "catppuccin") (mkMerge [
     {
-      catppuccin = {
-        enable = true;
-        inherit (cfg) flavor accent;
-        wezterm.apply = true;
-        # Disable nvim integration - we configure it manually via LazyVim
-        nvim.enable = false;
+      nixporn = {
+        avatar = lib.mkDefault osConfig.nixporn.avatar;
+        wallpaper = lib.mkDefault inputs.wallpapers.catppuccin.anime-japan.path;
       };
 
       home.sessionVariables = {
@@ -33,9 +27,8 @@ in
         COLORSCHEME_ACCENT = cfg.accent;
       };
     }
-    (mkIf guiLinux {
-      catppuccin.cursors.enable = true;
 
+    (mkIf guiLinux {
       home.pointerCursor = {
         size = 24;
         gtk.enable = true;

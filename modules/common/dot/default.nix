@@ -25,7 +25,7 @@ let
   );
 in
 {
-  imports = scanPaths ./.;
+  imports = lib.filter (path: builtins.baseNameOf path != "theme") (scanPaths ./.);
 
   options = {
     dot = {
