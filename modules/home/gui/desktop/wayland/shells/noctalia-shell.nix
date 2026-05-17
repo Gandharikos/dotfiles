@@ -7,13 +7,12 @@
   ...
 }:
 let
-  inherit (lib.attrsets) optionalAttrs;
   inherit (lib.meta) getExe';
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.strings) escapeShellArgs;
   inherit (config.my.gui) desktop;
   inherit (osConfig.dot.keyboard) keys;
-  inherit (config.nixporn) avatar wallpaper;
+  inherit (config.nixporn) wallpaper;
 
   enable = osConfig.dot.gui.desktop.wayland.enable && desktop.shell.default == "noctalia-shell";
   noctaliaSettingsFile = lib.dot.relativeToConfig "noctalia/settings.json";
@@ -53,6 +52,17 @@ let
       "plugin:screen-recorder"
       action
     ]);
+  noctaliaWallpapersSeed =
+    if wallpaper == null then
+      null
+    else
+      pkgs.writeText "noctalia-wallpapers.json" (
+        builtins.toJSON {
+          defaultWallpaper = toString wallpaper;
+          wallpapers = { };
+          usedRandomWallpapers = { };
+        }
+      );
 
   inherit (desktop) modKey;
 in
@@ -70,23 +80,18 @@ in
       };
 
       settings = settings // {
-        general =
-          settings.general
-          // optionalAttrs (avatar != null) { avatarImage = toString avatar; }
-          // {
-            keybinds = settings.general.keybinds // {
-              keyLeft = settings.general.keybinds.keyLeft ++ [ "Ctrl+${keys.H}" ];
-              keyDown = settings.general.keybinds.keyDown ++ [ "Ctrl+${keys.J}" ];
-              keyUp = settings.general.keybinds.keyUp ++ [ "Ctrl+${keys.K}" ];
-              keyRight = settings.general.keybinds.keyRight ++ [ "Ctrl+${keys.L}" ];
-            };
+        general = removeAttrs settings.general [ "avatarImage" ] // {
+          keybinds = settings.general.keybinds // {
+            keyLeft = settings.general.keybinds.keyLeft ++ [ "Ctrl+${keys.H}" ];
+            keyDown = settings.general.keybinds.keyDown ++ [ "Ctrl+${keys.J}" ];
+            keyUp = settings.general.keybinds.keyUp ++ [ "Ctrl+${keys.K}" ];
+            keyRight = settings.general.keybinds.keyRight ++ [ "Ctrl+${keys.L}" ];
           };
-        wallpaper =
-          settings.wallpaper
-          // optionalAttrs (wallpaper != null) {
-            enabled = true;
-            directory = builtins.dirOf (toString wallpaper);
-          };
+        };
+        wallpaper = removeAttrs (settings.wallpaper or { }) [
+          "directory"
+          "enabled"
+        ];
         idle = removeAttrs (settings.idle or { }) managedIdleSettings;
       };
 
@@ -432,11 +437,20 @@ in
         // xf86Binds;
     };
 
-    home.file.".cache/noctalia/wallpapers.json" = mkIf (wallpaper != null) {
-      text = builtins.toJSON {
-        defaultWallpaper = toString wallpaper;
-        wallpapers = { };
-      };
-    };
+    home.activation.seedNoctaliaWallpapers = mkIf (wallpaper != null) (
+      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        cache_file="${config.xdg.cacheHome}/noctalia/wallpapers.json"
+
+        if [ -L "$cache_file" ]; then
+          rm -f "$cache_file"
+        fi
+
+        if [ ! -e "$cache_file" ]; then
+          mkdir -p "$(dirname "$cache_file")"
+          cp ${noctaliaWallpapersSeed} "$cache_file"
+          chmod 0644 "$cache_file"
+        fi
+      ''
+    );
   };
 }
