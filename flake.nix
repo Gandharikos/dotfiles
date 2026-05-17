@@ -274,10 +274,7 @@
 
     dms = {
       url = "github:AvengeMedia/DankMaterialShell";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        quickshell.follows = "quickshell";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     wallpapers.url = "github:Gandharikos/wallpapers";
