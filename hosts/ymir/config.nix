@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ lib, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -34,7 +34,6 @@
     };
     virtual.enable = true;
     persistence.enable = true;
-    networking.enableIPv6 = false;
     machine = {
       type = "laptop";
       cpu = "amd";
@@ -57,20 +56,6 @@
       backend = "keyd";
     };
   };
-
-  dot.users.${config.dot.primaryUser}.home = {
-    my = {
-      gui.browser.default = "google-chrome";
-      gui.terminal.size = 12;
-      gui.apps = {
-        anki.enable = true;
-        chrome.enable = true;
-        firefox.enable = lib.mkForce false;
-        zen.enable = lib.mkForce false;
-      };
-    };
-  };
-
   home-manager.sharedModules = [
     {
       programs.niri.settings.debug.render-drm-device = "/dev/dri/by-path/pci-0000:65:00.0-render";
