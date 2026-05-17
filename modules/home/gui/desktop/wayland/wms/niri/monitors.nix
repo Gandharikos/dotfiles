@@ -13,6 +13,21 @@ let
   isResolution = value: builtins.match "^[0-9]+x[0-9]+(@[0-9.]+)?$" value != null;
   isPosition = value: builtins.match "^(-?[0-9]+)x(-?[0-9]+)$" value != null;
   toInt = value: builtins.fromJSON value;
+  toFloat =
+    value: builtins.fromJSON (if builtins.match "^[0-9]+$" value != null then "${value}.0" else value);
+  parseResolution =
+    value:
+    let
+      match = builtins.match "^([0-9]+)x([0-9]+)(@([0-9.]+))?$" value;
+      refresh = builtins.elemAt match 3;
+    in
+    {
+      width = toInt (builtins.elemAt match 0);
+      height = toInt (builtins.elemAt match 1);
+    }
+    // optionalAttrs (refresh != null) {
+      refresh = toFloat refresh;
+    };
   parsePosition =
     value:
     let
@@ -29,7 +44,7 @@ let
       inherit (output) scale;
     }
     // optionalAttrs (isResolution output.resolution) {
-      mode = output.resolution;
+      mode = parseResolution output.resolution;
     }
     // optionalAttrs (isPosition output.position) {
       position = parsePosition output.position;
