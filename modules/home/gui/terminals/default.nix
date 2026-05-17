@@ -84,7 +84,7 @@ in
 
     size = mkOption {
       type = int;
-      default = if osConfig.dot.machine.type == "laptop" then 15 else 12;
+      default = 12;
       description = ''
         The font size to use for the terminal. This is used by the
         `dot.gui.terminal` module to determine which font size to use.

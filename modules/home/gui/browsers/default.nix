@@ -42,7 +42,7 @@ in
         "google-chrome"
         "firefox"
       ]);
-      default = if osConfig.dot.gui.enable && osClass == "nixos" then "zen" else null;
+      default = if osConfig.dot.gui.enable && osClass == "nixos" then "google-chrome" else null;
       description = "The browser to use";
     };
     desktopId = mkOption {
