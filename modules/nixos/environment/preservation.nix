@@ -7,7 +7,7 @@
 }:
 let
   cfg = config.dot.persistence;
-  inherit (config.dot) enabledUser users;
+  inherit (config.dot) enabledUsers users;
   inherit (lib.attrsets) genAttrs;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
@@ -204,7 +204,7 @@ in
       ];
 
       # User-level persistence (replaces home-manager persistence module)
-      users = genAttrs enabledUser mkUserPersistence;
+      users = genAttrs enabledUsers mkUserPersistence;
     };
     # Create some directories with custom permissions.
     #
@@ -219,7 +219,7 @@ in
     # Note that immediate parent directories of persisted files can also be
     # configured with ownership and permissions from the `parent` settings if
     # `configureParent = true` is set for the file.
-    systemd.tmpfiles.settings.preservation = mkMerge (map mkUserTmpfiles enabledUser);
+    systemd.tmpfiles.settings.preservation = mkMerge (map mkUserTmpfiles enabledUsers);
 
     # systemd-machine-id-commit.service would fail but it is not relevant
     # in this specific setup for a persistent machine-id so we disable it

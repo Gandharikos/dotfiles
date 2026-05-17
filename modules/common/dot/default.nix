@@ -41,7 +41,7 @@ in
         default = config.dot.users.${config.dot.primaryUser};
         description = "The primary dot user configuration.";
       };
-      enabledUser = mkOption {
+      enabledUsers = mkOption {
         internal = true;
         readOnly = true;
         type = listOf str;

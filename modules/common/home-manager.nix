@@ -45,7 +45,7 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     verbose = true;
-    users = genAttrs dot.enabledUser primaryHomeModule;
+    users = genAttrs dot.enabledUsers primaryHomeModule;
     sharedModules = [ ../home ];
   };
 }

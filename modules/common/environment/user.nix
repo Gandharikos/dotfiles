@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (config.dot) enabledUser users;
+  inherit (config.dot) enabledUsers users;
   inherit (lib.attrsets) genAttrs;
 in
 {
@@ -24,7 +24,7 @@ in
   };
 
   # Define a user account.
-  users.users = genAttrs enabledUser (name: {
+  users.users = genAttrs enabledUsers (name: {
     # https://github.com/LnL7/nix-darwin/issues/1237 still have a bug
     shell = builtins.getAttr users.${name}.shell pkgs;
     home = users.${name}.homeDirectory;

@@ -67,7 +67,7 @@ in
         IgnoreRhosts = "yes";
         MaxAuthTries = 3;
 
-        AllowUsers = config.dot.enabledUser;
+        AllowUsers = config.dot.enabledUsers;
       };
       openFirewall = true;
       hostKeys = [

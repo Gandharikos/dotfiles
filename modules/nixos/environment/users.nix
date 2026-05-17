@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (config.dot) enabledUser primaryUser users;
+  inherit (config.dot) enabledUsers primaryUser users;
   inherit (lib.attrsets) genAttrs;
   cfgUser = config.users.users."${primaryUser}";
   ifTheyExist = groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
@@ -29,9 +29,9 @@ in
       # misc
       uinput = { };
     }
-    // genAttrs enabledUser (_: { });
+    // genAttrs enabledUsers (_: { });
     users =
-      genAttrs enabledUser (name: {
+      genAttrs enabledUsers (name: {
         # we have to use initialHashedPassword here when using tmpfs for /
         inherit (config.dot.users.${name}) initialHashedPassword;
         group = "users";
