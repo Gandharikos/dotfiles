@@ -23,8 +23,9 @@ let
       config,
     }:
     let
-      regularKey = "${config.secretsCore}/id_ed25519.pub";
-      extraKeysDir = "${config.secretsCore}/keys";
+      hasSecretsCore = config.secretsCore != null && builtins.pathExists config.secretsCore;
+      regularKey = config.secretsCore + "/id_ed25519.pub";
+      extraKeysDir = config.secretsCore + "/keys";
     in
     {
       name = mkOption (
@@ -91,10 +92,10 @@ let
       authorizedKeys = mkOption {
         type = listOf str;
         default =
-          optionals (config.secretsCore != null && builtins.pathExists regularKey) [
+          optionals (hasSecretsCore && builtins.pathExists regularKey) [
             (builtins.readFile regularKey)
           ]
-          ++ optionals (config.secretsCore != null && builtins.pathExists extraKeysDir) (
+          ++ optionals (hasSecretsCore && builtins.pathExists extraKeysDir) (
             forEach (lib.filter (path: lib.hasSuffix ".pub" (toString path)) (
               listFilesRecursive extraKeysDir
             )) (key: builtins.readFile key)
