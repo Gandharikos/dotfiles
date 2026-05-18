@@ -12,6 +12,10 @@ let
   cfg = config.my.ssh;
   yubikeys = osConfig.dot.yubikey.names;
   inherit (config.my) secretsCore;
+  hasSecretsCore = secretsCore != null && builtins.pathExists secretsCore;
+  regularKey = secretsCore + "/id_ed25519.pub";
+  keysDir = secretsCore + "/keys";
+  identifyYubikey = keysDir + "/identify-yubikey.sh";
 in
 {
   options.my.ssh = {
@@ -112,11 +116,9 @@ in
         connect
       ];
 
-      home.file =
-        lib.optionalAttrs (secretsCore != null && builtins.pathExists "${secretsCore}/id_ed25519.pub")
-          {
-            ".ssh/id_ed25519.pub".source = "${secretsCore}/id_ed25519.pub";
-          };
+      home.file = lib.optionalAttrs (hasSecretsCore && builtins.pathExists regularKey) {
+        ".ssh/id_ed25519.pub".source = regularKey;
+      };
     }
 
     # ===================================================================
@@ -132,15 +134,12 @@ in
       # Link FIDO2 public key files (only if they exist)
       home.file = mkMerge [
         # YubiKey identification helper script
-        (lib.optionalAttrs
-          (secretsCore != null && builtins.pathExists "${secretsCore}/keys/identify-yubikey.sh")
-          {
-            ".local/bin/identify-yubikey" = {
-              source = "${secretsCore}/keys/identify-yubikey.sh";
-              executable = true;
-            };
-          }
-        )
+        (lib.optionalAttrs (hasSecretsCore && builtins.pathExists identifyYubikey) {
+          ".local/bin/identify-yubikey" = {
+            source = identifyYubikey;
+            executable = true;
+          };
+        })
 
         # Link public key for each YubiKey (if file exists)
         (builtins.listToAttrs (
@@ -148,9 +147,9 @@ in
             map (
               name:
               let
-                pubKeyPath = "${secretsCore}/keys/id_${name}.pub";
+                pubKeyPath = keysDir + "/id_${name}.pub";
               in
-              if secretsCore != null && builtins.pathExists pubKeyPath then
+              if hasSecretsCore && builtins.pathExists pubKeyPath then
                 {
                   name = ".ssh/id_${name}.pub";
                   value = {

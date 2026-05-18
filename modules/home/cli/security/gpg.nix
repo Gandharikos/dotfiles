@@ -10,6 +10,15 @@ let
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.types) nullOr str path;
   cfg = config.my.security.gpg;
+  defaultPublicKeysPath =
+    if
+      config.my.secretsCore != null
+      && builtins.pathExists config.my.secretsCore
+      && builtins.pathExists (config.my.secretsCore + "/gpg-keys.pub")
+    then
+      config.my.secretsCore + "/gpg-keys.pub"
+    else
+      null;
 in
 {
   options.my.security.gpg = {
@@ -37,7 +46,7 @@ in
 
     publicKeysPath = mkOption {
       type = nullOr path;
-      default = if config.my.secretsCore == null then null else "${config.my.secretsCore}/gpg-keys.pub";
+      default = defaultPublicKeysPath;
       description = "The path to the public key of my gpg.";
     };
   };
