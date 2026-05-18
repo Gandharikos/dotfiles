@@ -16,8 +16,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.shellAliases.br = "broot";
-
     programs.broot = {
       enable = true;
       enableBashIntegration = true;
