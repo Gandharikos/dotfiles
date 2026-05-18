@@ -1,8 +1,37 @@
+{ config, inputs, ... }:
+let
+  noctalia = config.programs.noctalia-shell.package;
+in
 {
   imports = [
-    ./cli.nix
-    ./dev.nix
+    inputs.niri.homeModules.niri
+    inputs.noctalia.homeModules.default
   ];
 
-  nixporn.cursors.enable = false;
+  programs = {
+    ghostty.enable = true;
+    google-chrome.enable = true;
+
+    noctalia-shell = {
+      enable = true;
+      systemd.enable = false;
+    };
+
+    niri = {
+      enable = true;
+      settings = {
+        prefer-no-csd = true;
+        hotkey-overlay.skip-at-startup = true;
+        xwayland-satellite.enable = true;
+        spawn-at-startup = [
+          {
+            argv = [
+              "${noctalia}/bin/noctalia-shell"
+              "--no-duplicate"
+            ];
+          }
+        ];
+      };
+    };
+  };
 }
