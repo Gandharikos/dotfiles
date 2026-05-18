@@ -1242,11 +1242,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779044235,
-        "narHash": "sha256-ojm7C8w5wPKUxxRt0tOkbOEPvWY1LLRj4P18vy3/6Ws=",
+        "lastModified": 1779104903,
+        "narHash": "sha256-fsLWdH07Mcbj295R7tLB8s899AT0S/w7CbYd45pe7xY=",
         "owner": "Gandharikos",
         "repo": "nixporn",
-        "rev": "d4e7abdca4744fd644aa7c95b9431871430679e0",
+        "rev": "53dfb7d26cf6f041dbaa060c1b4911a2b34aecb1",
         "type": "github"
       },
       "original": {
