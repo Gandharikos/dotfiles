@@ -1,5 +1,4 @@
 {
-  inputs,
   lib,
   config,
   ...
@@ -15,15 +14,11 @@ let
   colorschemeName = config.nixporn.colorscheme;
 in
 {
-  imports = [
-    inputs.nixporn.homeModules.colorscheme
-  ]
-  ++ scanPaths ./.;
+  imports = scanPaths ./.;
 
   config = mkMerge [
     {
       nixporn = {
-        enable = mkDefault true;
         colorscheme = mkDefault "tokyonight";
         transparent = mkDefault true;
       };
