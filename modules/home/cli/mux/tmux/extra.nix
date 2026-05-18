@@ -8,8 +8,8 @@
 let
   inherit (lib.strings) optionalString;
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
-  inherit (lib.meta) getExe' getExe;
-  shell = getExe (builtins.getAttr config.my.shell pkgs);
+  inherit (lib.meta) getExe';
+  shell = "${config.home.profileDirectory}/bin/${config.my.shell}";
 in
 {
   programs.tmux.extraConfig = with osConfig.dot.keyboard.keys; ''

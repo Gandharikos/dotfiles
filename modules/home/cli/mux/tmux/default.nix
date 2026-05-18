@@ -1,5 +1,4 @@
 {
-  pkgs,
   lib,
   config,
   ...
@@ -12,8 +11,7 @@ let
   autoStart = config.my.mux.autoStart && config.my.mux.default == "tmux";
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf mkBefore;
-  inherit (lib.meta) getExe;
-  shell = getExe (builtins.getAttr config.my.shell pkgs);
+  shell = "${config.home.profileDirectory}/bin/${config.my.shell}";
 in
 {
   imports = lib.dot.scanPaths ./.;

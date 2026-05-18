@@ -16,7 +16,7 @@ let
     ;
   inherit (lib.modules) mkDefault;
 
-  shell = getExe (builtins.getAttr config.my.shell pkgs);
+  shell = "${config.home.profileDirectory}/bin/${config.my.shell}";
 in
 {
   imports = lib.dot.scanPaths ./.;
