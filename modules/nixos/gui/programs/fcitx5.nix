@@ -62,7 +62,7 @@ in
           };
           addons = {
             classicui.globalSection = {
-              Font = "Noto Sans CJK SC 12";
+              Font = mkDefault "Noto Sans CJK SC 12";
               # MenuFont = "Sans Serif 12";
               # TrayFont = "Sans Serif 12";
             };
