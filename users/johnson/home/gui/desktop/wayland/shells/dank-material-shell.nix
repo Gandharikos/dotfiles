@@ -49,6 +49,7 @@ in
   imports = [
     inputs.dms.homeModules.dank-material-shell
   ];
+
   config = mkIf enable {
     programs.dank-material-shell = {
       enable = true;

@@ -129,7 +129,7 @@ in
       };
 
       context = {
-        AGENTS = lib.dot.getFile "modules/home/cli/ai/common/base.md";
+        AGENTS = lib.dot.getFile "users/johnson/home/cli/ai/common/base.md";
       };
 
       commands = sharedAiTools.geminiCli.commands // sharedAiTools.geminiCli.agents;

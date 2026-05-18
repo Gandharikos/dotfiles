@@ -14,6 +14,8 @@ let
   inherit (pkgs.stdenv) isLinux;
   inherit (config) my;
   home = config.home.homeDirectory;
+  editorDesktopId = "${if (my.editor or "helix") == "helix" then "Helix" else my.editor}.desktop";
+  browserDesktopId = my.gui.browser.desktopId or null;
   # define default applications for some url schemes.
   browser = [
     # keep-sorted start
@@ -63,12 +65,10 @@ let
 
   images = [ "image/*" ];
   associations =
-    (lib.genAttrs editor (_: [
-      "${if my.editor == "helix" then "Helix" else my.editor}.desktop"
-    ]))
+    (lib.genAttrs editor (_: [ editorDesktopId ]))
     // (lib.genAttrs media (_: [ "mpv.desktop" ]))
     // (lib.genAttrs images (_: [ "viewnior.desktop" ]))
-    // (lib.genAttrs browser (_: [ "${my.gui.browser.desktopId}" ]))
+    // (lib.optionalAttrs (browserDesktopId != null) (lib.genAttrs browser (_: [ browserDesktopId ])))
     // {
       "application/pdf" = [ "org.pwmt.zathura.desktop" ];
       "x-scheme-handler/spotify" = [ "spotify.desktop" ];
