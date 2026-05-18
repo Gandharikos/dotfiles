@@ -2,7 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    (import ../common/disko/luks-btrfs-tmpfs.nix { })
+    (import ../common/disko/ext4.nix { })
   ];
 
   dot = {
@@ -23,14 +23,14 @@
     };
 
     services = {
-      btrbk.enable = true;
+      btrbk.enable = false;
       zram.enable = true;
       printing.enable = true;
       fwupd.enable = true;
     };
 
     virtual.enable = true;
-    persistence.enable = true;
+    persistence.enable = false;
     networking.enableIPv6 = true;
 
     machine = {
@@ -52,7 +52,7 @@
 
     keyboard = {
       layout = "qwerty";
-      backend = "keyd";
+      backend = null;
     };
   };
 }

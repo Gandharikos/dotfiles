@@ -1,16 +1,12 @@
 { lib, ... }:
 let
   inherit (lib.attrsets) optionalAttrs;
-  inherit (lib.filesystem) listFilesRecursive;
-  inherit (lib.lists) forEach optionals;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types)
     anything
     deferredModule
     enum
     listOf
-    nullOr
-    path
     singleLineStr
     str
     submodule
@@ -22,11 +18,6 @@ let
       name,
       config,
     }:
-    let
-      hasSecretsCore = config.secretsCore != null && builtins.pathExists config.secretsCore;
-      regularKey = config.secretsCore + "/id_ed25519.pub";
-      extraKeysDir = config.secretsCore + "/keys";
-    in
     {
       name = mkOption (
         {
@@ -84,22 +75,9 @@ let
         ];
         description = "System groups for this user.";
       };
-      secretsCore = mkOption {
-        type = nullOr path;
-        default = null;
-        description = "Directory containing this user's core public SSH keys.";
-      };
       authorizedKeys = mkOption {
         type = listOf str;
-        default =
-          optionals (hasSecretsCore && builtins.pathExists regularKey) [
-            (builtins.readFile regularKey)
-          ]
-          ++ optionals (hasSecretsCore && builtins.pathExists extraKeysDir) (
-            forEach (lib.filter (path: lib.hasSuffix ".pub" (toString path)) (
-              listFilesRecursive extraKeysDir
-            )) (key: builtins.readFile key)
-          );
+        default = [ ];
         description = "SSH public keys authorized for this user.";
       };
     };
