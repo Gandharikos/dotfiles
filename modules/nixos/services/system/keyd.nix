@@ -35,7 +35,6 @@ in
             capslock = "overload(control, esc)";
             tab = "overload(tab_layer, tab)";
             leftshift = "overload(shift, macro(leftshift))";
-            rightshift = "oneshot(shift)";
             leftcontrol = "layer(meta)";
             leftmeta = "layer(control)";
             rightalt = "rightmeta";

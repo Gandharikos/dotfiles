@@ -44,6 +44,12 @@ in
             - schema: rime_ice
       '';
 
+      "${cfg.dir}/rime_ice_suggestion.custom.yaml".text = ''
+        patch:
+          "ascii_composer/switch_key/Shift_L": noop
+          "ascii_composer/switch_key/Shift_R": commit_code
+      '';
+
       "${cfg.dir}/grammar.yaml".source = pkgs.fetchurl {
         url = "https://github.com/lotem/rime-octagram-data/raw/master/grammar.yaml";
         sha256 = "0aa14rvypnja38dm15hpq34xwvf06al6am9hxls6c4683ppyk355";

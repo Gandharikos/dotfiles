@@ -109,7 +109,7 @@
       (deflayer base
         @tab-mod   _    _    _    _    _    _    _    _    _    _    _
         @escctrl   _    _    _    _    _    _    _    _    _    '    ;    _
-        _          _    _    _    _    _    _    _    @comma @dot _ @smart_sft
+        _          _    _    _    _    _    _    _    @comma @dot _ _
         ${baseBottomRow}
       )
 
