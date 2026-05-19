@@ -9,6 +9,10 @@
       # "https://mirrors.ustc.edu.cn/nix-channels/store"
       # "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
 
+      # public binary cache hosted in Germany (TUM), queried before the official CDN
+      # it is an additional cache, not a full cache.nixos.org mirror
+      "https://cache.dos.cit.tum.de?priority=5"
+
       # official nix cache mirror, high priority
       "https://cache.nixos.org?priority=10"
       "https://nix-community.cachix.org"
@@ -19,6 +23,7 @@
       "https://cache.numtide.com"
     ];
     trusted-public-keys = [
+      "cache.dos.cit.tum.de-1:ZCSRbf/HsV0XwrrfR4dC6HyrjqwqKXmR/hDPsYyZ9Sg="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
