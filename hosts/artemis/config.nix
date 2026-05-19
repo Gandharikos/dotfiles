@@ -2,7 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    (import ../common/disko/ext4.nix { })
+    (import ../common/disko/luks-btrfs-tmpfs.nix { })
   ];
 
   dot = {
@@ -23,20 +23,19 @@
     };
 
     services = {
-      btrbk.enable = false;
+      btrbk.enable = true;
       zram.enable = true;
       printing.enable = true;
       fwupd.enable = true;
     };
 
     virtual.enable = true;
-    persistence.enable = false;
-    networking.enableIPv6 = true;
+    persistence.enable = true;
 
     machine = {
       type = "desktop";
       cpu = "amd";
-      gpu = "intel";
+      gpu = "nvidia";
       hasBluetooth = true;
       hasPrinter = false;
       hasTPM = true;
