@@ -13,6 +13,7 @@
       partitions = {
         ESP = {
           priority = 1;
+          label = "boot";
           size = "512M";
           type = "EF00";
           content = {
@@ -24,6 +25,7 @@
         };
 
         swap = {
+          priority = 2;
           label = "swap";
           size = swapSize;
           content = {
@@ -33,6 +35,8 @@
         };
 
         root = {
+          priority = 3;
+          label = "nixos";
           size = "100%";
           content = {
             type = "filesystem";
