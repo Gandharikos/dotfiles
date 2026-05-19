@@ -68,7 +68,7 @@ in
         enable = true;
         settings = {
           client_id_command = "cat ${config.sops.secrets.spotify_client_id.path}";
-          clinet_port = 8080;
+          client_port = 8080;
           layout.playback_window_position = "Bottom";
           border_type = "Rounded";
           play_icon = " ";
@@ -99,11 +99,11 @@ in
             key_sequence = "n";
           }
           {
-            command = "SeekForward";
+            command.SeekForward = { };
             key_sequence = "O";
           }
           {
-            command = "SeekBackward";
+            command.SeekBackward = { };
             key_sequence = "N";
           }
           {
