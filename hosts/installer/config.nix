@@ -1,17 +1,10 @@
 {
-  lib,
   pkgs,
   inputs,
-  self,
   ...
 }:
 let
-  userDirs = builtins.attrNames (
-    lib.filterAttrs (
-      name: type: type == "directory" && builtins.pathExists "${self}/users/${name}/default.nix"
-    ) (builtins.readDir "${self}/users")
-  );
-  primaryUser = builtins.head userDirs;
+  primaryUser = "michael";
 in
 {
   imports = [
@@ -62,5 +55,5 @@ in
     # configures the network interface(include wireless) via `nmcli` & `nmtui`
     networkmanager.enable = true;
   };
-  system.stateVersion = "26.05";
+  system.stateVersion = "25.11";
 }
