@@ -1,4 +1,8 @@
-{ lib, ... }:
+{
+  lib,
+  pkgs,
+  ...
+}:
 {
   imports = [
     ./hardware-configuration.nix
@@ -58,4 +62,7 @@
   };
 
   security.soteria.enable = lib.mkForce false;
+
+  boot.loader.grub.dedsec-theme.resolution = lib.mkForce "1080p";
+  console.font = lib.mkForce "${pkgs.terminus_font}/share/consolefonts/ter-d24n.psf.gz";
 }
