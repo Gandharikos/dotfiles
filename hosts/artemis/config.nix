@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -52,4 +52,6 @@
       backend = null;
     };
   };
+
+  users.users.${config.dot.primaryUser}.uid = 1000;
 }

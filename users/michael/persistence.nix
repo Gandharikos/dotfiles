@@ -1,11 +1,11 @@
 { config, lib, ... }:
 let
-  inherit (config.home-manager.users.johnson) my;
-  inherit (lib.modules) mkIf mkMerge;
+  inherit (config.home-manager.users.michael) my;
+  inherit (lib.modules) mkIf;
 in
 {
-  dot.users.johnson.persistence = {
-    directories = mkMerge [
+  dot.users.michael.persistence = {
+    directories = [
       ".cache/Anki"
       ".local/share/Anki2"
       # keep-sorted start
@@ -64,7 +64,7 @@ in
       ".local/share/zoxide"
     ];
 
-    files = mkIf my.claude-code.enable [
+    files = mkIf (builtins.hasAttr "claude-code" my && my.claude-code.enable) [
       ".claude.json"
     ];
   };
