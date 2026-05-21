@@ -95,6 +95,24 @@ in
         idle = removeAttrs (settings.idle or { }) managedIdleSettings;
       };
 
+      pluginSettings.tailscale = {
+        refreshInterval = 5000;
+        compactMode = false;
+        showIpAddress = true;
+        showPeerCount = true;
+        hideDisconnected = false;
+        hideMullvadExitNodes = true;
+        showSearchBar = false;
+        terminalCommand = "ghostty";
+        sshUsername = "";
+        pingCount = 5;
+        defaultPeerAction = "copy-ip";
+        taildropEnabled = true;
+        taildropDownloadDir = "~/Downloads/Taildrop";
+        taildropReceiveMode = "operator";
+        loginServer = "";
+      };
+
       inherit plugins;
     };
 
