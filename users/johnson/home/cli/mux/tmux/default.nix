@@ -29,6 +29,8 @@ in
         interactiveShellInit = ''
           if not set -q TMUX
              and test -z "$SSH_TTY"
+             and test -z "$SSH_CONNECTION"
+             and test -z "$SSH_CLIENT"
              and test -z "$WSL_DISTRO_NAME"
              and test -z "$INSIDE_EMACS"
              and test -z "$EMACS"
@@ -51,6 +53,8 @@ in
           "${key}" = mkBefore ''
             if [[ -z "$TMUX" ]] \
               && [[ -z "$SSH_TTY" ]] \
+              && [[ -z "$SSH_CONNECTION" ]] \
+              && [[ -z "$SSH_CLIENT" ]] \
               && [[ -z "$WSL_DISTRO_NAME" ]] \
               && [[ -z "$INSIDE_PYCHARM" ]] \
               && [[ -z "$EMACS" ]] \
