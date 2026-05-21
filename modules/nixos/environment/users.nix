@@ -7,6 +7,7 @@
 let
   inherit (config.dot) enabledUsers primaryUser users;
   inherit (lib.attrsets) genAttrs;
+  inherit (lib.modules) mkIf;
   cfgUser = config.users.users."${primaryUser}";
   ifTheyExist = groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
 in
@@ -47,4 +48,11 @@ in
         };
       };
   };
+
+  systemd.services = mkIf config.services.userborn.enable (
+    genAttrs (map (name: "home-manager-${name}") enabledUsers) (_: {
+      after = [ "userborn.service" ];
+      requires = [ "userborn.service" ];
+    })
+  );
 }

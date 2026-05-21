@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ lib, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -58,6 +58,4 @@
   };
 
   security.soteria.enable = lib.mkForce false;
-
-  users.users.${config.dot.primaryUser}.uid = 1000;
 }
