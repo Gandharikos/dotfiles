@@ -15,7 +15,8 @@ in
   boot.loader = {
     systemd-boot.enable = true;
     efi = {
-      canTouchEfiVariables = true;
+      # Keep the installer from taking boot priority over the target system.
+      canTouchEfiVariables = false;
       efiSysMountPoint = "/boot";
     };
   };
