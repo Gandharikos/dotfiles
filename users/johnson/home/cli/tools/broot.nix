@@ -9,6 +9,8 @@ let
   editor = config.my.editor;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
+  inherit (lib.lists) optionals;
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
 in
 {
   options.my.broot = {
@@ -88,6 +90,8 @@ in
               "{input-path}"
             ];
           }
+        ]
+        ++ optionals isLinux [
           {
             input_extensions = [ "d2" ];
             output_extension = "png";
