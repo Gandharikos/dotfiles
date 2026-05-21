@@ -1,10 +1,11 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 let
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkForce mkIf;
   inherit (lib.options) mkEnableOption;
   cfg = config.dot.machine;
 in
@@ -37,5 +38,9 @@ in
 
     # https://wiki.nixos.org/wiki/Bluetooth
     services.blueman.enable = true;
+    systemd.user.services.blueman-applet.serviceConfig.ExecStart = mkForce [
+      ""
+      "${pkgs.blueman}/bin/blueman-applet"
+    ];
   };
 }
