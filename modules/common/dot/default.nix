@@ -12,6 +12,7 @@ let
   inherit (lib.attrsets) attrNames filterAttrs;
   inherit (lib.types)
     attrsOf
+    bool
     enum
     listOf
     str
@@ -48,6 +49,13 @@ in
         default = attrNames (filterAttrs (_: user: user.enable) config.dot.users);
         description = "Enabled dot users.";
       };
+      singleUser = mkOption {
+        internal = true;
+        readOnly = true;
+        type = bool;
+        default = builtins.length config.dot.enabledUsers == 1;
+        description = "Whether exactly one dot user is enabled.";
+      };
       users = mkOption {
         type = attrsOf userType;
         default = { };
@@ -67,5 +75,17 @@ in
     };
   };
 
-  config.dot.users.${config.dot.primaryUser}.enable = mkDefault true;
+  config = {
+    assertions = [
+      {
+        assertion = !config.dot.singleUser || config.dot.enabledUsers == [ config.dot.primaryUser ];
+        message = ''
+          dot.singleUser is true, so the only enabled dot user must be dot.primaryUser.
+          Set dot.primaryUser to the enabled user, or enable another dot user intentionally.
+        '';
+      }
+    ];
+
+    dot.users.${config.dot.primaryUser}.enable = mkDefault true;
+  };
 }

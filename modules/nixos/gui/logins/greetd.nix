@@ -22,7 +22,7 @@ in
       FDE (Full Disk Encryption) enabled. It is a security risk for systems without FDE.
     ''
     // {
-      default = persist;
+      default = persist && config.dot.singleUser;
     };
 
   config = mkIf login.greetd.enable {

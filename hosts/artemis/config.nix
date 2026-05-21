@@ -7,6 +7,7 @@
 
   dot = {
     primaryUser = "michael";
+    users.johnson.enable = true;
     security = {
       auditd.enable = lib.mkForce false;
     };
