@@ -23,7 +23,7 @@
     "showCategories": true,
     "showIconBackground": false,
     "sortByMostUsed": true,
-    "terminalCommand": "alacritty -e",
+    "terminalCommand": "ghostty -e",
     "viewMode": "list"
   },
   "audio": {
@@ -177,10 +177,10 @@
             "showIpAddress": true,
             "showPeerCount": true,
             "sshUsername": "",
-            "taildropDownloadDir": "~/Downloads",
+            "taildropDownloadDir": "~/Downloads/Taildrop",
             "taildropEnabled": true,
             "taildropReceiveMode": "operator",
-            "terminalCommand": ""
+            "terminalCommand": "ghostty"
           },
           "id": "plugin:tailscale"
         }
