@@ -8,8 +8,6 @@
   dot = {
     primaryUser = "michael";
 
-    users.johnson.enable = true;
-
     boot = {
       secureBoot = false;
       tmpOnTmpfs = false;
