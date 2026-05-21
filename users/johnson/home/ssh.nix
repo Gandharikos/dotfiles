@@ -25,41 +25,41 @@ in
     {
       my.ssh.enableFido2 = mkDefault false;
 
-      programs.ssh.matchBlocks = {
+      programs.ssh.settings = {
         "*" = {
-          identityFile = mkDefault identityFiles;
-          addKeysToAgent = mkDefault (if cfg.enableFido2 then "no" else "yes");
+          IdentityFile = mkDefault identityFiles;
+          AddKeysToAgent = mkDefault (if cfg.enableFido2 then "no" else "yes");
         };
 
         "192.168.*" = {
-          forwardAgent = mkDefault true;
+          ForwardAgent = mkDefault true;
         };
 
         "loki" = {
-          hostname = mkDefault "loki.local";
-          forwardAgent = mkDefault true;
+          HostName = mkDefault "loki.local";
+          ForwardAgent = mkDefault true;
         };
 
         "sigurd" = {
-          hostname = mkDefault "sigurd.local";
-          forwardAgent = mkDefault true;
+          HostName = mkDefault "sigurd.local";
+          ForwardAgent = mkDefault true;
         };
 
         "ymir" = {
-          hostname = mkDefault "ymir.local";
-          forwardAgent = mkDefault true;
+          HostName = mkDefault "ymir.local";
+          ForwardAgent = mkDefault true;
         };
 
         "nidhogg" = {
-          hostname = mkDefault "nidhogg.local";
-          forwardAgent = mkDefault true;
+          HostName = mkDefault "nidhogg.local";
+          ForwardAgent = mkDefault true;
         };
 
         "github.com" = {
-          hostname = mkDefault "github.com";
-          user = mkDefault "git";
-          identityFile = mkDefault identityFiles;
-          identitiesOnly = mkDefault true;
+          HostName = mkDefault "github.com";
+          User = mkDefault "git";
+          IdentityFile = mkDefault identityFiles;
+          IdentitiesOnly = mkDefault true;
         };
       };
 
