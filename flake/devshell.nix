@@ -15,22 +15,17 @@
           name = "dots";
           startup.pre-commit.text = config.pre-commit.installationScript;
         };
-        packages =
-          with pkgs;
-          [
-            nix
-            # nix helpers
-            nix-melt
-            nix-inspect
-            nix-search-cli
-            # package creation helpers
-            nurl
-            nix-init
-            nix-prefetch-git
-          ]
-          ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isLinux [
-            inputs'.quickshell.packages.default
-          ];
+        packages = with pkgs; [
+          nix
+          # nix helpers
+          nix-melt
+          nix-inspect
+          nix-search-cli
+          # package creation helpers
+          nurl
+          nix-init
+          nix-prefetch-git
+        ];
         commands = [
           {
             package = pkgs.nix-tree;
