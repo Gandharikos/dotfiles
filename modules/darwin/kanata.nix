@@ -19,6 +19,9 @@ in
       pkgs.kanata-with-cmd
     ];
 
+    # kanata uses Karabiner's VirtualHID daemon as its macOS output device.
+    homebrew.casks = [ "karabiner-elements" ];
+
     # Launch daemon for the Virtual HID Device
     launchd.daemons = {
       karabiner-virtualhid = {
