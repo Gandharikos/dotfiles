@@ -35,7 +35,7 @@ in
         "printk"
         "panic"
       ];
-      default = "silent";
+      default = "printk";
       description = ''
         Action to take on critical errors.
         - silent: Discard audit records (safest for stability)
@@ -47,6 +47,12 @@ in
     autoPrune = {
       enable = mkEnableOption "Enable auto-pruning of audit logs via logrotate" // {
         default = true;
+      };
+
+      size = mkOption {
+        type = int;
+        default = 524288000; # ~500 megabytes
+        description = "The maximum size of the audit log in bytes";
       };
 
       dates = mkOption {
@@ -73,20 +79,32 @@ in
       };
     };
 
-    # [Core Best Practice] Utilize logrotate for log lifecycle management
-    services.logrotate.settings.audit = mkIf cfg.autoPrune.enable {
-      files = "/var/log/audit/*.log";
-      frequency = cfg.autoPrune.dates; # Rotate daily by default
-      rotate = 7; # Keep the last 7 rotated logs
-      compress = true; # Auto-compress (saves massive amounts of space)
-      delaycompress = true; # Delay compression by one day to prevent compressing while auditd is still writing
-      missingok = true; # Do not error out if the log file is missing
-      notifempty = true; # Do not rotate if the log is empty
-      create = "0640 root root"; # Extremely strict permissions for the newly created log file
-      postrotate = ''
-        # After rotation, gently notify the auditd process to reopen its file descriptors
-        /bin/kill -HUP `cat /var/run/auditd.pid 2> /dev/null` 2> /dev/null || true
-      '';
+    # the audit log can grow quite large, so we _can_ automatically prune it
+    systemd = mkIf cfg.autoPrune.enable {
+      timers."clean-audit-log" = {
+        description = "Periodically clean audit log";
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnCalendar = cfg.autoPrune.dates;
+          Persistent = true;
+        };
+      };
+
+      services."clean-audit-log" = {
+        script = ''
+          set -eu
+          if [[ $(stat -c "%s" /var/log/audit/audit.log) -gt ${toString cfg.autoPrune.size} ]]; then
+            echo "Clearing Audit Log";
+            rm -rvf /var/log/audit/audit.log;
+            echo "Done!"
+          fi
+        '';
+
+        serviceConfig = {
+          Type = "oneshot";
+          User = "root";
+        };
+      };
     };
   };
 }

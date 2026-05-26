@@ -1,4 +1,3 @@
-{ lib, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -9,7 +8,6 @@
   dot = {
     primaryUser = "johnson";
     security = {
-      auditd.enable = lib.mkForce false;
       fixWebcam = true;
     };
     boot = {
