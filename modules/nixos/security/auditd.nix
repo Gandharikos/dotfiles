@@ -1,12 +1,18 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
   cfg = config.dot.security.auditd;
+  auditctl = lib.getExe' config.security.audit.package "auditctl";
+  auditRules = pkgs.writeTextDir "audit.rules" ''
+    -D
+    ${lib.concatLines config.security.audit.rules}
+  '';
   inherit (lib.options) mkEnableOption mkOption;
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkForce mkIf;
   inherit (lib.types)
     str
     int
@@ -80,8 +86,15 @@ in
     };
 
     # the audit log can grow quite large, so we _can_ automatically prune it
-    systemd = mkIf cfg.autoPrune.enable {
-      timers."clean-audit-log" = {
+    systemd = {
+      services.audit-rules-nixos.serviceConfig = {
+        # The kernel parameters already set audit=1 and audit_backlog_limit.
+        # auditctl currently rejects changing these at runtime, so only load rules here.
+        ExecStart = mkForce "${auditctl} -R ${auditRules}/audit.rules";
+        ExecStopPost = mkForce [ "${auditctl} -D" ];
+      };
+
+      timers."clean-audit-log" = mkIf cfg.autoPrune.enable {
         description = "Periodically clean audit log";
         wantedBy = [ "timers.target" ];
         timerConfig = {
@@ -90,7 +103,7 @@ in
         };
       };
 
-      services."clean-audit-log" = {
+      services."clean-audit-log" = mkIf cfg.autoPrune.enable {
         script = ''
           set -eu
           if [[ $(stat -c "%s" /var/log/audit/audit.log) -gt ${toString cfg.autoPrune.size} ]]; then
