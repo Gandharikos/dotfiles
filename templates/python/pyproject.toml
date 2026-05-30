@@ -1,7 +1,7 @@
 [project]
 name = "sample-project"
 version = "0.1.0"
-description = "Minimal Python development template for Nix using uv2nix."
+description = "Minimal Python development template for Nix using devenv and uv."
 requires-python = ">=3.12"
 dependencies = []
 

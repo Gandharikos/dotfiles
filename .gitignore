@@ -9,3 +9,4 @@ GEMINI.md
 QWEN.md
 .cache/nix
 /.codex
+!templates/*/.envrc

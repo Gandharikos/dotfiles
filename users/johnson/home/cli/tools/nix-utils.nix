@@ -19,6 +19,7 @@ in
   config = mkIf cfg.enable {
     # ======== Nix Development Tools ========
     home.packages = with pkgs; [
+      devenv # Declarative development environments
       nixd # Nix LSP
       nixfmt # RFC style formatter
       nvd # Nix differ

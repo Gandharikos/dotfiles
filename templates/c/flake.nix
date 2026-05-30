@@ -1,121 +1,42 @@
 {
-  description = "An over-engineered Hello World in C";
+  description = "C project template using devenv";
 
-  # Nixpkgs / NixOS version to use.
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+  inputs = {
+    nixpkgs.url = "github:cachix/devenv-nixpkgs/rolling";
+    devenv.url = "github:cachix/devenv";
+  };
+
+  nixConfig = {
+    extra-substituters = "https://devenv.cachix.org";
+    extra-trusted-public-keys = "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=";
+  };
 
   outputs =
-    {
-      self,
+    inputs@{
       nixpkgs,
+      devenv,
       ...
     }:
     let
-      # to work with older version of flakes
-      lastModifiedDate = self.lastModifiedDate or self.lastModified or "19700101";
-
-      # Generate a user-friendly version number.
-      version = builtins.substring 0 8 lastModifiedDate;
-
-      # System types to support.
-      supportedSystems = [
+      systems = [
         "x86_64-linux"
-        "x86_64-darwin"
         "aarch64-linux"
+        "x86_64-darwin"
         "aarch64-darwin"
       ];
-
-      # Helper function to generate an attrset '{ x86_64-linux = f "x86_64-linux"; ... }'.
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-
-      # Nixpkgs instantiated for supported system types.
-      nixpkgsFor = forAllSystems (
-        system:
-        import nixpkgs {
-          inherit system;
-          overlays = [ self.overlay ];
-        }
-      );
+      forAllSystems = nixpkgs.lib.genAttrs systems;
     in
     {
-      # A Nixpkgs overlay.
-      overlay = final: _prev: {
-        hello =
-          with final;
-          stdenv.mkDerivation {
-            pname = "hello";
-            inherit version;
-
-            src = ./.;
-
-            nativeBuildInputs = [ autoreconfHook ];
-          };
-      };
-
-      # Provide some binary packages for selected system types.
-      packages = forAllSystems (system: {
-        inherit (nixpkgsFor.${system}) hello;
-      });
-
-      # The default package for 'nix build'. This makes sense if the
-      # flake provides only one package or there is a clear "main"
-      # package.
-      defaultPackage = forAllSystems (system: self.packages.${system}.hello);
-
-      # A NixOS module, if applicable (e.g. if the package provides a system service).
-      nixosModules.hello =
-        { pkgs, ... }:
-        {
-          nixpkgs.overlays = [ self.overlay ];
-
-          environment.systemPackages = [ pkgs.hello ];
-
-          #systemd.services = { ... };
-        };
-
-      # Tests run by 'nix flake check' and by Hydra.
-      checks = forAllSystems (
+      devShells = forAllSystems (
         system:
-        with nixpkgsFor.${system};
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
         {
-          inherit (self.packages.${system}) hello;
-
-          # Additional tests, if applicable.
-          test = stdenv.mkDerivation {
-            pname = "hello-test";
-            inherit version;
-
-            buildInputs = [ hello ];
-
-            dontUnpack = true;
-
-            buildPhase = ''
-              echo 'running some integration tests'
-              [[ $(hello) = 'Hello Nixers!' ]]
-            '';
-
-            installPhase = "mkdir -p $out";
+          default = devenv.lib.mkShell {
+            inherit inputs pkgs;
+            modules = [ ./devenv.nix ];
           };
-        }
-        // lib.optionalAttrs stdenv.hostPlatform.isLinux {
-          # A VM test of the NixOS module.
-          vmTest =
-            with import (nixpkgs + "/nixos/lib/testing-python.nix") { inherit system; };
-            makeTest {
-              nodes = {
-                client =
-                  { ... }:
-                  {
-                    imports = [ self.nixosModules.hello ];
-                  };
-              };
-
-              testScript = ''
-                start_all()
-                client.wait_for_unit("multi-user.target")
-                client.succeed("hello")
-              '';
-            };
         }
       );
     };

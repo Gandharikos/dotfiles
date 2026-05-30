@@ -1,6 +1,6 @@
 <div align=center>
 
-# ❄️ nix-template-python-uv2nix 🐍
+# ❄️ nix-template-python-devenv 🐍
 
 [![NixOS](https://img.shields.io/badge/Made_for-Python-blue.svg?logo=python&style=for-the-badge)](https://www.python.org/)
 [![NixOS](https://img.shields.io/badge/Flakes-Nix-informational.svg?logo=nixos&style=for-the-badge)](https://nixos.org)
@@ -12,7 +12,7 @@ Minimal **Python** development template for **Nix**
 
 ## About
 
-This is a minimal template for Python development with `uv` and `uv2nix`.
+This is a minimal template for Python development with `uv` managed by `devenv`.
 
 ## Initialization
 
@@ -25,10 +25,8 @@ nix flake init -t github:Gandharikos/.dotfiles#python
 
 ## Usage
 
-- `nix develop`: opens a shell with the project virtualenv and `uv`
-- `nix build`: builds the Python project virtualenv. The script defined in `pyproject.toml` will be
-  available under `./result/bin/<name>`
-- `nix run`: runs the Python program.
+- `nix develop --no-pure-eval`: opens the devenv shell with the project virtualenv and `uv`
+- `devenv test`: runs the devenv test hooks
 - `python -m package`: runs the Python module inside the dev shell
 - `uv add <dependency>`: adds a dependency to `pyproject.toml`
 - `uv lock`: refreshes `uv.lock`
@@ -36,5 +34,5 @@ nix flake init -t github:Gandharikos/.dotfiles#python
 ## Reference
 
 1. [wiki/Flakes](https://nixos.wiki/wiki/Flakes)
-2. [uv](https://docs.astral.sh/uv/) - used for Python package management
-3. [uv2nix](https://pyproject-nix.github.io/uv2nix/) - used to convert uv projects into Nix packages
+2. [devenv](https://devenv.sh/) - used for the development environment
+3. [uv](https://docs.astral.sh/uv/) - used for Python package management

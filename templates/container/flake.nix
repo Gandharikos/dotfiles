@@ -1,34 +1,43 @@
 {
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+  description = "Container tooling template using devenv";
+
+  inputs = {
+    nixpkgs.url = "github:cachix/devenv-nixpkgs/rolling";
+    devenv.url = "github:cachix/devenv";
+  };
+
+  nixConfig = {
+    extra-substituters = "https://devenv.cachix.org";
+    extra-trusted-public-keys = "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=";
+  };
 
   outputs =
-    {
-      self,
+    inputs@{
       nixpkgs,
+      devenv,
       ...
     }:
+    let
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
+      ];
+      forAllSystems = nixpkgs.lib.genAttrs systems;
+    in
     {
-      nixosConfigurations.container = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          (_: {
-            boot.isContainer = true;
-
-            # Let 'nixos-version --json' know about the Git revision
-            # of this flake.
-            system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
-
-            # Network configuration.
-            networking.useDHCP = false;
-            networking.firewall.allowedTCPPorts = [ 80 ];
-
-            # Enable a web server.
-            services.httpd = {
-              enable = true;
-              adminAddr = "johnson.wq.hu@gmail.com";
-            };
-          })
-        ];
-      };
+      devShells = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = devenv.lib.mkShell {
+            inherit inputs pkgs;
+            modules = [ ./devenv.nix ];
+          };
+        }
+      );
     };
 }
