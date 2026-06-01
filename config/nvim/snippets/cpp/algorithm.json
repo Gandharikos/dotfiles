@@ -22,5 +22,44 @@
       "}"
     ],
     "description": "jiangly-style C++ competitive programming template"
+  },
+  "print128": {
+    "prefix": ["print128"],
+    "body": [
+      "void print128(i128 x) {",
+      "    if (x == 0) {",
+      "        std::cout << 0;",
+      "        return;",
+      "    }",
+      "    u128 y;",
+      "    if (x < 0) {",
+      "        std::cout << '-';",
+      "        y = u128(-(x + 1)) + 1;",
+      "    } else {",
+      "        y = x;",
+      "    }",
+      "    std::string s;",
+      "    while (y > 0) {",
+      "        s += char('0' + y % 10);",
+      "        y /= 10;",
+      "    }",
+      "    std::ranges::reverse(s);",
+      "    std::cout << s;",
+      "}",
+      "$0"
+    ],
+    "description": "print signed __int128"
+  },
+  "power-of-two-i128": {
+    "prefix": ["p2", "pow2"],
+    "body": [
+      "std::vector<${1|i128,i64,int|}> p2(${2:n} + 1);",
+      "p2[0] = 1;",
+      "for (int i = 1; i <= ${2:n}; i++) {",
+      "    p2[i] = p2[i - 1] * 2;",
+      "}",
+      "$0"
+    ],
+    "description": "precompute powers of two"
   }
 }
