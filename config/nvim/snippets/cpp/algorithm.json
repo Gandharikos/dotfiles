@@ -80,7 +80,7 @@
   "bigint": {
     "prefix": ["bigint", "BigInt"],
     "body": [
-      "template<int N = ${1:1000}, int BASE = ${2:10}>",
+      "template<int N = 1000, int BASE = 10>",
       "struct BigInt {",
       "    static_assert(BASE >= 2 && BASE <= 1000000000);",
       "",
