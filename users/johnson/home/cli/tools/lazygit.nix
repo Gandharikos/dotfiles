@@ -219,7 +219,7 @@ with osConfig.dot.keyboard.keys;
             pasteCommits = "v";
             tagCommit = "T";
             checkoutCommit = "<space>";
-            resetCherryPick = "<c-R>";
+            resetCherryPick = "<c-r>";
             copyCommitAttributeToClipboard = "y";
             openLogMenu = "<c-l>";
             openInBrowser = "B";

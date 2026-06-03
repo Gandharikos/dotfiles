@@ -69,7 +69,7 @@ in
       stateVersion = mkOption {
         internal = true;
         type = str;
-        default = "26.05";
+        default = "26.11";
         description = "The version of my system";
       };
     };
