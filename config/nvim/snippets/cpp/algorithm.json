@@ -77,6 +77,11 @@
     ],
     "description": "read a matrix from standard input"
   },
+  "dfs-lambda": {
+    "prefix": ["dfs"],
+    "body": ["auto dfs = [&](this auto &&self${1:,}) -> ${2:void} {", "    $0", "};"],
+    "description": "recursive dfs lambda with explicit object parameter"
+  },
   "bigint": {
     "prefix": ["bigint", "BigInt"],
     "body": [

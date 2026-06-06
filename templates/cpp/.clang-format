@@ -2,7 +2,11 @@ BasedOnStyle: LLVM
 Standard: Latest
 IndentWidth: 2
 ColumnLimit: 100
-AllowShortFunctionsOnASingleLine: Empty
+BreakBeforeBrace: Attach
+InsertBraces: true
 DerivePointerAlignment: false
 PointerAlignment: Left
 SortIncludes: CaseSensitive
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
