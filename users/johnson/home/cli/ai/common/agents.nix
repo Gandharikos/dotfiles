@@ -2,7 +2,7 @@
 let
   agents = import ./agents { inherit lib; };
 
-  toGeminiAgents = lib.mapAttrs (
+  toAntigravityAgents = lib.mapAttrs (
     name: agentText:
     let
       parts = lib.splitString "---" agentText;
@@ -28,5 +28,5 @@ in
 
   toClaudeMarkdown = agents;
   toOpenCodeMarkdown = agents;
-  inherit toGeminiAgents;
+  inherit toAntigravityAgents;
 }

@@ -8,7 +8,7 @@
 let
   inherit (lib) mkDefault mkEnableOption mkIf;
 
-  cfg = config.my.gemini-cli;
+  cfg = config.my.antigravity-cli;
   codexEnabled = config.my.codex.enable or false;
   mcpModuleEnabled = config.my.mcp.enable or false;
 
@@ -19,15 +19,18 @@ in
     ./rules.nix
   ];
 
-  options.my.gemini-cli = {
-    enable = mkEnableOption "gemini-cli";
+  options.my.antigravity-cli = {
+    enable = mkEnableOption "antigravity-cli";
   };
 
   config = mkIf cfg.enable {
-    programs.gemini-cli = {
+    home.shellAliases = {
+      ag = "antigravity";
+    };
+
+    programs.antigravity-cli = {
       enable = true;
-      # build error on darwin
-      package = pkgs.llm-agents.gemini-cli;
+      package = pkgs.llm-agents.antigravity-cli;
       enableMcpIntegration = mkIf mcpModuleEnabled true;
 
       settings = {
@@ -132,8 +135,8 @@ in
         AGENTS = lib.dot.getFile "users/johnson/home/cli/ai/common/base.md";
       };
 
-      commands = sharedAiTools.geminiCli.commands // sharedAiTools.geminiCli.agents;
-      skills = mkIf (!codexEnabled) sharedAiTools.geminiCli.skills;
+      commands = sharedAiTools.antigravityCli.commands // sharedAiTools.antigravityCli.agents;
+      skills = mkIf (!codexEnabled) sharedAiTools.antigravityCli.skills;
     };
   };
 }

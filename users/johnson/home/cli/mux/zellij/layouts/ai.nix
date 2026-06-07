@@ -29,7 +29,7 @@ in
                         size = "25%";
                         split_direction = "Horizontal";
                         _children = [
-                          { pane.command = "gemini"; }
+                          { pane.command = "agy"; }
                           { pane.command = "claude"; }
                           { pane.command = "codex"; }
                         ];

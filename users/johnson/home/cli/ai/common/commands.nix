@@ -2,7 +2,7 @@
 let
   commands = import ./commands { inherit lib; };
 
-  toGeminiCommands = lib.mapAttrs (name: prompt: {
+  toAntigravityCommands = lib.mapAttrs (name: prompt: {
     inherit prompt;
     description =
       let
@@ -20,5 +20,5 @@ in
 
   toClaudeMarkdown = commands;
   toOpenCodeMarkdown = commands;
-  inherit toGeminiCommands;
+  inherit toAntigravityCommands;
 }

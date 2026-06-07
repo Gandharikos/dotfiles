@@ -8,6 +8,8 @@ in
 
   my = {
     # keep-sorted start block=yes newline_separated=yes
+    antigravity-cli.enable = true;
+
     atuin = {
       enable = true;
       autoLogin = true;
@@ -39,8 +41,6 @@ in
     fd.enable = true;
 
     fzf.enable = true;
-
-    gemini-cli.enable = true;
 
     gh.enable = true;
 

@@ -6,6 +6,9 @@ in
 {
   dot.users.johnson.persistence = {
     directories = mkMerge [
+      (mkIf config.dot.gui._1password.enable [
+        ".1password"
+      ])
       (mkIf my.gui.apps.anki.enable [
         ".cache/Anki"
         ".local/share/Anki2"
@@ -89,7 +92,7 @@ in
       (mkIf my.fastfetch.enable [
         ".cache/fastfetch"
       ])
-      (mkIf my."gemini-cli".enable [
+      (mkIf my."antigravity-cli".enable [
         ".gemini"
       ])
       (mkIf my.gh.enable [

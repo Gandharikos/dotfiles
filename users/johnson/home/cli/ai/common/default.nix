@@ -65,9 +65,9 @@ in
       inherit skillsDir;
     };
 
-    geminiCli = {
-      commands = aiCommands.toGeminiCommands;
-      agents = aiAgents.toGeminiAgents;
+    antigravityCli = {
+      commands = aiCommands.toAntigravityCommands;
+      agents = aiAgents.toAntigravityAgents;
       inherit skills;
     };
 
