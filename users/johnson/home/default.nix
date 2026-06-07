@@ -8,6 +8,11 @@ in
 
   my = {
     # keep-sorted start block=yes newline_separated=yes
+    _1password-cli = {
+      enable = true;
+      enableSshSocket = true;
+    };
+
     antigravity-cli.enable = true;
 
     atuin = {
