@@ -86,7 +86,7 @@
     "prefix": ["bs-int-pre", "bsp"],
     "body": [
       "${1:int} lo = ${2:1}, hi = ${3:1000000000};",
-      "auto check = [&](int x) -> bool {",
+      "auto check = [&](${1:int} x) -> bool {",
       "    $0",
       "};",
       "while (lo < hi) {",
@@ -105,7 +105,7 @@
     "prefix": ["bs-int-suc", "bss"],
     "body": [
       "${1:int} lo = ${2:1}, hi = ${3:n};",
-      "auto check = [&](int x) -> bool {",
+      "auto check = [&](${1:int} x) -> bool {",
       "    $0",
       "};",
       "while (lo < hi) {",
