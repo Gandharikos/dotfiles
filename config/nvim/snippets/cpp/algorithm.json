@@ -82,6 +82,64 @@
     "body": ["auto dfs = [&](this auto &&self${1:,}) -> ${2:void} {", "    $0", "};"],
     "description": "recursive dfs lambda with explicit object parameter"
   },
+  "binary-search-integer-predecessor": {
+    "prefix": ["bs-int-pre", "bsp"],
+    "body": [
+      "${1:int} lo = ${2:1}, hi = ${3:1000000000};",
+      "auto check = [&](int x) -> bool {",
+      "    $0",
+      "};",
+      "while (lo < hi) {",
+      "    ${1:int} m = (lo + hi + 1) / 2;",
+      "    if (check(m)) {",
+      "        lo = m;",
+      "    } else {",
+      "        hi = m - 1;",
+      "    }",
+      "}",
+      "std::cout << lo << \"\\n\";"
+    ],
+    "description": "integer binary search for predecessor"
+  },
+  "binary-search-integer-successor": {
+    "prefix": ["bs-int-suc", "bss"],
+    "body": [
+      "${1:int} lo = ${2:1}, hi = ${3:n};",
+      "auto check = [&](int x) -> bool {",
+      "    $0",
+      "};",
+      "while (lo < hi) {",
+      "    ${1:int} m = (lo + hi) / 2;",
+      "    if (check(m)) {",
+      "        hi = m;",
+      "    } else {",
+      "        lo = m + 1;",
+      "    }",
+      "}",
+      "std::cout << lo << \"\\n\";"
+    ],
+    "description": "integer binary search for successor"
+  },
+  "binary-search-real": {
+    "prefix": ["bs-real", "bsr"],
+    "body": [
+      "using real = long double;",
+      "constexpr real eps = ${1:1E-7};",
+      "real lo = ${2:0}, hi = ${3:1};",
+      "auto check = [&](real x) -> bool {",
+      "    $0",
+      "};",
+      "while (hi - lo > std::max(real(1), lo) * eps) {",
+      "    real m = (lo + hi) / 2;",
+      "    if (check(m)) {",
+      "        hi = m;",
+      "    } else {",
+      "        lo = m;",
+      "    }",
+      "}"
+    ],
+    "description": "real binary search"
+  },
   "bigint": {
     "prefix": ["bigint", "BigInt"],
     "body": [
