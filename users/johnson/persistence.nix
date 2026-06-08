@@ -56,6 +56,10 @@ in
       (mkIf my.gui.apps.vlc.enable [
         ".config/vlc"
       ])
+      (mkIf my.gui.apps.zed.enable [
+        ".config/zed"
+        ".local/share/zed"
+      ])
       (mkIf my.atuin.enable [
         ".local/share/atuin"
       ])

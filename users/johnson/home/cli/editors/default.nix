@@ -18,6 +18,7 @@ in
       "helix"
       "vscode"
       "emacs"
+      "zed"
     ];
     default = "nvim";
     description = "The editor to use";
