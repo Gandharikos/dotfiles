@@ -37,6 +37,7 @@ in
              and test -z "$VIM"
              and test -z "$NVIM"
              and test -z "$INSIDE_PYCHARM"
+             and test -z "$ZED_TERMINAL"
              and test -z "$ZELLIJ_SESSION_NAME"
              and test "$TERM_PROGRAM" != "vscode"
             tmux attach-session; or tmux
@@ -61,6 +62,7 @@ in
               && [[ -z "$VIM" ]] \
               && [[ -z "$NVIM" ]] \
               && [[ -z "$INSIDE_EMACS" ]] \
+              && [[ -z "$ZED_TERMINAL" ]] \
               && [[ -z "$ZELLIJ_SESSION_NAME" ]] \
               && [[ "$TERM_PROGRAM" != "vscode" ]]
             then

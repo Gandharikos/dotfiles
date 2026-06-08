@@ -65,6 +65,7 @@ in
           diagnostics = false;
           metrics = false;
         };
+        terminal.env.ZED_TERMINAL = "1";
         title_bar = {
           show_branch_status_icon = true;
           show_menus = false;
