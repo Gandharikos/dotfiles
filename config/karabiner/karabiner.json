@@ -22,15 +22,6 @@
               {
                 "type": "basic",
                 "from": {
-                  "key_code": "right_shift",
-                  "modifiers": { "optional": ["any"] }
-                },
-                "to": [{ "key_code": "right_shift" }],
-                "to_if_alone": [{ "sticky_modifier": { "right_shift": "toggle" } }]
-              },
-              {
-                "type": "basic",
-                "from": {
                   "key_code": "left_option",
                   "modifiers": { "optional": ["any"] }
                 },
@@ -539,9 +530,9 @@
                 "type": "basic",
                 "from": { "key_code": "u", "modifiers": { "mandatory": ["shift"] } },
                 "to": [
-                  {
-                    "shell_command": "/usr/bin/osascript -e 'tell application \"System Events\" to keystroke \"Ü\"'"
-                  }
+                  { "key_code": "u", "modifiers": ["left_option"] },
+                  { "key_code": "u", "modifiers": ["left_shift"] },
+                  { "key_code": "vk_none" }
                 ]
               },
               {
@@ -549,9 +540,9 @@
                 "type": "basic",
                 "from": { "key_code": "u" },
                 "to": [
-                  {
-                    "shell_command": "/usr/bin/osascript -e 'tell application \"System Events\" to keystroke \"ü\"'"
-                  }
+                  { "key_code": "u", "modifiers": ["left_option"] },
+                  { "key_code": "u" },
+                  { "key_code": "vk_none" }
                 ]
               },
               {
@@ -559,9 +550,9 @@
                 "type": "basic",
                 "from": { "key_code": "o", "modifiers": { "mandatory": ["shift"] } },
                 "to": [
-                  {
-                    "shell_command": "/usr/bin/osascript -e 'tell application \"System Events\" to keystroke \"Ö\"'"
-                  }
+                  { "key_code": "u", "modifiers": ["left_option"] },
+                  { "key_code": "o", "modifiers": ["left_shift"] },
+                  { "key_code": "vk_none" }
                 ]
               },
               {
@@ -569,9 +560,9 @@
                 "type": "basic",
                 "from": { "key_code": "o" },
                 "to": [
-                  {
-                    "shell_command": "/usr/bin/osascript -e 'tell application \"System Events\" to keystroke \"ö\"'"
-                  }
+                  { "key_code": "u", "modifiers": ["left_option"] },
+                  { "key_code": "o" },
+                  { "key_code": "vk_none" }
                 ]
               },
               {
@@ -591,9 +582,9 @@
                 "type": "basic",
                 "from": { "key_code": "a", "modifiers": { "mandatory": ["shift"] } },
                 "to": [
-                  {
-                    "shell_command": "/usr/bin/osascript -e 'tell application \"System Events\" to keystroke \"Ä\"'"
-                  }
+                  { "key_code": "u", "modifiers": ["left_option"] },
+                  { "key_code": "a", "modifiers": ["left_shift"] },
+                  { "key_code": "vk_none" }
                 ]
               },
               {
@@ -601,9 +592,9 @@
                 "type": "basic",
                 "from": { "key_code": "a" },
                 "to": [
-                  {
-                    "shell_command": "/usr/bin/osascript -e 'tell application \"System Events\" to keystroke \"ä\"'"
-                  }
+                  { "key_code": "u", "modifiers": ["left_option"] },
+                  { "key_code": "a" },
+                  { "key_code": "vk_none" }
                 ]
               },
               {
@@ -620,11 +611,7 @@
                 "conditions": [{ "type": "variable_if", "name": "tab_layer", "value": 1 }],
                 "type": "basic",
                 "from": { "key_code": "s" },
-                "to": [
-                  {
-                    "shell_command": "/usr/bin/osascript -e 'tell application \"System Events\" to keystroke \"ß\"'"
-                  }
-                ]
+                "to": [{ "key_code": "s", "modifiers": ["left_option"] }]
               },
               {
                 "conditions": [{ "type": "variable_if", "name": "tab_layer", "value": 1 }],

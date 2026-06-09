@@ -4,7 +4,7 @@
     machine.type = "laptop";
     keyboard = {
       layout = "qwerty";
-      backend = "kanata";
+      backend = "karabiner";
     };
     users.johnson.home.my.gui.terminal.size = 14;
   };
