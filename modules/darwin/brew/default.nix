@@ -120,6 +120,7 @@
       "linear-linear"
       "loom"
       "macfuse" # required by veracrypt
+      "mullvad-vpn" # vpn
       "obs" # stream / recoding software
       # "obs" # stream / recoding software
       # virtualization
