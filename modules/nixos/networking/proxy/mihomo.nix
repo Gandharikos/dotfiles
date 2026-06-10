@@ -27,8 +27,8 @@ in
     ];
 
     systemd.services.mihomo = {
-      after = [ "sops-nix.service" ];
-      wants = [ "sops-nix.service" ];
+      after = [ "sops-install-secrets.service" ];
+      wants = [ "sops-install-secrets.service" ];
       wantedBy = if cfg.autoStart then [ "multi-user.target" ] else lib.mkForce [ ];
     };
   };

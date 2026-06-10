@@ -1,7 +1,12 @@
 { lib, ... }:
 let
   inherit (lib.options) mkOption mkEnableOption;
-  inherit (lib.types) enum listOf str;
+  inherit (lib.types)
+    bool
+    enum
+    listOf
+    str
+    ;
 in
 {
   options.dot.networking.tailscale = {
@@ -17,6 +22,18 @@ in
       type = listOf str;
       default = [ "--ssh" ];
       description = "Default command-line flags passed to Tailscale before role-specific flags.";
+    };
+
+    acceptRoutes = mkOption {
+      type = bool;
+      default = true;
+      description = "Whether to accept routes advertised by other Tailscale nodes.";
+    };
+
+    acceptDns = mkOption {
+      type = bool;
+      default = true;
+      description = "Whether to accept DNS configuration from the Tailscale admin panel.";
     };
 
     role = mkOption {

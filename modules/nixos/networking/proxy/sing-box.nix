@@ -27,9 +27,9 @@ in
     systemd.services.sing-box = {
       after = [
         "network-online.target"
-        "sops-nix.service"
+        "sops-install-secrets.service"
       ];
-      requires = [ "sops-nix.service" ];
+      requires = [ "sops-install-secrets.service" ];
       wants = [ "network-online.target" ];
       serviceConfig.ExecStartPre = mkForce "+${lib.getExe generateConfig}";
       wantedBy = if cfg.autoStart then [ "multi-user.target" ] else mkForce [ ];

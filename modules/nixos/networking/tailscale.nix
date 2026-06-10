@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  self,
   ...
 }:
 let
@@ -29,11 +30,18 @@ let
   advertiseRoutesFlag = optionals (isSubnetRouter && cfg.advertiseRoutes != [ ]) [
     "--advertise-routes=${concatStringsSep "," cfg.advertiseRoutes}"
   ];
+  boolFlag = name: value: "--${name}=${if value then "true" else "false"}";
+  routeAndDnsFlags = [
+    (boolFlag "accept-dns" cfg.acceptDns)
+    (boolFlag "accept-routes" cfg.acceptRoutes)
+  ];
 in
 {
   config = mkIf cfg.enable {
     sops.secrets = mkIf cfg.autoConnect {
-      tailscale_authKey = { };
+      tailscale_authKey = {
+        sopsFile = "${self}/secrets/services/tailscale.yaml";
+      };
     };
 
     environment.systemPackages = [ pkgs.tailscale ];
@@ -53,9 +61,7 @@ in
       # Apply role-specific Tailscale behavior declaratively.
       extraUpFlags =
         cfg.defaultFlags
-        ++ optionals isClient [
-          "--accept-routes"
-        ]
+        ++ routeAndDnsFlags
         ++ optionals isExitNode [
           "--advertise-exit-node"
         ]
@@ -67,9 +73,7 @@ in
       # Modern NixOS prefers declarative state management via extraSetFlags over extraUpFlags
       extraSetFlags =
         cfg.defaultFlags
-        ++ optionals isClient [
-          "--accept-routes"
-        ]
+        ++ routeAndDnsFlags
         ++ optionals isExitNode [
           "--advertise-exit-node"
         ]
@@ -90,8 +94,8 @@ in
       services = {
         tailscaled.serviceConfig.Environment = mkBefore [ "TS_NO_LOGS_NO_SUPPORT=true" ];
         tailscaled-autoconnect = mkIf cfg.autoConnect {
-          after = [ "sops-nix.service" ];
-          wants = [ "sops-nix.service" ];
+          after = [ "sops-install-secrets.service" ];
+          wants = [ "sops-install-secrets.service" ];
           wantedBy = mkForce [ ];
           serviceConfig = {
             # Global systemd defaults are 15s on this host, which is too short when Wi-Fi
@@ -103,7 +107,7 @@ in
       timers.tailscaled-autoconnect = mkIf cfg.autoConnect {
         wantedBy = [ "timers.target" ];
         timerConfig = {
-          # The service still orders after sops-nix.service; this only keeps the
+          # The service still orders after sops-install-secrets.service; this only keeps the
           # autoconnect attempt out of graphical.target's critical path.
           OnBootSec = "30s";
           Unit = "tailscaled-autoconnect.service";
@@ -116,6 +120,18 @@ in
         assertion = !isSubnetRouter || cfg.advertiseRoutes != [ ];
         message = "Tailscale roles `subnet-router` and `router-exit-node` require `dot.networking.tailscale.advertiseRoutes` to be non-empty.";
       }
+      {
+        assertion = !(config.dot.networking.vpn.enable && isExitNode);
+        message = "Mullvad VPN and Tailscale exit-node advertising both manage default-route behavior. Set either `dot.networking.vpn.enable = false` or use a non-exit-node Tailscale role.";
+      }
     ];
+
+    warnings =
+      optionals (config.dot.networking.vpn.enable && cfg.acceptRoutes == true) [
+        "Mullvad VPN is enabled while `dot.networking.tailscale.acceptRoutes = true`; accepted Tailscale routes may override Mullvad routing."
+      ]
+      ++ optionals (config.dot.networking.vpn.enable && cfg.acceptDns == true) [
+        "Mullvad VPN is enabled while `dot.networking.tailscale.acceptDns = true`; Tailscale DNS may conflict with Mullvad DNS leak protection."
+      ];
   };
 }

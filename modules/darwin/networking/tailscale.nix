@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  self,
   ...
 }:
 let
@@ -11,7 +12,6 @@ let
   inherit (lib.strings) concatStringsSep escapeShellArgs;
 
   cfg = config.dot.networking.tailscale;
-  isClient = cfg.role == "client";
   isSubnetRouter = builtins.elem cfg.role [
     "subnet-router"
     "router-exit-node"
@@ -24,13 +24,15 @@ let
   advertiseRoutesFlag = optionals (isSubnetRouter && cfg.advertiseRoutes != [ ]) [
     "--advertise-routes=${concatStringsSep "," cfg.advertiseRoutes}"
   ];
+  boolFlag = name: value: "--${name}=${if value then "true" else "false"}";
 
   socketPath = "/var/run/tailscaled.socket";
   tailscale' = getExe pkgs.tailscale;
   upArgs =
     cfg.defaultFlags
-    ++ optionals isClient [
-      "--accept-routes"
+    ++ [
+      (boolFlag "accept-dns" cfg.acceptDns)
+      (boolFlag "accept-routes" cfg.acceptRoutes)
     ]
     ++ optionals isExitNode [
       "--advertise-exit-node"
@@ -76,6 +78,7 @@ in
 
     sops.secrets = mkIf cfg.autoConnect {
       tailscale_authKey = {
+        sopsFile = "${self}/secrets/services/tailscale.yaml";
         owner = "root";
         group = "wheel";
         mode = "0400";

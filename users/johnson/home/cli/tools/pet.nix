@@ -70,8 +70,8 @@ in
           ];
         }
         {
-          command = "sops --in-place set secrets/services/default.yaml '[\"my_key\"]' '\"my-secret-value\"'";
-          description = "Set a string secret in secrets/services/default.yaml directly";
+          command = "sops --in-place set secrets/services/tailscale.yaml '[\"my_key\"]' '\"my-secret-value\"'";
+          description = "Set a string secret in secrets/services/tailscale.yaml directly";
           tag = [
             "cmd"
             "sops"
@@ -79,8 +79,8 @@ in
           ];
         }
         {
-          command = "printf '%s' '\"my-secret-value\"' | sops --in-place set --value-stdin secrets/services/default.yaml '[\"my_key\"]'";
-          description = "Set a string secret in secrets/services/default.yaml from stdin";
+          command = "printf '%s' '\"my-secret-value\"' | sops --in-place set --value-stdin secrets/services/tailscale.yaml '[\"my_key\"]'";
+          description = "Set a string secret in secrets/services/tailscale.yaml from stdin";
           tag = [
             "cmd"
             "sops"
@@ -88,7 +88,7 @@ in
           ];
         }
         {
-          command = "jq -Rn --arg v \"$SECRET\" '$v' | sops --in-place set --value-stdin secrets/services/default.yaml '[\"my_key\"]'";
+          command = "jq -Rn --arg v \"$SECRET\" '$v' | sops --in-place set --value-stdin secrets/services/tailscale.yaml '[\"my_key\"]'";
           description = "Set a string secret from the SECRET environment variable";
           tag = [
             "cmd"
@@ -97,8 +97,8 @@ in
           ];
         }
         {
-          command = "jq -nc --arg token \"$TOKEN\" --arg url \"$URL\" '{ token: $token, url: $url }' | sops --in-place set --value-stdin secrets/services/default.yaml '[\"mihomo\"]'";
-          description = "Set a nested object secret in secrets/services/default.yaml";
+          command = "jq -nc --arg token \"$TOKEN\" --arg url \"$URL\" '{ token: $token, url: $url }' | sops --in-place set --value-stdin secrets/services/tailscale.yaml '[\"mihomo\"]'";
+          description = "Set a nested object secret in secrets/services/tailscale.yaml";
           tag = [
             "cmd"
             "sops"
