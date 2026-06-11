@@ -20,7 +20,7 @@
     app_icon_colorize = true;
     avatar_path = lib.optionalString (avatar != null) (toString avatar);
     niri_overview_type_to_launch_enabled = true;
-    offline_mode = true;
+    offline_mode = false;
     polkit_agent = true;
     screen_time_enabled = true;
     clipboard_enabled = true;
@@ -98,9 +98,6 @@
   };
 
   theme = {
-    mode = lib.mkDefault "dark";
-    source = lib.mkDefault "builtin";
-    builtin = lib.mkDefault "Tokyo-Night";
     wallpaper_scheme = lib.mkDefault "m3-tonal-spot";
     templates = {
       enable_builtin_templates = true;
