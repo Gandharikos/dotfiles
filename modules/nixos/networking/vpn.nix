@@ -55,14 +55,22 @@ in
         pkgs.coreutils
       ];
       script = ''
+        is_logged_in() {
+          account_status="$(mullvad account get 2>/dev/null || true)"
+          case "$account_status" in
+            ""|*"Not logged in"*) return 1 ;;
+            *) return 0 ;;
+          esac
+        }
+
         for _ in $(seq 1 30); do
-          if mullvad status >/dev/null 2>&1 || mullvad account get >/dev/null 2>&1; then
+          if mullvad status >/dev/null 2>&1; then
             break
           fi
           sleep 1
         done
 
-        if mullvad account get >/dev/null 2>&1; then
+        if is_logged_in; then
           exit 0
         fi
 
