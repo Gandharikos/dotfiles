@@ -14,7 +14,7 @@ let
   inherit (osConfig.dot.keyboard) keys;
   inherit (config.nixporn) wallpaper;
 
-  enable = osConfig.dot.gui.desktop.wayland.enable && desktop.shell.default == "noctalia-shell";
+  enable = osConfig.dot.gui.desktop.wayland.enable && desktop.shell.default == "noctalia";
   noctaliaSettingsFile = lib.dot.relativeToConfig "noctalia/settings.json";
   settings = builtins.fromJSON (builtins.readFile noctaliaSettingsFile);
   managedIdleSettings = [
@@ -27,6 +27,23 @@ let
 
   noctaliaPluginsFile = lib.dot.relativeToConfig "noctalia/plugins.json";
   plugins = builtins.fromJSON (builtins.readFile noctaliaPluginsFile);
+  tailscaleSettings = {
+    refreshInterval = 5000;
+    compactMode = false;
+    showIpAddress = true;
+    showPeerCount = true;
+    hideDisconnected = false;
+    hideMullvadExitNodes = true;
+    showSearchBar = false;
+    terminalCommand = "ghostty";
+    sshUsername = "";
+    pingCount = 5;
+    defaultPeerAction = "copy-ip";
+    taildropEnabled = true;
+    taildropDownloadDir = "~/Downloads/Taildrop";
+    taildropReceiveMode = "operator";
+    loginServer = "";
+  };
 
   noctaliaPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
   uwsm = getExe' pkgs.uwsm "uwsm";
@@ -72,7 +89,7 @@ in
   ];
 
   config = mkIf enable {
-    programs.noctalia-shell = {
+    programs.noctalia = {
       enable = true;
 
       systemd = {
@@ -95,25 +112,11 @@ in
         idle = removeAttrs (settings.idle or { }) managedIdleSettings;
       };
 
-      pluginSettings.tailscale = {
-        refreshInterval = 5000;
-        compactMode = false;
-        showIpAddress = true;
-        showPeerCount = true;
-        hideDisconnected = false;
-        hideMullvadExitNodes = true;
-        showSearchBar = false;
-        terminalCommand = "ghostty";
-        sshUsername = "";
-        pingCount = 5;
-        defaultPeerAction = "copy-ip";
-        taildropEnabled = true;
-        taildropDownloadDir = "~/Downloads/Taildrop";
-        taildropReceiveMode = "operator";
-        loginServer = "";
-      };
+    };
 
-      inherit plugins;
+    xdg.configFile = {
+      "noctalia/plugins.json".text = builtins.toJSON plugins;
+      "noctalia/plugins/tailscale/settings.json".text = builtins.toJSON tailscaleSettings;
     };
 
     wayland.windowManager.hyprland.settings = with keys; {

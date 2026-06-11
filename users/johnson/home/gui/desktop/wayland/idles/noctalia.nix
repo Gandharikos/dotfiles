@@ -14,8 +14,8 @@ let
   idleCfg = desktop.idle;
   enable =
     osConfig.dot.gui.desktop.wayland.enable
-    && idleCfg.default == "noctalia-shell"
-    && (config.programs.noctalia-shell.enable or false);
+    && idleCfg.default == "noctalia"
+    && (config.programs.noctalia.enable or false);
   brightnessctl = getExe pkgs.brightnessctl;
   screenOffTimeout = lib.max 0 (idleCfg.timeout - 10);
   keyboardBacklightTimeout = idleCfg.timeout / 2;
@@ -45,7 +45,7 @@ let
 in
 {
   config = mkIf enable {
-    programs.noctalia-shell.settings.idle = {
+    programs.noctalia.settings.idle = {
       enabled = true;
       inherit screenOffTimeout;
       lockTimeout = idleCfg.timeout;

@@ -20,6 +20,7 @@ in
     {
       nixporn = {
         colorscheme = mkDefault "tokyonight";
+        gemini-cli.enable = false;
         transparent = mkDefault true;
       };
     }

@@ -34,7 +34,7 @@ let
   qs' = getExe' noctaliaQsPkg "qs";
 
   shellLock =
-    if desktop.shell.default == "noctalia-shell" then
+    if desktop.shell.default == "noctalia" then
       escapeShellArgs [
         qs'
         "-c"
@@ -141,11 +141,11 @@ in
       type = nullOr (enum [
         "hypridle"
         "swayidle"
-        "noctalia-shell"
+        "noctalia"
       ]);
       default =
-        if config.my.gui.desktop.shell.default == "noctalia-shell" then
-          "noctalia-shell"
+        if config.my.gui.desktop.shell.default == "noctalia" then
+          "noctalia"
         else if osConfig.dot.gui.desktop.default == "hyprland" then
           "hypridle"
         else if osConfig.dot.gui.desktop.default == "niri" then

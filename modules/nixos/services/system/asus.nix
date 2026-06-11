@@ -30,9 +30,23 @@ in
 
     # Ensure tmpfiles creates /etc/asusd before systemd applies ReadWritePaths
     # for asusd.service, otherwise the unit fails early with 226/NAMESPACE.
-    systemd.services.asusd = {
-      after = [ "systemd-tmpfiles-setup.service" ];
-      requires = [ "systemd-tmpfiles-setup.service" ];
+    systemd.services = {
+      asusd = {
+        after = [ "systemd-tmpfiles-setup.service" ];
+        requires = [ "systemd-tmpfiles-setup.service" ];
+        restartIfChanged = false;
+        stopIfChanged = false;
+      };
+
+      asus-shutdown = {
+        overrideStrategy = "asDropin";
+        restartIfChanged = false;
+        stopIfChanged = false;
+        serviceConfig = {
+          SendSIGKILL = lib.mkForce true;
+          TimeoutStopSec = lib.mkForce "10s";
+        };
+      };
     };
 
     # Persist asusd config (fan profiles, keyboard backlight, etc.) across reboots.

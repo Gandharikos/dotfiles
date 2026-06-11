@@ -15,7 +15,7 @@ in
     default = mkOption {
       type = nullOr (enum [
         "dank-material-shell"
-        "noctalia-shell"
+        "noctalia"
       ]);
       default = osConfig.dot.gui.desktop.shell;
       description = "The desktop shell to use.";

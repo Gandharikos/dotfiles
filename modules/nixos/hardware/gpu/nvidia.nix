@@ -62,5 +62,10 @@ in
         extraPackages32 = with pkgs.pkgsi686Linux; [ nvidia-vaapi-driver ];
       };
     };
+
+    systemd.services.nvidia-persistenced = {
+      restartIfChanged = false;
+      stopIfChanged = false;
+    };
   };
 }

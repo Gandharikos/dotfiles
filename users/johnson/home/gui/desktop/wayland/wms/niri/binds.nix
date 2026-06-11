@@ -47,7 +47,7 @@ let
   wpctlCmd = args: uwsmAppArgs pkgs wpctl args;
   brightnessctlCmd = args: uwsmAppArgs pkgs brightnessctl args;
   dmsEnabled = config.programs.dank-material-shell.enable or false;
-  noctaliaEnabled = config.programs.noctalia-shell.enable or false;
+  noctaliaEnabled = config.programs.noctalia.enable or false;
   shellHandlesXf86Binds = dmsEnabled || noctaliaEnabled;
   useNiriBuiltinShot = desktop.shot.default == "dank-material-shell" && !dmsEnabled;
   screenshotBinds =

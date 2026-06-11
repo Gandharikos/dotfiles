@@ -1,6 +1,6 @@
 { config, inputs, ... }:
 let
-  noctalia = config.programs.noctalia-shell.package;
+  noctalia = config.programs.noctalia.package;
 in
 {
   imports = [
@@ -12,7 +12,7 @@ in
     ghostty.enable = true;
     google-chrome.enable = true;
 
-    noctalia-shell = {
+    noctalia = {
       enable = true;
       systemd.enable = false;
     };

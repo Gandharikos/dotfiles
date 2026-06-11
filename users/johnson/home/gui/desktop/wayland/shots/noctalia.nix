@@ -13,10 +13,10 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.strings) escapeShellArgs;
 
-  noctaliaEnabled = config.programs.noctalia-shell.enable or false;
+  noctaliaEnabled = config.programs.noctalia.enable or false;
   enable =
     osConfig.dot.gui.desktop.wayland.enable
-    && config.my.gui.desktop.shot.default == "noctalia-shell"
+    && config.my.gui.desktop.shot.default == "noctalia"
     && noctaliaEnabled;
   screenshotPath = config.xdg.userDirs.extraConfig.SCREENSHOTS;
   screenToolkitSettingsFile = lib.dot.relativeToConfig "noctalia/plugins/screen-toolkit/settings.json";
@@ -50,7 +50,8 @@ let
 in
 {
   config = mkIf enable {
-    programs.noctalia-shell.pluginSettings."screen-toolkit" = screenToolkitSettings;
+    xdg.configFile."noctalia/plugins/screen-toolkit/settings.json".text =
+      builtins.toJSON screenToolkitSettings;
 
     wayland.windowManager.hyprland.settings.bindd = [
       ", Print, Screenshot Region, exec, ${noctaliaScreenshot "annotate"}"

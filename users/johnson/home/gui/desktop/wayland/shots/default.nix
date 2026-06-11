@@ -24,11 +24,11 @@ in
         "hyprshot"
         "grimblast"
         "dank-material-shell"
-        "noctalia-shell"
+        "noctalia"
       ]);
       default =
-        if desktop.shell.default == "noctalia-shell" then
-          "noctalia-shell"
+        if desktop.shell.default == "noctalia" then
+          "noctalia"
         else if desktop.shell.default == "dank-material-shell" then
           "dank-material-shell"
         else if osConfig.dot.gui.desktop.default == "hyprland" then

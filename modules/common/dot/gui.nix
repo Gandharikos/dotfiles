@@ -83,9 +83,9 @@ in
     shell = mkOption {
       type = nullOr (enum [
         "dank-material-shell"
-        "noctalia-shell"
+        "noctalia"
       ]);
-      default = if isLinux && dot.gui.desktop.wayland.enable then "noctalia-shell" else null;
+      default = if isLinux && dot.gui.desktop.wayland.enable then "noctalia" else null;
       description = "The desktop shell to use.";
     };
 

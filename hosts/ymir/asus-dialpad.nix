@@ -7,10 +7,9 @@
 }:
 let
   inherit (lib) getExe;
-  inherit (lib.modules) mkForce;
+  inherit (lib.modules) mkAfter mkForce;
 
   inherit (pkgs.stdenv.hostPlatform) system;
-  stateDir = "/var/lib/asus-dialpad-driver";
 
   basePackage = inputs.asus-dialpad-driver.packages.${system}.default.override {
     waylandSupport = true;
@@ -42,13 +41,16 @@ let
     name = "asus-dialpad-driver-start";
     runtimeInputs = [ pkgs.coreutils ];
     text = ''
-      install -d -m 0755 ${stateDir}
-      if [ ! -s ${stateDir}/dialpad_dev ]; then
-        cp ${seedConfig} ${stateDir}/dialpad_dev
-        chmod 0644 ${stateDir}/dialpad_dev
+      config_dir="''${1:?config directory required}"
+
+      install -d -m 0700 "$config_dir"
+      if [ ! -s "$config_dir/dialpad_dev" ]; then
+        cp ${seedConfig} "$config_dir/dialpad_dev"
+        chmod 0644 "$config_dir/dialpad_dev"
       fi
 
-      exec ${patchedPackage}/share/asus-dialpad-driver/dialpad.py ${config.services.asus-dialpad-driver.layout} ${stateDir}/
+      export XDG_RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+      exec ${patchedPackage}/share/asus-dialpad-driver/dialpad.py ${config.hardware.asus-dialpad-driver.layout} "$config_dir/"
     '';
   };
 in
@@ -57,19 +59,26 @@ in
     inputs.asus-dialpad-driver.nixosModules.default
   ];
 
-  services.asus-dialpad-driver = {
+  hardware.asus-dialpad-driver = {
     enable = true;
     package = patchedPackage;
     layout = "proartp16";
-    wayland = true;
-    runtimeDir = "/run/user/1000/";
-    # This runs as a system service, so it needs the session socket pinned explicitly.
-    waylandDisplay = "wayland-1";
+    sessionTypes = [ "wayland" ];
   };
 
-  systemd.services.asus-dialpad-driver.serviceConfig = {
-    ExecStart = mkForce (getExe startDriver);
-    StateDirectory = "asus-dialpad-driver";
+  users.users.${config.dot.primaryUser}.extraGroups = mkAfter [
+    "i2c"
+    "input"
+    "uinput"
+  ];
+
+  systemd.user.services.asus-dialpad-driver.serviceConfig = {
+    ExecStart = mkForce "${getExe startDriver} %E/asus-dialpad-driver";
+    Environment = mkForce [
+      "LOG=INFO"
+      "XDG_SESSION_TYPE=wayland"
+      "WAYLAND_DISPLAY=wayland-1"
+    ];
     WorkingDirectory = mkForce "${patchedPackage}/share/asus-dialpad-driver";
   };
 }
