@@ -7,7 +7,7 @@
   ...
 }:
 let
-  inherit (lib.meta) getExe';
+  inherit (lib.meta) getExe getExe';
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.strings) escapeShellArgs;
   inherit (config.my.gui) desktop;
@@ -15,58 +15,22 @@ let
   inherit (config.nixporn) wallpaper;
 
   enable = osConfig.dot.gui.desktop.wayland.enable && desktop.shell.default == "noctalia";
-  noctaliaSettingsFile = lib.dot.relativeToConfig "noctalia/settings.json";
-  settings = builtins.fromJSON (builtins.readFile noctaliaSettingsFile);
-  managedIdleSettings = [
-    "enabled"
-    "lockTimeout"
-    "screenOffTimeout"
-    "suspendTimeout"
-    "customCommands"
-  ];
-
-  noctaliaPluginsFile = lib.dot.relativeToConfig "noctalia/plugins.json";
-  plugins = builtins.fromJSON (builtins.readFile noctaliaPluginsFile);
-  tailscaleSettings = {
-    refreshInterval = 5000;
-    compactMode = false;
-    showIpAddress = true;
-    showPeerCount = true;
-    hideDisconnected = false;
-    hideMullvadExitNodes = true;
-    showSearchBar = false;
-    terminalCommand = "ghostty";
-    sshUsername = "";
-    pingCount = 5;
-    defaultPeerAction = "copy-ip";
-    taildropEnabled = true;
-    taildropDownloadDir = "~/Downloads/Taildrop";
-    taildropReceiveMode = "operator";
-    loginServer = "";
-  };
-
   noctaliaPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  uwsm = getExe' pkgs.uwsm "uwsm";
-  noctaliaExe = getExe' noctaliaPkg "noctalia-shell";
-  noctaliaCmd = [
-    uwsm
-    "app"
-    "--"
-    noctaliaExe
-  ];
+  noctaliaExe = getExe noctaliaPkg;
   noctaliaArgs =
     args:
-    noctaliaCmd
-    ++ [
-      "ipc"
-      "call"
+    [
+      noctaliaExe
+      "msg"
     ]
     ++ args;
   noctalia = args: escapeShellArgs (noctaliaArgs args);
   noctaliaRecorder =
     action:
     escapeShellArgs (noctaliaArgs [
-      "plugin:screen-recorder"
+      "plugin"
+      "noctalia/screen_recorder:service"
+      "all"
       action
     ]);
   noctaliaWallpapersSeed =
@@ -84,98 +48,57 @@ let
   inherit (desktop) modKey;
 in
 {
-  imports = [
-    inputs.noctalia.homeModules.default
-  ];
-
   config = mkIf enable {
-    programs.noctalia = {
-      enable = true;
-
-      systemd = {
-        enable = false;
-      };
-
-      settings = settings // {
-        general = removeAttrs settings.general [ "avatarImage" ] // {
-          keybinds = settings.general.keybinds // {
-            keyLeft = settings.general.keybinds.keyLeft ++ [ "Ctrl+${keys.H}" ];
-            keyDown = settings.general.keybinds.keyDown ++ [ "Ctrl+${keys.J}" ];
-            keyUp = settings.general.keybinds.keyUp ++ [ "Ctrl+${keys.K}" ];
-            keyRight = settings.general.keybinds.keyRight ++ [ "Ctrl+${keys.L}" ];
-          };
-        };
-        wallpaper = removeAttrs (settings.wallpaper or { }) [
-          "directory"
-          "enabled"
-        ];
-        idle = removeAttrs (settings.idle or { }) managedIdleSettings;
-      };
-
-    };
-
-    xdg.configFile = {
-      "noctalia/plugins.json".text = builtins.toJSON plugins;
-      "noctalia/plugins/tailscale/settings.json".text = builtins.toJSON tailscaleSettings;
-    };
-
     wayland.windowManager.hyprland.settings = with keys; {
-      exec-once = [
-        (escapeShellArgs (noctaliaCmd ++ [ "--no-duplicate" ]))
-      ];
-
       bindd =
         let
           launcher = noctalia [
+            "panel-toggle"
             "launcher"
-            "toggle"
           ];
           clipboard = noctalia [
-            "launcher"
+            "panel-toggle"
             "clipboard"
           ];
           windows = noctalia [
+            "panel-toggle"
             "launcher"
-            "windows"
           ];
           monitor = noctalia [
-            "systemMonitor"
-            "toggle"
+            "panel-toggle"
+            "control-center"
+            "system"
           ];
           sessionMenu = noctalia [
-            "sessionMenu"
-            "toggle"
+            "panel-toggle"
+            "session"
           ];
           controlCenter = noctalia [
-            "controlCenter"
-            "toggle"
+            "panel-toggle"
+            "control-center"
           ];
           settings = noctalia [
-            "settings"
-            "toggle"
+            "settings-toggle"
           ];
           notifications = noctalia [
+            "panel-toggle"
+            "control-center"
             "notifications"
-            "toggleHistory"
           ];
           dnd = noctalia [
-            "notifications"
-            "toggleDND"
+            "notification-dnd-toggle"
           ];
           darkMode = noctalia [
-            "darkMode"
-            "toggle"
+            "theme-mode-toggle"
           ];
           nightLight = noctalia [
-            "nightLight"
-            "toggle"
+            "nightlight-toggle"
           ];
           inhibit = noctalia [
-            "idleInhibitor"
-            "toggle"
+            "caffeine-toggle"
           ];
           lock = noctalia [
-            "lockScreen"
+            "session"
             "lock"
           ];
         in
@@ -200,7 +123,7 @@ in
         let
           playPause = noctalia [
             "media"
-            "playPause"
+            "toggle"
           ];
           next = noctalia [
             "media"
@@ -211,12 +134,10 @@ in
             "previous"
           ];
           muteOutput = noctalia [
-            "volume"
-            "muteOutput"
+            "volume-mute"
           ];
           muteInput = noctalia [
-            "volume"
-            "muteInput"
+            "mic-mute"
           ];
           brightnessctl = getExe' pkgs.brightnessctl "brightnessctl";
           kbdToggle = pkgs.writeShellScript "kbd-toggle" ''
@@ -242,20 +163,16 @@ in
       binddel = mkForce (
         let
           increaseVolume = noctalia [
-            "volume"
-            "increase"
+            "volume-up"
           ];
           decreaseVolume = noctalia [
-            "volume"
-            "decrease"
+            "volume-down"
           ];
           increaseBrightness = noctalia [
-            "brightness"
-            "increase"
+            "brightness-up"
           ];
           decreaseBrightness = noctalia [
-            "brightness"
-            "decrease"
+            "brightness-down"
           ];
           brightnessctl = getExe' pkgs.brightnessctl "brightnessctl";
           increaseKbdBrightness = "${brightnessctl} --device=*::kbd_backlight set +10%";
@@ -273,12 +190,6 @@ in
     };
 
     programs.niri.settings = {
-      spawn-at-startup = [
-        {
-          command = noctaliaCmd ++ [ "--no-duplicate" ];
-        }
-      ];
-
       binds =
         let
           spawn = args: { action.spawn = noctaliaArgs args; };
@@ -287,14 +198,14 @@ in
               allow-when-locked = true;
               action.spawn = noctaliaArgs [
                 "media"
-                "playPause"
+                "toggle"
               ];
             };
             "XF86AudioPause" = {
               allow-when-locked = true;
               action.spawn = noctaliaArgs [
                 "media"
-                "playPause"
+                "toggle"
               ];
             };
             "XF86AudioNext" = {
@@ -314,47 +225,41 @@ in
             "XF86AudioMute" = {
               allow-when-locked = true;
               action.spawn = noctaliaArgs [
-                "volume"
-                "muteOutput"
+                "volume-mute"
               ];
             };
             "XF86AudioMicMute" = {
               allow-when-locked = true;
               action.spawn = noctaliaArgs [
-                "volume"
-                "muteInput"
+                "mic-mute"
               ];
             };
             "XF86AudioRaiseVolume" = {
               allow-when-locked = true;
               repeat = true;
               action.spawn = noctaliaArgs [
-                "volume"
-                "increase"
+                "volume-up"
               ];
             };
             "XF86AudioLowerVolume" = {
               allow-when-locked = true;
               repeat = true;
               action.spawn = noctaliaArgs [
-                "volume"
-                "decrease"
+                "volume-down"
               ];
             };
             "XF86MonBrightnessUp" = {
               allow-when-locked = true;
               repeat = true;
               action.spawn = noctaliaArgs [
-                "brightness"
-                "increase"
+                "brightness-up"
               ];
             };
             "XF86MonBrightnessDown" = {
               allow-when-locked = true;
               repeat = true;
               action.spawn = noctaliaArgs [
-                "brightness"
-                "decrease"
+                "brightness-down"
               ];
             };
             "XF86KbdLightOnOff" = {
@@ -397,61 +302,60 @@ in
         with keys;
         {
           "${modKey}+Space" = spawn [
+            "panel-toggle"
             "launcher"
-            "toggle"
           ];
           "${modKey}+V" = spawn [
-            "launcher"
+            "panel-toggle"
             "clipboard"
           ];
           "${modKey}+W" = spawn [
+            "panel-toggle"
             "launcher"
-            "windows"
           ];
           "${modKey}+Escape" = spawn [
-            "systemMonitor"
-            "toggle"
+            "panel-toggle"
+            "control-center"
+            "system"
           ];
           "${modKey}+X" = spawn [
-            "sessionMenu"
-            "toggle"
+            "panel-toggle"
+            "session"
           ];
           "${modKey}+Ctrl+C" = spawn [
-            "controlCenter"
-            "toggle"
+            "panel-toggle"
+            "control-center"
           ];
           "${modKey}+Shift+D" = spawn [
-            "notifications"
-            "toggleDND"
+            "notification-dnd-toggle"
           ];
           "${modKey}+Shift+T" = spawn [
-            "darkMode"
-            "toggle"
+            "theme-mode-toggle"
           ];
           "${modKey}+Shift+${N}" = spawn [
-            "nightLight"
-            "toggle"
+            "nightlight-toggle"
           ];
           "${modKey}+${I}" = spawn [
-            "idleInhibitor"
-            "toggle"
+            "caffeine-toggle"
           ];
           "Alt+Comma" = spawn [
-            "settings"
-            "toggle"
+            "settings-toggle"
           ];
           "${modKey}+Apostrophe" = spawn [
+            "panel-toggle"
+            "control-center"
             "notifications"
-            "toggleHistory"
           ];
         }
         // {
           "${modKey}+Alt+L".action.spawn = noctaliaArgs [
-            "lockScreen"
+            "session"
             "lock"
           ];
           "F10".action.spawn = noctaliaArgs [
-            "plugin:screen-recorder"
+            "plugin"
+            "noctalia/screen_recorder:service"
+            "all"
             "toggle"
           ];
         }

@@ -1,7 +1,4 @@
-{ config, inputs, ... }:
-let
-  noctalia = config.programs.noctalia.package;
-in
+{ inputs, ... }:
 {
   imports = [
     inputs.niri.homeModules.niri
@@ -14,7 +11,7 @@ in
 
     noctalia = {
       enable = true;
-      systemd.enable = false;
+      systemd.enable = true;
     };
 
     niri = {
@@ -23,14 +20,6 @@ in
         prefer-no-csd = true;
         hotkey-overlay.skip-at-startup = true;
         xwayland-satellite.enable = true;
-        spawn-at-startup = [
-          {
-            argv = [
-              "${noctalia}/bin/noctalia-shell"
-              "--no-duplicate"
-            ];
-          }
-        ];
       };
     };
   };

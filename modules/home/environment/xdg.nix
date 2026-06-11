@@ -108,6 +108,7 @@ in
         MISC = "''${home}/Misc";
         NOTES = "${config.xdg.userDirs.documents}/Notes";
         PROJECTS = "${home}/Dev/Projects";
+        RECORDINGS = "${config.xdg.userDirs.videos}/Recorder";
         REPOS = "${home}/Dev/Repos";
         SCREENSHOTS = "${config.xdg.userDirs.pictures}/Screenshots";
         SECRET = "${home}/.secrets";
@@ -131,4 +132,10 @@ in
       associations.added = associations;
     };
   };
+
+  home.activation.createXdgExtraDirs = mkIf isLinux (
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      mkdir -p ${lib.escapeShellArg config.xdg.userDirs.extraConfig.RECORDINGS}
+    ''
+  );
 }

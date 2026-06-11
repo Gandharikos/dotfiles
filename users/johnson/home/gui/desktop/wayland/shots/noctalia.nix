@@ -7,9 +7,7 @@
   ...
 }:
 let
-  inherit (lib.meta)
-    getExe'
-    ;
+  inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf;
   inherit (lib.strings) escapeShellArgs;
 
@@ -18,59 +16,47 @@ let
     osConfig.dot.gui.desktop.wayland.enable
     && config.my.gui.desktop.shot.default == "noctalia"
     && noctaliaEnabled;
-  screenshotPath = config.xdg.userDirs.extraConfig.SCREENSHOTS;
-  screenToolkitSettingsFile = lib.dot.relativeToConfig "noctalia/plugins/screen-toolkit/settings.json";
-  screenToolkitSettings = (builtins.fromJSON (builtins.readFile screenToolkitSettingsFile)) // {
-    inherit screenshotPath;
-  };
 
   noctaliaPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  uwsm = getExe' pkgs.uwsm "uwsm";
-  noctaliaExe = getExe' noctaliaPkg "noctalia-shell";
-  noctaliaCmd = [
-    uwsm
-    "app"
-    "--"
-    noctaliaExe
-  ];
-  noctaliaIpc =
+  noctaliaExe = getExe noctaliaPkg;
+  noctaliaMsg =
     args:
-    noctaliaCmd
-    ++ [
-      "ipc"
-      "call"
+    [
+      noctaliaExe
+      "msg"
     ]
     ++ args;
-  noctaliaScreenshot =
-    mode:
-    escapeShellArgs (noctaliaIpc [
-      "plugin:screen-toolkit"
-      mode
-    ]);
+  noctaliaScreenshot = args: escapeShellArgs (noctaliaMsg args);
 in
 {
   config = mkIf enable {
-    xdg.configFile."noctalia/plugins/screen-toolkit/settings.json".text =
-      builtins.toJSON screenToolkitSettings;
-
     wayland.windowManager.hyprland.settings.bindd = [
-      ", Print, Screenshot Region, exec, ${noctaliaScreenshot "annotate"}"
-      "CTRL, Print, Screenshot Fullscreen, exec, ${noctaliaScreenshot "annotateFullscreen"}"
-      "ALT, Print, Screenshot Focused Window, exec, ${noctaliaScreenshot "annotateWindow"}"
+      ", Print, Screenshot Region, exec, ${noctaliaScreenshot [ "screenshot-region" ]}"
+      "CTRL, Print, Screenshot All Outputs, exec, ${
+        noctaliaScreenshot [
+          "screenshot-fullscreen"
+          "all"
+        ]
+      }"
+      "ALT, Print, Screenshot Pick Output, exec, ${
+        noctaliaScreenshot [
+          "screenshot-fullscreen"
+          "pick"
+        ]
+      }"
     ];
 
     programs.niri.settings.binds = {
-      "Print".action.spawn = noctaliaIpc [
-        "plugin:screen-toolkit"
-        "annotate"
+      "Print".action.spawn = noctaliaMsg [
+        "screenshot-region"
       ];
-      "Ctrl+Print".action.spawn = noctaliaIpc [
-        "plugin:screen-toolkit"
-        "annotateFullscreen"
+      "Ctrl+Print".action.spawn = noctaliaMsg [
+        "screenshot-fullscreen"
+        "all"
       ];
-      "Alt+Print".action.spawn = noctaliaIpc [
-        "plugin:screen-toolkit"
-        "annotateWindow"
+      "Alt+Print".action.spawn = noctaliaMsg [
+        "screenshot-fullscreen"
+        "pick"
       ];
     };
   };

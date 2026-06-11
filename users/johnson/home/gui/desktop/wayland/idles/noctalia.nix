@@ -31,26 +31,45 @@ let
     "-rd"
     idleCfg.keyboardBacklight.device
   ];
-  keyboardBacklightCommands =
-    if idleCfg.keyboardBacklight.enable then
-      builtins.toJSON [
-        {
-          timeout = keyboardBacklightTimeout;
-          command = keyboardBacklightOff;
-          resumeCommand = keyboardBacklightOn;
-        }
-      ]
-    else
-      "[]";
 in
 {
   config = mkIf enable {
     programs.noctalia.settings.idle = {
-      enabled = true;
-      inherit screenOffTimeout;
-      lockTimeout = idleCfg.timeout;
-      suspendTimeout = idleCfg.timeout + 10;
-      customCommands = keyboardBacklightCommands;
+      pre_action_fade_seconds = 5;
+      behavior_order = lib.optional idleCfg.keyboardBacklight.enable "keyboard-backlight" ++ [
+        "screen-off"
+        "lock"
+        "suspend"
+      ];
+      behavior = {
+        "screen-off" = {
+          enabled = true;
+          timeout = screenOffTimeout;
+          action = "screen_off";
+          command = "noctalia:dpms-off";
+          resume_command = "noctalia:dpms-on";
+        };
+        lock = {
+          enabled = true;
+          inherit (idleCfg) timeout;
+          action = "lock";
+          command = "noctalia:session lock";
+        };
+        suspend = {
+          enabled = true;
+          timeout = idleCfg.timeout + 10;
+          action = "suspend";
+        };
+      }
+      // lib.optionalAttrs idleCfg.keyboardBacklight.enable {
+        "keyboard-backlight" = {
+          enabled = true;
+          timeout = keyboardBacklightTimeout;
+          action = "command";
+          command = keyboardBacklightOff;
+          resume_command = keyboardBacklightOn;
+        };
+      };
     };
   };
 }

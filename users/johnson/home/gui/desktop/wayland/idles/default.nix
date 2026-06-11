@@ -30,18 +30,15 @@ let
   # Shell-specific lock commands
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
   dms = getExe' dmsPkg "dms";
-  noctaliaQsPkg = inputs.noctalia-qs.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  qs' = getExe' noctaliaQsPkg "qs";
+  noctaliaPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  noctalia = getExe noctaliaPkg;
 
   shellLock =
     if desktop.shell.default == "noctalia" then
       escapeShellArgs [
-        qs'
-        "-c"
-        "noctalia-shell"
-        "ipc"
-        "call"
-        "lockScreen"
+        noctalia
+        "msg"
+        "session"
         "lock"
       ]
     else if desktop.shell.default == "dank-material-shell" then
