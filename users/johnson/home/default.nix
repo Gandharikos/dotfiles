@@ -108,6 +108,8 @@ in
 
     pet.enable = true;
 
+    polymarket.enable = true;
+
     ripgrep.enable = true;
 
     security.gpg = {
