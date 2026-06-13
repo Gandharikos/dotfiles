@@ -228,6 +228,24 @@ in
           };
         }
         {
+          context = "AgentPanel";
+          bindings = {
+            q = "workspace::ToggleRightDock";
+          };
+        }
+        {
+          context = "AgentPanel > Editor && VimControl && !VimWaiting && !menu";
+          bindings = {
+            q = "workspace::ToggleRightDock";
+          };
+        }
+        {
+          context = "AgentPanel > Markdown";
+          bindings = {
+            q = "workspace::ToggleRightDock";
+          };
+        }
+        {
           context = "Editor && (vim_mode == normal || vim_mode == helix_normal || vim_mode == helix_select) && !menu";
           bindings = {
             "alt-h" = "vim::ResizePaneLeft";
@@ -248,6 +266,56 @@ in
             "space /" = "pane::DeploySearch";
             "space e" = "pane::RevealInProjectPanel";
             "space ," = "tab_switcher::ToggleAll";
+            "space 1" = [
+              "pane::ActivateItem"
+              0
+            ];
+            "space 2" = [
+              "pane::ActivateItem"
+              1
+            ];
+            "space 3" = [
+              "pane::ActivateItem"
+              2
+            ];
+            "space 4" = [
+              "pane::ActivateItem"
+              3
+            ];
+            "space 5" = [
+              "pane::ActivateItem"
+              4
+            ];
+            "space 6" = [
+              "pane::ActivateItem"
+              5
+            ];
+            "space 7" = [
+              "pane::ActivateItem"
+              6
+            ];
+            "space 8" = [
+              "pane::ActivateItem"
+              7
+            ];
+            "space 9" = [
+              "pane::ActivateItem"
+              8
+            ];
+            "space 0" = "pane::ActivateLastItem";
+            "space a a" = "agent::Toggle";
+            "] b" = "pane::ActivateNextItem";
+            "[ b" = "pane::ActivatePreviousItem";
+            "] h" = "editor::GoToHunk";
+            "[ h" = "editor::GoToPreviousHunk";
+            "] c" = "editor::GoToHunk";
+            "[ c" = "editor::GoToPreviousHunk";
+            "] d" = "editor::GoToDiagnostic";
+            "[ d" = "editor::GoToPreviousDiagnostic";
+            "] e" = "editor::GoToDiagnostic";
+            "[ e" = "editor::GoToPreviousDiagnostic";
+            "] q" = "editor::MoveToStartOfNextExcerpt";
+            "[ q" = "editor::MoveToStartOfExcerpt";
             "space f f" = "file_finder::Toggle";
             "space f n" = "workspace::NewFile";
             "space f r" = [
