@@ -12,7 +12,6 @@ let
   inherit (lib.strings) escapeShellArgs;
   inherit (config.my.gui) desktop;
   inherit (osConfig.dot.keyboard) keys;
-  inherit (config.nixporn) wallpaper;
 
   enable = osConfig.dot.gui.desktop.wayland.enable && desktop.shell.default == "noctalia";
   noctaliaPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
@@ -33,17 +32,6 @@ let
       "all"
       action
     ]);
-  noctaliaWallpapersSeed =
-    if wallpaper == null then
-      null
-    else
-      pkgs.writeText "noctalia-wallpapers.json" (
-        builtins.toJSON {
-          defaultWallpaper = toString wallpaper;
-          wallpapers = { };
-          usedRandomWallpapers = { };
-        }
-      );
 
   inherit (desktop) modKey;
 in
@@ -361,21 +349,5 @@ in
         }
         // xf86Binds;
     };
-
-    home.activation.seedNoctaliaWallpapers = mkIf (wallpaper != null) (
-      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        cache_file="${config.xdg.cacheHome}/noctalia/wallpapers.json"
-
-        if [ -L "$cache_file" ]; then
-          rm -f "$cache_file"
-        fi
-
-        if [ ! -e "$cache_file" ]; then
-          mkdir -p "$(dirname "$cache_file")"
-          cp ${noctaliaWallpapersSeed} "$cache_file"
-          chmod 0644 "$cache_file"
-        fi
-      ''
-    );
   };
 }
