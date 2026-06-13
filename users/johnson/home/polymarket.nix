@@ -41,12 +41,15 @@ let
     export POLYMARKET_CLOB_URL="${cfg.clobUrl}"
     export POLYMARKET_HOST="$POLYMARKET_CLOB_URL"
     export POLYMARKET_CHAIN_ID="${cfg.chainId}"
+    export POLYMARKET_SIGNATURE_TYPE="${cfg.signatureType}"
 
     POLYMARKET_PRIVATE_KEY="$(cat "${config.sops.secrets.polymarket_private_key.path}")"
     POLY_API_KEY="$(cat "${config.sops.secrets.poly_api_key.path}")"
     POLY_SECRET="$(cat "${config.sops.secrets.poly_secret.path}")"
     POLY_PASSPHRASE="$(cat "${config.sops.secrets.poly_passphrase.path}")"
     POLYMARKET_FUNDER_ADDRESS="$(cat "${config.sops.secrets.polymarket_funder_address.path}")"
+    POLYMARKET_RELAYER_API_KEY="$(cat "${config.sops.secrets.polymarket_relayer_api_key.path}")"
+    POLYMARKET_RELAYER_API_KEY_ADDRESS="$(cat "${config.sops.secrets.polymarket_relayer_api_key_address.path}")"
 
     export POLYMARKET_PRIVATE_KEY
     export PRIVATE_KEY="$POLYMARKET_PRIVATE_KEY"
@@ -64,8 +67,23 @@ let
     export CLOB_SECRET="$POLY_SECRET"
     export CLOB_PASS_PHRASE="$POLY_PASSPHRASE"
 
+    export API_KEY="$POLY_API_KEY"
+    export SECRET="$POLY_SECRET"
+    export PASSPHRASE="$POLY_PASSPHRASE"
+    export SIGNATURE_TYPE="$POLYMARKET_SIGNATURE_TYPE"
+    export POLY_SIGNATURE_TYPE="$POLYMARKET_SIGNATURE_TYPE"
+
     export POLYMARKET_FUNDER_ADDRESS
     export FUNDER_ADDRESS="$POLYMARKET_FUNDER_ADDRESS"
+    export POLY_FUNDER_ADDRESS="$POLYMARKET_FUNDER_ADDRESS"
+    export DEPOSIT_WALLET_ADDRESS="$POLYMARKET_FUNDER_ADDRESS"
+    export POLYMARKET_WALLET_ADDRESS="$POLYMARKET_FUNDER_ADDRESS"
+    export POLY_WALLET_ADDRESS="$POLYMARKET_WALLET_ADDRESS"
+
+    export POLYMARKET_RELAYER_API_KEY
+    export POLYMARKET_RELAYER_API_KEY_ADDRESS
+    export RELAYER_API_KEY="$POLYMARKET_RELAYER_API_KEY"
+    export RELAYER_API_KEY_ADDRESS="$POLYMARKET_RELAYER_API_KEY_ADDRESS"
   '';
 in
 {
@@ -82,6 +100,12 @@ in
       type = str;
       default = "137";
       description = "Polymarket chain ID.";
+    };
+
+    signatureType = mkOption {
+      type = str;
+      default = "3";
+      description = "Polymarket CLOB signature type: 0 EOA, 1 proxy, 2 Safe, 3 deposit wallet.";
     };
 
     enablePython = mkOption {
@@ -142,6 +166,12 @@ in
       poly_secret = mkPolymarketSecret;
       poly_passphrase = mkPolymarketSecret;
       polymarket_funder_address = mkPolymarketSecret // {
+        key = "relayer_api_key_address";
+      };
+      polymarket_relayer_api_key = mkPolymarketSecret // {
+        key = "relayer_api_key";
+      };
+      polymarket_relayer_api_key_address = mkPolymarketSecret // {
         key = "relayer_api_key_address";
       };
     };
