@@ -345,8 +345,7 @@
         "group:g6"
       ];
       end = [
-        "cat"
-        "wallpaper"
+        "group:g8"
         "group:g1"
         "group:g4"
         "group:g2"
@@ -359,6 +358,8 @@
           opacity = 0.0;
           padding = 8.0;
           members = [
+            "wallpaper"
+            "screenshot"
             "noctalia/screen_recorder:recorder"
           ];
         }
@@ -433,6 +434,16 @@
             "sysmon"
             "ram"
             "temp"
+          ];
+        }
+        {
+          id = "g8";
+          fill = "surface_variant";
+          opacity = 0.0;
+          padding = 8.0;
+          members = [
+            "cat"
+            "audio_visualizer"
           ];
         }
       ];
@@ -539,6 +550,11 @@
     active_window = {
       max_length = 160;
       title_scroll = "on_hover";
+    };
+    audio_visualizer = {
+      bands = 60;
+      high_color = "secondary";
+      width = 120.0;
     };
     battery = {
       hide_when_full = true;
