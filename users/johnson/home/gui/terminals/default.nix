@@ -19,8 +19,10 @@ let
     ;
   inherit (lib.meta) getExe;
   inherit (lib.strings) escapeShellArgs hasInfix;
-  inherit (lib.dot) withUWSMArgs;
+  inherit (lib.dot) uwsmAppArgs;
   inherit (config.my.gui) terminal;
+  terminalProgram = getExe (builtins.getAttr terminal.default pkgs);
+  terminalArgs = if terminal.default == "ghostty" then [ "+new-window" ] else [ ];
   commandType = coercedTo str (
     value:
     if hasInfix " " value then
@@ -58,12 +60,9 @@ in
         if terminal.default == null then
           [ ]
         else if osConfig.dot.gui.desktop.uwsm.enable then
-          withUWSMArgs pkgs terminal.default
+          uwsmAppArgs pkgs terminalProgram terminalArgs
         else
-          [
-            getExe
-            (builtins.getAttr terminal.default pkgs)
-          ];
+          [ terminalProgram ] ++ terminalArgs;
       description = ''
         The argv form of the terminal command. This is used by
         compositors like Niri that expect a program and its arguments

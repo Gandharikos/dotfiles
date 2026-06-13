@@ -51,11 +51,12 @@ in
   config = mkIf enable {
     xdg.configFile."ghostty/shaders".source = ghostty-shaders;
 
-    programs.ghostty = with osConfig.dot.keyboard.keys; {
+    programs.ghostty = with osConfig.dot.keyboard.keys; rec {
       enable = true;
       # NOTE: It's broken on macOS, so you should to install it by brew.
       # See: https://github.com/NixOS/nixpkgs/issues/388984
       package = if isLinux then pkgs.ghostty else null;
+      systemd.enable = isLinux;
       enableFishIntegration = true;
       enableZshIntegration = true;
       enableBashIntegration = true;
@@ -93,7 +94,8 @@ in
         # other
         copy-on-select = "clipboard";
         # shell-integration-features = "cursor,sudo,no-title,ssh-env";
-        quit-after-last-window-closed = true;
+        quit-after-last-window-closed = !systemd.enable;
+        # quit-after-last-window-closed-delay = "10m";
         confirm-close-surface = false;
         app-notifications = "no-clipboard-copy";
         # keybinds
