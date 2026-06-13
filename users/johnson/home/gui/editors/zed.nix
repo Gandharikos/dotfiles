@@ -37,27 +37,120 @@ in
         autosave = "on_focus_change";
         buffer_font_family = lib.mkDefault "Maple Mono NF CN";
         buffer_font_size = lib.mkDefault 14.0;
+        centered_layout = {
+          left_padding = 0.15;
+          right_padding = 0.15;
+        };
+        chat_panel.dock = "right";
         cli_default_open_behavior = "existing_window";
         code_lens = "on";
+        collaboration_panel = {
+          button = false;
+          dock = "left";
+        };
         completion_menu_item_kind = "symbol";
         completions.lsp_fetch_timeout_ms = 2000;
         diagnostics.inline.enabled = true;
         document_folding_ranges = "off";
-        edit_predictions.allow_data_collection = "no";
+        edit_predictions = {
+          allow_data_collection = "no";
+          disabled_globs = [
+            "**/.git"
+            "**/.svn"
+            "**/.hg"
+            "**/CVS"
+            "**/.DS_Store"
+            "**/Thumbs.db"
+            "**/.classpath"
+            "**/.settings"
+            "**/.vscode"
+            "**/.idea"
+            "**/node_modules"
+            "**/.serverless"
+            "**/build"
+            "**/dist"
+            "**/coverage"
+            "**/.venv"
+            "**/__pycache__"
+            "**/.ropeproject"
+            "**/.pytest_cache"
+            "**/.ruff_cache"
+          ];
+          enabled_in_assistant = false;
+          mode = "eager";
+        };
+        file_scan_exclusions = [
+          "**/.git"
+          "**/.svn"
+          "**/.hg"
+          "**/CVS"
+          "**/.DS_Store"
+          "**/Thumbs.db"
+          "**/.classpath"
+          "**/.settings"
+          "**/.vscode"
+          "**/.idea"
+          "**/node_modules"
+          "**/.serverless"
+          "**/build"
+          "**/dist"
+          "**/coverage"
+          "**/.venv"
+          "**/__pycache__"
+          "**/.ropeproject"
+          "**/.pytest_cache"
+          "**/.ruff_cache"
+        ];
+        file_scan_inclusions = [ ".env" ];
+        file_types = {
+          Dockerfile = [
+            "Dockerfile"
+            "Dockerfile.*"
+          ];
+          JSON = [
+            "json"
+            "jsonc"
+            "*.code-snippets"
+          ];
+        };
         git.inline_blame.show_commit_summary = true;
         helix_mode = true;
         indent_guides = {
           background_coloring = "indent_aware";
+          enabled = true;
           coloring = "indent_aware";
         };
         inlay_hints.enabled = true;
         minimap.show = "auto";
+        notification_panel = {
+          button = false;
+          enabled = false;
+        };
+        outline_panel = {
+          button = false;
+          dock = "right";
+        };
         prettier.allowed = true;
-        project_panel.dock = "left";
+        preferred_line_length = 120;
+        project_panel = {
+          button = false;
+          default_width = 300;
+          dock = "left";
+          file_icons = true;
+          folder_icons = true;
+          git_status = true;
+          scrollbar.show = "never";
+        };
+        projects_online_by_default = false;
         relative_line_numbers = "enabled";
+        scrollbar.show = "never";
         search.regex = true;
         semantic_tokens = "combined";
         soft_wrap = "editor_width";
+        tab_bar = {
+          show = true;
+          show_nav_history_buttons = false;
+        };
         tabs = {
           file_icons = true;
           git_status = true;
@@ -66,11 +159,28 @@ in
           diagnostics = false;
           metrics = false;
         };
-        terminal.env.ZED_TERMINAL = "1";
+        terminal = {
+          button = false;
+          detect_venv.on = {
+            activate_script = "default";
+            directories = [
+              ".venv"
+              "venv"
+            ];
+          };
+          env = {
+            EDITOR = "zed --wait";
+            ZED_TERMINAL = "1";
+          };
+        };
         title_bar = {
           show_branch_status_icon = true;
           show_menus = false;
           show_user_menu = true;
+        };
+        toolbar = {
+          quick_actions = false;
+          title = false;
         };
         ui_font_family = lib.mkDefault "LXGW WenKai Screen";
         ui_font_size = lib.mkDefault 16.0;
@@ -89,23 +199,48 @@ in
       userKeymaps = [
         {
           context = "Workspace";
-          bindings."ctrl-/" = "terminal_panel::Toggle";
-        }
-        {
-          context = "Editor";
-          bindings."ctrl-/" = "terminal_panel::Toggle";
-        }
-        {
-          context = "Terminal";
-          bindings."ctrl-/" = "terminal_panel::Toggle";
-        }
-        {
-          context = "Editor && (vim_mode == normal || vim_mode == helix_normal || vim_mode == helix_select) && !menu";
           bindings = {
+            "ctrl-/" = "terminal_panel::Toggle";
             "ctrl-h" = "workspace::ActivatePaneLeft";
             "ctrl-j" = "workspace::ActivatePaneDown";
             "ctrl-k" = "workspace::ActivatePaneUp";
             "ctrl-l" = "workspace::ActivatePaneRight";
+            "ctrl-q" = "workspace::CloseWindow";
+          };
+        }
+        {
+          context = "Editor";
+          bindings = {
+            "ctrl-/" = "terminal_panel::Toggle";
+            "ctrl-q" = "workspace::CloseWindow";
+          };
+        }
+        {
+          context = "Terminal";
+          bindings = {
+            "ctrl-/" = "terminal_panel::Toggle";
+            "ctrl-h" = "workspace::ActivatePaneLeft";
+            "ctrl-j" = "workspace::ActivatePaneDown";
+            "ctrl-k" = "workspace::ActivatePaneUp";
+            "ctrl-l" = "workspace::ActivatePaneRight";
+            "ctrl-q" = "workspace::CloseWindow";
+          };
+        }
+        {
+          context = "Editor && (vim_mode == normal || vim_mode == helix_normal || vim_mode == helix_select) && !menu";
+          bindings = {
+            "alt-h" = "vim::ResizePaneLeft";
+            "alt-j" = "vim::ResizePaneDown";
+            "alt-k" = "vim::ResizePaneUp";
+            "alt-l" = "vim::ResizePaneRight";
+            "ctrl-h" = "workspace::ActivatePaneLeft";
+            "ctrl-j" = "workspace::ActivatePaneDown";
+            "ctrl-k" = "workspace::ActivatePaneUp";
+            "ctrl-l" = "workspace::ActivatePaneRight";
+            "down" = "editor::MoveLineDown";
+            "enter" = "vim::HelixJumpToWord";
+            "left" = "editor::Outdent";
+            "right" = "editor::Indent";
             "shift-h" = "pane::ActivatePreviousItem";
             "shift-l" = "pane::ActivateNextItem";
             "space space" = "file_finder::Toggle";
@@ -163,6 +298,7 @@ in
             "space w j" = "workspace::ActivatePaneDown";
             "space w k" = "workspace::ActivatePaneUp";
             "space w l" = "workspace::ActivatePaneRight";
+            "space w o" = "pane::JoinAll";
             "space w q" = [
               "pane::CloseActiveItem"
               {
@@ -173,6 +309,29 @@ in
             "space w v" = "pane::SplitRight";
             "space w z" = "workspace::ToggleZoom";
             "space x x" = "diagnostics::Deploy";
+            "s h" = "pane::SplitLeft";
+            "s j" = "pane::SplitDown";
+            "s k" = "pane::SplitUp";
+            "s l" = "pane::SplitRight";
+            "s o" = [
+              "action::Sequence"
+              [
+                "vim::InsertLineBelow"
+                "vim::SwitchToNormalMode"
+              ]
+            ];
+            "s shift-h" = "workspace::MovePaneLeft";
+            "s shift-j" = "workspace::MovePaneDown";
+            "s shift-k" = "workspace::MovePaneUp";
+            "s shift-l" = "workspace::MovePaneRight";
+            "s shift-o" = [
+              "action::Sequence"
+              [
+                "vim::InsertLineAbove"
+                "vim::SwitchToNormalMode"
+              ]
+            ];
+            "up" = "editor::MoveLineUp";
           };
         }
         {
@@ -210,8 +369,12 @@ in
         {
           context = "vim_mode == visual";
           bindings = {
+            "down" = "editor::MoveLineDown";
+            "left" = "editor::Outdent";
+            "right" = "editor::Indent";
             "shift-j" = "editor::MoveLineDown";
             "shift-k" = "editor::MoveLineUp";
+            "up" = "editor::MoveLineUp";
           };
         }
         {
@@ -225,7 +388,8 @@ in
             "c" = "project_panel::Copy";
             "p" = "project_panel::Paste";
             "/" = "project_panel::NewSearchInDirectory";
-            "q" = "project_panel::ToggleFocus";
+            "escape" = "project_panel::Toggle";
+            "q" = "project_panel::Toggle";
             "space e" = null;
           };
         }

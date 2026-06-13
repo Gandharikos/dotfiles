@@ -21,6 +21,7 @@ in
     home.packages = with pkgs; [
       devenv # Declarative development environments
       nixd # Nix LSP
+      nil # Nix LSP
       nixfmt # RFC style formatter
       nvd # Nix differ
       nix-diff # Another differ
