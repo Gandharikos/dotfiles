@@ -96,10 +96,6 @@ in
         treesj
         nvim-spider
         smart-splits-nvim
-        diffview-nvim
-        git-blame-nvim
-        git-conflict-nvim
-        undotree
         R-nvim
         dropbar-nvim
         scope-nvim
