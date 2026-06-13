@@ -77,6 +77,10 @@ in
           ];
           opacity = 0.85;
         }
+        {
+          matches = singleton { "app-id" = "^(dev\\.zed\\.Zed|zed)$"; };
+          opacity = 0.88;
+        }
       ];
     };
   };

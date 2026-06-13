@@ -24,19 +24,19 @@ in
 
       userSettings = {
         agent.play_sound_when_agent_done = "when_hidden";
-        agent_buffer_font_size = lib.mkDefault 15.0;
+        agent_buffer_font_size = lib.mkDefault 17.0;
         agent_servers = {
           claude-acp.type = "registry";
           codex-acp.type = "registry";
           cursor.type = "registry";
           opencode.type = "registry";
         };
-        agent_ui_font_size = lib.mkDefault 16.0;
+        agent_ui_font_size = lib.mkDefault 18.0;
         auto_signature_help = true;
         auto_update = false;
         autosave = "on_focus_change";
         buffer_font_family = lib.mkDefault "Maple Mono NF CN";
-        buffer_font_size = lib.mkDefault 14.0;
+        buffer_font_size = lib.mkDefault 16.0;
         centered_layout = {
           left_padding = 0.15;
           right_padding = 0.15;
@@ -114,7 +114,7 @@ in
           ];
         };
         git.inline_blame.show_commit_summary = true;
-        helix_mode = true;
+        helix_mode = false;
         indent_guides = {
           background_coloring = "indent_aware";
           enabled = true;
@@ -183,9 +183,10 @@ in
           title = false;
         };
         ui_font_family = lib.mkDefault "LXGW WenKai Screen";
-        ui_font_size = lib.mkDefault 16.0;
+        ui_font_size = lib.mkDefault 18.0;
         use_smartcase_search = true;
         vertical_scroll_margin = 5.0;
+        vim_mode = true;
         vim = {
           toggle_relative_line_numbers = true;
           use_smartcase_find = true;
