@@ -9,61 +9,16 @@ let
   inherit (lib.attrsets) attrValues;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption mkOption;
-  inherit (lib.types) bool enum str;
+  inherit (lib.types)
+    bool
+    enum
+    listOf
+    str
+    ;
 
   proxyBackends = lib.dot.mkSelfhostedProxyBackends config;
   proxyHostNames = map (service: service.hostName) (attrValues proxyBackends);
-
-  backupPackage =
-    {
-      inherit (pkgs) restic;
-      borg = pkgs.borgbackup;
-    }
-    .${cfg.backup};
-
-  selfhostedExport = pkgs.writeShellApplication {
-    name = "selfhosted-export";
-    runtimeInputs = with pkgs; [
-      coreutils
-      gnugrep
-      gnutar
-      postgresql
-      sudo
-      systemd
-      zstd
-    ];
-    text = ''
-      if [ "$(id -u)" != 0 ]; then
-        echo "selfhosted-export must be run as root" >&2
-        exit 1
-      fi
-
-      output="''${1:-/var/backup/selfhosted/selfhosted-$(date -u +%Y%m%dT%H%M%SZ).tar.zst}"
-      workdir="$(mktemp -d)"
-      trap 'rm -rf "$workdir"' EXIT
-
-      mkdir -p "$(dirname "$output")" "$workdir/postgresql" "$workdir/var/lib"
-
-      if systemctl is-active --quiet postgresql.service; then
-        sudo -u postgres pg_dumpall --globals-only | tee "$workdir/postgresql/globals.sql" > /dev/null
-        sudo -u postgres psql -Atqc "SELECT datname FROM pg_database WHERE datname IN ('miniflux', 'vaultwarden', 'wakapi')" \
-          | while IFS= read -r database; do
-              [ -n "$database" ] || continue
-              sudo -u postgres pg_dump --format=custom "$database" \
-                | tee "$workdir/postgresql/$database.dump" > /dev/null
-            done
-      fi
-
-      for directory in forgejo vaultwarden ntfy-sh wakapi; do
-        if [ -e "/var/lib/$directory" ]; then
-          tar -C /var/lib -cpf "$workdir/var/lib/$directory.tar" "$directory"
-        fi
-      done
-
-      tar -C "$workdir" --zstd -cpf "$output" .
-      echo "$output"
-    '';
-  };
+  selfhostedExport = lib.dot.mkSelfhostedExportPackage pkgs;
 in
 {
   imports = lib.dot.scanPaths ./.;
@@ -111,15 +66,80 @@ in
       default = "gatus";
       description = "Monitoring service to deploy for self-hosted services.";
     };
+
+    backups = {
+      exportDir = mkOption {
+        type = str;
+        default = "/var/backup/selfhosted";
+        description = "Directory where selfhosted-export writes migration archives.";
+      };
+
+      schedule = mkOption {
+        type = str;
+        default = "daily";
+        description = "systemd calendar schedule for self-hosted backups.";
+      };
+
+      restic = {
+        repository = mkOption {
+          type = str;
+          default = "/var/backup/restic/selfhosted";
+          description = "Restic repository used for self-hosted backups.";
+        };
+
+        passwordFile = mkOption {
+          type = str;
+          default = "/var/lib/selfhosted-backup/restic-password";
+          description = "Restic repository password file.";
+        };
+
+        pruneOpts = mkOption {
+          type = listOf str;
+          default = [
+            "--keep-daily 7"
+            "--keep-weekly 4"
+            "--keep-monthly 6"
+          ];
+          description = "Restic forget/prune retention options.";
+        };
+      };
+
+      borg = {
+        repository = mkOption {
+          type = str;
+          default = "/var/backup/borg/selfhosted";
+          description = "Borg repository used for self-hosted backups.";
+        };
+
+        pruneKeep = mkOption {
+          type = lib.types.attrsOf (lib.types.either lib.types.int str);
+          default = {
+            daily = 7;
+            weekly = 4;
+            monthly = 6;
+          };
+          description = "Borg prune retention policy.";
+        };
+      };
+    };
   };
 
   config = mkIf cfg.enable (mkMerge [
     {
-      environment.systemPackages = [
-        backupPackage
-        selfhostedExport
-      ];
+      environment.systemPackages = [ selfhostedExport ];
       networking.hosts."127.0.0.1" = proxyHostNames;
+      systemd.tmpfiles.settings.selfhosted-backup = {
+        ${cfg.backups.exportDir}.d = {
+          user = "root";
+          group = "root";
+          mode = "0700";
+        };
+        "/var/lib/selfhosted-backup".d = {
+          user = "root";
+          group = "root";
+          mode = "0700";
+        };
+      };
     }
   ]);
 }

@@ -2,7 +2,7 @@
 let
   inherit (lib.attrsets) filterAttrs optionalAttrs recursiveUpdate;
   inherit (lib.options) mkEnableOption mkOption mkPackageOption;
-  inherit (lib.types) port str;
+  inherit (lib.types) enum port str;
 
   mkProgram =
     pkgs: name: extraConfig:
@@ -19,6 +19,7 @@ let
       displayName ? name,
       subdomain ? displayName,
       defaultEnable ? config.dot.selfhosted.enable,
+      scheme ? "http",
     }:
     let
       cfg = config.dot.selfhosted.services.${name};
@@ -42,6 +43,14 @@ let
         default = subdomain;
         description = "Local subdomain used by the reverse proxy.";
       };
+      scheme = mkOption {
+        type = enum [
+          "http"
+          "https"
+        ];
+        default = scheme;
+        description = "Scheme used by the reverse proxy to reach ${displayName}.";
+      };
       hostName = mkOption {
         type = str;
         default = "${cfg.subdomain}.${config.dot.selfhosted.domain}";
@@ -62,6 +71,7 @@ let
           ntfy
           miniflux
           wakapi
+          kanidm
           jellyfin
           calibre
           ;
@@ -73,10 +83,57 @@ let
         gatus = cfg.services.gatus;
       }
     );
+
+  mkSelfhostedExportPackage =
+    pkgs:
+    pkgs.writeShellApplication {
+      name = "selfhosted-export";
+      runtimeInputs = with pkgs; [
+        coreutils
+        gnugrep
+        gnutar
+        postgresql
+        sudo
+        systemd
+        zstd
+      ];
+      text = ''
+        if [ "$(id -u)" != 0 ]; then
+          echo "selfhosted-export must be run as root" >&2
+          exit 1
+        fi
+
+        output="''${1:-/var/backup/selfhosted/selfhosted-$(date -u +%Y%m%dT%H%M%SZ).tar.zst}"
+        workdir="$(mktemp -d)"
+        trap 'rm -rf "$workdir"' EXIT
+
+        mkdir -p "$(dirname "$output")" "$workdir/postgresql" "$workdir/var/lib"
+
+        if systemctl is-active --quiet postgresql.service; then
+          sudo -u postgres pg_dumpall --globals-only | tee "$workdir/postgresql/globals.sql" > /dev/null
+          sudo -u postgres psql -Atqc "SELECT datname FROM pg_database WHERE datname IN ('miniflux', 'vaultwarden', 'wakapi')" \
+            | while IFS= read -r database; do
+                [ -n "$database" ] || continue
+                sudo -u postgres pg_dump --format=custom "$database" \
+                  | tee "$workdir/postgresql/$database.dump" > /dev/null
+              done
+        fi
+
+        for directory in forgejo kanidm vaultwarden ntfy-sh wakapi; do
+          if [ -e "/var/lib/$directory" ]; then
+            tar -C /var/lib -cpf "$workdir/var/lib/$directory.tar" "$directory"
+          fi
+        done
+
+        tar -C "$workdir" --zstd -cpf "$output" .
+        echo "$output"
+      '';
+    };
 in
 {
   inherit
     mkProgram
+    mkSelfhostedExportPackage
     mkSelfhostedProxyBackends
     mkSelfhostedServiceOptions
     ;
