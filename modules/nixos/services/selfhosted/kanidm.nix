@@ -1,0 +1,217 @@
+{
+  config,
+  lib,
+  pkgs,
+  self,
+  ...
+}:
+let
+  cfg = config.dot.selfhosted.services.kanidm;
+  services = config.dot.selfhosted.services;
+  secretsFile = "${self}/secrets/services/kanidm.yaml";
+  certDir = "/var/lib/kanidm/tls";
+  cert = "${certDir}/fullchain.pem";
+  key = "${certDir}/key.pem";
+  inherit (lib.modules) mkIf;
+in
+{
+  options.dot.selfhosted.services.kanidm = lib.dot.mkSelfhostedServiceOptions {
+    inherit config;
+    name = "kanidm";
+    subdomain = "sso";
+    defaultPort = 8443;
+    scheme = "https";
+  };
+
+  config = mkIf cfg.enable {
+    sops.secrets = {
+      kanidm-admin-password = {
+        sopsFile = secretsFile;
+        key = "admin-password";
+        owner = "kanidm";
+        group = "kanidm";
+      };
+      kanidm-idm-admin-password = {
+        sopsFile = secretsFile;
+        key = "idm-admin-password";
+        owner = "kanidm";
+        group = "kanidm";
+      };
+      kanidm-oauth2-forgejo = {
+        sopsFile = secretsFile;
+        key = "oauth2-forgejo";
+        owner = "kanidm";
+        group = "kanidm";
+      };
+      forgejo-kanidm-oauth2 = {
+        sopsFile = secretsFile;
+        key = "oauth2-forgejo";
+        owner = "forgejo";
+        group = "forgejo";
+      };
+      kanidm-oauth2-miniflux = {
+        sopsFile = secretsFile;
+        key = "oauth2-miniflux";
+        owner = "kanidm";
+        group = "kanidm";
+      };
+      kanidm-oauth2-vaultwarden = {
+        sopsFile = secretsFile;
+        key = "oauth2-vaultwarden";
+        owner = "kanidm";
+        group = "kanidm";
+      };
+      kanidm-oauth2-wakapi = {
+        sopsFile = secretsFile;
+        key = "oauth2-wakapi";
+        owner = "kanidm";
+        group = "kanidm";
+      };
+    };
+
+    services.kanidm = {
+      package = pkgs.kanidmWithSecretProvisioning_1_10;
+      server = {
+        enable = true;
+        settings = {
+          version = "2";
+          domain = cfg.hostName;
+          origin = "https://${cfg.hostName}";
+          bindaddress = "${cfg.host}:${toString cfg.port}";
+          ldapbindaddress = null;
+          tls_chain = cert;
+          tls_key = key;
+          online_backup = {
+            path = "/var/lib/kanidm/backups";
+            schedule = "00 22 * * *";
+            versions = 7;
+          };
+        };
+      };
+      client = {
+        enable = true;
+        settings.uri = "https://${cfg.hostName}";
+      };
+      provision = {
+        enable = true;
+        adminPasswordFile = config.sops.secrets.kanidm-admin-password.path;
+        idmAdminPasswordFile = config.sops.secrets.kanidm-idm-admin-password.path;
+        instanceUrl = "https://${cfg.host}:${toString cfg.port}";
+        acceptInvalidCerts = true;
+        groups = {
+          selfhosted-users.members = [ "johnson" ];
+          forgejo-users.members = [ "johnson" ];
+          forgejo-admins.members = [ "johnson" ];
+          miniflux-users.members = [ "johnson" ];
+          vaultwarden-users.members = [ "johnson" ];
+          wakapi-users.members = [ "johnson" ];
+        };
+        persons.johnson = {
+          displayName = "Johnson";
+          legalName = "Johnson Hu";
+          mailAddresses = [ config.dot.admin.email ];
+          groups = [
+            "selfhosted-users"
+            "forgejo-users"
+            "forgejo-admins"
+            "miniflux-users"
+            "vaultwarden-users"
+            "wakapi-users"
+          ];
+        };
+        systems.oauth2 = {
+          forgejo = mkIf services.forgejo.enable {
+            displayName = "Forgejo";
+            originLanding = "https://${services.forgejo.hostName}/";
+            originUrl = "https://${services.forgejo.hostName}/user/oauth2/Kanidm/callback";
+            basicSecretFile = config.sops.secrets.kanidm-oauth2-forgejo.path;
+            allowInsecureClientDisablePkce = true;
+            preferShortUsername = true;
+            scopeMaps.forgejo-users = [
+              "openid"
+              "email"
+              "profile"
+            ];
+            claimMaps.forgejo_role = {
+              joinType = "array";
+              valuesByGroup.forgejo-admins = [ "admin" ];
+            };
+          };
+          miniflux = mkIf services.miniflux.enable {
+            displayName = "Miniflux";
+            originLanding = "https://${services.miniflux.hostName}/";
+            originUrl = "https://${services.miniflux.hostName}/oauth2/oidc/callback";
+            basicSecretFile = config.sops.secrets.kanidm-oauth2-miniflux.path;
+            preferShortUsername = true;
+            scopeMaps.miniflux-users = [
+              "openid"
+              "email"
+              "profile"
+            ];
+          };
+          vaultwarden = mkIf services.vaultwarden.enable {
+            displayName = "Vaultwarden";
+            originLanding = "https://${services.vaultwarden.hostName}/";
+            originUrl = "https://${services.vaultwarden.hostName}/identity/connect/oidc-signin";
+            basicSecretFile = config.sops.secrets.kanidm-oauth2-vaultwarden.path;
+            preferShortUsername = true;
+            scopeMaps.vaultwarden-users = [
+              "openid"
+              "email"
+              "profile"
+            ];
+          };
+          wakapi = mkIf services.wakapi.enable {
+            displayName = "Wakapi";
+            originLanding = "https://${services.wakapi.hostName}/";
+            originUrl = "https://${services.wakapi.hostName}/oidc/kanidm/callback";
+            basicSecretFile = config.sops.secrets.kanidm-oauth2-wakapi.path;
+            allowInsecureClientDisablePkce = true;
+            preferShortUsername = true;
+            scopeMaps.wakapi-users = [
+              "openid"
+              "email"
+              "profile"
+            ];
+          };
+        };
+      };
+    };
+
+    systemd.services = {
+      kanidm-selfsigned-cert = {
+        description = "Generate local self-signed TLS certificate for Kanidm";
+        before = [ "kanidm.service" ];
+        requiredBy = [ "kanidm.service" ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+        };
+        script = ''
+          ${pkgs.coreutils}/bin/install -d -m 0750 -o kanidm -g kanidm ${certDir}
+          if [ ! -s ${cert} ] || [ ! -s ${key} ]; then
+            ${pkgs.openssl}/bin/openssl req \
+              -x509 \
+              -newkey rsa:4096 \
+              -sha256 \
+              -days 3650 \
+              -nodes \
+              -keyout ${key} \
+              -out ${cert} \
+              -subj "/CN=${cfg.hostName}" \
+              -addext "subjectAltName=DNS:${cfg.hostName},DNS:localhost,IP:127.0.0.1"
+          fi
+          ${pkgs.coreutils}/bin/chown kanidm:kanidm ${cert} ${key}
+          ${pkgs.coreutils}/bin/chmod 0440 ${cert} ${key}
+        '';
+      };
+
+      kanidm = {
+        after = [ "kanidm-selfsigned-cert.service" ];
+        requires = [ "kanidm-selfsigned-cert.service" ];
+      };
+    };
+
+    networking.hosts."127.0.0.1" = [ cfg.hostName ];
+  };
+}

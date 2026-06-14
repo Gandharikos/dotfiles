@@ -6,6 +6,8 @@
 let
   cfg = config.dot.selfhosted.services.vaultwarden;
   selfhosted = config.dot.selfhosted;
+  kanidm = config.dot.selfhosted.services.kanidm;
+  oidcEnabled = kanidm.enable;
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkOption;
   inherit (lib.types)
@@ -14,6 +16,7 @@ let
     path
     str
     ;
+  inherit (lib.lists) optionals;
 
   publicUrl =
     if selfhosted.useHttps then
@@ -81,7 +84,8 @@ in
     services.vaultwarden = {
       enable = true;
       dbBackend = "postgresql";
-      environmentFile = cfg.environmentFiles;
+      environmentFile =
+        cfg.environmentFiles ++ optionals oidcEnabled [ config.sops.templates.vaultwarden-kanidm-env.path ];
       config = {
         DATABASE_URL = "postgresql://vaultwarden@127.0.0.1/vaultwarden?sslmode=disable";
         DATA_FOLDER = cfg.dataDir;
@@ -96,8 +100,24 @@ in
         SHOW_PASSWORD_HINT = false;
         SIGNUPS_ALLOWED = cfg.allowRegistration;
         SIGNUPS_VERIFY = cfg.verifySignups;
+        SSO_AUTHORITY = mkIf oidcEnabled "https://${kanidm.hostName}/oauth2/openid/vaultwarden";
+        SSO_CLIENT_ID = mkIf oidcEnabled "vaultwarden";
+        SSO_ENABLED = oidcEnabled;
+        SSO_SCOPES = mkIf oidcEnabled "email profile";
+        SSO_SIGNUPS_ALLOWED = oidcEnabled;
+        SSO_SIGNUPS_MATCH_EMAIL = oidcEnabled;
         USE_SYSLOG = true;
       };
+    };
+
+    sops.templates.vaultwarden-kanidm-env = mkIf oidcEnabled {
+      owner = "root";
+      group = "root";
+      mode = "0400";
+      content = ''
+        SSO_CLIENT_SECRET=${config.sops.placeholder.kanidm-oauth2-vaultwarden}
+      '';
+      restartUnits = [ "vaultwarden.service" ];
     };
 
     systemd.services.vaultwarden = {

@@ -11,7 +11,7 @@ let
 
   mkEndpoint = name: service: {
     inherit name;
-    url = "http://${service.host}:${toString service.port}";
+    url = "${service.scheme}://${service.host}:${toString service.port}";
     interval = "1m";
     conditions = [ "[STATUS] < 500" ];
   };
@@ -35,6 +35,7 @@ in
           ++ optional cfg.services.ntfy.enable (mkEndpoint "ntfy" cfg.services.ntfy)
           ++ optional cfg.services.miniflux.enable (mkEndpoint "miniflux" cfg.services.miniflux)
           ++ optional cfg.services.wakapi.enable (mkEndpoint "wakapi" cfg.services.wakapi)
+          ++ optional cfg.services.kanidm.enable (mkEndpoint "kanidm" cfg.services.kanidm)
           ++ optional cfg.services.jellyfin.enable (mkEndpoint "jellyfin" cfg.services.jellyfin)
           ++ optional cfg.services.calibre.enable (mkEndpoint "calibre" cfg.services.calibre);
       };
