@@ -7,6 +7,7 @@
 }:
 let
   cfg = config.my.langs.rust;
+  enable = config.my.langs.enable && cfg.enable;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkMerge mkIf;
   inherit (lib.lists) optionals;
@@ -23,11 +24,10 @@ in
 {
   options.my.langs.rust = {
     enable = mkEnableOption "Rust development environment";
-    xdg.enable = mkEnableOption "Rust XDG environment variables";
   };
 
   config = mkMerge [
-    (mkIf cfg.enable {
+    (mkIf enable {
       home.packages = [
         rustToolchain
         fenixPkgs.stable.rust-analyzer
@@ -54,10 +54,10 @@ in
       };
     })
 
-    (mkIf cfg.xdg.enable {
+    (mkIf enable {
       home.sessionPath = [ "${xdg.dataHome}/cargo/bin" ];
 
-      home.sessionVariables = rec {
+      home.sessionVariables = {
         CARGO_HOME = "${xdg.dataHome}/cargo";
         RUST_SRC_PATH = "${rustToolchain}/lib/rustlib/src/rust/library";
       };

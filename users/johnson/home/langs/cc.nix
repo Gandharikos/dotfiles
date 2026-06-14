@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.my.langs.cc;
+  enable = config.my.langs.enable && cfg.enable;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkMerge mkIf;
   inherit (builtins) isList elemAt;
@@ -78,11 +79,10 @@ in
 {
   options.my.langs.cc = {
     enable = mkEnableOption "C/C++ development environment";
-    xdg.enable = mkEnableOption "C/C++ XDG environment variables";
   };
 
   config = mkMerge [
-    (mkIf cfg.enable {
+    (mkIf enable {
       home.packages =
         with pkgs;
         [
@@ -126,7 +126,7 @@ in
       };
     })
 
-    (mkIf cfg.xdg.enable {
+    (mkIf enable {
       xdg.configFile."clangd/config.yaml".text = ''
         If:
           PathMatch: '.*\.(cc|cpp|cxx|c\+\+|hpp|hh|hxx|h\+\+)$'

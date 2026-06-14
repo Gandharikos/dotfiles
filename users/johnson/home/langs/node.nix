@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.my.langs.node;
+  enable = config.my.langs.enable && cfg.enable;
   nodePkg = pkgs.nodejs_latest;
   inherit (lib.modules) mkMerge mkIf;
   inherit (lib.options) mkEnableOption;
@@ -16,11 +17,10 @@ in
 {
   options.my.langs.node = {
     enable = mkEnableOption "Node.js development environment";
-    xdg.enable = mkEnableOption "Node.js XDG environment variables";
   };
 
   config = mkMerge [
-    (mkIf cfg.enable {
+    (mkIf enable {
       home.packages = [
         nodePkg
         pkgs.yarn
@@ -35,7 +35,7 @@ in
       home.sessionVariables.PATH = [ "$(${yarn'} global bin)" ];
     })
 
-    (mkIf cfg.xdg.enable {
+    (mkIf enable {
       # NPM refuses to adopt XDG conventions upstream, so I enforce it myself.
       home.sessionVariables = {
         NPM_CONFIG_USERCONFIG = "${xdg.configHome}/npm/config";

@@ -6,17 +6,17 @@
 }:
 let
   cfg = config.my.langs.python;
+  enable = config.my.langs.enable && cfg.enable;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
 in
 {
   options.my.langs.python = {
     enable = mkEnableOption "Python development environment";
-    xdg.enable = mkEnableOption "Python XDG environment variables";
   };
 
   config = mkMerge [
-    (mkIf cfg.enable {
+    (mkIf enable {
       home.packages = with pkgs; [
         uv
         (python3.withPackages (
@@ -48,7 +48,7 @@ in
       };
     })
 
-    (mkIf cfg.xdg.enable {
+    (mkIf enable {
       home.sessionVariables = {
         # Internal
         PYTHONPYCACHEPREFIX = "${config.xdg.cacheHome}/python";

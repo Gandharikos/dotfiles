@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.my.langs.r;
+  enable = config.my.langs.enable && cfg.enable;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
 
@@ -62,11 +63,10 @@ in
 {
   options.my.langs.r = {
     enable = mkEnableOption "R development environment";
-    xdg.enable = mkEnableOption "R XDG environment variables";
   };
 
   config = mkMerge [
-    (mkIf cfg.enable {
+    (mkIf enable {
       # --- Packages ----------------------------------------------------------
       home.packages = with pkgs; [
         (rWrapper.override {
@@ -89,7 +89,7 @@ in
       };
     })
 
-    (mkIf cfg.xdg.enable {
+    (mkIf enable {
       # --- XDG mapping -------------------------------------------------------
       # Environment wiring for interop (only when enabled)
       home.sessionVariables = {
