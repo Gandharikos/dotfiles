@@ -21,7 +21,6 @@
           size = swapSize;
           content = {
             type = "swap";
-            randomEncryption = true;
           };
         };
         root = {
