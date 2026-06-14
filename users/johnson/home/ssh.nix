@@ -55,6 +55,12 @@ in
           ForwardAgent = mkDefault true;
         };
 
+        "athena" = {
+          HostName = mkDefault "159.69.182.58";
+          User = mkDefault "johnson";
+          ForwardAgent = mkDefault true;
+        };
+
         "github.com" = {
           HostName = mkDefault "github.com";
           User = mkDefault "git";
