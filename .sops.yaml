@@ -39,7 +39,7 @@ creation_rules:
       - pgp:
           - *johnson
   # User-specific secrets: only user keys needed
-  - path_regex: ^(\./)?secrets/johnson/[^/]+\.(ya?ml|json|env|ini)$
+  - path_regex: ^(\./)?secrets/johnson/[^/]+(?:\.(?:ya?ml|json|env|ini))?$
     key_groups:
       - age:
           - *johnson_age

@@ -101,6 +101,7 @@ in
         scope-nvim
         obsidian-nvim
         zk-nvim
+        vim-wakatime
       ];
     };
   };

@@ -61,6 +61,7 @@ in
             vscode.streetsidesoftware.code-spell-checker
             vscode.tonybaloney.vscode-pets
             vscode.vscodevim.vim
+            vscode.wakatime.vscode-wakatime
           ];
         enableExtensionUpdateCheck = false;
         enableUpdateCheck = false;

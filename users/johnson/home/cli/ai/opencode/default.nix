@@ -72,6 +72,7 @@ in
           "opencode-gemini-auth@latest"
           "opencode-pty@latest"
           "oh-my-openagent@latest"
+          "opencode-wakatime@latest"
         ];
       };
 

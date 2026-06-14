@@ -485,6 +485,7 @@ in
         "nu"
         "terraform"
         "toml"
+        "wakatime"
       ];
     };
   };

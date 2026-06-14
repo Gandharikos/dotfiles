@@ -11,6 +11,7 @@ in
   options.dot.selfhosted.services.wakapi = lib.dot.mkSelfhostedServiceOptions {
     inherit config;
     name = "wakapi";
+    subdomain = "waka";
     defaultPort = 3003;
   };
 

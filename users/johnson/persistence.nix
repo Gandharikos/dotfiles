@@ -133,6 +133,9 @@ in
       (mkIf my.yazi.enable [
         ".local/state/yazi"
       ])
+      (mkIf my.wakatime.enable [
+        ".wakatime"
+      ])
       (mkIf my.zellij.enable [
         ".cache/zellij"
         ".local/share/zellij"

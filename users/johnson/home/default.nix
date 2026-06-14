@@ -134,6 +134,8 @@ in
 
     typst.enable = true;
 
+    wakatime.enable = true;
+
     yazi.enable = true;
 
     zellij.enable = true;
