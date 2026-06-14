@@ -1,6 +1,6 @@
 { config, lib, ... }:
 let
-  inherit (lib.modules) mkDefault mkIf;
+  inherit (lib.modules) mkDefault mkForce mkIf;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) nullOr str;
   cfg = config.dot.profiles.hetzner;
@@ -31,10 +31,19 @@ in
         hasTPM = false;
       };
       boot = {
-        loader = mkDefault "grub";
-        grub.devices = mkDefault [ cfg.bootDevice ];
-        tmpOnTmpfs = mkDefault false;
+        loader = "grub";
+        secureBoot = false;
+        tmpOnTmpfs = false;
+        grub.devices = [ cfg.bootDevice ];
+        plymouth.enable = mkForce false;
       };
     };
+    boot.loader = {
+      efi.canTouchEfiVariables = lib.mkForce false;
+      grub = {
+        dedsec-theme.enable = lib.mkForce false;
+      };
+    };
+
   };
 }

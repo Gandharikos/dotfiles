@@ -1,4 +1,3 @@
-{ lib, ... }:
 {
   imports = [
     (import ../common/disko/bios-ext4.nix {
@@ -7,33 +6,17 @@
     })
   ];
 
-  boot.loader = {
-    efi.canTouchEfiVariables = lib.mkForce false;
-    grub = {
-      dedsec-theme.enable = lib.mkForce false;
-    };
-  };
-
   networking.domain = "huwenqiang.dev";
 
   dot = {
     primaryUser = "johnson";
 
     boot = {
-      loader = "grub";
-      secureBoot = false;
-      tmpOnTmpfs = false;
       enableKernelTweaks = true;
-      plymouth.enable = false;
-
       initrd = {
         enableTweaks = true;
         optimizeCompressor = false;
       };
-    };
-
-    device = {
-      type = "server";
     };
 
     profiles.hetzner = {
