@@ -1,34 +1,37 @@
-{ lib, ... }:
+{ lib, osConfig, ... }:
+let
+  isMinimal = osConfig ? dot && osConfig.dot.profiles.minimal.enable or false;
+in
 {
   imports = lib.dot.scanPaths ./.;
 
   my = {
     # keep-sorted start block=yes newline_separated=yes
     _1password-cli = {
-      enable = true;
-      enableSshSocket = true;
+      enable = !isMinimal;
+      enableSshSocket = !isMinimal;
     };
 
-    agy.enable = true;
+    agy.enable = !isMinimal;
 
     atuin = {
       enable = true;
-      autoLogin = true;
+      autoLogin = !isMinimal;
     };
 
     bash.enable = true;
 
     bat.enable = true;
 
-    broot.enable = true;
+    broot.enable = !isMinimal;
 
     btop.enable = true;
 
     carapace.enable = true;
 
-    claude-code.enable = true;
+    claude-code.enable = !isMinimal;
 
-    codex.enable = true;
+    codex.enable = !isMinimal;
 
     direnv = {
       enable = true;
@@ -39,26 +42,26 @@
 
     fastfetch = {
       enable = true;
-      startOnLogin = true;
+      startOnLogin = !isMinimal;
     };
 
     fd.enable = true;
 
     fzf.enable = true;
 
-    gh.enable = true;
+    gh.enable = !isMinimal;
 
     git.enable = true;
 
-    glow.enable = true;
+    glow.enable = !isMinimal;
 
-    gui.apps.anki.enable = true;
+    gui.apps.anki.enable = !isMinimal;
 
-    gui.apps.keyguard.enable = true;
+    gui.apps.keyguard.enable = !isMinimal;
 
-    jjui.enable = true;
+    jjui.enable = !isMinimal;
 
-    jujutsu.enable = true;
+    jujutsu.enable = !isMinimal;
 
     langs = {
       cc = {
@@ -82,54 +85,57 @@
       # };
     };
 
-    lazygit.enable = true;
+    lazygit.enable = !isMinimal;
 
-    mcp.enable = true;
+    mail.enable = !isMinimal;
+
+    mcp.enable = !isMinimal;
 
     mux = {
-      default = "tmux";
-      autoStart = true;
+      default = if isMinimal then null else "tmux";
+      autoStart = !isMinimal;
     };
 
-    navi.enable = true;
+    navi.enable = !isMinimal;
 
-    neovim.enable = true;
+    neovim = {
+      enable = true;
+      distro = if isMinimal then null else "lazyvim";
+    };
 
-    nix-index.enable = true;
+    nix-index.enable = !isMinimal;
 
-    nix-search-tv.enable = true;
+    nix-search-tv.enable = !isMinimal;
 
-    nix-your-shell.enable = true;
+    nix-your-shell.enable = !isMinimal;
 
-    numbat.enable = true;
+    numbat.enable = !isMinimal;
 
-    opencode.enable = true;
+    opencode.enable = !isMinimal;
 
-    pay-respects.enable = true;
+    pay-respects.enable = !isMinimal;
 
-    pet.enable = true;
+    pet.enable = !isMinimal;
 
-    polymarket.enable = true;
+    polymarket.enable = !isMinimal;
 
     ripgrep.enable = true;
 
     starship.enable = true;
 
-    tealdeer.enable = true;
+    tealdeer.enable = !isMinimal;
 
-    tmux.enable = true;
+    topgrade.enable = !isMinimal;
 
-    topgrade.enable = true;
+    typst.enable = !isMinimal;
 
-    typst.enable = true;
+    wakatime.enable = !isMinimal;
 
-    wakatime.enable = true;
+    yazi.enable = !isMinimal;
 
-    yazi.enable = true;
+    zellij.enable = !isMinimal;
 
-    zellij.enable = true;
-
-    zk.enable = true;
+    zk.enable = !isMinimal;
 
     zoxide.enable = true;
     # keep-sorted end

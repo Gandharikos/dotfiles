@@ -1,17 +1,17 @@
 { lib, ... }:
 let
   inherit (lib.options) mkOption;
-  inherit (lib.types) enum bool;
+  inherit (lib.types) enum bool nullOr;
 in
 {
   imports = lib.dot.scanPaths ./.;
 
   options.my.mux = {
     default = mkOption {
-      type = enum [
+      type = nullOr (enum [
         "tmux"
         "zellij"
-      ];
+      ]);
       default = "tmux";
       description = "The terminal multiplexer to use";
     };

@@ -11,9 +11,7 @@ let
   cfg = config.my.mail;
 in
 {
-  options.my.mail.enable = mkEnableOption "mail" // {
-    default = true;
-  };
+  options.my.mail.enable = mkEnableOption "mail";
 
   config = mkIf cfg.enable {
     my.aerc.enable = true;
