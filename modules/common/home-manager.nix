@@ -41,7 +41,8 @@ in
 {
   home-manager = {
     inherit extraSpecialArgs;
-    backupFileExtension = "backup";
+    # backupFileExtension = "backup";
+    backupCommand = lib.getExe' pkgs.trash-cli "trash-put";
     useGlobalPkgs = true;
     useUserPackages = true;
     verbose = true;
