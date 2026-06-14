@@ -9,7 +9,7 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.types) str bool;
 
-  cfg = config.khanelinix.security.acme;
+  cfg = config.dot.security.acme;
 in
 {
   options.dot.security.acme = {

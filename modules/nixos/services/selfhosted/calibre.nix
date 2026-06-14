@@ -4,19 +4,15 @@
   ...
 }:
 let
-  cfg = config.dot.services.calibre;
+  cfg = config.dot.selfhosted.services.calibre;
   inherit (lib.modules) mkIf;
-  inherit (lib.options) mkEnableOption mkOption;
-  inherit (lib.types) port;
 in
 {
-  options.dot.services.calibre = {
-    enable = mkEnableOption "calibre";
-    port = mkOption {
-      type = port;
-      default = 8080;
-      description = "The port to listen on";
-    };
+  options.dot.selfhosted.services.calibre = lib.dot.mkSelfhostedServiceOptions {
+    inherit config;
+    name = "calibre";
+    defaultPort = 8080;
+    defaultEnable = false;
   };
 
   config = mkIf cfg.enable {

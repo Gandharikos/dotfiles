@@ -5,14 +5,13 @@
   ...
 }:
 let
-  cfg = config.dot.services.samba;
-  inherit (lib.options) mkEnableOption;
+  cfg = config.dot.selfhosted.services.samba;
   inherit (lib.modules) mkIf;
+  inherit (lib.options) mkEnableOption;
 in
 {
-  options.dot.services.samba = {
-    enable = mkEnableOption "Enable Samba";
-  };
+  options.dot.selfhosted.services.samba.enable = mkEnableOption "Samba for self-hosted file shares";
+
   # TODO: completed this
   # check this url: https://github.com/skogsbrus/os/blob/02e9b05a01da428df9a10588c83687f6f7bfb22b/sys/samba_server.nix#L51
 
@@ -25,7 +24,7 @@ in
         # See https://github.com/NixOS/nixpkgs/blob/592047fc9e4f7b74a4dc85d1b9f5243dfe4899e3/pkgs/top-level/all-packages.nix#L27268
         enable = true;
         openFirewall = true;
-        shares.testshare = {
+        settings.testshare = {
           path = "/path/to/share";
           writable = "true";
           comment = "Hello World!";

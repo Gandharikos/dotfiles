@@ -1,0 +1,27 @@
+{
+  config,
+  lib,
+  ...
+}:
+let
+  cfg = config.dot.selfhosted.services.ntfy;
+  inherit (lib.modules) mkIf;
+in
+{
+  options.dot.selfhosted.services.ntfy = lib.dot.mkSelfhostedServiceOptions {
+    inherit config;
+    name = "ntfy";
+    defaultPort = 2586;
+  };
+
+  config = mkIf cfg.enable {
+    services.ntfy-sh = {
+      enable = true;
+      settings = {
+        base-url = "http://${cfg.hostName}";
+        behind-proxy = true;
+        listen-http = "${cfg.host}:${toString cfg.port}";
+      };
+    };
+  };
+}

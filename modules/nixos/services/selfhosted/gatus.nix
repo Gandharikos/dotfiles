@@ -1,0 +1,43 @@
+{
+  config,
+  lib,
+  ...
+}:
+let
+  cfg = config.dot.selfhosted;
+  gatus = cfg.services.gatus;
+  inherit (lib.lists) optional;
+  inherit (lib.modules) mkIf;
+
+  mkEndpoint = name: service: {
+    inherit name;
+    url = "http://${service.host}:${toString service.port}";
+    interval = "1m";
+    conditions = [ "[STATUS] < 500" ];
+  };
+in
+{
+  options.dot.selfhosted.services.gatus = lib.dot.mkSelfhostedServiceOptions {
+    inherit config;
+    name = "gatus";
+    defaultPort = 8083;
+    defaultEnable = config.dot.selfhosted.enable && config.dot.selfhosted.monitoring == "gatus";
+  };
+
+  config = mkIf gatus.enable {
+    services.gatus = {
+      enable = true;
+      settings = {
+        web.port = gatus.port;
+        endpoints =
+          optional cfg.services.vaultwarden.enable (mkEndpoint "vaultwarden" cfg.services.vaultwarden)
+          ++ optional cfg.services.forgejo.enable (mkEndpoint "forgejo" cfg.services.forgejo)
+          ++ optional cfg.services.ntfy.enable (mkEndpoint "ntfy" cfg.services.ntfy)
+          ++ optional cfg.services.miniflux.enable (mkEndpoint "miniflux" cfg.services.miniflux)
+          ++ optional cfg.services.wakapi.enable (mkEndpoint "wakapi" cfg.services.wakapi)
+          ++ optional cfg.services.jellyfin.enable (mkEndpoint "jellyfin" cfg.services.jellyfin)
+          ++ optional cfg.services.calibre.enable (mkEndpoint "calibre" cfg.services.calibre);
+      };
+    };
+  };
+}

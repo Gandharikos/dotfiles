@@ -4,22 +4,20 @@
   ...
 }:
 let
-  cfg = config.dot.services.jellyfin;
+  cfg = config.dot.selfhosted.services.jellyfin;
   inherit (lib.modules) mkIf;
-  inherit (lib.options) mkEnableOption mkOption;
-  inherit (lib.types) int;
 in
 {
-  options.dot.services.jellyfin = {
-    enable = mkEnableOption "jellyfin";
-    port = mkOption {
-      type = int;
-      default = 8096;
-      description = "The port on which Jellyfin will listen.";
-    };
+  options.dot.selfhosted.services.jellyfin = lib.dot.mkSelfhostedServiceOptions {
+    inherit config;
+    name = "jellyfin";
+    defaultPort = 8096;
+    defaultEnable = false;
   };
 
   config = mkIf cfg.enable {
+    users.groups.media = { };
+
     services.jellyfin = {
       enable = true;
       group = "media";
