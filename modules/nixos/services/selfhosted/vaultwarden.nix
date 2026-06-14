@@ -28,6 +28,7 @@ in
     lib.dot.mkSelfhostedServiceOptions {
       inherit config;
       name = "vaultwarden";
+      subdomain = "vault";
       defaultPort = 8222;
     }
     // {

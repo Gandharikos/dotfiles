@@ -11,6 +11,7 @@ in
   options.dot.selfhosted.services.miniflux = lib.dot.mkSelfhostedServiceOptions {
     inherit config;
     name = "miniflux";
+    subdomain = "rss";
     defaultPort = 8082;
   };
 

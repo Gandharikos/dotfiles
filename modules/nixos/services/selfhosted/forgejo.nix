@@ -14,6 +14,7 @@ in
     lib.dot.mkSelfhostedServiceOptions {
       inherit config;
       name = "forgejo";
+      subdomain = "git";
       defaultPort = 3000;
     }
     // {
