@@ -1,3 +1,4 @@
+{ lib, ... }:
 {
   imports = [
     (import ../common/disko/bios-ext4.nix {
@@ -10,6 +11,7 @@
 
   dot = {
     primaryUser = "johnson";
+    users.johnson.home.my.direnv.enable = lib.mkForce false;
 
     boot = {
       enableKernelTweaks = true;
