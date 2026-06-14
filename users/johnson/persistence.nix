@@ -35,6 +35,9 @@ in
         ".config/chromium"
         ".local/share/pki"
       ])
+      (mkIf my.gui.apps.keyguard.enable [
+        ".config/keyguard"
+      ])
       (mkIf my.gui.apps.obs.enable [
         ".config/obs-studio"
       ])

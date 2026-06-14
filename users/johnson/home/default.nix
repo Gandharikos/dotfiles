@@ -58,6 +58,8 @@ in
 
     gui.apps.anki.enable = true;
 
+    gui.apps.keyguard.enable = true;
+
     jjui.enable = true;
 
     jujutsu.enable = true;
