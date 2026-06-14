@@ -21,10 +21,13 @@
       };
     };
 
-    profiles.hetzner = {
-      enable = true;
-      ipv4 = "159.69.182.58";
-      ipv6 = "2a01:4f8:c015:cfa3::1";
+    profiles = {
+      hetzner = {
+        enable = true;
+        ipv4 = "159.69.182.58";
+        ipv6 = "2a01:4f8:c015:cfa3::1";
+      };
+      minimal.enable = true;
     };
 
     networking = {
@@ -45,10 +48,6 @@
       atuin.enable = lib.mkForce false;
       fastfetch.startOnLogin = lib.mkForce false;
       git.enable = lib.mkForce false;
-      mail.enable = lib.mkForce false;
-      mcp.enable = lib.mkForce false;
-      neovim.distro = lib.mkForce null;
-      polymarket.enable = lib.mkForce false;
     };
     selfhosted = {
       enable = true;
