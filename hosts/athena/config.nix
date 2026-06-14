@@ -43,6 +43,7 @@
     persistence.enable = false;
     users.johnson.home.my = {
       atuin.enable = lib.mkForce false;
+      fastfetch.startOnLogin = lib.mkForce false;
       git.enable = lib.mkForce false;
       mail.enable = lib.mkForce false;
       mcp.enable = lib.mkForce false;
