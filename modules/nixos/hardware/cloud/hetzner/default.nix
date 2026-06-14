@@ -1,8 +1,4 @@
+{ lib, ... }:
 {
-  imports = [
-    # keep-sorted start
-    ./networking.nix
-    ./profile.nix
-    # keep-sorted end
-  ];
+  imports = lib.dot.scanPaths ./.;
 }
