@@ -13,7 +13,7 @@ let
 
   proxyBackends = lib.dot.mkSelfhostedProxyBackends config;
   proxyHostNames = map (service: service.hostName) (attrValues proxyBackends);
-  proxyTarget = service: "http://${service.host}:${toString service.port}";
+  proxyTarget = service: "${service.scheme}://${service.host}:${toString service.port}";
   virtualHosts = mapAttrs' (
     _: service:
     nameValuePair service.hostName {
@@ -22,6 +22,9 @@ let
       locations."/" = {
         proxyPass = proxyTarget service;
         proxyWebsockets = true;
+        extraConfig = lib.optionalString (service.scheme == "https") ''
+          proxy_ssl_verify off;
+        '';
       };
     }
   ) proxyBackends;

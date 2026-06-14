@@ -14,10 +14,19 @@ let
   proxyBackends = lib.dot.mkSelfhostedProxyBackends config;
   virtualHostName =
     service: if selfhosted.useHttps then service.hostName else "http://${service.hostName}";
+  proxyTarget = service: "${service.scheme}://${service.host}:${toString service.port}";
   mkProxyVirtualHost = service: {
     extraConfig = ''
       encode zstd gzip
-      reverse_proxy ${service.host}:${toString service.port}
+      reverse_proxy ${proxyTarget service} ${
+        lib.optionalString (service.scheme == "https") ''
+          {
+            transport http {
+              tls_insecure_skip_verify
+            }
+          }
+        ''
+      }
     '';
   };
   virtualHosts = mapAttrs' (
