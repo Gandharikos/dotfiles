@@ -73,15 +73,15 @@ in
       default = config.dot.device.type == "server";
     };
 
-    domainSuffix = mkOption {
+    domain = mkOption {
       type = str;
       default = "localhost";
-      description = "Domain suffix used for local reverse-proxy host names.";
+      description = "Domain used for self-hosted reverse-proxy host names.";
     };
 
     useHttps = mkOption {
       type = bool;
-      default = cfg.domainSuffix != "localhost";
+      default = cfg.domain != "localhost";
       description = "Whether reverse proxies should serve self-hosted domains over HTTPS.";
     };
 

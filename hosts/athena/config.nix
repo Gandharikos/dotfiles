@@ -32,7 +32,7 @@
     persistence.enable = false;
     selfhosted = {
       enable = true;
-      domainSuffix = "huwenqiang.dev";
+      domain = "huwenqiang.dev";
       reverseProxy = "caddy";
       monitoring = "gatus";
       backup = "restic";

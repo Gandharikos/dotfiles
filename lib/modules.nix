@@ -44,7 +44,7 @@ let
       };
       hostName = mkOption {
         type = str;
-        default = "${cfg.subdomain}.${config.dot.selfhosted.domainSuffix}";
+        default = "${cfg.subdomain}.${config.dot.selfhosted.domain}";
         description = "Local host name used by the reverse proxy.";
       };
     };

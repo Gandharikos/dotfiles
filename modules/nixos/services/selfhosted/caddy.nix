@@ -24,7 +24,7 @@ let
     _: service: nameValuePair (virtualHostName service) (mkProxyVirtualHost service)
   ) proxyBackends;
   localVaultwardenHost =
-    optionalAttrs (selfhosted.domainSuffix == "localhost" && selfhosted.services.vaultwarden.enable)
+    optionalAttrs (selfhosted.domain == "localhost" && selfhosted.services.vaultwarden.enable)
       {
         "http://localhost" = mkProxyVirtualHost selfhosted.services.vaultwarden;
       };

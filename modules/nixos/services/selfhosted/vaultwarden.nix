@@ -18,7 +18,7 @@ let
   publicUrl =
     if selfhosted.useHttps then
       "https://${cfg.hostName}"
-    else if selfhosted.domainSuffix == "localhost" then
+    else if selfhosted.domain == "localhost" then
       "http://localhost"
     else
       "http://${cfg.hostName}";
