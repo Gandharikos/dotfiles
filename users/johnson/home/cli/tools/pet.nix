@@ -105,6 +105,15 @@ in
             "secrets"
           ];
         }
+        {
+          command = "cp <file_path> secrets/johnson/<secret_name> && sops --encrypt --input-type binary --output-type json -i secrets/johnson/<secret_name>";
+          description = "Encrypt a file to secrets/johnson/ as binary using SOPS";
+          tag = [
+            "cmd"
+            "sops"
+            "secrets"
+          ];
+        }
       ];
     };
   };
