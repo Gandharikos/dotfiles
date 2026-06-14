@@ -38,7 +38,7 @@ let
 
   tokyonightWallpaper = {
     day = inputs.wallpapers.tokyonight.japan-city-river.path;
-    moon = inputs.wallpapers.tokyonight.tokyo-night-street.path;
+    moon = inputs.wallpapers.tokyonight.night-japan-street-dark.path;
     night = inputs.wallpapers.tokyonight.tokyo-night-street-main.path;
     storm = inputs.wallpapers.tokyonight.tokyo-night-street-rain.path;
   };
