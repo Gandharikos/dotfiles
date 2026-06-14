@@ -16,12 +16,12 @@ in
   options.my.security.gpg = {
     encrytionKey = mkOption {
       type = nullOr str;
-      default = null;
+      default = "6E714D9B24EF3018DB51E7892BE66A4F9E095541";
       description = "The encrytion key of my gpg.";
     };
     signatureKey = mkOption {
       type = nullOr str;
-      default = null;
+      default = "EC571D2B91912D528A9F3B00639746C15BE596AF";
       description = "The signature key of my gpg.";
     };
   };

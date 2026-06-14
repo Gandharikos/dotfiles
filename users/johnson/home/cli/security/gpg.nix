@@ -9,6 +9,7 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.types) nullOr str path;
+  secretsCore = lib.dot.getFile "secrets/johnson/core";
   cfg = config.my.security.gpg;
 in
 {
@@ -31,13 +32,13 @@ in
 
     key = mkOption {
       type = nullOr str;
-      default = null;
+      default = "776C7FC245E58F55";
       description = "The public key of my gpg.";
     };
 
     publicKeysPath = mkOption {
       type = nullOr path;
-      default = null;
+      default = secretsCore + "/gpg-keys.pub";
       description = "The path to the public key of my gpg.";
     };
   };
