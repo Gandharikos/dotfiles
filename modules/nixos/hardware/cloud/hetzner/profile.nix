@@ -32,10 +32,9 @@ in
       };
       boot = {
         loader = mkDefault "grub";
+        grub.devices = mkDefault [ cfg.bootDevice ];
         tmpOnTmpfs = mkDefault false;
       };
     };
-
-    boot.loader.grub.devices = mkDefault [ cfg.bootDevice ];
   };
 }

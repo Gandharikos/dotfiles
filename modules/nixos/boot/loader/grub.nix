@@ -7,7 +7,7 @@
 let
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.options) mkOption;
-  inherit (lib.types) nullOr str;
+  inherit (lib.types) listOf str;
   cfg = config.dot.boot;
 in
 {
@@ -16,10 +16,10 @@ in
   ];
 
   options.dot.boot.grub = {
-    device = mkOption {
-      type = nullOr str;
-      default = "nodev";
-      description = "The device to use for the GRUB bootloader.";
+    devices = mkOption {
+      type = listOf str;
+      default = [ "nodev" ];
+      description = "The devices to install the GRUB bootloader to. Use nodev to generate GRUB configuration without installing to a disk.";
     };
     style = mkOption {
       type = str;
@@ -34,7 +34,7 @@ in
       useOSProber = mkDefault true;
       efiSupport = true;
       enableCryptodisk = mkDefault false;
-      inherit (cfg.grub) device;
+      devices = mkDefault cfg.grub.devices;
       dedsec-theme = {
         enable = true;
         inherit (cfg.grub) style;

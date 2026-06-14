@@ -49,7 +49,6 @@ in
         systemd.enable = true;
       };
       loader.grub = {
-        device = mkForce "";
         efiSupport = mkForce false;
         useOSProber = mkForce false;
       };

@@ -22,9 +22,10 @@ in
         cpu = mkDefault "vm-intel";
         gpu = mkDefault null;
       };
-      boot.loader = mkDefault "grub";
+      boot = {
+        loader = mkDefault "grub";
+        grub.devices = mkDefault [ cfg.bootDevice ];
+      };
     };
-
-    boot.loader.grub.devices = mkDefault [ cfg.bootDevice ];
   };
 }
