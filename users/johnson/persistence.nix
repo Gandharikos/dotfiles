@@ -96,7 +96,7 @@ in
       (mkIf my.fastfetch.enable [
         ".cache/fastfetch"
       ])
-      (mkIf my."antigravity-cli".enable [
+      (mkIf my.agy.enable [
         ".gemini"
       ])
       (mkIf my.gh.enable [

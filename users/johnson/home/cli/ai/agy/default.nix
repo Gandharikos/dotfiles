@@ -8,7 +8,7 @@
 let
   inherit (lib) mkDefault mkEnableOption mkIf;
 
-  cfg = config.my.antigravity-cli;
+  cfg = config.my.agy;
   codexEnabled = config.my.codex.enable or false;
   mcpModuleEnabled = config.my.mcp.enable or false;
 
@@ -19,15 +19,11 @@ in
     ./rules.nix
   ];
 
-  options.my.antigravity-cli = {
-    enable = mkEnableOption "antigravity-cli";
+  options.my.agy = {
+    enable = mkEnableOption "agy";
   };
 
   config = mkIf cfg.enable {
-    home.shellAliases = {
-      ag = "antigravity";
-    };
-
     programs.antigravity-cli = {
       enable = true;
       package = pkgs.llm-agents.antigravity-cli;
@@ -92,10 +88,6 @@ in
         };
 
         ide.enabled = true;
-
-        model = {
-          compressionThreshold = 0.7;
-        };
 
         privacy.usageStatisticsEnabled = false;
 

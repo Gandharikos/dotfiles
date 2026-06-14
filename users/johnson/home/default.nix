@@ -13,7 +13,7 @@ in
       enableSshSocket = true;
     };
 
-    antigravity-cli.enable = true;
+    agy.enable = true;
 
     atuin = {
       enable = true;
