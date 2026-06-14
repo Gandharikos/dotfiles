@@ -17,11 +17,6 @@ in
 
   config = mkIf (config.nixporn.colorscheme == "catppuccin") (mkMerge [
     {
-      nixporn = {
-        avatar = lib.mkDefault osConfig.nixporn.avatar;
-        wallpaper = lib.mkDefault inputs.wallpapers.catppuccin.anime-japan.path;
-      };
-
       home.sessionVariables = {
         COLORSCHEME_FLAVOR = cfg.flavor;
         COLORSCHEME_ACCENT = cfg.accent;
@@ -29,6 +24,10 @@ in
     }
 
     (mkIf guiLinux {
+      nixporn = {
+        avatar = lib.mkDefault osConfig.nixporn.avatar;
+        wallpaper = lib.mkDefault inputs.wallpapers.catppuccin.anime-japan.path;
+      };
       home.pointerCursor = {
         size = 24;
         gtk.enable = true;

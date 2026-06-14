@@ -11,7 +11,7 @@ let
   inherit (pkgs.stdenv.hostPlatform) isLinux;
 
   cfg = config.nixporn.colorschemes.tokyonight;
-  cursorEnable = config.nixporn.colorscheme == "tokyonight" && osConfig.dot.gui.enable && isLinux;
+  enable = config.nixporn.colorscheme == "tokyonight" && osConfig.dot.gui.enable && isLinux;
 
   tokyonightCursor = palette: {
     day = {
@@ -48,15 +48,15 @@ in
 
   config = mkMerge [
     (mkIf (config.nixporn.colorscheme == "tokyonight") {
+      home.sessionVariables.COLORSCHEME_STYLE = cfg.style;
+    })
+    (mkIf enable {
       nixporn = {
         avatar = mkDefault osConfig.nixporn.avatar;
         wallpaper = mkDefault tokyonightWallpaper.${cfg.style};
         cursors.bibata = mkDefault (tokyonightCursor cfg.palette).${cfg.style};
       };
 
-      home.sessionVariables.COLORSCHEME_STYLE = cfg.style;
-    })
-    (mkIf cursorEnable {
       home.pointerCursor = {
         size = 24;
         gtk.enable = true;
