@@ -9,7 +9,7 @@ let
     ;
 in
 {
-  options.dot.machine.monitors = mkOption {
+  options.dot.device.monitors = mkOption {
     type = listOf (submodule {
       options = {
         name = mkOption {

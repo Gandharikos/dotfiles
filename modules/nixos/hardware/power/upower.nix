@@ -5,10 +5,10 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (config.dot) machine;
+  inherit (config.dot) device;
 in
 {
-  config = mkIf (machine.type == "laptop") {
+  config = mkIf (device.type == "laptop") {
     # DBus service that provides power management support to applications.
     services.upower = {
       enable = true;

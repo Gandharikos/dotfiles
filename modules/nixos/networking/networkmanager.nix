@@ -7,7 +7,7 @@
 let
   inherit (lib.lists) optionals;
   isGui = config.dot.gui.enable;
-  # isServer = config.dot.machine.machine == "server";
+  # isServer = config.dot.device.type == "server";
 in
 {
   networking.networkmanager = {

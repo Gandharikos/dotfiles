@@ -7,7 +7,7 @@ in
 {
   imports = scanPaths ./.;
   # hardware
-  options.dot.machine = {
+  options.dot.device = {
     type = mkOption {
       type = enum [
         "workstation"

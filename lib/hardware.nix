@@ -45,7 +45,7 @@ let
     => "DP-1"
     ```
   */
-  primaryMonitor = config: builtins.elemAt config.dot.machine.monitors 0;
+  primaryMonitor = config: builtins.elemAt config.dot.device.monitors 0;
 in
 {
   inherit isx86Linux primaryMonitor;

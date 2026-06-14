@@ -5,7 +5,7 @@
 }:
 let
   inherit (lib) mkIf mkDefault mkForce;
-  isWSL = config.dot.machine.type == "wsl";
+  isWSL = config.dot.device.type == "wsl";
   isProxy = config.dot.networking.proxy.enable;
   inherit (lib.options) mkEnableOption;
   cfg = config.dot.networking;

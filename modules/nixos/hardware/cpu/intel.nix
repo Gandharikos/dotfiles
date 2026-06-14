@@ -5,10 +5,10 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (config.dot) machine;
+  inherit (config.dot) device;
 in
 {
-  config = mkIf (machine.cpu == "intel" || machine.cpu == "vm-intel") {
+  config = mkIf (device.cpu == "intel" || device.cpu == "vm-intel") {
     hardware.cpu.intel.updateMicrocode = true;
 
     boot = {

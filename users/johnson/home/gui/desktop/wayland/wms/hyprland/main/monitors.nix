@@ -8,7 +8,7 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) optionals;
   inherit (lib.strings) concatStringsSep;
-  inherit (osConfig.dot.machine) monitors;
+  inherit (osConfig.dot.device) monitors;
   cfg = config.my.gui.desktop.hyprland;
   mkMonitors =
     ms:

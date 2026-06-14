@@ -28,7 +28,7 @@
     virtual.enable = true;
     persistence.enable = true;
     networking.enableIPv6 = false;
-    machine = {
+    device = {
       type = "laptop";
       cpu = "intel";
       gpu = "intel";

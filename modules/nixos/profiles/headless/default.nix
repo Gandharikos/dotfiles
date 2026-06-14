@@ -6,7 +6,7 @@
 let
   inherit (lib.dot) scanPaths;
   inherit (lib.modules) mkIf mkForce;
-  inherit (config.dot.machine) type;
+  inherit (config.dot.device) type;
   # NOTE: wsl can use graphical desktop by docker, but it's not recommended
   isHeadless = type == "wsl" || type == "server" || type == "mobile";
 in

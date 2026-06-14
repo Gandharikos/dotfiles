@@ -7,10 +7,10 @@
 let
   inherit (lib.modules) mkIf;
   inherit (builtins) attrValues;
-  inherit (config.dot) machine;
+  inherit (config.dot) device;
 in
 {
-  config = mkIf (machine.gpu == "intel" || machine.gpu == "hybrid-nv") {
+  config = mkIf (device.gpu == "intel" || device.gpu == "hybrid-nv") {
     # we enable modesetting since this is recomeneded for intel gpus
     services.xserver.videoDrivers = [ "modesetting" ];
 
@@ -31,7 +31,7 @@ in
 
     # environment.systemPackages = [ pkgs.intel-gpu-tools ];
     #
-    # environment.variables = mkIf (config.hardware.graphics.enable && machine.gpu != "hybrid-nv") {
+    # environment.variables = mkIf (config.hardware.graphics.enable && device.gpu != "hybrid-nv") {
     #   VDPAU_DRIVER = "va_gl";
     # };
   };

@@ -7,10 +7,10 @@
 let
   inherit (lib.modules) mkForce mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.dot.machine;
+  cfg = config.dot.device;
 in
 {
-  options.dot.machine.hasBluetooth = mkEnableOption "Whether the system has bluetooth support";
+  options.dot.device.hasBluetooth = mkEnableOption "Whether the system has bluetooth support";
 
   config = mkIf cfg.hasBluetooth {
     # enable bluetooth & gui paring tools - blueman

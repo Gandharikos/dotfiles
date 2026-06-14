@@ -6,8 +6,8 @@
 }:
 let
   cfg = config.dot.virtual.qemu;
-  isIntel = config.dot.machine.cpu == "intel";
-  isAmd = config.dot.machine.cpu == "amd";
+  isIntel = config.dot.device.cpu == "intel";
+  isAmd = config.dot.device.cpu == "amd";
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
   inherit (lib.lists) optionals;

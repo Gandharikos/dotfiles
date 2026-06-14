@@ -7,7 +7,7 @@
 let
   inherit (lib.modules) mkIf;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
-  inherit (osConfig.dot.machine) monitors;
+  inherit (osConfig.dot.device) monitors;
   hasHidpi = builtins.any (m: (m.scale or 1.0) > 1.0) monitors;
   dpi = if hasHidpi then 192 else 96;
   isXorg = osConfig.dot.gui.desktop.xorg.enable or false;

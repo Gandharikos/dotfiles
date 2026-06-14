@@ -15,7 +15,7 @@ in
   options.my.gui.apps.cloudflare-warp = {
     enable = mkEnableOption "Cloudflare Warp" // {
       default = false;
-      # osConfig.dot.machine.type == "laptop"
+      # osConfig.dot.device.type == "laptop"
       # && pkgs.stdenv.hostPlatform.isLinux;
     };
   };

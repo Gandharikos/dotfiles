@@ -6,10 +6,10 @@
 let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
-  cfg = config.dot.machine;
+  cfg = config.dot.device;
 in
 {
-  options.dot.machine.hasTPM = mkEnableOption "Whether the system has tpm support";
+  options.dot.device.hasTPM = mkEnableOption "Whether the system has tpm support";
 
   config = mkIf cfg.hasTPM {
     security.tpm2 = {

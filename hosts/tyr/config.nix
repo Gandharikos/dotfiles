@@ -1,7 +1,7 @@
 {
   dot = {
     primaryUser = "johnson";
-    machine.type = "desktop";
+    device.type = "desktop";
     networking.tailscale = {
       role = "router-exit-node";
       advertiseRoutes = [ "192.168.1.0/24" ];

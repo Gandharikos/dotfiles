@@ -70,7 +70,7 @@ in
 
   options.dot.selfhosted = {
     enable = mkEnableOption "self-hosted services" // {
-      default = config.dot.machine.type == "server";
+      default = config.dot.device.type == "server";
     };
 
     domainSuffix = mkOption {

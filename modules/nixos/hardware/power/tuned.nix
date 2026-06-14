@@ -5,10 +5,10 @@
 }:
 let
   inherit (lib) mkIf mkForce;
-  inherit (config.dot) machine;
+  inherit (config.dot) device;
 in
 {
-  config = mkIf (machine.type == "laptop") {
+  config = mkIf (device.type == "laptop") {
 
     services = {
       tlp.enable = mkForce false;

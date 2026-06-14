@@ -96,7 +96,7 @@ in
       # this is why your webcam no worky
       (optionals (!config.dot.security.fixWebcam) [ "uvcvideo" ])
 
-      (optionals (!config.dot.machine.hasBluetooth) [
+      (optionals (!config.dot.device.hasBluetooth) [
         "bluetooth"
         "btusb" # bluetooth dongles
       ])

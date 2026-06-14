@@ -6,7 +6,7 @@
 }:
 let
   inherit (lib.modules) mkIf mkDefault;
-  isNvidia = config.dot.machine.gpu == "nvidia";
+  isNvidia = config.dot.device.gpu == "nvidia";
 in
 {
   config = mkIf isNvidia {

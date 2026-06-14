@@ -7,7 +7,7 @@
 }:
 let
   inherit (lib.modules) mkIf mkDefault mkForce;
-  isWsl = config.dot.machine.type == "wsl";
+  isWsl = config.dot.device.type == "wsl";
 in
 {
   imports = [
@@ -16,7 +16,7 @@ in
 
   config = mkIf isWsl {
     dot = {
-      machine = {
+      device = {
         gpu = null;
         cpu = null;
         hasTPM = false;

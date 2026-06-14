@@ -32,7 +32,7 @@
     };
     virtual.enable = true;
     persistence.enable = true;
-    machine = {
+    device = {
       type = "laptop";
       cpu = "amd";
       gpu = "nvidia";

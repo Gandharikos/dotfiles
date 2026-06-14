@@ -5,7 +5,7 @@
 }:
 let
   inherit (config) dot;
-  inherit (config.dot.machine) type;
+  inherit (config.dot.device) type;
   inherit (lib.modules) mkForce mkMerge mkIf;
   isMobile = type == "mobile" || type == "laptop";
   isHost = type == "desktop" || type == "workstation";

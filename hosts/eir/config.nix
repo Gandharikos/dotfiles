@@ -1,7 +1,7 @@
 {
   dot = {
     primaryUser = "johnson";
-    machine.type = "laptop";
+    device.type = "laptop";
     keyboard = {
       layout = "qwerty";
       backend = "karabiner";

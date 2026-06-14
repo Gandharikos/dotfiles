@@ -7,7 +7,7 @@ let
   inherit (lib.options) mkOption;
   inherit (lib.modules) mkIf;
   inherit (lib.types) enum;
-  isLaptop = config.dot.machine.type == "laptop";
+  isLaptop = config.dot.device.type == "laptop";
   cfg = config.dot.services.logind;
   lidActions = [
     "ignore"
