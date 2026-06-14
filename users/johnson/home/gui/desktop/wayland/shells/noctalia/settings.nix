@@ -78,6 +78,7 @@
       "stripes"
       "wipe"
       "honeycomb"
+      "zoom"
     ];
     transition_duration = 1500;
     edge_smoothness = 0.05;
@@ -95,9 +96,12 @@
   }
   // lib.optionalAttrs (wallpaper != null) {
     default.path = toString wallpaper;
+    last.path = toString wallpaper;
+    monitors."eDP-1".path = toString wallpaper;
   };
 
   theme = {
+    builtin = "Tokyo-Night";
     wallpaper_scheme = lib.mkDefault "m3-tonal-spot";
     templates = {
       enable_builtin_templates = true;
@@ -511,13 +515,13 @@
         name = "official";
         kind = "git";
         location = "https://github.com/noctalia-dev/official-plugins";
-        auto_update = false;
+        auto_update = true;
       }
       {
         name = "community";
         kind = "git";
         location = "https://github.com/noctalia-dev/community-plugins";
-        auto_update = false;
+        auto_update = true;
       }
     ];
     enabled = [
@@ -553,7 +557,7 @@
     };
     audio_visualizer = {
       bands = 60;
-      high_color = "secondary";
+      color_2 = "secondary";
       width = 120.0;
     };
     battery = {
@@ -593,5 +597,6 @@
     };
     tray.drawer = true;
     weather.show_condition = false;
+    workspaces.display = "none";
   };
 }
