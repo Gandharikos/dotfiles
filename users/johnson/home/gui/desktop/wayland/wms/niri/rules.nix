@@ -40,8 +40,8 @@ in
         {
           matches = [
             { title = "^(1Password)$"; }
-            { title = "^([Kk]eyguard)$"; }
-            { app-id = "^([Kk]eyguard)$"; }
+            { title = "^(Bitwarden)$"; }
+            { app-id = "^(Bitwarden)$"; }
           ];
           open-floating = true;
         }

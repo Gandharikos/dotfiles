@@ -51,6 +51,7 @@ in
         # Bitwarden
         "match:title ^(Bitwarden)$, float on"
         "match:class ^(Bitwarden)$, float on"
+        "match:class ^(Bitwarden)$, center on"
         # remove borders on floating windows
         "match:float 1, border_size 0"
 
