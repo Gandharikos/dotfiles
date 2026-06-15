@@ -61,6 +61,12 @@ in
         owner = "kanidm";
         group = "kanidm";
       };
+      kanidm-oauth2-linkwarden = {
+        sopsFile = secretsFile;
+        key = "oauth2-linkwarden";
+        owner = "kanidm";
+        group = "kanidm";
+      };
     };
 
     services.kanidm = {
@@ -98,6 +104,7 @@ in
           forgejo-admins.members = [ "johnson" ];
           miniflux-users.members = [ "johnson" ];
           wakapi-users.members = [ "johnson" ];
+          linkwarden-users.members = [ "johnson" ];
         };
         persons.johnson = {
           displayName = "Johnson";
@@ -109,6 +116,7 @@ in
             "forgejo-admins"
             "miniflux-users"
             "wakapi-users"
+            "linkwarden-users"
           ];
         };
         systems.oauth2 = {
@@ -149,6 +157,19 @@ in
             allowInsecureClientDisablePkce = true;
             preferShortUsername = true;
             scopeMaps.wakapi-users = [
+              "openid"
+              "email"
+              "profile"
+            ];
+          };
+          linkwarden = mkIf services.linkwarden.enable {
+            displayName = "Linkwarden";
+            originLanding = "https://${services.linkwarden.hostName}/";
+            originUrl = "https://${services.linkwarden.hostName}/api/v1/auth/callback/authentik";
+            basicSecretFile = config.sops.secrets.kanidm-oauth2-linkwarden.path;
+            preferShortUsername = true;
+            enableLegacyCrypto = true;
+            scopeMaps.linkwarden-users = [
               "openid"
               "email"
               "profile"

@@ -35,6 +35,7 @@ in
           ++ optional cfg.services.ntfy.enable (mkEndpoint "ntfy" cfg.services.ntfy)
           ++ optional cfg.services.miniflux.enable (mkEndpoint "miniflux" cfg.services.miniflux)
           ++ optional cfg.services.wakapi.enable (mkEndpoint "wakapi" cfg.services.wakapi)
+          ++ optional cfg.services.linkwarden.enable (mkEndpoint "linkwarden" cfg.services.linkwarden)
           ++ optional cfg.services.kanidm.enable (mkEndpoint "kanidm" cfg.services.kanidm)
           ++ optional cfg.services.jellyfin.enable (mkEndpoint "jellyfin" cfg.services.jellyfin)
           ++ optional cfg.services.calibre.enable (mkEndpoint "calibre" cfg.services.calibre);
