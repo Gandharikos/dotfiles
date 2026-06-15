@@ -22,6 +22,12 @@ let
     interval = "5m";
     conditions = [ "[STATUS] == 200" ];
   };
+  reactfluxEndpoint = {
+    name = "reactflux";
+    url = "${if cfg.useHttps then "https" else "http"}://${cfg.services.reactflux.hostName}";
+    interval = "1m";
+    conditions = [ "[STATUS] == 200" ];
+  };
 in
 {
   options.dot.selfhosted.services.gatus = lib.dot.mkSelfhostedServiceOptions {
@@ -46,6 +52,7 @@ in
           ++ optional cfg.services.rsshub.enable (mkEndpoint "rsshub" cfg.services.rsshub)
           ++ optional cfg.services.linkwarden.enable (mkEndpoint "linkwarden" cfg.services.linkwarden)
           ++ optional cfg.services.kanidm.enable (mkEndpoint "kanidm" cfg.services.kanidm)
+          ++ optional cfg.services.reactflux.enable reactfluxEndpoint
           ++ optional cfg.services.jellyfin.enable (mkEndpoint "jellyfin" cfg.services.jellyfin)
           ++ optional cfg.services.calibre.enable (mkEndpoint "calibre" cfg.services.calibre)
           ++ optional cfg.backups.health.enable backupEndpoint;
