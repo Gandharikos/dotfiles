@@ -255,9 +255,9 @@
   audio = {
     enable_overdrive = false;
     enable_sounds = true;
-    sound_volume = 0.5;
-    volume_change_sound = "";
-    notification_sound = "";
+    sound_volume = 1.0;
+    volume_change_sound = "${config.programs.noctalia.package}/share/noctalia/assets/sounds/volume-change.wav";
+    notification_sound = "${config.programs.noctalia.package}/share/noctalia/assets/sounds/notification.wav";
   };
 
   brightness = {
