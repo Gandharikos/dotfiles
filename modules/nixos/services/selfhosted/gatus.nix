@@ -15,6 +15,13 @@ let
     interval = "1m";
     conditions = [ "[STATUS] < 500" ];
   };
+
+  backupEndpoint = {
+    name = "selfhosted-backup";
+    url = "http://127.0.0.1:${toString cfg.backups.health.port}/health";
+    interval = "5m";
+    conditions = [ "[STATUS] == 200" ];
+  };
 in
 {
   options.dot.selfhosted.services.gatus = lib.dot.mkSelfhostedServiceOptions {
@@ -38,7 +45,8 @@ in
           ++ optional cfg.services.linkwarden.enable (mkEndpoint "linkwarden" cfg.services.linkwarden)
           ++ optional cfg.services.kanidm.enable (mkEndpoint "kanidm" cfg.services.kanidm)
           ++ optional cfg.services.jellyfin.enable (mkEndpoint "jellyfin" cfg.services.jellyfin)
-          ++ optional cfg.services.calibre.enable (mkEndpoint "calibre" cfg.services.calibre);
+          ++ optional cfg.services.calibre.enable (mkEndpoint "calibre" cfg.services.calibre)
+          ++ optional cfg.backups.health.enable backupEndpoint;
       };
     };
   };

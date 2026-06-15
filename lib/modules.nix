@@ -1,6 +1,7 @@
 { lib, ... }:
 let
   inherit (lib.attrsets) filterAttrs optionalAttrs recursiveUpdate;
+  inherit (lib.lists) optional;
   inherit (lib.options) mkEnableOption mkOption mkPackageOption;
   inherit (lib.types) enum port str;
 
@@ -85,6 +86,26 @@ let
       }
     );
 
+  mkSelfhostedBackupPaths =
+    config:
+    let
+      cfg = config.dot.selfhosted;
+      inherit (cfg) services;
+    in
+    [
+      cfg.backups.exportDir
+      (builtins.dirOf cfg.backups.postgresqlDumpFile)
+    ]
+    ++ optional services.vaultwarden.enable services.vaultwarden.dataDir
+    ++ optional services.forgejo.enable config.services.forgejo.stateDir
+    ++ optional services.linkwarden.enable "/var/lib/linkwarden"
+    ++ optional services.kanidm.enable "/var/lib/kanidm"
+    ++ optional services.gatus.enable "/var/lib/gatus"
+    ++ optional services.wakapi.enable "/var/lib/wakapi"
+    ++ optional services.ntfy.enable "/var/lib/ntfy-sh"
+    ++ optional services.caddy.enable "/var/lib/caddy"
+    ++ cfg.backups.extraPaths;
+
   mkSelfhostedExportPackage =
     pkgs:
     pkgs.writeShellApplication {
@@ -111,6 +132,8 @@ let
         mkdir -p "$(dirname "$output")" "$workdir/postgresql" "$workdir/var/lib"
 
         if systemctl is-active --quiet postgresql.service; then
+          sudo -u postgres pg_dumpall \
+            | zstd -T0 -19 -o "$workdir/postgresql/all.sql.zst" > /dev/null
           sudo -u postgres pg_dumpall --globals-only | tee "$workdir/postgresql/globals.sql" > /dev/null
           sudo -u postgres psql -Atqc "SELECT datname FROM pg_database WHERE datname IN ('miniflux', 'vaultwarden', 'wakapi', 'linkwarden', 'roundcube')" \
             | while IFS= read -r database; do
@@ -120,7 +143,7 @@ let
               done
         fi
 
-        for directory in forgejo kanidm vaultwarden ntfy-sh wakapi linkwarden mailserver roundcube; do
+        for directory in caddy forgejo gatus kanidm miniflux vaultwarden ntfy-sh wakapi linkwarden mailserver roundcube; do
           if [ -e "/var/lib/$directory" ]; then
             tar -C /var/lib -cpf "$workdir/var/lib/$directory.tar" "$directory"
           fi
@@ -130,12 +153,51 @@ let
         echo "$output"
       '';
     };
+
+  mkSelfhostedTaildropPackage =
+    pkgs: config:
+    let
+      cfg = config.dot.selfhosted;
+      target = "${cfg.backups.taildrop.target}:";
+    in
+    pkgs.writeShellApplication {
+      name = "selfhosted-taildrop-backup";
+      runtimeInputs = with pkgs; [
+        coreutils
+        tailscale
+      ];
+      text = ''
+        if [ "$(id -u)" != 0 ]; then
+          echo "selfhosted-taildrop-backup must be run as root" >&2
+          exit 1
+        fi
+
+        timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+
+        send_file() {
+          local source="$1"
+          local name="$2"
+
+          if [ ! -s "$source" ]; then
+            echo "missing or empty backup artifact: $source" >&2
+            return 1
+          fi
+
+          tailscale file cp --update-interval=0 --name "$name" "$source" "${target}"
+        }
+
+        send_file "${cfg.backups.exportDir}/selfhosted-latest.tar.zst" "$timestamp-athena-selfhosted.tar.zst"
+        send_file "${cfg.backups.postgresqlDumpFile}" "$timestamp-athena-postgresql.sql.zst"
+      '';
+    };
 in
 {
   inherit
     mkProgram
+    mkSelfhostedBackupPaths
     mkSelfhostedExportPackage
     mkSelfhostedProxyBackends
     mkSelfhostedServiceOptions
+    mkSelfhostedTaildropPackage
     ;
 }

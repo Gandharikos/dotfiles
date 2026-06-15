@@ -55,6 +55,10 @@
       reverseProxy = "caddy";
       monitoring = "gatus";
       backup = "restic";
+      backups.taildrop = {
+        enable = true;
+        target = "ymir";
+      };
       services.mailserver = {
         enable = true;
         delivery = {

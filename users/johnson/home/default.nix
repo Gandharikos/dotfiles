@@ -19,6 +19,11 @@ in
       autoLogin = !isMinimal;
     };
 
+    backups.taildrop = {
+      enable = osConfig.networking.hostName == "ymir";
+      schedule = "03:30";
+    };
+
     bash.enable = true;
 
     bat.enable = true;
