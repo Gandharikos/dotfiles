@@ -38,7 +38,11 @@ in
           draw-border-with-background = false;
         }
         {
-          matches = singleton { title = "^(1Password)$"; };
+          matches = [
+            { title = "^(1Password)$"; }
+            { title = "^([Kk]eyguard)$"; }
+            { app-id = "^([Kk]eyguard)$"; }
+          ];
           open-floating = true;
         }
         {
