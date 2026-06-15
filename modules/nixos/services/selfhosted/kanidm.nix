@@ -61,12 +61,6 @@ in
         owner = "kanidm";
         group = "kanidm";
       };
-      kanidm-oauth2-linkwarden = {
-        sopsFile = secretsFile;
-        key = "oauth2-linkwarden";
-        owner = "kanidm";
-        group = "kanidm";
-      };
     };
 
     services.kanidm = {
