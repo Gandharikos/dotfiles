@@ -70,7 +70,7 @@ in
 
         "match:class ^(gcr-prompter)$, dim_around on"
         "match:class ^(xdg-desktop-portal-gtk)$, dim_around on"
-        "match:class ^(polkit-gnome-authentication-agent-1)$, dim_around on"
+        "match:class ^(Soteria|polkit-gnome-authentication-agent-1)$, dim_around on"
 
         # fix xwayland apps
         "match:xwayland 1, rounding 0"
