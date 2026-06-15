@@ -23,6 +23,8 @@ in
 
     bat.enable = true;
 
+    bitwarden-cli.enable = !isMinimal;
+
     broot.enable = !isMinimal;
 
     btop.enable = true;

@@ -85,6 +85,7 @@
       # keep-sorted start
 
       "aria2" # download tool
+      "bitwarden-cli"
       "curl"
       # misc that nix do not have cache for.
       "git-trim"
@@ -111,6 +112,7 @@
       # "spotify" # music
       "1password" # password manager
       "1password-cli"
+      "bitwarden" # password manager
       "clash-verge-rev"
       # "stats" # beautiful system monitor
       "eudic" # dictionary
