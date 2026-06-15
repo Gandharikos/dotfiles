@@ -73,6 +73,7 @@ let
           miniflux
           wakapi
           linkwarden
+          rsshub
           kanidm
           jellyfin
           calibre

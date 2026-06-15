@@ -27,6 +27,7 @@ in
   options.dot.selfhosted.services.gatus = lib.dot.mkSelfhostedServiceOptions {
     inherit config;
     name = "gatus";
+    subdomain = "status";
     defaultPort = 8083;
     defaultEnable = config.dot.selfhosted.enable && config.dot.selfhosted.monitoring == "gatus";
   };
@@ -42,6 +43,7 @@ in
           ++ optional cfg.services.ntfy.enable (mkEndpoint "ntfy" cfg.services.ntfy)
           ++ optional cfg.services.miniflux.enable (mkEndpoint "miniflux" cfg.services.miniflux)
           ++ optional cfg.services.wakapi.enable (mkEndpoint "wakapi" cfg.services.wakapi)
+          ++ optional cfg.services.rsshub.enable (mkEndpoint "rsshub" cfg.services.rsshub)
           ++ optional cfg.services.linkwarden.enable (mkEndpoint "linkwarden" cfg.services.linkwarden)
           ++ optional cfg.services.kanidm.enable (mkEndpoint "kanidm" cfg.services.kanidm)
           ++ optional cfg.services.jellyfin.enable (mkEndpoint "jellyfin" cfg.services.jellyfin)

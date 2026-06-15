@@ -1,4 +1,9 @@
-{ lib, ... }:
+{
+  config,
+  lib,
+  self,
+  ...
+}:
 {
   imports = [
     (import ../common/disko/bios-ext4.nix {
@@ -8,6 +13,21 @@
   ];
 
   networking.domain = "huwenqiang.dev";
+
+  sops.secrets.rsshub-access-key = {
+    sopsFile = "${self}/secrets/services/rsshub.yaml";
+    key = "access-key";
+  };
+
+  sops.templates.rsshub-env = {
+    owner = "root";
+    group = "root";
+    mode = "0400";
+    content = ''
+      ACCESS_KEY=${config.sops.placeholder.rsshub-access-key}
+    '';
+    restartUnits = [ "rsshub.service" ];
+  };
 
   dot = {
     primaryUser = "johnson";
@@ -70,6 +90,10 @@
             passwordSecretKey = "replay_password";
           };
         };
+      };
+      services.rsshub = {
+        enable = true;
+        environmentFile = config.sops.templates.rsshub-env.path;
       };
     };
 
