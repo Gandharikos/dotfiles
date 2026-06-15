@@ -55,12 +55,6 @@ in
         owner = "kanidm";
         group = "kanidm";
       };
-      kanidm-oauth2-vaultwarden = {
-        sopsFile = secretsFile;
-        key = "oauth2-vaultwarden";
-        owner = "kanidm";
-        group = "kanidm";
-      };
       kanidm-oauth2-wakapi = {
         sopsFile = secretsFile;
         key = "oauth2-wakapi";
@@ -103,7 +97,6 @@ in
           forgejo-users.members = [ "johnson" ];
           forgejo-admins.members = [ "johnson" ];
           miniflux-users.members = [ "johnson" ];
-          vaultwarden-users.members = [ "johnson" ];
           wakapi-users.members = [ "johnson" ];
         };
         persons.johnson = {
@@ -115,14 +108,13 @@ in
             "forgejo-users"
             "forgejo-admins"
             "miniflux-users"
-            "vaultwarden-users"
             "wakapi-users"
           ];
         };
         systems.oauth2 = {
           forgejo = mkIf services.forgejo.enable {
             displayName = "Forgejo";
-            originLanding = "https://${services.forgejo.hostName}/";
+            originLanding = "https://${services.forgejo.hostName}/user/oauth2/Kanidm";
             originUrl = "https://${services.forgejo.hostName}/user/oauth2/Kanidm/callback";
             basicSecretFile = config.sops.secrets.kanidm-oauth2-forgejo.path;
             allowInsecureClientDisablePkce = true;
@@ -139,7 +131,7 @@ in
           };
           miniflux = mkIf services.miniflux.enable {
             displayName = "Miniflux";
-            originLanding = "https://${services.miniflux.hostName}/";
+            originLanding = "https://${services.miniflux.hostName}/oauth2/oidc/redirect";
             originUrl = "https://${services.miniflux.hostName}/oauth2/oidc/callback";
             basicSecretFile = config.sops.secrets.kanidm-oauth2-miniflux.path;
             preferShortUsername = true;
@@ -149,21 +141,9 @@ in
               "profile"
             ];
           };
-          vaultwarden = mkIf services.vaultwarden.enable {
-            displayName = "Vaultwarden";
-            originLanding = "https://${services.vaultwarden.hostName}/";
-            originUrl = "https://${services.vaultwarden.hostName}/identity/connect/oidc-signin";
-            basicSecretFile = config.sops.secrets.kanidm-oauth2-vaultwarden.path;
-            preferShortUsername = true;
-            scopeMaps.vaultwarden-users = [
-              "openid"
-              "email"
-              "profile"
-            ];
-          };
           wakapi = mkIf services.wakapi.enable {
             displayName = "Wakapi";
-            originLanding = "https://${services.wakapi.hostName}/";
+            originLanding = "https://${services.wakapi.hostName}/oidc/kanidm/login";
             originUrl = "https://${services.wakapi.hostName}/oidc/kanidm/callback";
             basicSecretFile = config.sops.secrets.kanidm-oauth2-wakapi.path;
             allowInsecureClientDisablePkce = true;
