@@ -112,7 +112,7 @@ let
 
         if systemctl is-active --quiet postgresql.service; then
           sudo -u postgres pg_dumpall --globals-only | tee "$workdir/postgresql/globals.sql" > /dev/null
-          sudo -u postgres psql -Atqc "SELECT datname FROM pg_database WHERE datname IN ('miniflux', 'vaultwarden', 'wakapi', 'linkwarden')" \
+          sudo -u postgres psql -Atqc "SELECT datname FROM pg_database WHERE datname IN ('miniflux', 'vaultwarden', 'wakapi', 'linkwarden', 'roundcube')" \
             | while IFS= read -r database; do
                 [ -n "$database" ] || continue
                 sudo -u postgres pg_dump --format=custom "$database" \
@@ -120,7 +120,7 @@ let
               done
         fi
 
-        for directory in forgejo kanidm vaultwarden ntfy-sh wakapi linkwarden; do
+        for directory in forgejo kanidm vaultwarden ntfy-sh wakapi linkwarden mailserver roundcube; do
           if [ -e "/var/lib/$directory" ]; then
             tar -C /var/lib -cpf "$workdir/var/lib/$directory.tar" "$directory"
           fi

@@ -55,6 +55,18 @@
       reverseProxy = "caddy";
       monitoring = "gatus";
       backup = "restic";
+      services.mailserver = {
+        enable = true;
+        delivery = {
+          mode = "relay";
+          relay = {
+            host = "mail.smtp2go.com";
+            port = 587;
+            username = "huwenqiang.dev";
+            passwordSecretKey = "replay_password";
+          };
+        };
+      };
     };
 
     services = {
