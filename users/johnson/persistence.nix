@@ -13,6 +13,10 @@ in
         ".cache/Anki"
         ".local/share/Anki2"
       ])
+      (mkIf my.gui.apps.bitwarden.enable [
+        ".cache/Bitwarden"
+        ".config/Bitwarden"
+      ])
       (mkIf my.gui.apps.discord.enable [
         # keep-sorted start
         ".config/Discord"
@@ -34,9 +38,6 @@ in
         ".cache/chromium"
         ".config/chromium"
         ".local/share/pki"
-      ])
-      (mkIf my.gui.apps.keyguard.enable [
-        ".config/keyguard"
       ])
       (mkIf my.gui.apps.obs.enable [
         ".config/obs-studio"

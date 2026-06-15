@@ -23,7 +23,9 @@
 
       # Default to none, add more as necessary. This is usually where
       # electron packages go when they reach EOL.
-      permittedInsecurePackages = [ ];
+      permittedInsecurePackages = [
+        "electron-39.8.10"
+      ];
 
       # Nixpkgs sets internal package aliases to ease migration from other
       # distributions easier, or for convenience's sake. Even though the manual

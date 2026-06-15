@@ -48,9 +48,9 @@ in
       windowrule = [
         # 1Password
         "match:title ^(1Password)$, float on"
-        # Keyguard
-        "match:title ^([Kk]eyguard)$, float on"
-        "match:class ^([Kk]eyguard)$, float on"
+        # Bitwarden
+        "match:title ^(Bitwarden)$, float on"
+        "match:class ^(Bitwarden)$, float on"
         # remove borders on floating windows
         "match:float 1, border_size 0"
 

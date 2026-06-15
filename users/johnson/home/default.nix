@@ -57,7 +57,7 @@ in
 
     gui.apps.anki.enable = !isMinimal;
 
-    gui.apps.keyguard.enable = !isMinimal;
+    gui.apps.bitwarden.enable = !isMinimal;
 
     jjui.enable = !isMinimal;
 
