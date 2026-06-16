@@ -40,6 +40,19 @@ in
     };
 
   config = mkIf cfg.enable {
+    dot.selfhosted = {
+      proxyBackends.forgejo = {
+        inherit (cfg)
+          host
+          hostName
+          localHostAlias
+          port
+          scheme
+          ;
+      };
+      backups.paths = [ config.services.forgejo.stateDir ];
+    };
+
     services.forgejo = {
       enable = true;
       database.type = "sqlite3";

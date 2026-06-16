@@ -10,17 +10,18 @@ let
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types)
+    attrsOf
     bool
     enum
     int
     listOf
     port
     str
+    submodule
     ;
 
-  proxyBackends = lib.dot.mkSelfhostedProxyBackends config;
   proxyHostNames = map (service: service.hostName) (
-    attrValues (lib.attrsets.filterAttrs (_: service: service.localHostAlias) proxyBackends)
+    attrValues (lib.attrsets.filterAttrs (_: service: service.localHostAlias) cfg.proxyBackends)
   );
   selfhostedExport = lib.dot.mkSelfhostedExportPackage pkgs;
   selfhostedTaildrop = lib.dot.mkSelfhostedTaildropPackage pkgs config;
@@ -158,7 +159,49 @@ in
       description = "Monitoring service to deploy for self-hosted services.";
     };
 
+    proxyBackends = mkOption {
+      type = attrsOf (submodule {
+        options = {
+          host = mkOption {
+            type = str;
+            description = "Address the self-hosted service listens on.";
+          };
+
+          port = mkOption {
+            type = port;
+            description = "Port the self-hosted service listens on.";
+          };
+
+          scheme = mkOption {
+            type = enum [
+              "http"
+              "https"
+            ];
+            description = "Scheme used by the reverse proxy to reach the service.";
+          };
+
+          hostName = mkOption {
+            type = str;
+            description = "Public host name used by the reverse proxy.";
+          };
+
+          localHostAlias = mkOption {
+            type = bool;
+            description = "Whether this service host name is mapped to localhost on the host machine.";
+          };
+        };
+      });
+      default = { };
+      description = "Reverse-proxy backend definitions contributed by self-hosted services.";
+    };
+
     backups = {
+      paths = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = "Filesystem paths contributed by self-hosted services for backups.";
+      };
+
       exportDir = mkOption {
         type = str;
         default = "/var/backup/selfhosted";
@@ -282,6 +325,11 @@ in
         selfhostedExport
         selfhostedTaildrop
       ];
+      dot.selfhosted.backups.paths = [
+        cfg.backups.exportDir
+        (builtins.dirOf cfg.backups.postgresqlDumpFile)
+      ]
+      ++ cfg.backups.extraPaths;
       networking.hosts."127.0.0.1" = proxyHostNames;
       systemd.tmpfiles.settings.selfhosted-backup = {
         ${cfg.backups.exportDir}.d = {

@@ -9,7 +9,6 @@ let
   borg = cfg.backups.borg;
   exportPackage = lib.dot.mkSelfhostedExportPackage pkgs;
   taildropPackage = lib.dot.mkSelfhostedTaildropPackage pkgs config;
-  backupPaths = lib.dot.mkSelfhostedBackupPaths config;
   inherit (lib.modules) mkIf;
 in
 {
@@ -18,7 +17,7 @@ in
 
     services.borgbackup.jobs.selfhosted = {
       repo = borg.repository;
-      paths = backupPaths;
+      paths = cfg.backups.paths;
       doInit = true;
       encryption = {
         mode = "repokey-blake2";

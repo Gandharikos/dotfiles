@@ -9,9 +9,7 @@ let
   restic = cfg.backups.restic;
   exportPackage = lib.dot.mkSelfhostedExportPackage pkgs;
   taildropPackage = lib.dot.mkSelfhostedTaildropPackage pkgs config;
-  backupPathsFile = pkgs.writeText "selfhosted-backup-paths" (
-    lib.concatLines (lib.dot.mkSelfhostedBackupPaths config)
-  );
+  backupPathsFile = pkgs.writeText "selfhosted-backup-paths" (lib.concatLines cfg.backups.paths);
   inherit (lib.modules) mkIf;
 in
 {

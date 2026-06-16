@@ -24,6 +24,19 @@ in
   };
 
   config = mkIf cfg.enable {
+    dot.selfhosted = {
+      proxyBackends.kanidm = {
+        inherit (cfg)
+          host
+          hostName
+          localHostAlias
+          port
+          scheme
+          ;
+      };
+      backups.paths = [ "/var/lib/kanidm" ];
+    };
+
     sops.secrets = {
       kanidm-admin-password = {
         sopsFile = secretsFile;

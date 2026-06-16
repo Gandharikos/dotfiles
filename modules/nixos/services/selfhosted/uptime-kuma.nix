@@ -17,6 +17,16 @@ in
   };
 
   config = mkIf cfg.enable {
+    dot.selfhosted.proxyBackends.uptimeKuma = {
+      inherit (cfg)
+        host
+        hostName
+        localHostAlias
+        port
+        scheme
+        ;
+    };
+
     services.uptime-kuma = {
       enable = true;
       settings = {

@@ -11,8 +11,7 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
 
-  proxyBackends = lib.dot.mkSelfhostedProxyBackends config;
-  proxyHostNames = map (service: service.hostName) (attrValues proxyBackends);
+  proxyHostNames = map (service: service.hostName) (attrValues selfhosted.proxyBackends);
   proxyTarget = service: "${service.scheme}://${service.host}:${toString service.port}";
   virtualHosts = mapAttrs' (
     _: service:
@@ -27,7 +26,7 @@ let
         '';
       };
     }
-  ) proxyBackends;
+  ) selfhosted.proxyBackends;
 in
 {
   options.dot.selfhosted.services.nginx.enable = mkEnableOption "Nginx for self-hosted services" // {

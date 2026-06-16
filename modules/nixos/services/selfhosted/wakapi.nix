@@ -18,6 +18,19 @@ in
   };
 
   config = mkIf cfg.enable {
+    dot.selfhosted = {
+      proxyBackends.wakapi = {
+        inherit (cfg)
+          host
+          hostName
+          localHostAlias
+          port
+          scheme
+          ;
+      };
+      backups.paths = [ "/var/lib/wakapi" ];
+    };
+
     services.wakapi = {
       enable = true;
       database.createLocally = true;

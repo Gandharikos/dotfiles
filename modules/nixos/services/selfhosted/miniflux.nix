@@ -18,6 +18,16 @@ in
   };
 
   config = mkIf cfg.enable {
+    dot.selfhosted.proxyBackends.miniflux = {
+      inherit (cfg)
+        host
+        hostName
+        localHostAlias
+        port
+        scheme
+        ;
+    };
+
     services.postgresql.authentication = ''
       host miniflux miniflux 127.0.0.1/32 trust
     '';

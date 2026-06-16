@@ -16,6 +16,16 @@ in
   };
 
   config = mkIf cfg.enable {
+    dot.selfhosted.proxyBackends.calibre = {
+      inherit (cfg)
+        host
+        hostName
+        localHostAlias
+        port
+        scheme
+        ;
+    };
+
     services.calibre-server.enable = true;
 
     networking.firewall.allowedTCPPorts = [ cfg.port ];

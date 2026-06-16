@@ -18,6 +18,16 @@ in
   };
 
   config = mkIf cfg.enable {
+    dot.selfhosted.proxyBackends.rsshub = {
+      inherit (cfg)
+        host
+        hostName
+        localHostAlias
+        port
+        scheme
+        ;
+    };
+
     services.rsshub = {
       enable = true;
 

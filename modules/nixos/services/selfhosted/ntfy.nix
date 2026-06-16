@@ -15,6 +15,19 @@ in
   };
 
   config = mkIf cfg.enable {
+    dot.selfhosted = {
+      proxyBackends.ntfy = {
+        inherit (cfg)
+          host
+          hostName
+          localHostAlias
+          port
+          scheme
+          ;
+      };
+      backups.paths = [ "/var/lib/ntfy-sh" ];
+    };
+
     services.ntfy-sh = {
       enable = true;
       settings = {

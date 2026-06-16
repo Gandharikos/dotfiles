@@ -11,7 +11,6 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
 
-  proxyBackends = lib.dot.mkSelfhostedProxyBackends config;
   virtualHostName =
     service: if selfhosted.useHttps then service.hostName else "http://${service.hostName}";
   proxyTarget = service: "${service.scheme}://${service.host}:${toString service.port}";
@@ -31,7 +30,7 @@ let
   };
   virtualHosts = mapAttrs' (
     _: service: nameValuePair (virtualHostName service) (mkProxyVirtualHost service)
-  ) proxyBackends;
+  ) selfhosted.proxyBackends;
   localVaultwardenHost =
     optionalAttrs (selfhosted.domain == "localhost" && selfhosted.services.vaultwarden.enable)
       {
@@ -44,6 +43,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    dot.selfhosted.backups.paths = [ "/var/lib/caddy" ];
+
     environment = {
       shellAliases = {
         caddy-log = "journalctl _SYSTEMD_UNIT=caddy.service";

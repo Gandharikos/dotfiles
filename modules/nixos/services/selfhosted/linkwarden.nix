@@ -34,6 +34,19 @@ in
   };
 
   config = mkIf cfg.enable {
+    dot.selfhosted = {
+      proxyBackends.linkwarden = {
+        inherit (cfg)
+          host
+          hostName
+          localHostAlias
+          port
+          scheme
+          ;
+      };
+      backups.paths = [ "/var/lib/linkwarden" ];
+    };
+
     sops.secrets = {
       linkwarden-nextauth-secret = {
         sopsFile = secretsFile;

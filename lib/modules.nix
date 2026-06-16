@@ -1,7 +1,6 @@
 { lib, ... }:
 let
-  inherit (lib.attrsets) filterAttrs optionalAttrs recursiveUpdate;
-  inherit (lib.lists) optional;
+  inherit (lib.attrsets) recursiveUpdate;
   inherit (lib.options) mkEnableOption mkOption mkPackageOption;
   inherit (lib.types)
     bool
@@ -68,54 +67,6 @@ let
         description = "Whether this service host name is mapped to localhost on the host machine.";
       };
     };
-
-  mkSelfhostedProxyBackends =
-    config:
-    let
-      cfg = config.dot.selfhosted;
-    in
-    filterAttrs (_: service: service.enable) (
-      {
-        inherit (cfg.services)
-          vaultwarden
-          forgejo
-          ntfy
-          miniflux
-          wakapi
-          linkwarden
-          rsshub
-          kanidm
-          jellyfin
-          calibre
-          ;
-      }
-      // optionalAttrs cfg.services.uptimeKuma.enable {
-        uptimeKuma = cfg.services.uptimeKuma;
-      }
-      // optionalAttrs cfg.services.gatus.enable {
-        gatus = cfg.services.gatus;
-      }
-    );
-
-  mkSelfhostedBackupPaths =
-    config:
-    let
-      cfg = config.dot.selfhosted;
-      inherit (cfg) services;
-    in
-    [
-      cfg.backups.exportDir
-      (builtins.dirOf cfg.backups.postgresqlDumpFile)
-    ]
-    ++ optional services.vaultwarden.enable services.vaultwarden.dataDir
-    ++ optional services.forgejo.enable config.services.forgejo.stateDir
-    ++ optional services.linkwarden.enable "/var/lib/linkwarden"
-    ++ optional services.kanidm.enable "/var/lib/kanidm"
-    ++ optional services.gatus.enable "/var/lib/gatus"
-    ++ optional services.wakapi.enable "/var/lib/wakapi"
-    ++ optional services.ntfy.enable "/var/lib/ntfy-sh"
-    ++ optional services.caddy.enable "/var/lib/caddy"
-    ++ cfg.backups.extraPaths;
 
   mkSelfhostedExportPackage =
     pkgs:
@@ -205,9 +156,7 @@ in
 {
   inherit
     mkProgram
-    mkSelfhostedBackupPaths
     mkSelfhostedExportPackage
-    mkSelfhostedProxyBackends
     mkSelfhostedServiceOptions
     mkSelfhostedTaildropPackage
     ;

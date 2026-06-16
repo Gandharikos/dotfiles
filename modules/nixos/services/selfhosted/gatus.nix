@@ -39,6 +39,19 @@ in
   };
 
   config = mkIf gatus.enable {
+    dot.selfhosted = {
+      proxyBackends.gatus = {
+        inherit (gatus)
+          host
+          hostName
+          localHostAlias
+          port
+          scheme
+          ;
+      };
+      backups.paths = [ "/var/lib/gatus" ];
+    };
+
     services.gatus = {
       enable = true;
       settings = {

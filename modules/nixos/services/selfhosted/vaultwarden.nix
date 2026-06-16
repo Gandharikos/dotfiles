@@ -64,6 +64,19 @@ in
     };
 
   config = mkIf cfg.enable {
+    dot.selfhosted = {
+      proxyBackends.vaultwarden = {
+        inherit (cfg)
+          host
+          hostName
+          localHostAlias
+          port
+          scheme
+          ;
+      };
+      backups.paths = [ cfg.dataDir ];
+    };
+
     services.postgresql = {
       enable = true;
       ensureDatabases = [ "vaultwarden" ];

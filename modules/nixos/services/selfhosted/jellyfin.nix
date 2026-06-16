@@ -16,6 +16,16 @@ in
   };
 
   config = mkIf cfg.enable {
+    dot.selfhosted.proxyBackends.jellyfin = {
+      inherit (cfg)
+        host
+        hostName
+        localHostAlias
+        port
+        scheme
+        ;
+    };
+
     users.groups.media = { };
 
     services.jellyfin = {
