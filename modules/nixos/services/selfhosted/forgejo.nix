@@ -14,6 +14,7 @@ let
   inherit (lib.types)
     bool
     nullOr
+    port
     str
     ;
 in
@@ -36,6 +37,20 @@ in
         type = nullOr str;
         default = null;
         description = "Redis-compatible URL used by Forgejo for cache and sessions.";
+      };
+
+      redis = {
+        enable = mkOption {
+          type = bool;
+          default = config.dot.selfhosted.services.redis.enable;
+          description = "Whether Forgejo should use Redis-compatible cache and sessions.";
+        };
+
+        port = mkOption {
+          type = port;
+          default = 6371;
+          description = "Redis-compatible port used by Forgejo.";
+        };
       };
     };
 

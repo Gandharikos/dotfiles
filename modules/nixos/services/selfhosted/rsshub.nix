@@ -7,15 +7,25 @@
 let
   cfg = config.dot.selfhosted.services.rsshub;
   redis = config.dot.selfhosted.services.redis;
+  inherit (lib.options) mkOption;
   inherit (lib.modules) mkDefault mkIf;
+  inherit (lib.types) port;
 in
 {
-  options.dot.selfhosted.services.rsshub = lib.dot.mkSelfhostedServiceOptions {
-    inherit config;
-    name = "rsshub";
-    defaultPort = 1200;
-    defaultEnable = false;
-  };
+  options.dot.selfhosted.services.rsshub =
+    lib.dot.mkSelfhostedServiceOptions {
+      inherit config;
+      name = "rsshub";
+      defaultPort = 1200;
+      defaultEnable = false;
+    }
+    // {
+      redis.port = mkOption {
+        type = port;
+        default = 6372;
+        description = "Redis-compatible port used by RSSHub.";
+      };
+    };
 
   config = mkIf cfg.enable {
     dot.selfhosted.proxyBackends.rsshub = {
@@ -32,20 +42,20 @@ in
       enable = true;
 
       redis = {
-        enable = mkDefault redis.enable;
+        inherit (redis) enable;
         createLocally = mkDefault redis.enable;
-        host = mkDefault redis.host;
-        port = mkDefault redis.rsshub.port;
+        inherit (redis) host;
+        inherit (cfg.redis) port;
       };
 
       settings = {
-        NODE_ENV = mkDefault "production";
-        PORT = mkDefault cfg.port;
-        LISTEN_INADDR_ANY = mkDefault false;
-        CACHE_EXPIRE = mkDefault "1800";
-        CACHE_CONTENT_EXPIRE = mkDefault "7200";
-        CHROMIUM_EXECUTABLE_PATH = mkDefault (lib.getExe pkgs.chromium);
-        PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = mkDefault "true";
+        NODE_ENV = "production";
+        PORT = cfg.port;
+        LISTEN_INADDR_ANY = false;
+        CACHE_EXPIRE = "1800";
+        CACHE_CONTENT_EXPIRE = "7200";
+        CHROMIUM_EXECUTABLE_PATH = lib.getExe pkgs.chromium;
+        PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
       };
     };
   };

@@ -5,11 +5,12 @@
 }:
 let
   cfg = config.dot.selfhosted;
+  forgejo = cfg.services.forgejo;
   redis = cfg.services.redis;
-  forgejoRedisUrl = "redis://${redis.host}:${toString redis.forgejo.port}/0";
+  forgejoRedisUrl = "redis://${redis.host}:${toString forgejo.redis.port}/0";
   inherit (lib.modules) mkForce mkIf;
   inherit (lib.options) mkEnableOption mkOption;
-  inherit (lib.types) port str;
+  inherit (lib.types) str;
 in
 {
   options.dot.selfhosted.services.redis = {
@@ -23,25 +24,14 @@ in
       description = "Address Redis-compatible self-hosted services listen on.";
     };
 
-    forgejo.port = mkOption {
-      type = port;
-      default = 6371;
-      description = "Redis-compatible port used by Forgejo.";
-    };
-
-    rsshub.port = mkOption {
-      type = port;
-      default = 6372;
-      description = "Redis-compatible port used by RSSHub.";
-    };
   };
 
   config = mkIf cfg.services.redis.enable {
-    services.redis.servers = mkIf cfg.services.forgejo.enable {
-      forgejo = {
+    services.redis.servers = {
+      forgejo = mkIf (forgejo.enable && forgejo.redis.enable) {
         enable = true;
         bind = redis.host;
-        port = redis.forgejo.port;
+        port = forgejo.redis.port;
         databases = 16;
         logLevel = "notice";
         save = [ ];
@@ -49,6 +39,8 @@ in
       };
     };
 
-    dot.selfhosted.services.forgejo.redisUrl = mkIf cfg.services.forgejo.enable forgejoRedisUrl;
+    dot.selfhosted.services.forgejo.redisUrl = mkIf (
+      forgejo.enable && forgejo.redis.enable
+    ) forgejoRedisUrl;
   };
 }
