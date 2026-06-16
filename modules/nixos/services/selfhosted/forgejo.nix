@@ -9,9 +9,13 @@ let
   kanidm = config.dot.selfhosted.services.kanidm;
   oidcEnabled = kanidm.enable;
   inherit (lib) getExe;
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkOption;
-  inherit (lib.types) bool;
+  inherit (lib.types)
+    bool
+    nullOr
+    str
+    ;
 in
 {
   options.dot.selfhosted.services.forgejo =
@@ -27,25 +31,48 @@ in
         default = false;
         description = "Whether public Forgejo account registration is allowed.";
       };
+
+      redisUrl = mkOption {
+        type = nullOr str;
+        default = null;
+        description = "Redis-compatible URL used by Forgejo for cache and sessions.";
+      };
     };
 
   config = mkIf cfg.enable {
     services.forgejo = {
       enable = true;
       database.type = "sqlite3";
-      settings = {
-        server = {
-          DISABLE_SSH = true;
-          DOMAIN = cfg.hostName;
-          HTTP_ADDR = cfg.host;
-          HTTP_PORT = cfg.port;
-          ROOT_URL = "https://${cfg.hostName}/";
-        };
-        service = {
-          DISABLE_REGISTRATION = if oidcEnabled then false else !cfg.allowRegistration;
-          ALLOW_ONLY_EXTERNAL_REGISTRATION = oidcEnabled;
-        };
-      };
+      settings = mkMerge [
+        {
+          server = {
+            DISABLE_SSH = true;
+            DOMAIN = cfg.hostName;
+            HTTP_ADDR = cfg.host;
+            HTTP_PORT = cfg.port;
+            ROOT_URL = "https://${cfg.hostName}/";
+          };
+          service = {
+            DISABLE_REGISTRATION = if oidcEnabled then false else !cfg.allowRegistration;
+            ALLOW_ONLY_EXTERNAL_REGISTRATION = oidcEnabled;
+          };
+        }
+        (mkIf (cfg.redisUrl != null) {
+          cache = {
+            ADAPTER = "redis";
+            HOST = cfg.redisUrl;
+          };
+          session = {
+            PROVIDER = "redis";
+            PROVIDER_CONFIG = cfg.redisUrl;
+          };
+        })
+      ];
+    };
+
+    systemd.services.forgejo = mkIf (cfg.redisUrl != null) {
+      after = [ "redis-forgejo.service" ];
+      wants = [ "redis-forgejo.service" ];
     };
 
     systemd.services.forgejo-kanidm-oauth = mkIf oidcEnabled {
