@@ -3,7 +3,12 @@ let
   inherit (lib.attrsets) filterAttrs optionalAttrs recursiveUpdate;
   inherit (lib.lists) optional;
   inherit (lib.options) mkEnableOption mkOption mkPackageOption;
-  inherit (lib.types) enum port str;
+  inherit (lib.types)
+    bool
+    enum
+    port
+    str
+    ;
 
   mkProgram =
     pkgs: name: extraConfig:
@@ -56,6 +61,11 @@ let
         type = str;
         default = "${cfg.subdomain}.${config.dot.selfhosted.domain}";
         description = "Local host name used by the reverse proxy.";
+      };
+      localHostAlias = mkOption {
+        type = bool;
+        default = true;
+        description = "Whether this service host name is mapped to localhost on the host machine.";
       };
     };
 

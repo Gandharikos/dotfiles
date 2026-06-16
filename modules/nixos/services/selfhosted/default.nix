@@ -19,7 +19,9 @@ let
     ;
 
   proxyBackends = lib.dot.mkSelfhostedProxyBackends config;
-  proxyHostNames = map (service: service.hostName) (attrValues proxyBackends);
+  proxyHostNames = map (service: service.hostName) (
+    attrValues (lib.attrsets.filterAttrs (_: service: service.localHostAlias) proxyBackends)
+  );
   selfhostedExport = lib.dot.mkSelfhostedExportPackage pkgs;
   selfhostedTaildrop = lib.dot.mkSelfhostedTaildropPackage pkgs config;
   backupHealthScript = pkgs.writeText "selfhosted-backup-health.py" ''

@@ -5,28 +5,28 @@
 }:
 let
   cfg = config.dot.selfhosted;
-  redis = cfg.services.redis;
   inherit (lib.modules) mkIf;
-  inherit (lib.options) mkEnableOption;
+  inherit (lib.options) mkEnableOption mkOption;
+  inherit (lib.types) port str;
 in
 {
-  options.dot.selfhosted.services.redis.enable =
-    mkEnableOption "Redis-compatible cache for self-hosted services"
-    // {
-      default = cfg.enable && cfg.services.rsshub.enable;
+  options.dot.selfhosted.services.redis = {
+    enable = mkEnableOption "Redis-compatible cache for self-hosted services" // {
+      default = cfg.enable;
     };
 
-  config = mkIf redis.enable {
-    services.redis.servers = mkIf cfg.services.rsshub.enable {
-      rsshub = {
-        enable = true;
-        bind = cfg.services.rsshub.redis.host;
-        port = cfg.services.rsshub.redis.port;
-        databases = 16;
-        logLevel = "notice";
-        appendOnly = false;
-        save = [ ];
-      };
+    host = mkOption {
+      type = str;
+      default = "127.0.0.1";
+      description = "Address Redis-compatible self-hosted services listen on.";
+    };
+
+    rsshub.port = mkOption {
+      type = port;
+      default = 6372;
+      description = "Redis-compatible port used by RSSHub.";
     };
   };
+
+  config = mkIf cfg.services.redis.enable { };
 }

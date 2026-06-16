@@ -29,6 +29,8 @@
     restartUnits = [ "rsshub.service" ];
   };
 
+  services.rsshub.secretFiles = [ config.sops.templates.rsshub-env.path ];
+
   dot = {
     primaryUser = "johnson";
     users.johnson.home.my.direnv.enable = lib.mkForce false;
@@ -93,7 +95,7 @@
       };
       services.rsshub = {
         enable = true;
-        environmentFile = config.sops.templates.rsshub-env.path;
+        localHostAlias = false;
       };
     };
 
