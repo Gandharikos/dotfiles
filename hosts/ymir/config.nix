@@ -28,7 +28,6 @@
       printing.enable = true;
       fwupd.enable = true;
       asus.enable = true;
-      # samba.enable = true;
     };
     virtual.enable = true;
     persistence.enable = true;

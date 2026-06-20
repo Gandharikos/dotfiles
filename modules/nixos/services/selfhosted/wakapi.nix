@@ -1,12 +1,14 @@
 {
   config,
   lib,
+  self,
   ...
 }:
 let
   cfg = config.dot.selfhosted.services.wakapi;
   kanidm = config.dot.selfhosted.services.kanidm;
   oidcEnabled = kanidm.enable;
+  secretsFile = "${self}/secrets/services/kanidm.yaml";
   inherit (lib.modules) mkIf;
 in
 {
@@ -28,7 +30,33 @@ in
           scheme
           ;
       };
+      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "wakapi" cfg) ];
       backups.paths = [ "/var/lib/wakapi" ];
+    };
+
+    sops.secrets.kanidm-oauth2-wakapi = mkIf oidcEnabled {
+      sopsFile = secretsFile;
+      key = "oauth2-wakapi";
+      owner = "kanidm";
+      group = "kanidm";
+    };
+
+    services.kanidm.provision = mkIf oidcEnabled {
+      groups.wakapi-users.members = [ "johnson" ];
+      persons.johnson.groups = [ "wakapi-users" ];
+      systems.oauth2.wakapi = {
+        displayName = "Wakapi";
+        originLanding = "https://${cfg.hostName}/oidc/kanidm/login";
+        originUrl = "https://${cfg.hostName}/oidc/kanidm/callback";
+        basicSecretFile = config.sops.secrets.kanidm-oauth2-wakapi.path;
+        allowInsecureClientDisablePkce = true;
+        preferShortUsername = true;
+        scopeMaps.wakapi-users = [
+          "openid"
+          "email"
+          "profile"
+        ];
+      };
     };
 
     services.wakapi = {

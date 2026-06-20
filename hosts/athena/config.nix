@@ -97,6 +97,7 @@
         enable = true;
         localHostAlias = false;
       };
+      services.code-server.enable = true;
     };
 
     services = {

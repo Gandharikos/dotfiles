@@ -7,7 +7,6 @@ let
   cfg = config.dot.selfhosted;
   forgejo = cfg.services.forgejo;
   redis = cfg.services.redis;
-  forgejoRedisUrl = "redis://${redis.host}:${toString forgejo.redis.port}/0";
   inherit (lib.modules) mkForce mkIf;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types) str;
@@ -38,9 +37,5 @@ in
         settings.dbfilename = mkForce "forgejo-cache.rdb";
       };
     };
-
-    dot.selfhosted.services.forgejo.redisUrl = mkIf (
-      forgejo.enable && forgejo.redis.enable
-    ) forgejoRedisUrl;
   };
 }

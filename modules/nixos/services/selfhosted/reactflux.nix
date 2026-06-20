@@ -60,6 +60,15 @@ in
   };
 
   config = mkIf cfg.enable {
+    dot.selfhosted.gatus.endpoints = [
+      {
+        name = "reactflux";
+        url = "${if selfhosted.useHttps then "https" else "http"}://${cfg.hostName}";
+        interval = "1m";
+        conditions = [ "[STATUS] == 200" ];
+      }
+    ];
+
     networking.hosts."127.0.0.1" = [ cfg.hostName ];
 
     services.caddy.virtualHosts.${virtualHostName} = mkIf selfhosted.services.caddy.enable {

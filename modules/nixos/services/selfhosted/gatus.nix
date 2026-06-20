@@ -9,23 +9,10 @@ let
   inherit (lib.lists) optional;
   inherit (lib.modules) mkIf;
 
-  mkEndpoint = name: service: {
-    inherit name;
-    url = "${service.scheme}://${service.host}:${toString service.port}";
-    interval = "1m";
-    conditions = [ "[STATUS] < 500" ];
-  };
-
   backupEndpoint = {
     name = "selfhosted-backup";
     url = "http://127.0.0.1:${toString cfg.backups.health.port}/health";
     interval = "5m";
-    conditions = [ "[STATUS] == 200" ];
-  };
-  reactfluxEndpoint = {
-    name = "reactflux";
-    url = "${if cfg.useHttps then "https" else "http"}://${cfg.services.reactflux.hostName}";
-    interval = "1m";
     conditions = [ "[STATUS] == 200" ];
   };
 in
@@ -56,19 +43,7 @@ in
       enable = true;
       settings = {
         web.port = gatus.port;
-        endpoints =
-          optional cfg.services.vaultwarden.enable (mkEndpoint "vaultwarden" cfg.services.vaultwarden)
-          ++ optional cfg.services.forgejo.enable (mkEndpoint "forgejo" cfg.services.forgejo)
-          ++ optional cfg.services.ntfy.enable (mkEndpoint "ntfy" cfg.services.ntfy)
-          ++ optional cfg.services.miniflux.enable (mkEndpoint "miniflux" cfg.services.miniflux)
-          ++ optional cfg.services.wakapi.enable (mkEndpoint "wakapi" cfg.services.wakapi)
-          ++ optional cfg.services.rsshub.enable (mkEndpoint "rsshub" cfg.services.rsshub)
-          ++ optional cfg.services.linkwarden.enable (mkEndpoint "linkwarden" cfg.services.linkwarden)
-          ++ optional cfg.services.kanidm.enable (mkEndpoint "kanidm" cfg.services.kanidm)
-          ++ optional cfg.services.reactflux.enable reactfluxEndpoint
-          ++ optional cfg.services.jellyfin.enable (mkEndpoint "jellyfin" cfg.services.jellyfin)
-          ++ optional cfg.services.calibre.enable (mkEndpoint "calibre" cfg.services.calibre)
-          ++ optional cfg.backups.health.enable backupEndpoint;
+        endpoints = cfg.gatus.endpoints ++ optional cfg.backups.health.enable backupEndpoint;
       };
     };
   };

@@ -44,6 +44,7 @@ in
           scheme
           ;
       };
+      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "linkwarden" cfg) ];
       backups.paths = [ "/var/lib/linkwarden" ];
     };
 
@@ -74,6 +75,24 @@ in
         "linkwarden.service"
         "linkwarden-worker.service"
       ];
+    };
+
+    services.kanidm.provision = mkIf oidcEnabled {
+      groups.linkwarden-users.members = [ "johnson" ];
+      persons.johnson.groups = [ "linkwarden-users" ];
+      systems.oauth2.linkwarden = {
+        displayName = "Linkwarden";
+        originLanding = "https://${cfg.hostName}/";
+        originUrl = "https://${cfg.hostName}/api/v1/auth/callback/authentik";
+        basicSecretFile = config.sops.secrets.kanidm-oauth2-linkwarden.path;
+        preferShortUsername = true;
+        enableLegacyCrypto = true;
+        scopeMaps.linkwarden-users = [
+          "openid"
+          "email"
+          "profile"
+        ];
+      };
     };
 
     services.linkwarden = {

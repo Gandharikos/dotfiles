@@ -11,6 +11,7 @@ let
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.types)
     attrsOf
+    anything
     bool
     enum
     int
@@ -193,6 +194,12 @@ in
       });
       default = { };
       description = "Reverse-proxy backend definitions contributed by self-hosted services.";
+    };
+
+    gatus.endpoints = mkOption {
+      type = listOf (attrsOf anything);
+      default = [ ];
+      description = "Gatus endpoint definitions contributed by self-hosted services.";
     };
 
     backups = {

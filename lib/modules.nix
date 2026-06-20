@@ -16,6 +16,13 @@ let
       package = mkPackageOption pkgs name { };
     } extraConfig;
 
+  mkGatusEndpoint = name: service: {
+    inherit name;
+    url = "${service.scheme}://${service.host}:${toString service.port}";
+    interval = "1m";
+    conditions = [ "[STATUS] < 500" ];
+  };
+
   mkSelfhostedServiceOptions =
     {
       config,
@@ -156,6 +163,7 @@ in
 {
   inherit
     mkProgram
+    mkGatusEndpoint
     mkSelfhostedExportPackage
     mkSelfhostedServiceOptions
     mkSelfhostedTaildropPackage

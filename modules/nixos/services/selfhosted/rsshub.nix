@@ -28,14 +28,17 @@ in
     };
 
   config = mkIf cfg.enable {
-    dot.selfhosted.proxyBackends.rsshub = {
-      inherit (cfg)
-        host
-        hostName
-        localHostAlias
-        port
-        scheme
-        ;
+    dot.selfhosted = {
+      proxyBackends.rsshub = {
+        inherit (cfg)
+          host
+          hostName
+          localHostAlias
+          port
+          scheme
+          ;
+      };
+      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "rsshub" cfg) ];
     };
 
     services.rsshub = {

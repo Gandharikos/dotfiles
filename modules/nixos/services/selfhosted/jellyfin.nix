@@ -16,14 +16,17 @@ in
   };
 
   config = mkIf cfg.enable {
-    dot.selfhosted.proxyBackends.jellyfin = {
-      inherit (cfg)
-        host
-        hostName
-        localHostAlias
-        port
-        scheme
-        ;
+    dot.selfhosted = {
+      proxyBackends.jellyfin = {
+        inherit (cfg)
+          host
+          hostName
+          localHostAlias
+          port
+          scheme
+          ;
+      };
+      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "jellyfin" cfg) ];
     };
 
     users.groups.media = { };

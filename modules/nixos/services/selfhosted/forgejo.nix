@@ -2,18 +2,20 @@
   config,
   lib,
   pkgs,
+  self,
   ...
 }:
 let
   cfg = config.dot.selfhosted.services.forgejo;
   kanidm = config.dot.selfhosted.services.kanidm;
+  redis = config.dot.selfhosted.services.redis;
   oidcEnabled = kanidm.enable;
+  secretsFile = "${self}/secrets/services/kanidm.yaml";
   inherit (lib) getExe;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkOption;
   inherit (lib.types)
     bool
-    nullOr
     port
     str
     ;
@@ -33,17 +35,17 @@ in
         description = "Whether public Forgejo account registration is allowed.";
       };
 
-      redisUrl = mkOption {
-        type = nullOr str;
-        default = null;
-        description = "Redis-compatible URL used by Forgejo for cache and sessions.";
-      };
-
       redis = {
         enable = mkOption {
           type = bool;
           default = config.dot.selfhosted.services.redis.enable;
           description = "Whether Forgejo should use Redis-compatible cache and sessions.";
+        };
+
+        url = mkOption {
+          type = str;
+          default = "redis://${redis.host}:${toString cfg.redis.port}/0";
+          description = "Redis-compatible URL used by Forgejo for cache and sessions.";
         };
 
         port = mkOption {
@@ -65,7 +67,23 @@ in
           scheme
           ;
       };
+      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "forgejo" cfg) ];
       backups.paths = [ config.services.forgejo.stateDir ];
+    };
+
+    sops.secrets = mkIf oidcEnabled {
+      kanidm-oauth2-forgejo = {
+        sopsFile = secretsFile;
+        key = "oauth2-forgejo";
+        owner = "kanidm";
+        group = "kanidm";
+      };
+      forgejo-kanidm-oauth2 = {
+        sopsFile = secretsFile;
+        key = "oauth2-forgejo";
+        owner = "forgejo";
+        group = "forgejo";
+      };
     };
 
     services.forgejo = {
@@ -85,20 +103,48 @@ in
             ALLOW_ONLY_EXTERNAL_REGISTRATION = oidcEnabled;
           };
         }
-        (mkIf (cfg.redisUrl != null) {
+        (mkIf cfg.redis.enable {
           cache = {
             ADAPTER = "redis";
-            HOST = cfg.redisUrl;
+            HOST = cfg.redis.url;
           };
           session = {
             PROVIDER = "redis";
-            PROVIDER_CONFIG = cfg.redisUrl;
+            PROVIDER_CONFIG = cfg.redis.url;
           };
         })
       ];
     };
 
-    systemd.services.forgejo = mkIf (cfg.redisUrl != null) {
+    services.kanidm.provision = mkIf oidcEnabled {
+      groups = {
+        forgejo-users.members = [ "johnson" ];
+        forgejo-admins.members = [ "johnson" ];
+      };
+      persons.johnson.groups = [
+        "forgejo-users"
+        "forgejo-admins"
+      ];
+      systems.oauth2.forgejo = {
+        displayName = "Forgejo";
+        originLanding = "https://${cfg.hostName}/user/oauth2/Kanidm";
+        originUrl = "https://${cfg.hostName}/user/oauth2/Kanidm/callback";
+        basicSecretFile = config.sops.secrets.kanidm-oauth2-forgejo.path;
+        allowInsecureClientDisablePkce = true;
+        preferShortUsername = true;
+        scopeMaps.forgejo-users = [
+          "openid"
+          "email"
+          "profile"
+        ];
+        claimMaps.forgejo_role = {
+          joinType = "array";
+          valuesByGroup.forgejo-admins = [ "admin" ];
+        };
+      };
+    };
+
+    systemd.services.forgejo = mkIf cfg.redis.enable {
       after = [ "redis-forgejo.service" ];
       wants = [ "redis-forgejo.service" ];
     };

@@ -16,14 +16,17 @@ in
   };
 
   config = mkIf cfg.enable {
-    dot.selfhosted.proxyBackends.calibre = {
-      inherit (cfg)
-        host
-        hostName
-        localHostAlias
-        port
-        scheme
-        ;
+    dot.selfhosted = {
+      proxyBackends.calibre = {
+        inherit (cfg)
+          host
+          hostName
+          localHostAlias
+          port
+          scheme
+          ;
+      };
+      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "calibre" cfg) ];
     };
 
     services.calibre-server.enable = true;

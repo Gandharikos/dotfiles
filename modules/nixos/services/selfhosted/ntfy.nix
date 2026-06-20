@@ -25,6 +25,7 @@ in
           scheme
           ;
       };
+      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "ntfy" cfg) ];
       backups.paths = [ "/var/lib/ntfy-sh" ];
     };
 

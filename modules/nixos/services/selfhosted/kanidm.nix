@@ -7,7 +7,6 @@
 }:
 let
   cfg = config.dot.selfhosted.services.kanidm;
-  services = config.dot.selfhosted.services;
   secretsFile = "${self}/secrets/services/kanidm.yaml";
   certDir = "/var/lib/kanidm/tls";
   cert = "${certDir}/fullchain.pem";
@@ -34,6 +33,7 @@ in
           scheme
           ;
       };
+      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "kanidm" cfg) ];
       backups.paths = [ "/var/lib/kanidm" ];
     };
 
@@ -47,30 +47,6 @@ in
       kanidm-idm-admin-password = {
         sopsFile = secretsFile;
         key = "idm-admin-password";
-        owner = "kanidm";
-        group = "kanidm";
-      };
-      kanidm-oauth2-forgejo = {
-        sopsFile = secretsFile;
-        key = "oauth2-forgejo";
-        owner = "kanidm";
-        group = "kanidm";
-      };
-      forgejo-kanidm-oauth2 = {
-        sopsFile = secretsFile;
-        key = "oauth2-forgejo";
-        owner = "forgejo";
-        group = "forgejo";
-      };
-      kanidm-oauth2-miniflux = {
-        sopsFile = secretsFile;
-        key = "oauth2-miniflux";
-        owner = "kanidm";
-        group = "kanidm";
-      };
-      kanidm-oauth2-wakapi = {
-        sopsFile = secretsFile;
-        key = "oauth2-wakapi";
         owner = "kanidm";
         group = "kanidm";
       };
@@ -107,81 +83,12 @@ in
         acceptInvalidCerts = true;
         groups = {
           selfhosted-users.members = [ "johnson" ];
-          forgejo-users.members = [ "johnson" ];
-          forgejo-admins.members = [ "johnson" ];
-          miniflux-users.members = [ "johnson" ];
-          wakapi-users.members = [ "johnson" ];
-          linkwarden-users.members = [ "johnson" ];
         };
         persons.johnson = {
           displayName = "Johnson";
           legalName = "Johnson Hu";
           mailAddresses = [ config.dot.admin.email ];
-          groups = [
-            "selfhosted-users"
-            "forgejo-users"
-            "forgejo-admins"
-            "miniflux-users"
-            "wakapi-users"
-            "linkwarden-users"
-          ];
-        };
-        systems.oauth2 = {
-          forgejo = mkIf services.forgejo.enable {
-            displayName = "Forgejo";
-            originLanding = "https://${services.forgejo.hostName}/user/oauth2/Kanidm";
-            originUrl = "https://${services.forgejo.hostName}/user/oauth2/Kanidm/callback";
-            basicSecretFile = config.sops.secrets.kanidm-oauth2-forgejo.path;
-            allowInsecureClientDisablePkce = true;
-            preferShortUsername = true;
-            scopeMaps.forgejo-users = [
-              "openid"
-              "email"
-              "profile"
-            ];
-            claimMaps.forgejo_role = {
-              joinType = "array";
-              valuesByGroup.forgejo-admins = [ "admin" ];
-            };
-          };
-          miniflux = mkIf services.miniflux.enable {
-            displayName = "Miniflux";
-            originLanding = "https://${services.miniflux.hostName}/oauth2/oidc/redirect";
-            originUrl = "https://${services.miniflux.hostName}/oauth2/oidc/callback";
-            basicSecretFile = config.sops.secrets.kanidm-oauth2-miniflux.path;
-            preferShortUsername = true;
-            scopeMaps.miniflux-users = [
-              "openid"
-              "email"
-              "profile"
-            ];
-          };
-          wakapi = mkIf services.wakapi.enable {
-            displayName = "Wakapi";
-            originLanding = "https://${services.wakapi.hostName}/oidc/kanidm/login";
-            originUrl = "https://${services.wakapi.hostName}/oidc/kanidm/callback";
-            basicSecretFile = config.sops.secrets.kanidm-oauth2-wakapi.path;
-            allowInsecureClientDisablePkce = true;
-            preferShortUsername = true;
-            scopeMaps.wakapi-users = [
-              "openid"
-              "email"
-              "profile"
-            ];
-          };
-          linkwarden = mkIf services.linkwarden.enable {
-            displayName = "Linkwarden";
-            originLanding = "https://${services.linkwarden.hostName}/";
-            originUrl = "https://${services.linkwarden.hostName}/api/v1/auth/callback/authentik";
-            basicSecretFile = config.sops.secrets.kanidm-oauth2-linkwarden.path;
-            preferShortUsername = true;
-            enableLegacyCrypto = true;
-            scopeMaps.linkwarden-users = [
-              "openid"
-              "email"
-              "profile"
-            ];
-          };
+          groups = [ "selfhosted-users" ];
         };
       };
     };

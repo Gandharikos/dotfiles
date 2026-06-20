@@ -23,7 +23,6 @@
       zram.enable = true;
       printing.enable = true;
       fwupd.enable = true;
-      # samba.enable = true;
     };
     virtual.enable = true;
     persistence.enable = true;
