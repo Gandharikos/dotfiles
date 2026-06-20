@@ -26,7 +26,7 @@ in
           scheme
           ;
       };
-      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "calibre" cfg) ];
+      services.gatus.endpoints = [ (lib.dot.mkGatusEndpoint "calibre" cfg) ];
     };
 
     services.calibre-server.enable = true;

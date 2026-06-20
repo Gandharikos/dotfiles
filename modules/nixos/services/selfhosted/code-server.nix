@@ -74,7 +74,7 @@ in
           scheme
           ;
       };
-      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "code-server" cfg) ];
+      services.gatus.endpoints = [ (lib.dot.mkGatusEndpoint "code-server" cfg) ];
       backups.paths = [ cfg.stateDir ];
     };
 

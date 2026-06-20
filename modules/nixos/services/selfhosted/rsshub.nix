@@ -38,7 +38,7 @@ in
           scheme
           ;
       };
-      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "rsshub" cfg) ];
+      services.gatus.endpoints = [ (lib.dot.mkGatusEndpoint "rsshub" cfg) ];
     };
 
     services.rsshub = {

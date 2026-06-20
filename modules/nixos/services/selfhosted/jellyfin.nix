@@ -26,7 +26,7 @@ in
           scheme
           ;
       };
-      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "jellyfin" cfg) ];
+      services.gatus.endpoints = [ (lib.dot.mkGatusEndpoint "jellyfin" cfg) ];
     };
 
     users.groups.media = { };

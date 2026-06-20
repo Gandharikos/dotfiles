@@ -30,7 +30,7 @@ in
           scheme
           ;
       };
-      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "wakapi" cfg) ];
+      services.gatus.endpoints = [ (lib.dot.mkGatusEndpoint "wakapi" cfg) ];
       backups.paths = [ "/var/lib/wakapi" ];
     };
 

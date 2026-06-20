@@ -67,7 +67,7 @@ in
           scheme
           ;
       };
-      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "forgejo" cfg) ];
+      services.gatus.endpoints = [ (lib.dot.mkGatusEndpoint "forgejo" cfg) ];
       backups.paths = [ config.services.forgejo.stateDir ];
     };
 

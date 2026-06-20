@@ -74,7 +74,7 @@ in
           scheme
           ;
       };
-      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "vaultwarden" cfg) ];
+      services.gatus.endpoints = [ (lib.dot.mkGatusEndpoint "vaultwarden" cfg) ];
       backups.paths = [ cfg.dataDir ];
     };
 

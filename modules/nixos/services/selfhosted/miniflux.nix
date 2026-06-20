@@ -30,7 +30,7 @@ in
           scheme
           ;
       };
-      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "miniflux" cfg) ];
+      services.gatus.endpoints = [ (lib.dot.mkGatusEndpoint "miniflux" cfg) ];
     };
 
     services.postgresql.authentication = ''

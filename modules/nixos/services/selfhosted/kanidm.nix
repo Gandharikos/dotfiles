@@ -33,7 +33,7 @@ in
           scheme
           ;
       };
-      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "kanidm" cfg) ];
+      services.gatus.endpoints = [ (lib.dot.mkGatusEndpoint "kanidm" cfg) ];
       backups.paths = [ "/var/lib/kanidm" ];
     };
 

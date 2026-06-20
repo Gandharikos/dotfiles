@@ -8,6 +8,12 @@ let
   gatus = cfg.services.gatus;
   inherit (lib.lists) optional;
   inherit (lib.modules) mkIf;
+  inherit (lib.options) mkOption;
+  inherit (lib.types)
+    listOf
+    str
+    submodule
+    ;
 
   backupEndpoint = {
     name = "selfhosted-backup";
@@ -17,13 +23,45 @@ let
   };
 in
 {
-  options.dot.selfhosted.services.gatus = lib.dot.mkSelfhostedServiceOptions {
-    inherit config;
-    name = "gatus";
-    subdomain = "status";
-    defaultPort = 8083;
-    defaultEnable = config.dot.selfhosted.enable && config.dot.selfhosted.monitoring == "gatus";
-  };
+  options.dot.selfhosted.services.gatus =
+    lib.dot.mkSelfhostedServiceOptions {
+      inherit config;
+      name = "gatus";
+      subdomain = "status";
+      defaultPort = 8083;
+      defaultEnable = config.dot.selfhosted.enable && config.dot.selfhosted.monitoring == "gatus";
+    }
+    // {
+      endpoints = mkOption {
+        type = listOf (submodule {
+          options = {
+            name = mkOption {
+              type = str;
+              description = "Gatus endpoint name.";
+            };
+
+            url = mkOption {
+              type = str;
+              description = "URL checked by Gatus.";
+            };
+
+            interval = mkOption {
+              type = str;
+              default = "1m";
+              description = "Gatus check interval.";
+            };
+
+            conditions = mkOption {
+              type = listOf str;
+              default = [ "[STATUS] < 500" ];
+              description = "Gatus endpoint conditions.";
+            };
+          };
+        });
+        default = [ ];
+        description = "Endpoint definitions checked by Gatus.";
+      };
+    };
 
   config = mkIf gatus.enable {
     dot.selfhosted = {
@@ -43,7 +81,7 @@ in
       enable = true;
       settings = {
         web.port = gatus.port;
-        endpoints = cfg.gatus.endpoints ++ optional cfg.backups.health.enable backupEndpoint;
+        endpoints = gatus.endpoints ++ optional cfg.backups.health.enable backupEndpoint;
       };
     };
   };

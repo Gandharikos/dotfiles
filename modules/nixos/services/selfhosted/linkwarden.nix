@@ -44,7 +44,7 @@ in
           scheme
           ;
       };
-      gatus.endpoints = [ (lib.dot.mkGatusEndpoint "linkwarden" cfg) ];
+      services.gatus.endpoints = [ (lib.dot.mkGatusEndpoint "linkwarden" cfg) ];
       backups.paths = [ "/var/lib/linkwarden" ];
     };
 

@@ -60,7 +60,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    dot.selfhosted.gatus.endpoints = [
+    dot.selfhosted.services.gatus.endpoints = [
       {
         name = "reactflux";
         url = "${if selfhosted.useHttps then "https" else "http"}://${cfg.hostName}";
