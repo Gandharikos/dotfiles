@@ -102,6 +102,11 @@ in
             DISABLE_REGISTRATION = if oidcEnabled then false else !cfg.allowRegistration;
             ALLOW_ONLY_EXTERNAL_REGISTRATION = oidcEnabled;
           };
+          oauth2_client = mkIf oidcEnabled {
+            ENABLE_AUTO_REGISTRATION = true;
+            USERNAME = "nickname";
+            ACCOUNT_LINKING = "auto";
+          };
         }
         (mkIf cfg.redis.enable {
           cache = {
@@ -148,6 +153,8 @@ in
       after = [ "redis-forgejo.service" ];
       wants = [ "redis-forgejo.service" ];
     };
+
+    systemd.services.forgejo-secrets.serviceConfig.RemainAfterExit = lib.mkForce false;
 
     systemd.services.forgejo-kanidm-oauth = mkIf oidcEnabled {
       description = "Configure Forgejo Kanidm OAuth source";

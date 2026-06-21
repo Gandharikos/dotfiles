@@ -110,7 +110,6 @@ in
         before = [ "radicale.service" ];
         serviceConfig = {
           Type = "oneshot";
-          RemainAfterExit = true;
         };
         script = ''
           ${pkgs.coreutils}/bin/install -d -m 0750 -o radicale -g radicale ${cfg.dataDir}

@@ -214,7 +214,6 @@ in
         requiredBy = [ "kanidm.service" ];
         serviceConfig = {
           Type = "oneshot";
-          RemainAfterExit = true;
         };
         script = ''
           ${pkgs.coreutils}/bin/install -d -m 0750 -o kanidm -g kanidm ${certDir}

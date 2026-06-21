@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.dot.selfhosted.services.mmdl;
+  radicale = config.dot.selfhosted.services.radicale;
   envFile = "${cfg.dataDir}/env";
   aesSecretFile = "${cfg.dataDir}/aes-password";
   nextAuthSecretFile = "${cfg.dataDir}/nextauth-secret";
@@ -107,7 +108,6 @@ in
         before = [ "podman-mmdl.service" ];
         serviceConfig = {
           Type = "oneshot";
-          RemainAfterExit = true;
         };
         script = ''
           ${pkgs.coreutils}/bin/install -d -m 0700 -o root -g root ${cfg.dataDir}
@@ -143,6 +143,9 @@ in
             printf 'NEXT_PUBLIC_DEBUG_MODE=false\n'
             printf 'NEXT_API_DEBUG_MODE=false\n'
             printf 'NEXT_PUBLIC_TEST_MODE=false\n'
+            ${lib.optionalString radicale.enable ''
+              printf 'ADDITIONAL_VALID_CALDAV_URL_LIST=["https://${radicale.hostName}/"]\n'
+            ''}
           } > ${envFile}
 
           ${pkgs.coreutils}/bin/chown root:root ${envFile}
