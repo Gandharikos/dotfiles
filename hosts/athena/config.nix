@@ -99,6 +99,13 @@
       };
       services.code-server.enable = true;
       services.calibre.enable = true;
+      services.seafile.enable = true;
+      services.fava.enable = true;
+      services.blog.enable = true;
+      services.notes.enable = true;
+      services.radicale.enable = true;
+      services.mmdl.enable = false;
+      services.vikunja.enable = true;
       services.grafana.enable = true;
       services.prometheus.enable = true;
       services.loki.enable = true;
