@@ -336,11 +336,11 @@ in
         path = [ config.services.postfix.package ];
         serviceConfig = {
           Type = "oneshot";
-          RemainAfterExit = true;
         };
         script = ''
           set -euo pipefail
 
+          install -d -m 0755 -o root -g root /var/lib/postfix/conf
           umask 077
           {
             printf '%s %s:' '${relayHost}' '${cfg.delivery.relay.username}'
@@ -353,6 +353,8 @@ in
           chmod 0600 /var/lib/postfix/conf/sasl_passwd /var/lib/postfix/conf/sasl_passwd.db
         '';
       };
+
+      systemd.services.postfix-setup.serviceConfig.RemainAfterExit = mkForce false;
 
       security.acme = {
         acceptTerms = true;
@@ -375,6 +377,11 @@ in
           user = "rspamd";
           group = "rspamd";
           mode = "0700";
+        };
+        "/var/lib/postfix/conf".d = {
+          user = "root";
+          group = "root";
+          mode = "0755";
         };
       };
     })
