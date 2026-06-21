@@ -10,3 +10,4 @@ QWEN.md
 .cache/nix
 /.codex
 !templates/*/.envrc
+/.omo/run-continuation
