@@ -98,6 +98,10 @@
         localHostAlias = false;
       };
       services.code-server.enable = true;
+      services.calibre.enable = true;
+      services.grafana.enable = true;
+      services.prometheus.enable = true;
+      services.loki.enable = true;
     };
 
     services = {
