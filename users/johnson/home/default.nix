@@ -124,6 +124,13 @@ in
 
     ripgrep.enable = true;
 
+    security.gpg.enableSshSupport = osConfig.dot.yubikey.enable;
+
+    ssh.gpgAgentForwarding = {
+      enable = osConfig.dot.yubikey.enable;
+      hosts = [ "ymir" ];
+    };
+
     starship.enable = true;
 
     tealdeer.enable = !isMinimal;

@@ -135,6 +135,7 @@ in
 
     services.gpg-agent = {
       enable = true;
+      enableExtraSocket = cfg.enableSshSupport;
       inherit (cfg) enableSshSupport;
       pinentry.package =
         if pkgs.stdenv.hostPlatform.isDarwin then

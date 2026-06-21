@@ -7,7 +7,7 @@
 }:
 let
   inherit (lib.modules) mkIf mkMerge;
-  inherit (lib.options) mkEnableOption;
+  inherit (lib.options) mkEnableOption mkOption;
   cfg = config.my.ssh;
 in
 {
@@ -21,6 +21,22 @@ in
         Enable YubiKey FIDO2 SSH authentication.
         When enabled: Only FIDO2 keys are used (maximum security, must have YubiKey).
       '';
+    };
+
+    gpgAgentForwarding = {
+      enable = mkEnableOption "GPG agent forwarding over SSH";
+
+      hosts = mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+        description = "SSH host aliases that should forward the local GPG agent to the remote host.";
+      };
+
+      socketDir = mkOption {
+        type = lib.types.str;
+        default = "/run/user/1000/gnupg";
+        description = "Runtime directory containing gpg-agent sockets on both local and remote hosts.";
+      };
     };
   };
 

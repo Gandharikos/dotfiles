@@ -23,6 +23,10 @@ in
     services.openssh = {
       enable = true;
       startWhenNeeded = true;
+      ports = [
+        22
+        2222
+      ];
 
       allowSFTP = true;
 
@@ -36,10 +40,12 @@ in
         PasswordAuthentication = false;
         KbdInteractiveAuthentication = false;
         AuthenticationMethods = "publickey";
+        AllowStreamLocalForwarding = "yes";
         PubkeyAuthentication = "yes";
         ChallengeResponseAuthentication = "no";
         UsePAM = true;
         UseDns = false;
+        StreamLocalBindUnlink = "yes";
         X11Forwarding = false;
 
         # Use key exchange algorithms recommended by `nixpkgs#ssh-audit`
