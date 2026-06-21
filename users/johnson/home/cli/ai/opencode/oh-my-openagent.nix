@@ -9,12 +9,12 @@ let
   cfg = config.my.opencode;
   json = pkgs.formats.json { };
 
-  mainModel = "openai/gpt-5.4";
-  nanoModel = "openai/gpt-5.4-nano";
-  quickModel = "openai/gpt-5.3-codex-spark";
+  mainModel = "openrouter/openai/gpt-5.5";
+  nanoModel = "openrouter/openai/gpt-5.4-nano";
+  quickModel = "openrouter/openai/gpt-5.3-codex-spark";
 
   deliberateFallbackModels = [
-    "openai/gpt-5.3-codex"
+    "openrouter/openai/gpt-5.3-codex"
     quickModel
   ];
 
@@ -110,7 +110,7 @@ in
             openai = 3;
           };
           modelConcurrency = {
-            "openai/gpt-5.4" = 2;
+            "openrouter/openai/gpt-5.5" = 2;
             "github-copilot/gpt-5-mini" = 12;
           };
         };

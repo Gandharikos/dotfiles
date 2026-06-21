@@ -6,15 +6,24 @@
   ...
 }:
 let
-  inherit (lib) mkDefault mkEnableOption mkIf;
+  inherit (lib)
+    getExe
+    mkDefault
+    mkEnableOption
+    mkIf
+    ;
+  inherit (lib.meta) getExe';
+
+  cat' = getExe' pkgs.coreutils "cat";
+
   sharedAiTools = aiCommon;
   cfg = config.my.opencode;
   mcpModuleEnabled = config.my.mcp.enable or false;
 
   defaultAgent = "dotfiles-expert";
-  mainModel = "openai/gpt-5.4";
-  nanoModel = "openai/gpt-5.4-nano";
-  quickModel = "openai/gpt-5.3-codex-spark";
+  mainModel = "openrouter/openai/gpt-5.5";
+  nanoModel = "openrouter/openai/gpt-5.4-nano";
+  quickModel = "openrouter/openai/gpt-5.3-codex-spark";
 in
 {
   imports = lib.dot.scanPaths ./.;
@@ -24,6 +33,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    sops.secrets.openrouter_api_key = { };
+
     home.shellAliases = {
       opencode-coding = "opencode --model ${quickModel}";
       opencode-deep = "opencode --model ${mainModel}";
@@ -33,7 +44,10 @@ in
 
     programs.opencode = {
       enable = true;
-      package = pkgs.llm-agents.opencode;
+      package = pkgs.writeShellScriptBin "opencode" ''
+        export OPENROUTER_API_KEY="$(${cat'} ${config.sops.secrets.openrouter_api_key.path})"
+        exec ${getExe pkgs.llm-agents.opencode} "$@"
+      '';
       enableMcpIntegration = mkIf mcpModuleEnabled true;
 
       tui.theme = mkDefault "opencode";

@@ -18,6 +18,13 @@
           };
         };
       };
+
+      openrouter = {
+        npm = "@openrouter/ai-sdk-provider";
+        name = "OpenRouter";
+        options = { };
+      };
+
     };
   };
 }
