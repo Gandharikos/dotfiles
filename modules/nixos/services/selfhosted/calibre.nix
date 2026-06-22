@@ -202,7 +202,26 @@ in
         "kanidm.service"
         "sops-install-secrets.service"
       ];
-      requires = [ "sops-install-secrets.service" ];
+      requires = [
+        "kanidm.service"
+        "sops-install-secrets.service"
+      ];
+      path = [ pkgs.curl ];
+      preStart = ''
+        for attempt in $(seq 1 60); do
+          if curl -fsS https://${kanidm.hostName}/oauth2/openid/calibre/.well-known/openid-configuration >/dev/null; then
+            exit 0
+          fi
+          sleep 2
+        done
+
+        echo "Kanidm OIDC discovery for Calibre is not ready" >&2
+        exit 1
+      '';
+      serviceConfig = {
+        RestartSec = "10s";
+        StartLimitIntervalSec = 0;
+      };
     };
   };
 }

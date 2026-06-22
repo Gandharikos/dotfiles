@@ -165,15 +165,31 @@ in
       ];
       requires = [
         "forgejo.service"
+        "kanidm.service"
         "sops-install-secrets.service"
       ];
       wantedBy = [ "multi-user.target" ];
-      path = [ pkgs.gnugrep ];
+      path = [
+        pkgs.coreutils
+        pkgs.curl
+        pkgs.gnugrep
+      ];
       serviceConfig = {
         Type = "oneshot";
         User = "forgejo";
         Group = "forgejo";
       };
+      preStart = ''
+        for attempt in $(seq 1 60); do
+          if ${pkgs.curl}/bin/curl -fsS https://${kanidm.hostName}/oauth2/openid/forgejo/.well-known/openid-configuration >/dev/null; then
+            exit 0
+          fi
+          sleep 2
+        done
+
+        echo "Kanidm OIDC discovery for Forgejo is not ready" >&2
+        exit 1
+      '';
       script = ''
         set -eu
 
