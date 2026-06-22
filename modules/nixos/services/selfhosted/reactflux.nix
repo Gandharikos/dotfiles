@@ -9,7 +9,7 @@ let
   cfg = selfhosted.services.reactflux;
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption mkOption;
-  inherit (lib.types) package str;
+  inherit (lib.types) bool package str;
 
   reactflux = pkgs.stdenvNoCC.mkDerivation {
     pname = "reactflux";
@@ -33,6 +33,18 @@ let
   };
 
   virtualHostName = if selfhosted.useHttps then cfg.hostName else "http://${cfg.hostName}";
+  configuredPackage = pkgs.runCommand "reactflux-configured-${reactflux.version}" { } ''
+    cp -a ${cfg.package} "$out"
+    chmod -R u+w "$out"
+    substituteInPlace "$out/index.html" \
+      --replace-fail '</head>' '<script>
+        (() => {
+          if (${builtins.toJSON cfg.autoConfigureServer} && location.pathname === "/" && location.search === "") {
+            location.replace("/?server=" + encodeURIComponent(${builtins.toJSON cfg.serverUrl}));
+          }
+        })();
+      </script></head>'
+  '';
 in
 {
   options.dot.selfhosted.services.reactflux = {
@@ -57,6 +69,18 @@ in
       default = "${cfg.subdomain}.${selfhosted.domain}";
       description = "Local host name used by the reverse proxy.";
     };
+
+    serverUrl = mkOption {
+      type = str;
+      default = "https://${selfhosted.services.miniflux.hostName}";
+      description = "Miniflux server URL prefilled on the ReactFlux login page.";
+    };
+
+    autoConfigureServer = mkOption {
+      type = bool;
+      default = true;
+      description = "Whether to prefill the Miniflux server URL for ReactFlux.";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -74,7 +98,7 @@ in
     services.caddy.virtualHosts.${virtualHostName} = mkIf selfhosted.services.caddy.enable {
       extraConfig = ''
         encode zstd gzip
-        root * ${cfg.package}
+        root * ${configuredPackage}
         try_files {path} {path}/ /index.html
         file_server
       '';
@@ -83,7 +107,7 @@ in
     services.nginx.virtualHosts.${cfg.hostName} = mkIf selfhosted.services.nginx.enable {
       enableACME = selfhosted.useHttps;
       forceSSL = selfhosted.useHttps;
-      root = cfg.package;
+      root = configuredPackage;
       locations."/".tryFiles = "$uri $uri/ /index.html";
     };
   };
