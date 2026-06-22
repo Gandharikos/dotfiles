@@ -102,6 +102,7 @@ in
       enableRegistration = false;
       environment = {
         NEXTAUTH_URL = "https://${cfg.hostName}/api/v1/auth";
+        NEXT_PUBLIC_CREDENTIALS_ENABLED = "false";
       }
       // optionalAttrs oidcEnabled {
         NEXT_PUBLIC_AUTHENTIK_ENABLED = "true";
