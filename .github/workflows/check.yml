@@ -17,7 +17,7 @@ jobs:
     name: "Check Commit Message"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Run commit message check
         uses: ./.github/actions/commit-message-check
@@ -27,7 +27,7 @@ jobs:
     outputs:
       run-check: ${{ steps.check.outputs.run-check }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Should Run Check
         id: check
@@ -40,7 +40,7 @@ jobs:
     if: needs.should-run.outputs.run-check == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install Nix
         uses: cachix/install-nix-action@v31
