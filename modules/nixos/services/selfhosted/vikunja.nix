@@ -42,7 +42,7 @@ in
       persons.johnson.groups = [ "vikunja-users" ];
       systems.oauth2.vikunja = {
         displayName = "Vikunja";
-        originLanding = "https://${cfg.hostName}/auth/openid/kanidm";
+        originLanding = "https://${cfg.hostName}/login?redirectToProvider=kanidm";
         originUrl = "https://${cfg.hostName}/auth/openid/kanidm";
         basicSecretFile = oidcSecretFile;
         allowInsecureClientDisablePkce = true;
