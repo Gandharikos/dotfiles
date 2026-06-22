@@ -100,7 +100,12 @@
       services.code-server.enable = true;
       services.calibre.enable = true;
       services.seafile.enable = true;
+      services.actual.enable = true;
+      services.dawarich.enable = true;
       services.fava.enable = true;
+      services.paperless.enable = true;
+      services.stirling-pdf.enable = true;
+      services.windmill.enable = true;
       services.blog.enable = true;
       services.notes.enable = true;
       services.radicale.enable = true;
