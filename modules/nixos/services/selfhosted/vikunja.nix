@@ -123,7 +123,7 @@ in
           ${pkgs.coreutils}/bin/install -d -m 0750 -o root -g kanidm ${oidcDir}
 
           if [ ! -s ${oidcSecretFile} ]; then
-            ${pkgs.openssl}/bin/openssl rand -base64 48 > ${oidcSecretFile}
+            ${pkgs.openssl}/bin/openssl rand -base64 48 | ${pkgs.coreutils}/bin/tr -d '\n' > ${oidcSecretFile}
           fi
 
           ${pkgs.coreutils}/bin/chown root:kanidm ${oidcSecretFile}

@@ -155,6 +155,11 @@ in
     };
 
     systemd.services = {
+      kanidm = mkIf oidcEnabled {
+        after = [ "code-server-oauth2-secrets.service" ];
+        requires = [ "code-server-oauth2-secrets.service" ];
+      };
+
       code-server-oauth2-secrets = mkIf oidcEnabled {
         description = "Generate code-server OAuth2 secrets";
         before = [
@@ -169,12 +174,13 @@ in
           Type = "oneshot";
         };
         script = ''
-          ${pkgs.coreutils}/bin/chgrp kanidm ${cfg.stateDir}
+          ${pkgs.coreutils}/bin/install -d -m 0750 -o code-server -g kanidm ${cfg.stateDir}
+          ${pkgs.coreutils}/bin/chown code-server:kanidm ${cfg.stateDir}
           ${pkgs.coreutils}/bin/chmod 0750 ${cfg.stateDir}
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o code-server -g kanidm ${oauth2SecretDir}
+          ${pkgs.coreutils}/bin/install -d -m 0750 -o root -g kanidm ${oauth2SecretDir}
 
           if [ ! -s ${oauth2ClientSecretFile} ]; then
-            ${pkgs.openssl}/bin/openssl rand -base64 48 > ${oauth2ClientSecretFile}
+            ${pkgs.openssl}/bin/openssl rand -base64 48 | ${pkgs.coreutils}/bin/tr -d '\n' > ${oauth2ClientSecretFile}
           fi
 
           cookie_secret="$(${pkgs.coreutils}/bin/cat ${oauth2CookieSecretFile} 2>/dev/null || true)"
@@ -182,7 +188,7 @@ in
             ${pkgs.openssl}/bin/openssl rand -hex 16 > ${oauth2CookieSecretFile}
           fi
 
-          ${pkgs.coreutils}/bin/chown code-server:kanidm ${oauth2ClientSecretFile} ${oauth2CookieSecretFile}
+          ${pkgs.coreutils}/bin/chown root:kanidm ${oauth2ClientSecretFile} ${oauth2CookieSecretFile}
           ${pkgs.coreutils}/bin/chmod 0440 ${oauth2ClientSecretFile} ${oauth2CookieSecretFile}
 
           {

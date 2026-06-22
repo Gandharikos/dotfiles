@@ -228,7 +228,7 @@ in
         fi
 
         if [ ! -s ${oauth2SecretFile} ]; then
-          ${pkgs.openssl}/bin/openssl rand -base64 48 > ${oauth2SecretFile}
+          ${pkgs.openssl}/bin/openssl rand -base64 48 | ${pkgs.coreutils}/bin/tr -d '\n' > ${oauth2SecretFile}
         fi
 
         ${pkgs.coreutils}/bin/chown grafana:grafana ${secretKeyFile}
