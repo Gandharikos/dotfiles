@@ -104,12 +104,10 @@
       services.dawarich.enable = true;
       services.fava.enable = true;
       services.paperless.enable = true;
-      services.stirling-pdf.enable = true;
-      services.windmill.enable = true;
+      services.immich.enable = true;
       services.blog.enable = true;
       services.notes.enable = true;
       services.radicale.enable = true;
-      services.mmdl.enable = false;
       services.vikunja.enable = true;
       services.grafana.enable = true;
       services.prometheus.enable = true;

@@ -12,6 +12,47 @@ let
   certDir = "/var/lib/kanidm/tls";
   cert = "${certDir}/fullchain.pem";
   key = "${certDir}/key.pem";
+  provision = config.services.kanidm.provision;
+  provisionStateJson = pkgs.writeText "selfhosted-kanidm-provision-state.json" (
+    builtins.toJSON { inherit (provision) groups persons systems; }
+  );
+  finalProvisionState =
+    if provision.extraJsonFile != null then
+      ''
+        <(${lib.getExe pkgs.yq-go} '. *+ load("${provision.extraJsonFile}") | (.. | select(type == "!!seq")) |= unique' ${provisionStateJson})
+      ''
+    else
+      provisionStateJson;
+  generatedOauthSecretServices =
+    lib.optionals (services.code-server.enable && services.kanidm.enable) [
+      "code-server-oauth2-secrets.service"
+    ]
+    ++ lib.optionals (services.paperless.enable && services.kanidm.enable) [
+      "paperless-oauth2-secrets.service"
+    ]
+    ++ lib.optionals (services.dawarich.enable && services.kanidm.enable) [
+      "dawarich-oauth2-secrets.service"
+    ]
+    ++ lib.optionals (services.fava.enable && services.kanidm.enable) [
+      "fava-oauth2-secrets.service"
+    ];
+  oauthConsumerServices =
+    lib.optionals (services.code-server.enable && services.kanidm.enable) [
+      "oauth2-proxy-code-server.service"
+    ]
+    ++ lib.optionals (services.paperless.enable && services.kanidm.enable) [
+      "paperless-web.service"
+      "paperless-kanidm-admin.service"
+    ]
+    ++ lib.optionals (services.dawarich.enable && services.kanidm.enable) [
+      "dawarich.target"
+      "dawarich-init-db.service"
+      "dawarich-web.service"
+    ]
+    ++ lib.optionals (services.fava.enable && services.kanidm.enable) [
+      "oauth2-proxy-fava.service"
+    ];
+  inherit (lib) getExe optionalString;
   inherit (lib.modules) mkIf;
 in
 {
@@ -237,6 +278,43 @@ in
       kanidm = {
         after = [ "kanidm-selfsigned-cert.service" ];
         requires = [ "kanidm-selfsigned-cert.service" ];
+      };
+
+      kanidm-oauth2-provision = mkIf (generatedOauthSecretServices != [ ]) {
+        description = "Synchronize generated Kanidm OAuth2 client secrets";
+        wantedBy = [ "multi-user.target" ];
+        after = [ "kanidm.service" ] ++ generatedOauthSecretServices;
+        requires = [ "kanidm.service" ] ++ generatedOauthSecretServices;
+        before = oauthConsumerServices;
+        requiredBy = oauthConsumerServices;
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+        };
+        script = ''
+          set -euo pipefail
+
+          count=0
+          while ! ${getExe pkgs.curl} -L --silent --max-time 1 --connect-timeout 1 --fail \
+            ${optionalString provision.acceptInvalidCerts "--insecure"} \
+            ${provision.instanceUrl} >/dev/null
+          do
+            sleep 1
+            if [ "$count" -eq 30 ]; then
+              echo "Kanidm did not become ready for OAuth2 provisioning" >&2
+              exit 1
+            fi
+            count=$((count + 1))
+          done
+
+          KANIDM_IDM_ADMIN_PASSWORD="$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.kanidm-idm-admin-password.path})"
+          KANIDM_PROVISION_IDM_ADMIN_TOKEN="$KANIDM_IDM_ADMIN_PASSWORD" \
+            ${getExe pkgs.kanidm-provision} \
+              ${optionalString (!provision.autoRemove) "--no-auto-remove"} \
+              ${optionalString provision.acceptInvalidCerts "--accept-invalid-certs"} \
+              --url "${provision.instanceUrl}" \
+              --state ${finalProvisionState}
+        '';
       };
     };
 
