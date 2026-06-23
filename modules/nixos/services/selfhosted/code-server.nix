@@ -16,14 +16,13 @@ let
       }
     else
       cfg;
-  passwordEnv = "${cfg.stateDir}/password-env";
   oauth2SecretDir = "${cfg.stateDir}/oauth2";
   oauth2ClientSecretFile = "${oauth2SecretDir}/client-secret";
   oauth2CookieSecretFile = "${oauth2SecretDir}/cookie-secret";
   oauth2EnvFile = "${oauth2SecretDir}/env";
   dataDirGroup = if oidcEnabled then "kanidm" else "code-server";
   inherit (lib) getExe;
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkForce mkIf;
   inherit (lib.options) mkOption;
   inherit (lib.types)
     listOf
@@ -118,12 +117,41 @@ in
     users = {
       groups.code-server = { };
       users.code-server = {
+        isNormalUser = mkForce false;
         isSystemUser = true;
         group = "code-server";
         home = cfg.stateDir;
         createHome = true;
         shell = pkgs.bashInteractive;
       };
+    };
+
+    services.code-server = {
+      enable = true;
+      package = pkgs.code-server;
+      auth = if oidcEnabled then "none" else "password";
+      inherit (cfg) host;
+      inherit (cfg) port;
+      user = "code-server";
+      group = "code-server";
+      extraPackages = cfg.packages;
+      userDataDir = "${cfg.stateDir}/data";
+      extensionsDir = "${cfg.stateDir}/extensions";
+      disableTelemetry = true;
+      disableUpdateCheck = true;
+      extraEnvironment = {
+        CARGO_HOME = "${cfg.stateDir}/.cargo";
+        HOME = cfg.stateDir;
+        NIX_CONFIG = "experimental-features = nix-command flakes";
+        SHELL = getExe pkgs.bashInteractive;
+      };
+      extraArguments = [ "${cfg.stateDir}/workspace" ];
+    };
+
+    systemd.services.code-server.serviceConfig = {
+      Restart = mkForce "always";
+      RestartSec = "10s";
+      WorkingDirectory = "${cfg.stateDir}/workspace";
     };
 
     systemd.tmpfiles.settings.code-server = {
@@ -199,58 +227,6 @@ in
           ${pkgs.coreutils}/bin/chown root:root ${oauth2EnvFile}
           ${pkgs.coreutils}/bin/chmod 0400 ${oauth2EnvFile}
         '';
-      };
-
-      code-server-password = {
-        description = "Generate code-server password";
-        before = [ "code-server.service" ];
-        requiredBy = [ "code-server.service" ];
-        serviceConfig = {
-          Type = "oneshot";
-        };
-        script = ''
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o code-server -g ${dataDirGroup} ${cfg.stateDir}
-          if [ ! -s ${passwordEnv} ]; then
-            password="$(${pkgs.openssl}/bin/openssl rand -base64 24)"
-            ${pkgs.coreutils}/bin/install -m 0600 -o code-server -g code-server /dev/null ${passwordEnv}
-            printf 'PASSWORD=%s\n' "$password" > ${passwordEnv}
-          fi
-          ${pkgs.coreutils}/bin/chown code-server:code-server ${passwordEnv}
-          ${pkgs.coreutils}/bin/chmod 0600 ${passwordEnv}
-        '';
-      };
-
-      code-server = {
-        description = "code-server";
-        wantedBy = [ "multi-user.target" ];
-        after = [
-          "network.target"
-          "code-server-password.service"
-        ];
-        requires = [ "code-server-password.service" ];
-        path = cfg.packages;
-        environment = {
-          CARGO_HOME = "${cfg.stateDir}/.cargo";
-          HOME = cfg.stateDir;
-          NIX_CONFIG = "experimental-features = nix-command flakes";
-          SHELL = getExe pkgs.bashInteractive;
-        };
-        script = ''
-          exec ${getExe pkgs.code-server} \
-            --auth ${if oidcEnabled then "none" else "password"} \
-            --bind-addr ${cfg.host}:${toString cfg.port} \
-            --user-data-dir ${cfg.stateDir}/data \
-            --extensions-dir ${cfg.stateDir}/extensions \
-            ${cfg.stateDir}/workspace
-        '';
-        serviceConfig = {
-          EnvironmentFile = passwordEnv;
-          Group = "code-server";
-          Restart = "always";
-          RestartSec = "10s";
-          User = "code-server";
-          WorkingDirectory = "${cfg.stateDir}/workspace";
-        };
       };
 
       oauth2-proxy-code-server = mkIf oidcEnabled {
