@@ -35,6 +35,9 @@ let
     ]
     ++ lib.optionals (services.fava.enable && services.kanidm.enable) [
       "fava-oauth2-secrets.service"
+    ]
+    ++ lib.optionals (services.filebrowser.enable && services.kanidm.enable) [
+      "filebrowser-oauth2-secrets.service"
     ];
   oauthConsumerServices =
     lib.optionals (services.code-server.enable && services.kanidm.enable) [
@@ -51,6 +54,9 @@ let
     ]
     ++ lib.optionals (services.fava.enable && services.kanidm.enable) [
       "oauth2-proxy-fava.service"
+    ]
+    ++ lib.optionals (services.filebrowser.enable && services.kanidm.enable) [
+      "oauth2-proxy-filebrowser.service"
     ];
   inherit (lib) getExe optionalString;
   inherit (lib.modules) mkIf;

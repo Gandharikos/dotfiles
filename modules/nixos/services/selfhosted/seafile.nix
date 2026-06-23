@@ -26,7 +26,7 @@ in
       inherit config;
       name = "seafile";
       displayName = "Seafile";
-      subdomain = "files";
+      subdomain = "cloud";
       defaultPort = 8085;
       defaultEnable = false;
     }

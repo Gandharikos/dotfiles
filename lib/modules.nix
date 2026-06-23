@@ -112,7 +112,7 @@ let
               done
         fi
 
-        for directory in actual caddy dawarich fava forgejo gatus immich kanidm linkwarden mailserver miniflux ntfy-sh paperless roundcube vaultwarden wakapi; do
+        for directory in actual caddy dawarich fava filebrowser forgejo gatus immich kanidm linkwarden mailserver miniflux ntfy-sh paperless roundcube vaultwarden wakapi; do
           if [ -e "/var/lib/$directory" ]; then
             tar -C /var/lib -cpf "$workdir/var/lib/$directory.tar" "$directory"
           fi

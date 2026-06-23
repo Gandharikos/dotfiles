@@ -74,7 +74,7 @@ let
           targets = [
             {
               datasource.type = "loki";
-              expr = ''{unit=~"caddy.service|kanidm.service|grafana.service|vikunja.service|radicale.service"}'';
+              expr = ''{unit=~"caddy.service|kanidm.service|grafana.service|vikunja.service"}'';
               refId = "A";
             }
           ];

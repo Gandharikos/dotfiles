@@ -103,11 +103,11 @@
       services.actual.enable = true;
       services.dawarich.enable = true;
       services.fava.enable = true;
+      services.filebrowser.enable = true;
       services.paperless.enable = true;
       services.immich.enable = true;
       services.blog.enable = true;
       services.notes.enable = true;
-      services.radicale.enable = true;
       services.vikunja.enable = true;
       services.grafana.enable = true;
       services.prometheus.enable = true;
