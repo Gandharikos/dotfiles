@@ -24,14 +24,15 @@ let
     ]
     ++ args;
   noctalia = args: escapeShellArgs (noctaliaArgs args);
-  noctaliaRecorder =
-    action:
-    escapeShellArgs (noctaliaArgs [
-      "plugin"
-      "noctalia/screen_recorder:service"
-      "all"
-      action
-    ]);
+  screenRecorderArgs = action: [
+    noctaliaExe
+    "msg"
+    "plugin"
+    "noctalia/screen_recorder:service"
+    "focused"
+    action
+  ];
+  noctaliaRecorder = action: escapeShellArgs (screenRecorderArgs action);
 
   inherit (desktop) modKey;
 in
@@ -340,12 +341,7 @@ in
             "session"
             "lock"
           ];
-          "F10".action.spawn = noctaliaArgs [
-            "plugin"
-            "noctalia/screen_recorder:service"
-            "all"
-            "toggle"
-          ];
+          "F10".action.spawn = screenRecorderArgs "toggle";
         }
         // xf86Binds;
     };
