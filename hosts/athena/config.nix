@@ -104,6 +104,7 @@
       services.dawarich.enable = true;
       services.fava.enable = true;
       services.filebrowser.enable = true;
+      services.homepage.enable = true;
       services.paperless.enable = true;
       services.immich.enable = true;
       services.blog.enable = true;
