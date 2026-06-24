@@ -527,6 +527,7 @@
     enabled = [
       "noctalia/bongocat"
       "noctalia/screen_recorder"
+      "noctalia/translator"
     ];
   };
 
