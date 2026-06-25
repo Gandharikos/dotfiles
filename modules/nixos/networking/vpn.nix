@@ -9,8 +9,10 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) optionals;
   inherit (lib.options) mkEnableOption;
+  inherit (lib.strings) escapeShellArg;
   accountNumberSecret = config.sops.secrets.mullvad_vpn_account_number;
   cfg = config.dot.networking.vpn;
+  deviceLimitMessage = "There are too many devices on the account";
 in
 {
   options.dot.networking.vpn = {
@@ -53,6 +55,7 @@ in
       path = [
         config.services.mullvad-vpn.package
         pkgs.coreutils
+        pkgs.gnugrep
       ];
       script = ''
         is_logged_in() {
@@ -80,11 +83,39 @@ in
           exit 1
         fi
 
-        mullvad account login "$account_number"
+        login_output="$(mktemp)"
+        set +e
+        mullvad account login "$account_number" >"$login_output" 2>&1
+        login_status="$?"
+        set -e
+
+        if [ "$login_status" -eq 0 ]; then
+          rm -f "$login_output"
+          exit 0
+        fi
+
+        cat "$login_output" >&2
+
+        if grep -Fq ${escapeShellArg deviceLimitMessage} "$login_output"; then
+          echo >&2
+          echo "Mullvad account device limit reached." >&2
+          echo "Revoke one unused device, then restart this service:" >&2
+          echo "  sudo sh -c 'account=\$(tr -d \"[:space:]\" < ${accountNumberSecret.path}); mullvad account revoke-device --account \"\$account\" <device-id-or-name>'" >&2
+          echo "  sudo systemctl restart mullvad-vpn-login.service" >&2
+          echo >&2
+          echo "Current devices on the account:" >&2
+          mullvad account list-devices --account "$account_number" --verbose >&2 || true
+          rm -f "$login_output"
+          exit 75
+        fi
+
+        rm -f "$login_output"
+        exit "$login_status"
       '';
       serviceConfig = {
         Type = "oneshot";
         TimeoutStartSec = "2min";
+        SuccessExitStatus = [ 75 ];
       };
     };
   };
