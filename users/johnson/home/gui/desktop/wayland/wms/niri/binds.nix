@@ -19,6 +19,7 @@ let
     ;
 
   cfg = config.my.gui.desktop.niri;
+  lid = config.my.gui.desktop.lid;
   inherit (desktop) modKey;
   modShift = "${modKey}+Shift";
   modCtrl = "${modKey}+Ctrl";
@@ -57,6 +58,19 @@ let
         "Shift+Print".action.screenshot-window.write-to-disk = true;
         "Ctrl+Print".action.screenshot-screen.write-to-disk = true;
         "${modKey}+Print".action.screenshot = [ ];
+      }
+    else
+      { };
+  lidBinds =
+    if lid.enable then
+      {
+        "${modShift}+S" = {
+          repeat = false;
+          action.spawn = [
+            lid.command
+            "on"
+          ];
+        };
       }
     else
       { };
@@ -242,6 +256,7 @@ with osConfig.dot.keyboard.keys;
           "${modKey}+Slash".action.show-hotkey-overlay = [ ];
         }
         screenshotBinds
+        lidBinds
         xf86FallbackBinds
         (mkWorkspaceBinds modKey "focus-workspace" (n: n))
         (mkWorkspaceBinds modShift "move-window-to-workspace" (n: n))

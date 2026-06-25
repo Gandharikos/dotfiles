@@ -18,6 +18,7 @@ let
     fileManager
     ;
   cfg = desktop.hyprland;
+  lid = config.my.gui.desktop.lid;
   num = desktop.workspace.number;
   inherit (desktop) modKey;
   hyprsplit_enabled = cfg.plugins.enable && elem "hyprsplit" cfg.plugins.list;
@@ -118,6 +119,9 @@ with osConfig.dot.keyboard.keys;
           # select area to perform OCR on
           "$mod, Print, OCR Selection, exec, ${wl-ocr}"
           ", XF86Favorites, OCR Selection, exec, ${wl-ocr}"
+        ]
+        ++ optionals lid.enable [
+          "$mod SHIFT, S, Lid Mode, exec, ${lid.command} on"
         ]
         ++ (mkHyprMoveTo [ "focusworkspaceoncurrentmonitor" "movetoworkspacesilent" ] num)
         ++ (optionals (!hyprsplit_enabled) (
