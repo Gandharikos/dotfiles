@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   keys,
   lib,
@@ -520,9 +521,9 @@
       }
       {
         name = "official";
-        kind = "git";
-        location = "https://github.com/noctalia-dev/official-plugins";
-        auto_update = true;
+        kind = "path";
+        location = toString inputs."noctalia-official-plugins";
+        auto_update = false;
       }
       {
         name = "community";

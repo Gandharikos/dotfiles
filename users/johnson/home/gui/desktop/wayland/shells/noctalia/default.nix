@@ -20,6 +20,7 @@ let
     if wallpaper == null then "~/Pictures/Wallpapers" else builtins.dirOf (toString wallpaper);
   baseSettings = import ./settings.nix {
     inherit
+      inputs
       config
       keys
       lib

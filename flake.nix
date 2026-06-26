@@ -275,6 +275,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    noctalia-official-plugins = {
+      url = "github:noctalia-dev/official-plugins";
+      flake = false;
+    };
+
     dms = {
       url = "github:AvengeMedia/DankMaterialShell";
       inputs.nixpkgs.follows = "nixpkgs";

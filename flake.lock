@@ -1371,6 +1371,22 @@
         "type": "github"
       }
     },
+    "noctalia-official-plugins": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1782513926,
+        "narHash": "sha256-AcVSxHze6Dcr19pGImokjCNLq5k4YigHooWf1mNZGzg=",
+        "owner": "noctalia-dev",
+        "repo": "official-plugins",
+        "rev": "8252db89fdd07cb443a113dad85287752bcd1133",
+        "type": "github"
+      },
+      "original": {
+        "owner": "noctalia-dev",
+        "repo": "official-plugins",
+        "type": "github"
+      }
+    },
     "noctalia-qs": {
       "inputs": {
         "nixpkgs": [
@@ -1505,6 +1521,7 @@
         "nixpkgs": "nixpkgs_3",
         "nixporn": "nixporn",
         "noctalia": "noctalia",
+        "noctalia-official-plugins": "noctalia-official-plugins",
         "noctalia-qs": "noctalia-qs",
         "nvidia-patch": "nvidia-patch",
         "pre-commit-hooks": "pre-commit-hooks",
