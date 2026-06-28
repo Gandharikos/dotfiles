@@ -55,7 +55,6 @@ in
           # hideAttachments.enable = true;
           readAllNotificationsButton.enable = true;
           # clearUrLs.enable = true;
-          friendsSince.enable = true;
         };
       };
     };
