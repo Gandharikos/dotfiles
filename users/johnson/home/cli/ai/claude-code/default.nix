@@ -17,6 +17,7 @@ let
       ;
   };
   mcpModuleEnabled = config.my.mcp.enable or false;
+  headroomEnabled = config.my.headroom.enable or false;
   sharedAiTools = aiCommon;
   claudeIcon = ./assets/claude.ico;
 in
@@ -69,6 +70,10 @@ in
         }
         // optionalAttrs mcpModuleEnabled {
           ENABLE_TOOL_SEARCH = "auto:5";
+        }
+        // optionalAttrs headroomEnabled {
+          # Route Claude Code through the local Headroom proxy for token compression.
+          ANTHROPIC_BASE_URL = config.my.headroom.baseUrl;
         };
       };
 

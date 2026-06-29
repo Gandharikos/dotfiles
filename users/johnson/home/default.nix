@@ -66,6 +66,8 @@ in
 
     gui.apps.bitwarden.enable = !isMinimal;
 
+    headroom.enable = !isMinimal;
+
     jjui.enable = !isMinimal;
 
     jujutsu.enable = !isMinimal;

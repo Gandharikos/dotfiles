@@ -94,6 +94,13 @@ in
       (mkIf my.codex.enable [
         ".codex"
       ])
+      (mkIf my.headroom.enable [
+        # Persist the ~500MB compression models + proxy state across reboots
+        # so the first-run download isn't repeated every boot.
+        ".cache/headroom"
+        ".cache/huggingface"
+        ".local/share/headroom"
+      ])
       (mkIf my.direnv.enable [
         ".local/share/direnv/allow"
       ])
