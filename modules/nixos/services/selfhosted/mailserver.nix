@@ -103,6 +103,10 @@ in
           sopsFile = secretsFile;
           key = "johnson";
         };
+        mailserver-ai = {
+          sopsFile = secretsFile;
+          key = "ai";
+        };
         mailserver-git = {
           sopsFile = secretsFile;
           key = "git";
@@ -174,6 +178,10 @@ in
               "postmaster"
               "postmaster@${domain}"
             ];
+          };
+
+          "ai@${domain}" = {
+            passwordFile = config.sops.secrets.mailserver-ai.path;
           };
 
           "git@${domain}" = {
