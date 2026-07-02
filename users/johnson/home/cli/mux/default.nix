@@ -11,6 +11,7 @@ in
       type = nullOr (enum [
         "tmux"
         "zellij"
+        "herdr"
       ]);
       default = "tmux";
       description = "The terminal multiplexer to use";
