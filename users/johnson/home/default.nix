@@ -70,7 +70,11 @@ in
 
     gui.apps.discord.enable = false;
 
+    gui.apps.helium.enable = !isMinimal;
+
     headroom.enable = !isMinimal;
+
+    herdr.enable = !isMinimal;
 
     jjui.enable = !isMinimal;
 

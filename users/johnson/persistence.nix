@@ -32,6 +32,10 @@ in
         ".cache/mozilla/firefox"
         ".mozilla/firefox"
       ])
+      (mkIf my.gui.apps.helium.enable [
+        ".cache/helium"
+        ".config/helium"
+      ])
       (mkIf my.gui.apps.chrome.enable [
         ".cache/google-chrome"
         ".config/google-chrome"
@@ -100,6 +104,9 @@ in
         ".cache/headroom"
         ".cache/huggingface"
         ".local/share/headroom"
+      ])
+      (mkIf my.herdr.enable [
+        ".config/herdr"
       ])
       (mkIf my.direnv.enable [
         ".local/share/direnv/allow"

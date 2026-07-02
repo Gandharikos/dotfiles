@@ -41,8 +41,9 @@ in
         "zen"
         "google-chrome"
         "firefox"
+        "helium"
       ]);
-      default = if osConfig.dot.gui.enable && osClass == "nixos" then "google-chrome" else null;
+      default = if osConfig.dot.gui.enable && osClass == "nixos" then "helium" else null;
       description = "The browser to use";
     };
     desktopId = mkOption {

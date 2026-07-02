@@ -10,6 +10,7 @@ let
     "zen"
     "firefox"
     "org.mozilla.firefox"
+    "helium"
     "google-chrome"
     "google-chrome-stable"
   ];

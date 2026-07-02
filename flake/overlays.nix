@@ -46,6 +46,7 @@ in
     overlays = dynamicOverlaysSet // {
       default = dotPackagesOverlay;
       dot = dotPackagesOverlay;
+      helium-browser = inputs.helium-browser.overlays.default;
       nixporn = inputs.nixporn.overlays.default;
     };
   };
