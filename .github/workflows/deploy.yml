@@ -109,6 +109,7 @@ jobs:
     if: needs.plan.outputs.should-deploy == 'true'
     runs-on: ubuntu-latest
     env:
+      TMPDIR: /tmp
       TAILSCALE_OAUTH_CLIENT_ID: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
       TAILSCALE_OAUTH_SECRET: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
     strategy:
