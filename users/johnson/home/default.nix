@@ -66,6 +66,10 @@ in
 
     gui.apps.bitwarden.enable = !isMinimal;
 
+    gui.apps.clash.enable = false;
+
+    gui.apps.discord.enable = false;
+
     headroom.enable = !isMinimal;
 
     jjui.enable = !isMinimal;
