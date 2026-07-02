@@ -123,61 +123,61 @@ in
           "five-hour-limit"
         ];
 
-        profiles = {
-          deep = {
-            model = "gpt-5.4";
-            model_auto_compact_token_limit = 900000;
-            model_context_window = 1050000;
-            model_reasoning_effort = "high";
-            model_verbosity = "high";
-            plan_mode_reasoning_effort = "xhigh";
-            web_search = "live";
-          };
-
-          nano = {
-            model = "gpt-5.4-nano";
-            model_reasoning_effort = "none";
-            model_verbosity = "low";
-            plan_mode_reasoning_effort = "low";
-            service_tier = "flex";
-            web_search = "disabled";
-          };
-
-          offline = {
-            sandbox_workspace_write.network_access = false;
-            web_search = "disabled";
-          };
-
-          quick = {
-            model = "gpt-5.3-codex-spark";
-            model_reasoning_effort = "medium";
-            model_reasoning_summary = "none";
-            model_verbosity = "low";
-            plan_mode_reasoning_effort = "medium";
-            service_tier = "fast";
-            web_search = "disabled";
-          };
-
-          spark = {
-            model = "gpt-5.3-codex-spark";
-            model_reasoning_effort = "medium";
-            model_verbosity = "medium";
-            plan_mode_reasoning_effort = "high";
-            service_tier = "fast";
-            web_search = "disabled";
-          };
-
-          unsafe = {
-            approval_policy = "on-request";
-            sandbox_mode = "danger-full-access";
-            shell_environment_policy.ignore_default_excludes = true;
-          };
-        };
-
         projects = {
           "${config.home.homeDirectory}/.dotfiles" = {
             trust_level = "trusted";
           };
+        };
+      };
+
+      profiles = {
+        deep = {
+          model = "gpt-5.4";
+          model_auto_compact_token_limit = 900000;
+          model_context_window = 1050000;
+          model_reasoning_effort = "high";
+          model_verbosity = "high";
+          plan_mode_reasoning_effort = "xhigh";
+          web_search = "live";
+        };
+
+        nano = {
+          model = "gpt-5.4-nano";
+          model_reasoning_effort = "none";
+          model_verbosity = "low";
+          plan_mode_reasoning_effort = "low";
+          service_tier = "flex";
+          web_search = "disabled";
+        };
+
+        offline = {
+          sandbox_workspace_write.network_access = false;
+          web_search = "disabled";
+        };
+
+        quick = {
+          model = "gpt-5.3-codex-spark";
+          model_reasoning_effort = "medium";
+          model_reasoning_summary = "none";
+          model_verbosity = "low";
+          plan_mode_reasoning_effort = "medium";
+          service_tier = "fast";
+          web_search = "disabled";
+        };
+
+        spark = {
+          model = "gpt-5.3-codex-spark";
+          model_reasoning_effort = "medium";
+          model_verbosity = "medium";
+          plan_mode_reasoning_effort = "high";
+          service_tier = "fast";
+          web_search = "disabled";
+        };
+
+        unsafe = {
+          approval_policy = "on-request";
+          sandbox_mode = "danger-full-access";
+          shell_environment_policy.ignore_default_excludes = true;
         };
       };
 
