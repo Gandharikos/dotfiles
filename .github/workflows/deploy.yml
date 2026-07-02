@@ -1,0 +1,190 @@
+name: "Deploy NixOS"
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Deployment target"
+        required: true
+        default: "athena"
+        type: choice
+        options:
+          - athena
+          - all
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    name: "Plan Deploy"
+    runs-on: ubuntu-latest
+    outputs:
+      hosts: ${{ steps.plan.outputs.hosts }}
+      should-deploy: ${{ steps.plan.outputs.should-deploy }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute deploy targets
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # shellcheck disable=SC2016
+          deployable_hosts_expr='
+            let
+              root = builtins.getEnv "PWD";
+              hosts = builtins.attrNames (builtins.readDir (root + "/hosts"));
+              readHost =
+                host:
+                let
+                  path = root + "/hosts/${host}/default.nix";
+                  value = if builtins.pathExists path then import path else {};
+                in
+                if value ? deployable && value.deployable == true then host else null;
+            in
+            builtins.filter (x: x != null) (map readHost hosts)
+          '
+
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            if [[ "${{ inputs.target }}" == "all" ]]; then
+              hosts="$(nix eval --json --impure --expr "$deployable_hosts_expr")"
+            else
+              hosts='["athena"]'
+            fi
+          else
+            message="$(git log -1 --pretty=%B)"
+            force_deploy=false
+            if [[ "$message" =~ --deploy[[:space:]]*$ ]]; then
+              force_deploy=true
+            fi
+
+            if [[ "${{ github.event.before }}" =~ ^0+$ ]]; then
+              git diff-tree --no-commit-id --name-only -r "${{ github.sha }}" > changed-files.txt
+            else
+              git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" > changed-files.txt
+            fi
+
+            selfhosted_changed=false
+            if grep -qE '^modules/nixos/services/selfhosted/' changed-files.txt; then
+              selfhosted_changed=true
+            fi
+
+            if [[ "$force_deploy" == "true" ]]; then
+              hosts="$(nix eval --json --impure --expr "$deployable_hosts_expr")"
+            elif [[ "$selfhosted_changed" == "true" ]]; then
+              hosts='["athena"]'
+            else
+              hosts='[]'
+            fi
+          fi
+
+          should_deploy=false
+          if [[ "$(jq 'length' <<<"$hosts")" -gt 0 ]]; then
+            should_deploy=true
+          fi
+
+          echo "hosts=$hosts" >> "$GITHUB_OUTPUT"
+          echo "should-deploy=$should_deploy" >> "$GITHUB_OUTPUT"
+          echo "Deploy targets: $hosts"
+
+  deploy:
+    name: "Deploy ${{ matrix.host }}"
+    needs: plan
+    if: needs.plan.outputs.should-deploy == 'true'
+    runs-on: ubuntu-latest
+    env:
+      TAILSCALE_OAUTH_CLIENT_ID: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+      TAILSCALE_OAUTH_SECRET: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
+    strategy:
+      fail-fast: false
+      matrix:
+        host: ${{ fromJSON(needs.plan.outputs.hosts) }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Connect Tailscale
+        if: env.TAILSCALE_OAUTH_CLIENT_ID != '' && env.TAILSCALE_OAUTH_SECRET != ''
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
+          tags: tag:github-actions
+
+      - name: Configure SSH
+        shell: bash
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          set -euo pipefail
+
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+          pubkey="secrets/johnson/core/${{ matrix.host }}.pub"
+          if [[ ! -f "$pubkey" ]]; then
+            echo "Missing SSH host public key: $pubkey" >&2
+            exit 1
+          fi
+          printf '%s ' "${{ matrix.host }}" >> ~/.ssh/known_hosts
+          cat "$pubkey" >> ~/.ssh/known_hosts
+
+          cat >> ~/.ssh/config <<'EOF'
+          Host athena
+            HostName 159.69.182.58
+            User johnson
+            HostKeyAlias athena
+            IdentitiesOnly yes
+            IdentityFile ~/.ssh/id_ed25519
+            StrictHostKeyChecking yes
+
+          Host artemis loki sigurd
+            User johnson
+            HostKeyAlias %h
+            IdentitiesOnly yes
+            IdentityFile ~/.ssh/id_ed25519
+            StrictHostKeyChecking yes
+          EOF
+
+          chmod 600 ~/.ssh/config ~/.ssh/known_hosts
+
+      - name: Deploy
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          before="$(ssh -q "${{ matrix.host }}" 'readlink -e /run/current-system || true')"
+
+          nix run nixpkgs#nixos-rebuild -- switch \
+            --flake ".#${{ matrix.host }}" \
+            --target-host "${{ matrix.host }}" \
+            --use-substitutes \
+            --use-remote-sudo \
+            --log-format internal-json
+
+          after="$(ssh -q "${{ matrix.host }}" 'readlink -e /run/current-system || true')"
+          if [[ -n "$before" && -n "$after" && "$before" != "$after" ]]; then
+            # shellcheck disable=SC2029
+            ssh "${{ matrix.host }}" TERM=xterm-256color nix store diff-closures "$before" "$after" || true
+          fi
