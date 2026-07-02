@@ -363,7 +363,6 @@
           opacity = 0.0;
           padding = 8.0;
           members = [
-            "lid_toggle"
             "wallpaper"
             "screenshot"
             "noctalia/screen_recorder:recorder"
@@ -533,7 +532,6 @@
       }
     ];
     enabled = [
-      "johnson/lid_toggle"
       "noctalia/bongocat"
       "noctalia/screen_recorder"
       "noctalia/translator"
@@ -594,11 +592,7 @@
       glyph = "ghost-3";
       scale = 1.3;
     };
-    lid_toggle = {
-      type = "johnson/lid_toggle:toggle";
-      command = config.my.gui.desktop.lid.command;
-      notify = true;
-    };
+
     media = {
       hide_when_no_media = true;
       title_scroll = "always";
