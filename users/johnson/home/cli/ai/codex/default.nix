@@ -15,6 +15,7 @@ let
     optionalString
     optionals
     ;
+  headroomEnabled = config.my.headroom.enable or false;
 in
 {
   options.my.codex = {
@@ -60,6 +61,15 @@ in
         };
 
         model = "gpt-5.5";
+        model_provider = mkIf headroomEnabled "headroom";
+        model_providers = mkIf headroomEnabled {
+          headroom = {
+            name = "Headroom";
+            base_url = config.my.headroom.openaiBaseUrl;
+            env_key = "OPENAI_API_KEY";
+            wire_api = "responses";
+          };
+        };
         model_reasoning_effort = "high";
         plan_mode_reasoning_effort = "xhigh";
         service_tier = "fast";

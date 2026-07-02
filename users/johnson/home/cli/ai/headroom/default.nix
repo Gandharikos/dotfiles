@@ -33,6 +33,13 @@ in
       readOnly = true;
       description = "Base URL clients (e.g. claude-code) point ANTHROPIC_BASE_URL at.";
     };
+
+    openaiBaseUrl = mkOption {
+      type = str;
+      default = "${cfg.baseUrl}/v1";
+      readOnly = true;
+      description = "OpenAI-compatible base URL for clients that use OPENAI_BASE_URL or model provider config.";
+    };
   };
 
   config = mkIf cfg.enable {
