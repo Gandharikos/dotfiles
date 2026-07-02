@@ -68,6 +68,9 @@ in
         ".config/zed"
         ".local/share/zed"
       ])
+      (mkIf my.gui.apps.telegram.enable [
+        ".local/share/TelegramDesktop"
+      ])
       (mkIf my.atuin.enable [
         ".local/share/atuin"
       ])

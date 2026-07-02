@@ -72,6 +72,8 @@ in
 
     gui.apps.helium.enable = !isMinimal;
 
+    gui.apps.telegram.enable = !isMinimal;
+
     headroom.enable = !isMinimal;
 
     herdr.enable = !isMinimal;
