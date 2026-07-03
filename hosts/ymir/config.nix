@@ -1,7 +1,9 @@
+{ inputs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
     ./asus-dialpad.nix
+    inputs.vicinae.nixosModules.default
     (import ../common/disko/luks-btrfs-tmpfs.nix { })
   ];
 

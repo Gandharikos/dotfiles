@@ -31,7 +31,10 @@ let
   };
 in
 {
-  imports = [ inputs.vicinae.homeManagerModules.default ];
+  imports = [
+    inputs.vicinae.homeManagerModules.default
+    ./language.nix
+  ];
 
   config = mkIf enable {
     programs.vicinae = {
@@ -77,6 +80,7 @@ in
           mullvad
           nix
           process-manager
+          wiktionary
           wifi-commander
         ]
         ++ optionals (osConfig.dot.gui.desktop.default == "hyprland") [
