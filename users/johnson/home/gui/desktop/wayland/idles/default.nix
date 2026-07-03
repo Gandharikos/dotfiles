@@ -138,11 +138,11 @@ in
       type = nullOr (enum [
         "hypridle"
         "swayidle"
-        "noctalia"
+        "shell"
       ]);
       default =
         if config.my.gui.desktop.shell.default == "noctalia" then
-          "noctalia"
+          "shell"
         else if osConfig.dot.gui.desktop.default == "hyprland" then
           "hypridle"
         else if osConfig.dot.gui.desktop.default == "niri" then

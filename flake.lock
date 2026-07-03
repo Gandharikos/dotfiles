@@ -1530,6 +1530,8 @@
         "spicetify-nix": "spicetify-nix",
         "systems": "systems_5",
         "treefmt": "treefmt",
+        "vicinae": "vicinae",
+        "vicinae-extensions": "vicinae-extensions",
         "wallpapers": "wallpapers",
         "wsl": "wsl",
         "zen": "zen"
@@ -1771,6 +1773,58 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "vicinae": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "systems": [
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1783040721,
+        "narHash": "sha256-9mj0DI9/QxmBTpydeCYHAJTqLoTMmDS0wZuh2EXoVHY=",
+        "owner": "vicinaehq",
+        "repo": "vicinae",
+        "rev": "220af6e5e14f1ff692a258547afab8a88039c60c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vicinaehq",
+        "repo": "vicinae",
+        "type": "github"
+      }
+    },
+    "vicinae-extensions": {
+      "inputs": {
+        "flake-compat": [
+          "flake-compat"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "systems": [
+          "systems"
+        ],
+        "vicinae": [
+          "vicinae"
+        ]
+      },
+      "locked": {
+        "lastModified": 1783009133,
+        "narHash": "sha256-Non+frT3WG0TN60zCq63m8+d7yNmCCMaI363kZaDmPM=",
+        "owner": "vicinaehq",
+        "repo": "extensions",
+        "rev": "afb84fe4b5253777ff82db8e19e6cc0c9b7f811f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vicinaehq",
+        "repo": "extensions",
         "type": "github"
       }
     },

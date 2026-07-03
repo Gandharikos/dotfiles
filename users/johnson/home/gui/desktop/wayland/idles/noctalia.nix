@@ -14,7 +14,8 @@ let
   idleCfg = desktop.idle;
   enable =
     osConfig.dot.gui.desktop.wayland.enable
-    && idleCfg.default == "noctalia"
+    && idleCfg.default == "shell"
+    && desktop.shell.default == "noctalia"
     && (config.programs.noctalia.enable or false);
   brightnessctl = getExe pkgs.brightnessctl;
   screenOffTimeout = lib.max 0 (idleCfg.timeout - 10);

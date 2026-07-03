@@ -59,6 +59,21 @@ in
         ".cache/zen"
         ".config/zen"
       ])
+      (mkIf (my.gui.desktop.shell.default == "dank-material-shell") [
+        ".cache/DankMaterialShell"
+        ".config/DankMaterialShell"
+        ".local/state/DankMaterialShell"
+      ])
+      (mkIf (my.gui.desktop.shell.default == "noctalia") [
+        ".cache/noctalia"
+        ".cache/noctalia-qs"
+        ".config/noctalia"
+      ])
+      (mkIf (my.gui.desktop.launcher.default == "vicinae") [
+        ".config/vicinae"
+        ".local/share/vicinae"
+        ".local/state/vicinae"
+      ])
       (mkIf my.gui.apps.vlc.enable [
         ".config/vlc"
       ])

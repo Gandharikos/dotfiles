@@ -49,7 +49,8 @@ let
   dmsEnabled = config.programs.dank-material-shell.enable or false;
   noctaliaEnabled = config.programs.noctalia.enable or false;
   shellHandlesXf86Binds = dmsEnabled || noctaliaEnabled;
-  useNiriBuiltinShot = desktop.shot.default == "dank-material-shell" && !dmsEnabled;
+  useNiriBuiltinShot =
+    desktop.shot.default == "shell" && desktop.shell.default == "dank-material-shell" && !dmsEnabled;
   screenshotBinds =
     if useNiriBuiltinShot then
       {

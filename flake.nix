@@ -269,6 +269,25 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # launcher
+    vicinae = {
+      url = "github:vicinaehq/vicinae";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      };
+    };
+
+    vicinae-extensions = {
+      url = "github:vicinaehq/extensions";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+        flake-compat.follows = "flake-compat";
+        vicinae.follows = "vicinae";
+      };
+    };
+
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs = {

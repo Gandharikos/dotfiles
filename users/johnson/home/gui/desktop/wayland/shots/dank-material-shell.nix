@@ -15,7 +15,8 @@ let
   dmsEnabled = config.programs.dank-material-shell.enable or false;
   enable =
     osConfig.dot.gui.desktop.wayland.enable
-    && config.my.gui.desktop.shot.default == "dank-material-shell"
+    && config.my.gui.desktop.shot.default == "shell"
+    && config.my.gui.desktop.shell.default == "dank-material-shell"
     && dmsEnabled;
 
   dmsPkg = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;

@@ -7,6 +7,8 @@
   ...
 }:
 let
+  inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.lists) optionals;
   inherit (lib.meta) getExe getExe';
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.strings) escapeShellArgs;
@@ -91,8 +93,10 @@ in
             "lock"
           ];
         in
-        [
+        (optionals (desktop.launcher.default == "shell") [
           "$mod, space, Toggle App Launcher, exec, ${launcher}"
+        ])
+        ++ [
           "$mod, V, Toggle Clipboard History, exec, ${clipboard}"
           "$mod, Tab, Toggle Window Launcher, exec, ${windows}"
           "$mod, Escape, Toggle System Monitor, exec, ${monitor}"
@@ -289,11 +293,13 @@ in
           };
         in
         with keys;
-        {
+        optionalAttrs (desktop.launcher.default == "shell") {
           "${modKey}+Space" = spawn [
             "panel-toggle"
             "launcher"
           ];
+        }
+        // {
           "${modKey}+V" = spawn [
             "panel-toggle"
             "clipboard"

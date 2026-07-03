@@ -23,14 +23,11 @@ in
       type = nullOr (enum [
         "hyprshot"
         "grimblast"
-        "dank-material-shell"
-        "noctalia"
+        "shell"
       ]);
       default =
-        if desktop.shell.default == "noctalia" then
-          "noctalia"
-        else if desktop.shell.default == "dank-material-shell" then
-          "dank-material-shell"
+        if desktop.shell.default != null then
+          "shell"
         else if osConfig.dot.gui.desktop.default == "hyprland" then
           "hyprshot"
         else if osConfig.dot.gui.desktop.default == "niri" then

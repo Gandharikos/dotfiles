@@ -14,7 +14,8 @@ let
   noctaliaEnabled = config.programs.noctalia.enable or false;
   enable =
     osConfig.dot.gui.desktop.wayland.enable
-    && config.my.gui.desktop.shot.default == "noctalia"
+    && config.my.gui.desktop.shot.default == "shell"
+    && config.my.gui.desktop.shell.default == "noctalia"
     && noctaliaEnabled;
 
   noctaliaPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;

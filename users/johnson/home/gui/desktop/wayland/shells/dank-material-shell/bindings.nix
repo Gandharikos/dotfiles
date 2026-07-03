@@ -7,6 +7,8 @@
   ...
 }:
 let
+  inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.lists) optionals;
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.meta) getExe' getExe;
   inherit (config.my.gui) desktop;
@@ -57,8 +59,10 @@ in
           lock = dms' "lock toggle";
           recorder_toggle = dms' "screenRecorder toggleRecording";
         in
-        [
+        (optionals (desktop.launcher.default == "shell") [
           "$mod, space, Toggle App Launcher, exec, ${spotlight}"
+        ])
+        ++ [
           "$mod, V, Toggle Clipboard History, exec, ${clipboard}"
           "$mod, Tab, Toggle Overview, exec, ${overview}"
           "$mod, Escape, Toggle System Monitor, exec, ${monitor}"
@@ -238,11 +242,13 @@ in
           };
         in
         with keys;
-        {
+        optionalAttrs (desktop.launcher.default == "shell") {
           "${modKey}+Space" = spawn [
             "spotlight"
             "toggle"
           ];
+        }
+        // {
           "${modKey}+V" = spawn [
             "clipboard"
             "toggle"
