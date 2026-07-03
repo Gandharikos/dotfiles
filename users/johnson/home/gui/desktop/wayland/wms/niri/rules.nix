@@ -11,6 +11,8 @@ let
     "firefox"
     "org.mozilla.firefox"
     "helium"
+    "chromium"
+    "chromium-browser"
     "google-chrome"
     "google-chrome-stable"
   ];

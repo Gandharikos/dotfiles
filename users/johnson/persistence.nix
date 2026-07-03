@@ -36,9 +36,7 @@ in
         ".cache/helium"
         ".config/helium"
       ])
-      (mkIf my.gui.apps.chrome.enable [
-        ".cache/google-chrome"
-        ".config/google-chrome"
+      (mkIf my.gui.apps.chromium.enable [
         ".cache/chromium"
         ".config/chromium"
         ".local/share/pki"
