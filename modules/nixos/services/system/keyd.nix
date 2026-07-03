@@ -25,7 +25,10 @@ in
     services.keyd = {
       enable = true;
       keyboards.default = {
-        ids = [ "*" ];
+        ids = [
+          "*"
+          "-1234:5678" # vicinae-snippet-virtual-keyboard
+        ];
         settings = {
           global = {
             chord_timeout = "30";

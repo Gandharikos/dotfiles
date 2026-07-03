@@ -69,6 +69,12 @@ in
           applications.preferences = {
             launchPrefix = "uwsm app -- ";
           };
+          snippets.preferences = {
+            enabled = true;
+            undo = true;
+            prePasteDelay = "100";
+            keyDelay = "5";
+          };
         };
       };
 
