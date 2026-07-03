@@ -32,6 +32,8 @@ in
 
     broot.enable = !isMinimal;
 
+    brotab.enable = !isMinimal;
+
     btop.enable = true;
 
     carapace.enable = true;
