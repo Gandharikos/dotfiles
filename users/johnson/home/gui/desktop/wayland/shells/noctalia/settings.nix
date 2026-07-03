@@ -25,7 +25,7 @@
     polkit_agent = true;
     screen_time_enabled = true;
     clipboard_enabled = true;
-    clipboard_history_max_entries = 100;
+    clipboard_history_max_entries = 1000;
     clipboard_confirm_clear_history = true;
     clipboard_auto_paste = "auto";
     launch_apps_as_systemd_services = true;
