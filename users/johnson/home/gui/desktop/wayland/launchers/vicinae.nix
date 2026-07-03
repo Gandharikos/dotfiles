@@ -22,6 +22,13 @@ let
   ];
   vicinaeToggle = escapeShellArgs vicinaeCmd;
   extensionPackages = inputs.vicinae-extensions.packages.${pkgs.stdenv.hostPlatform.system};
+  browserLinkManifest = builtins.toJSON {
+    name = "com.vicinae.vicinae";
+    description = "IPC Native Messaging Host";
+    path = "${config.programs.vicinae.package}/libexec/vicinae/vicinae-browser-link";
+    type = "stdio";
+    allowed_origins = [ "chrome-extension://kcmipingpfbohfjckomimmahknoddnke/" ];
+  };
 in
 {
   imports = [ inputs.vicinae.homeManagerModules.default ];
@@ -65,6 +72,8 @@ in
       extensions =
         with extensionPackages;
         [
+          brotab
+          chromium-bookmarks
           mullvad
           nix
           process-manager
@@ -93,6 +102,17 @@ in
 
     home.shellAliases = optionalAttrs enable {
       launcher = vicinaeToggle;
+    };
+
+    home.file = mkIf pkgs.stdenv.isLinux {
+      ".config/net.imput.helium/NativeMessagingHosts/com.vicinae.vicinae.json" = {
+        force = true;
+        text = browserLinkManifest;
+      };
+      ".config/helium/NativeMessagingHosts/com.vicinae.vicinae.json" = {
+        force = true;
+        text = browserLinkManifest;
+      };
     };
   };
 }
