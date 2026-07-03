@@ -133,6 +133,9 @@ in
           "${config.home.homeDirectory}/.dotfiles" = {
             trust_level = "trusted";
           };
+          "${config.home.homeDirectory}/Dev/Projects" = {
+            trust_level = "trusted";
+          };
         };
       };
 
