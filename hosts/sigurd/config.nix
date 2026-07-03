@@ -18,7 +18,7 @@
         optimizeCompressor = true;
       };
     };
-    game.enable = true;
+    gui.game.enable = true;
     security.enable = true;
     services = {
       btrbk.enable = true;

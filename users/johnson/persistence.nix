@@ -53,6 +53,11 @@ in
       (mkIf my.gui.apps.spotify.spotify-player.enable [
         ".cache/spotify-player"
       ])
+      (mkIf config.dot.gui.game.enable [
+        ".cache/Steam"
+        ".local/share/Steam"
+        ".steam"
+      ])
       (mkIf my.gui.apps.wezterm.enable [
         ".cache/wezterm"
         ".local/share/wezterm"

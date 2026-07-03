@@ -31,6 +31,7 @@
       fwupd.enable = true;
       asus.enable = true;
     };
+    gui.game.enable = true;
     virtual.enable = true;
     persistence.enable = true;
     device = {

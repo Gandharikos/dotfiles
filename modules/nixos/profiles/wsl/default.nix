@@ -33,8 +33,10 @@ in
           optimizeCompressor = true;
         };
       };
-      gui.enable = mkDefault false;
-      game.enable = mkForce false;
+      gui = {
+        enable = mkDefault false;
+        game.enable = mkForce false;
+      };
       security = {
         enable = false;
         auditd.enable = true;
