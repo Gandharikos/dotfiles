@@ -14,10 +14,16 @@ let
   inherit (lib.types) nullOr enum;
   inherit (lib.meta) getExe';
   cat' = getExe' pkgs.coreutils "cat";
-  secretPath = config.sops.secrets.github_token.path;
+  git' = getExe' pkgs.git "git";
+  githubSecretPath = config.sops.secrets.github_token.path;
+  forgejoHost = "git.huwenqiang.dev";
+  forgejoSecretPath = config.sops.secrets.forgejo_token.path;
   tokenExportShell = ''
-    if [ -f ${secretPath} ]; then
-      export GITHUB_TOKEN="$(${cat'} ${secretPath})"
+    if [ -f ${githubSecretPath} ]; then
+      export GITHUB_TOKEN="$(${cat'} ${githubSecretPath})"
+    fi
+    if [ -f ${forgejoSecretPath} ]; then
+      export FORGEJO_TOKEN="$(${cat'} ${forgejoSecretPath})"
     fi
   '';
 in
@@ -38,8 +44,11 @@ in
     programs = {
       bash.initExtra = tokenExportShell;
       fish.shellInit = ''
-        if test -f ${secretPath}
-          set -gx GITHUB_TOKEN (${cat'} ${secretPath})
+        if test -f ${githubSecretPath}
+          set -gx GITHUB_TOKEN (${cat'} ${githubSecretPath})
+        end
+        if test -f ${forgejoSecretPath}
+          set -gx FORGEJO_TOKEN (${cat'} ${forgejoSecretPath})
         end
       '';
       zsh.initContent = tokenExportShell;
@@ -212,8 +221,20 @@ in
       activation.removeExistingGitconfig = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
         rm -f ~/.gitconfig
       '';
+      activation.installForgejoCredential = lib.hm.dag.entryAfter [ "sops-nix" ] ''
+        if [ -f ${forgejoSecretPath} ]; then
+          forgejo_token="$(${cat'} ${forgejoSecretPath})"
+          if [ -n "$forgejo_token" ]; then
+            printf 'protocol=https\nhost=${forgejoHost}\nusername=${config.my.name}\npassword=%s\n\n' "$forgejo_token" \
+              | ${git'} credential approve
+          fi
+        fi
+      '';
     };
 
-    sops.secrets.github_token = { };
+    sops.secrets = {
+      github_token = { };
+      forgejo_token = { };
+    };
   };
 }
