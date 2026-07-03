@@ -39,7 +39,7 @@ in
     default = mkOption {
       type = nullOr (enum [
         "zen"
-        "google-chrome"
+        "chromium"
         "firefox"
         "helium"
       ]);

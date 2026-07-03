@@ -11,15 +11,21 @@ let
     getExe
     getExe'
     mkEnableOption
+    mkOption
     mkIf
     optionalString
     optionals
     ;
-  headroomEnabled = config.my.headroom.enable or false;
+  headroomEnabled = cfg.useHeadroom;
 in
 {
   options.my.codex = {
     enable = mkEnableOption "codex";
+    useHeadroom = mkOption {
+      type = lib.types.bool;
+      default = config.my.headroom.enable or false;
+      description = "Whether to use headroom token-compression proxy for Codex.";
+    };
   };
 
   config = mkIf cfg.enable {

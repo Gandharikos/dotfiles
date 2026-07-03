@@ -38,7 +38,10 @@ in
 
     claude-code.enable = !isMinimal;
 
-    codex.enable = !isMinimal;
+    codex = {
+      enable = !isMinimal;
+      useHeadroom = false;
+    };
 
     direnv = {
       enable = true;
