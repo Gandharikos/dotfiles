@@ -1,9 +1,13 @@
 {
   config,
   lib,
+  pkgs,
   self,
   ...
 }:
+let
+  forgejo = config.dot.selfhosted.services.forgejo;
+in
 {
   imports = [
     (import ../common/disko/bios-ext4.nix {
@@ -32,8 +36,40 @@
 
   services.rsshub.secretFiles = [ config.sops.templates.rsshub-env.path ];
 
+  sops.secrets.forgejo-actions-runner-token = {
+    sopsFile = "${self}/secrets/services/forgejo.yaml";
+    key = "actions-runner-token";
+  };
+
+  sops.templates.forgejo-actions-runner-env = {
+    owner = "root";
+    group = "root";
+    mode = "0400";
+    content = ''
+      TOKEN=${config.sops.placeholder.forgejo-actions-runner-token}
+    '';
+    restartUnits = [ "gitea-runner-athena.service" ];
+  };
+
+  services.forgejo.settings.actions.ENABLED = true;
+
+  services.gitea-actions-runner = {
+    package = pkgs.forgejo-runner;
+    instances.athena = {
+      enable = true;
+      name = "athena";
+      url = "https://${forgejo.hostName}";
+      tokenFile = config.sops.templates.forgejo-actions-runner-env.path;
+      labels = [
+        "docker:docker://catthehacker/ubuntu:act-latest"
+        "ubuntu-latest:docker://catthehacker/ubuntu:act-latest"
+      ];
+    };
+  };
+
   dot = {
     primaryUser = "johnson";
+    virtual.podman.enable = true;
     users.johnson.home.my.direnv.enable = lib.mkForce false;
 
     boot = {
