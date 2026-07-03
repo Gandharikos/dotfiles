@@ -4,7 +4,7 @@ export NIX_CONFIG := "experimental-features = nix-command flakes"
 flake := env('FLAKE', justfile_directory())
 user := `whoami`
 rebuild := if os() == "macos" { "sudo darwin-rebuild" } else { "nixos-rebuild" }
-system-args := if os() == "macos" { "--show-trace -L -v" } else { "--show-trace -L -v --sudo" }
+system-args := if os() == "macos" { "" } else { "--elevate run0 --no-reexec" }
 
 [private]
 default:
