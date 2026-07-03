@@ -18,6 +18,7 @@ let
   ];
   browserMatches = builtins.map (appId: { "app-id" = "^${appId}$"; }) browserAppIds;
   pipTitle = "^(Picture-in-Picture|Picture in picture)$";
+  passwordManagerTitle = "^(1Password|Bitwarden|.*[Vv]aultwarden.*)$";
   cfg = config.my.gui.desktop.niri;
 in
 {
@@ -42,15 +43,17 @@ in
         }
         {
           matches = [
-            { title = "^(1Password)$"; }
-            { title = "^(Bitwarden)$"; }
+            { title = passwordManagerTitle; }
             { app-id = "^(Bitwarden)$"; }
           ];
           open-floating = true;
         }
         {
           matches = browserMatches;
-          excludes = singleton { title = pipTitle; };
+          excludes = [
+            { title = pipTitle; }
+            { title = passwordManagerTitle; }
+          ];
           open-maximized = true;
         }
         {

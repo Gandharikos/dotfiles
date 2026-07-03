@@ -52,6 +52,8 @@ in
         "match:title ^(Bitwarden)$, float on"
         "match:class ^(Bitwarden)$, float on"
         "match:class ^(Bitwarden)$, center on"
+        # Vaultwarden
+        "match:title ^(.*[Vv]aultwarden.*)$, float on"
         # remove borders on floating windows
         "match:float 1, border_size 0"
 
