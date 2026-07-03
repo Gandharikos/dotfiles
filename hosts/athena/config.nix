@@ -10,6 +10,7 @@
       device = "/dev/sda";
       swapSize = "2G";
     })
+    (import ./athena-volume.nix { })
   ];
 
   networking.domain = "huwenqiang.dev";
