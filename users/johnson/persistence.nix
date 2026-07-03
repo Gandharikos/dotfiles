@@ -34,7 +34,9 @@ in
       ])
       (mkIf my.gui.apps.helium.enable [
         ".cache/helium"
+        ".cache/net.imput.helium"
         ".config/helium"
+        ".config/net.imput.helium"
       ])
       (mkIf my.gui.apps.chromium.enable [
         ".cache/chromium"
