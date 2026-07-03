@@ -64,6 +64,10 @@ in
         "docker:docker://catthehacker/ubuntu:act-latest"
         "ubuntu-latest:docker://catthehacker/ubuntu:act-latest"
       ];
+      settings.container = {
+        network = "host";
+        options = "--add-host=${forgejo.hostName}:127.0.0.1";
+      };
     };
   };
 
