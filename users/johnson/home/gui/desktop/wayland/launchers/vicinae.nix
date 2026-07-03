@@ -67,6 +67,7 @@ in
         [
           mullvad
           nix
+          process-manager
           wifi-commander
         ]
         ++ optionals (osConfig.dot.gui.desktop.default == "hyprland") [
@@ -76,6 +77,9 @@ in
         ]
         ++ optionals (osConfig.dot.gui.desktop.default == "niri") [
           niri
+        ]
+        ++ optionals config.my.gui.apps.zed.enable [
+          zed-recents
         ];
     };
 
