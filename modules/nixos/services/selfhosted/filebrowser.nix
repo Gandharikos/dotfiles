@@ -120,6 +120,14 @@ in
     };
 
     systemd.services = {
+      filebrowser = {
+        preStart = ''
+          ${pkgs.coreutils}/bin/mkdir -p ${cfg.filesDir}
+          ${pkgs.coreutils}/bin/chmod 0750 ${cfg.filesDir}
+        '';
+        serviceConfig.WorkingDirectory = lib.mkForce cfg.dataDir;
+      };
+
       kanidm = mkIf oidcEnabled {
         after = [ "filebrowser-oauth2-secrets.service" ];
         requires = [ "filebrowser-oauth2-secrets.service" ];

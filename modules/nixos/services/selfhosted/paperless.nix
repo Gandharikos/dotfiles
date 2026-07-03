@@ -79,6 +79,11 @@ in
       };
     };
 
+    systemd.tmpfiles.rules = [
+      "d ${config.services.paperless.dataDir}/consume 0750 paperless paperless -"
+      "d ${config.services.paperless.dataDir}/media 0750 paperless paperless -"
+    ];
+
     systemd.services = {
       kanidm = mkIf oidcEnabled {
         after = [ "paperless-oauth2-secrets.service" ];
