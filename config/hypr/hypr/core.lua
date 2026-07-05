@@ -15,7 +15,7 @@ function M.setup(ctx)
   hl.config({
     general = {
       border_size = 2,
-      gaps_in = 8,
+      gaps_in = 4,
       gaps_out = 8,
       gaps_workspaces = 12,
       no_focus_fallback = false,

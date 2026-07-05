@@ -15,13 +15,14 @@ function M.setup(ctx)
       dim_around = 0.4,
       blur = {
         enabled = true,
-        size = 8,
-        passes = 2,
+        size = 10,
+        passes = 3,
         ignore_opacity = true,
         new_optimizations = true,
         xray = true,
+        vibrancy = 0.25,
         popups = true,
-        popups_ignorealpha = 0.2,
+        popups_ignorealpha = 0.1,
       },
       shadow = {
         enabled = true,
