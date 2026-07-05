@@ -1,5 +1,8 @@
 result
 result/
+docs/.astro
+docs/dist
+docs/node_modules
 .pre-commit-config.yaml
 .direnv
 .Trash-1000
