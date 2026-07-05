@@ -24,7 +24,7 @@ let
     concatStringsSep "" [
       (leftPad iconColor)
       "[${icon} ](fg:crust bg:${iconColor})"
-      "[ ${content} ](fg:${contentFg} bg:${moduleBg})"
+      "[ ${content}](fg:${contentFg} bg:${moduleBg})"
       textRightPad
     ];
   lang = symbol: color: {
@@ -94,7 +94,7 @@ in
       hostname = {
         ssh_only = false;
         style = "fg:${contentFg} bg:${moduleBg}";
-        format = "[ $hostname ]($style)${textRightPad}";
+        format = "[ $hostname]($style)${textRightPad}";
       };
 
       directory = {
@@ -104,7 +104,7 @@ in
           (leftPad "peach")
           "[ ](fg:crust bg:peach)"
           "[$read_only]($read_only_style)"
-          "[ $path ]($style)"
+          "[ $path]($style)"
           textRightPad
         ];
         read_only = " ";
@@ -141,14 +141,14 @@ in
         format = concatStringsSep "" [
           (leftPad "green")
           "[$symbol ](fg:crust bg:green)"
-          "[ $branch(:$remote_branch) ]($style)"
+          "[ $branch(:$remote_branch)]($style)"
         ];
       };
 
       git_status = {
         style = "fg:${cfg.accent} bg:${moduleBg}";
         format = concatStringsSep "" [
-          "[ $all_status$ahead_behind ]($style)"
+          "[ $all_status$ahead_behind]($style)"
           textRightPad
         ];
         conflicted = " ";
