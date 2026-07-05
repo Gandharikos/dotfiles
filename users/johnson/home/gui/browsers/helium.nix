@@ -32,6 +32,8 @@ in
       package = heliumPkg;
       flags = [
         "--ozone-platform-hint=auto"
+        "--disable-accelerated-video-decode"
+        "--disable-features=VaapiVideoDecoder,VaapiOnNvidiaGPUs,AcceleratedVideoDecodeLinuxGL,AcceleratedVideoDecodeLinuxZeroCopyGL"
       ];
       policies = {
         BrowserSignin = 0;
