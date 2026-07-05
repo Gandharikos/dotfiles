@@ -3,6 +3,7 @@
   config,
   osConfig,
   pkgs,
+  inputs,
   ...
 }:
 let
@@ -30,6 +31,28 @@ let
     inherit (monitor) scale;
   };
   lang = "eng+chi_sim+chi_tra";
+  noctaliaEnabled = config.programs.noctalia.enable or false;
+  dmsEnabled = config.programs.dank-material-shell.enable or false;
+  dmsExe = getExe' inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default "dms";
+  shellBackend =
+    if desktop.shell.default == "noctalia" && noctaliaEnabled then
+      "noctalia"
+    else if desktop.shell.default == "dank-material-shell" && dmsEnabled then
+      "dank-material-shell"
+    else
+      "none";
+  launcherBackend =
+    if desktop.launcher.default == "shell" && shellBackend == "none" then
+      "none"
+    else
+      desktop.launcher.default;
+  shotBackend =
+    if desktop.shot.default == null then
+      "none"
+    else if desktop.shot.default == "shell" && shellBackend == "none" then
+      "none"
+    else
+      desktop.shot.default;
   wl-ocr = uwsmScript pkgs "wl-ocr" ''
     ${getExe pkgs.grim} -g "$(${getExe pkgs.slurp})" - | ${getExe pkgs.tesseract} ${lang} - - | ${getExe' pkgs.wl-clipboard "wl-copy"}
   '';
@@ -71,6 +94,11 @@ let
     mod = desktop.modKey;
     workspaces = desktop.workspace.number;
     inherit theme;
+    backends = {
+      launcher = launcherBackend;
+      shell = shellBackend;
+      shot = shotBackend;
+    };
     keys = {
       inherit (key)
         I
@@ -86,14 +114,22 @@ let
       inherit terminal;
       inherit browser;
       file_manager = fileManager;
-      launcher = uwsmApp pkgs (getExe config.programs.vicinae.package) [ "toggle" ];
       ocr = wl-ocr;
       screenshot_region = screenshotRegion;
-      noctalia = uwsmApp pkgs (getExe config.programs.noctalia.package) [ "msg" ];
       keyboard_backlight_toggle = keyboardBacklightToggle;
       playerctl = uwsmApp pkgs (getExe pkgs.playerctl) [ ];
       wpctl = uwsmApp pkgs (getExe' pkgs.wireplumber "wpctl") [ ];
       brightnessctl = uwsmApp pkgs (getExe pkgs.brightnessctl) [ ];
+      noctalia = uwsmApp pkgs (getExe config.programs.noctalia.package) [ "msg" ];
+      dms = uwsmApp pkgs dmsExe [ ];
+      dms_ipc = uwsmApp pkgs dmsExe [
+        "ipc"
+        "call"
+      ];
+      vicinae = uwsmApp pkgs (getExe config.programs.vicinae.package) [ ];
+      hyprshot = uwsmApp pkgs (getExe pkgs.hyprshot) [ ];
+      grimblast = uwsmApp pkgs (getExe pkgs.grimblast) [ ];
+      satty = uwsmApp pkgs (getExe pkgs.satty) [ ];
     };
     startup = [
       "${withUWSM pkgs "wl-clip-persist"} --clipboard regular"

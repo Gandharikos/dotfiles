@@ -3,7 +3,7 @@ local M = {}
 function M.setup(ctx)
   local theme = ctx.theme or {}
 
-  for _, monitor in ipairs(ctx.generated.monitors or {}) do
+  for _, monitor in ipairs(ctx.monitors or {}) do
     hl.monitor(monitor)
   end
   hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
