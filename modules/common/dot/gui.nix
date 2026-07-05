@@ -72,7 +72,7 @@ in
       );
       default =
         if dot.gui.desktop.type == "wayland" then
-          "niri"
+          "hyprland"
         else if dot.gui.desktop.type == "xorg" then
           "i3"
         else
