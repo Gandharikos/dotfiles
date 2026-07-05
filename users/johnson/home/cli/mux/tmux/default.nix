@@ -9,7 +9,8 @@ let
   };
   cfg = config.my.tmux;
   autoStart = config.my.mux.autoStart && config.my.mux.default == "tmux";
-  inherit (lib.options) mkEnableOption;
+  inherit (lib.options) mkEnableOption mkOption;
+  inherit (lib.types) enum;
   inherit (lib.modules) mkIf mkBefore;
   shell = "${config.home.profileDirectory}/bin/${config.my.shell}";
 in
@@ -19,6 +20,14 @@ in
   options.my.tmux = {
     enable = mkEnableOption "tmux" // {
       default = config.my.mux.default == "tmux";
+    };
+    statusPosition = mkOption {
+      type = enum [
+        "top"
+        "bottom"
+      ];
+      default = "top";
+      description = "Position of the tmux status bar.";
     };
   };
 
