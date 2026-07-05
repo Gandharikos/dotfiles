@@ -22,6 +22,7 @@ let
     inherit
       inputs
       config
+      osConfig
       keys
       lib
       avatar

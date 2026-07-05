@@ -1,12 +1,17 @@
 {
   inputs,
   config,
+  osConfig,
   keys,
   lib,
   avatar,
   wallpaper,
   wallpaperDirectory,
 }:
+let
+  panelAttachedPlacement =
+    if osConfig.dot.gui.desktop.default == "hyprland" then "floating" else "attached";
+in
 {
   shell = {
     ui_scale = 1;
@@ -42,10 +47,10 @@
       borders = true;
       shadow = true;
       launcher_placement = "floating";
-      clipboard_placement = "attached";
-      control_center_placement = "attached";
-      wallpaper_placement = "attached";
-      session_placement = "attached";
+      clipboard_placement = panelAttachedPlacement;
+      control_center_placement = panelAttachedPlacement;
+      wallpaper_placement = panelAttachedPlacement;
+      session_placement = panelAttachedPlacement;
       open_near_click_control_center = false;
       open_near_click_launcher = false;
       open_near_click_clipboard = false;
