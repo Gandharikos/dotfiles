@@ -61,8 +61,7 @@ let
       escapeShellArgs [
         hyprctl'
         "dispatch"
-        "dpms"
-        "on"
+        ''hl.dsp.dpms({ action = "enable" })''
       ]
     else if osConfig.dot.gui.desktop.default == "niri" then
       escapeShellArgs [
@@ -79,8 +78,7 @@ let
       escapeShellArgs [
         hyprctl'
         "dispatch"
-        "dpms"
-        "off"
+        ''hl.dsp.dpms({ action = "disable" })''
       ]
     else if osConfig.dot.gui.desktop.default == "niri" then
       escapeShellArgs [
@@ -141,10 +139,10 @@ in
         "shell"
       ]);
       default =
-        if config.my.gui.desktop.shell.default == "noctalia" then
-          "shell"
-        else if osConfig.dot.gui.desktop.default == "hyprland" then
+        if osConfig.dot.gui.desktop.default == "hyprland" then
           "hypridle"
+        else if config.my.gui.desktop.shell.default == "noctalia" then
+          "shell"
         else if osConfig.dot.gui.desktop.default == "niri" then
           "swayidle"
         else

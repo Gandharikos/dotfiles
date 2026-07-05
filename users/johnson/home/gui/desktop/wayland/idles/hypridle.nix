@@ -59,12 +59,12 @@ in
             on-timeout = lockSession;
           }
           {
-            inherit timeout;
+            timeout = timeout + 10;
             on-timeout = screenOff;
             on-resume = screenOn;
           }
           {
-            timeout = timeout + 10;
+            timeout = timeout + 300;
             on-timeout = toString suspend;
           }
         ];
