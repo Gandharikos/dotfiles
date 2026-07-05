@@ -8,10 +8,8 @@
 }:
 let
   inherit (lib.attrsets) optionalAttrs;
-  inherit (lib.lists) optionals;
   inherit (lib.meta) getExe getExe';
-  inherit (lib.modules) mkIf mkForce;
-  inherit (lib.strings) escapeShellArgs;
+  inherit (lib.modules) mkIf;
   inherit (config.my.gui) desktop;
   inherit (osConfig.dot.keyboard) keys;
 
@@ -25,7 +23,6 @@ let
       "msg"
     ]
     ++ args;
-  noctalia = args: escapeShellArgs (noctaliaArgs args);
   screenRecorderArgs = action: [
     noctaliaExe
     "msg"
@@ -34,154 +31,11 @@ let
     "focused"
     action
   ];
-  noctaliaRecorder = action: escapeShellArgs (screenRecorderArgs action);
 
   inherit (desktop) modKey;
 in
 {
   config = mkIf enable {
-    wayland.windowManager.hyprland.settings = with keys; {
-      bindd =
-        let
-          launcher = noctalia [
-            "panel-toggle"
-            "launcher"
-          ];
-          clipboard = noctalia [
-            "panel-toggle"
-            "clipboard"
-          ];
-          windows = noctalia [
-            "panel-toggle"
-            "launcher"
-          ];
-          monitor = noctalia [
-            "panel-toggle"
-            "control-center"
-            "system"
-          ];
-          sessionMenu = noctalia [
-            "panel-toggle"
-            "session"
-          ];
-          controlCenter = noctalia [
-            "panel-toggle"
-            "control-center"
-          ];
-          settings = noctalia [
-            "settings-toggle"
-          ];
-          notifications = noctalia [
-            "panel-toggle"
-            "control-center"
-            "notifications"
-          ];
-          dnd = noctalia [
-            "notification-dnd-toggle"
-          ];
-          darkMode = noctalia [
-            "theme-mode-toggle"
-          ];
-          nightLight = noctalia [
-            "nightlight-toggle"
-          ];
-          inhibit = noctalia [
-            "caffeine-toggle"
-          ];
-          lock = noctalia [
-            "session"
-            "lock"
-          ];
-        in
-        (optionals (desktop.launcher.default == "shell") [
-          "$mod, space, Toggle App Launcher, exec, ${launcher}"
-        ])
-        ++ [
-          "$mod, V, Toggle Clipboard History, exec, ${clipboard}"
-          "$mod, Tab, Toggle Window Launcher, exec, ${windows}"
-          "$mod, Escape, Toggle System Monitor, exec, ${monitor}"
-          "$mod, X, Toggle Session Menu, exec, ${sessionMenu}"
-          "$mod, C, Toggle Control Center, exec, ${controlCenter}"
-          "$mod SHIFT, D, Toggle Do Not Disturb, exec, ${dnd}"
-          "$mod SHIFT, T, Toggle Theme Mode, exec, ${darkMode}"
-          "$mod SHIFT, ${N}, Toggle Night Light, exec, ${nightLight}"
-          "$mod, ${I}, Toggle Inhibit, exec, ${inhibit}"
-          "ALT, Comma, Toggle Settings, exec, ${settings}"
-          "$mod, Apostrophe, Toggle Notifications, exec, ${notifications}"
-          "SUPER ALT, L, Lock Screen, exec, ${lock}"
-          ", F10, Toggle Screen Recording, exec, ${noctaliaRecorder "toggle"}"
-        ];
-
-      binddl = mkForce (
-        let
-          playPause = noctalia [
-            "media"
-            "toggle"
-          ];
-          next = noctalia [
-            "media"
-            "next"
-          ];
-          previous = noctalia [
-            "media"
-            "previous"
-          ];
-          muteOutput = noctalia [
-            "volume-mute"
-          ];
-          muteInput = noctalia [
-            "mic-mute"
-          ];
-          brightnessctl = getExe' pkgs.brightnessctl "brightnessctl";
-          kbdToggle = pkgs.writeShellScript "kbd-toggle" ''
-            current=$(${brightnessctl} --device="*::kbd_backlight" get)
-            if [ "$current" -eq 0 ]; then
-              ${brightnessctl} --device="*::kbd_backlight" set 100%
-            else
-              ${brightnessctl} --device="*::kbd_backlight" set 0
-            fi
-          '';
-        in
-        [
-          ", XF86AudioPlay, Play/Pause, exec, ${playPause}"
-          ", XF86AudioPause, Play/Pause, exec, ${playPause}"
-          ", XF86AudioNext, Skip to Next Track, exec, ${next}"
-          ", XF86AudioPrev, Return to Previous Track, exec, ${previous}"
-          ", XF86AudioMute, Mute/Unmute Volume, exec, ${muteOutput}"
-          ", XF86AudioMicMute, Mute/Unmute Microphone, exec, ${muteInput}"
-          ", XF86KbdLightOnOff, Toggle Keyboard Backlight, exec, ${kbdToggle}"
-        ]
-      );
-
-      binddel = mkForce (
-        let
-          increaseVolume = noctalia [
-            "volume-up"
-          ];
-          decreaseVolume = noctalia [
-            "volume-down"
-          ];
-          increaseBrightness = noctalia [
-            "brightness-up"
-          ];
-          decreaseBrightness = noctalia [
-            "brightness-down"
-          ];
-          brightnessctl = getExe' pkgs.brightnessctl "brightnessctl";
-          increaseKbdBrightness = "${brightnessctl} --device=*::kbd_backlight set +10%";
-          decreaseKbdBrightness = "${brightnessctl} --device=*::kbd_backlight set 10%-";
-        in
-        [
-          ", XF86AudioRaiseVolume, Increase Volume, exec, ${increaseVolume}"
-          ", XF86AudioLowerVolume, Decrease Volume, exec, ${decreaseVolume}"
-          ", XF86MonBrightnessUp, Increase Brightness, exec, ${increaseBrightness}"
-          ", XF86MonBrightnessDown, Decrease Brightness, exec, ${decreaseBrightness}"
-          ", XF86KbdBrightnessUp, Increase Keyboard Brightness, exec, ${increaseKbdBrightness}"
-          ", XF86KbdBrightnessDown, Decrease Keyboard Brightness, exec, ${decreaseKbdBrightness}"
-        ]
-      );
-    };
-
     programs.niri.settings = {
       binds =
         let

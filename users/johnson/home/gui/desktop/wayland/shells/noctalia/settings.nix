@@ -41,7 +41,7 @@
       transparency_mode = "glass";
       borders = true;
       shadow = true;
-      launcher_placement = "centered";
+      launcher_placement = "floating";
       clipboard_placement = "attached";
       control_center_placement = "attached";
       wallpaper_placement = "attached";
@@ -561,7 +561,7 @@
   widget = {
     active_window = {
       max_length = 160;
-      title_scroll = "on_hover";
+      title_scroll = "always";
     };
     audio_visualizer = {
       bands = 60;

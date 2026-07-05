@@ -164,7 +164,7 @@ in
       };
       device = mkOption {
         type = str;
-        default = "dell::kbd_backlight";
+        default = "*::kbd_backlight";
         description = "Brightnessctl device name for the keyboard backlight.";
       };
     };

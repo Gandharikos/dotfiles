@@ -8,8 +8,7 @@
 }:
 let
   inherit (lib.attrsets) optionalAttrs;
-  inherit (lib.lists) optionals;
-  inherit (lib.modules) mkIf mkForce;
+  inherit (lib.modules) mkIf;
   inherit (lib.meta) getExe' getExe;
   inherit (config.my.gui) desktop;
   inherit (osConfig.dot.keyboard) keys;
@@ -40,78 +39,6 @@ let
 in
 {
   config = mkIf enable {
-    wayland.windowManager.hyprland.settings = with keys; {
-      bindd =
-        let
-          spotlight = dms' "spotlight toggle";
-          clipboard = dms' "clipboard toggle";
-          overview = dms' "hypr toggleOverview";
-          monitor = dms' "processlist toggle";
-          powermenu = dms' "powermenu toggle";
-          control_center = dms' "control-center toggle";
-          notepad = dms' "notepad toggle";
-          notifications = dms' "notifications toggle";
-          dnd = dms' "notifications toggleDoNotDisturb";
-          settings = dms' "settings toggle";
-          theme_toggle = dms' "theme toggle";
-          night_toggle = dms' "night toggle";
-          inhibit = dms' "inhibit toggle";
-          lock = dms' "lock toggle";
-          recorder_toggle = dms' "screenRecorder toggleRecording";
-        in
-        (optionals (desktop.launcher.default == "shell") [
-          "$mod, space, Toggle App Launcher, exec, ${spotlight}"
-        ])
-        ++ [
-          "$mod, V, Toggle Clipboard History, exec, ${clipboard}"
-          "$mod, Tab, Toggle Overview, exec, ${overview}"
-          "$mod, Escape, Toggle System Monitor, exec, ${monitor}"
-          "$mod, X, Toggle Power Menu, exec, ${powermenu}"
-          "$mod, C, Toggle Control Center, exec, ${control_center}"
-          "$mod, ${N}, Toggle Notepad, exec, ${notepad}"
-          "$mod SHIFT, D, Toggle Do Not Disturb, exec, ${dnd}"
-          "$mod SHIFT, T, Toggle Theme Mode, exec, ${theme_toggle}"
-          "$mod SHIFT, ${N}, Toggle Night Mode, exec, ${night_toggle}"
-          "$mod, ${I}, Toggle Inhibit, exec, ${inhibit}"
-          "ALT, Comma, Toggle Settings, exec, ${settings}"
-          "$mod, Apostrophe, Toggle Notifications, exec, ${notifications}"
-        ]
-        ++ [
-          "SUPER ALT, L, Toggle Lock, exec, ${lock}"
-          ", F10, Toggle Screen Recording, exec, ${recorder_toggle}"
-        ];
-      binddl = mkForce (
-        let
-          mpris_playpause = dms' "mpris playPause";
-          mpris_next = dms' "mpris next";
-          mpris_prev = dms' "mpris previous";
-          audio_mute = dms' "audio mute";
-          audio_micmute = dms' "audio micmute";
-        in
-        [
-          ", XF86AudioPlay, Play/Pause, exec, ${mpris_playpause}"
-          ", XF86AudioPause, Play/Pause, exec, ${mpris_playpause}"
-          ", XF86AudioNext, Skip to Next Track, exec, ${mpris_next}"
-          ", XF86AudioPrev, Return to Previous Track, exec, ${mpris_prev}"
-          ", XF86AudioMute, Mute/Unmute Volume, exec, ${audio_mute}"
-          ", XF86AudioMicMute, Mute/Unmute Microphone, exec, ${audio_micmute}"
-        ]
-      );
-      binddel = mkForce (
-        let
-          increment_volume = dms' "audio increment 2";
-          decrement_volume = dms' "audio decrement 2";
-          brightness_up = dms' "brightness increment 5 \"\"";
-          brightness_down = dms' "brightness decrement 5 \"\"";
-        in
-        [
-          ", XF86AudioRaiseVolume, Increase Volume, exec, ${increment_volume}"
-          ", XF86AudioLowerVolume, Decrease Volume, exec, ${decrement_volume}"
-          ", XF86MonBrightnessUp, Increase Brightness, exec, ${brightness_up}"
-          ", XF86MonBrightnessDown, Decrease Brightness, exec, ${brightness_down}"
-        ]
-      );
-    };
     programs.niri.settings = {
       binds =
         let

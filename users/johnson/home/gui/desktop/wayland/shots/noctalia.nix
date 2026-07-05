@@ -9,7 +9,6 @@
 let
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf;
-  inherit (lib.strings) escapeShellArgs;
 
   noctaliaEnabled = config.programs.noctalia.enable or false;
   enable =
@@ -27,26 +26,9 @@ let
       "msg"
     ]
     ++ args;
-  noctaliaScreenshot = args: escapeShellArgs (noctaliaMsg args);
 in
 {
   config = mkIf enable {
-    wayland.windowManager.hyprland.settings.bindd = [
-      ", Print, Screenshot Region, exec, ${noctaliaScreenshot [ "screenshot-region" ]}"
-      "CTRL, Print, Screenshot All Outputs, exec, ${
-        noctaliaScreenshot [
-          "screenshot-fullscreen"
-          "all"
-        ]
-      }"
-      "ALT, Print, Screenshot Pick Output, exec, ${
-        noctaliaScreenshot [
-          "screenshot-fullscreen"
-          "pick"
-        ]
-      }"
-    ];
-
     programs.niri.settings.binds = {
       "Print".action.spawn = noctaliaMsg [
         "screenshot-region"

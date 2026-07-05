@@ -2,13 +2,10 @@
   lib,
   config,
   osConfig,
-  pkgs,
   ...
 }:
 let
-  inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf;
-  inherit (lib.strings) escapeShellArgs;
   inherit (config.my.gui) desktop;
 
   idleCfg = desktop.idle;
@@ -17,21 +14,8 @@ let
     && idleCfg.default == "shell"
     && desktop.shell.default == "noctalia"
     && (config.programs.noctalia.enable or false);
-  brightnessctl = getExe pkgs.brightnessctl;
   screenOffTimeout = lib.max 0 (idleCfg.timeout - 10);
   keyboardBacklightTimeout = idleCfg.timeout / 2;
-  keyboardBacklightOff = escapeShellArgs [
-    brightnessctl
-    "-sd"
-    idleCfg.keyboardBacklight.device
-    "set"
-    "0"
-  ];
-  keyboardBacklightOn = escapeShellArgs [
-    brightnessctl
-    "-rd"
-    idleCfg.keyboardBacklight.device
-  ];
 in
 {
   config = mkIf enable {
@@ -47,8 +31,8 @@ in
           enabled = true;
           timeout = screenOffTimeout;
           action = "screen_off";
-          command = "noctalia:dpms-off";
-          resume_command = "noctalia:dpms-on";
+          command = idleCfg.commands.screenOff;
+          resume_command = idleCfg.commands.screenOn;
         };
         lock = {
           enabled = true;
@@ -67,8 +51,8 @@ in
           enabled = true;
           timeout = keyboardBacklightTimeout;
           action = "command";
-          command = keyboardBacklightOff;
-          resume_command = keyboardBacklightOn;
+          command = idleCfg.commands.keyboardBacklightOff;
+          resume_command = idleCfg.commands.keyboardBacklightOn;
         };
       };
     };

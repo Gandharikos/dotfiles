@@ -102,10 +102,6 @@ in
         ];
     };
 
-    wayland.windowManager.hyprland.settings.bindd = [
-      "$mod, space, Toggle App Launcher, exec, ${vicinaeToggle}"
-    ];
-
     programs.niri.settings.binds = {
       "${desktop.modKey}+Space".action.spawn = vicinaeCmd;
     };
