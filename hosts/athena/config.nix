@@ -149,8 +149,8 @@ in
       services.paperless.enable = true;
       services.immich.enable = true;
       services.blog.enable = true;
-      services.notes.enable = true;
-      services.vikunja.enable = true;
+      services.notes.enable = false;
+      services.vikunja.enable = false;
       services.grafana.enable = true;
       services.prometheus.enable = true;
       services.loki.enable = true;
