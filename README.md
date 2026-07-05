@@ -29,6 +29,8 @@ Encrypted secrets are required for most real deployments. Read the docs before r
 
 ## Docs
 
+Please read [document](docs/src/content/docs/index.md).
+
 Documentation lives at <https://gandharikos.github.io/.dotfiles/> and in [`docs/`](docs/). The docs
 site is built with Astro Starlight:
 
