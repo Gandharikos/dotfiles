@@ -47,8 +47,8 @@ jobs:
 
       - name: Build docs
         env:
-          DOCS_BASE: "/.dotfiles/"
-          DOCS_SITE: "https://gandharikos.github.io/.dotfiles"
+          DOCS_BASE: "/dotfiles/"
+          DOCS_SITE: "https://gandharikos.github.io/dotfiles"
         run: npm run build
 
       - name: Upload artifact

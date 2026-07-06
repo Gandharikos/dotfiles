@@ -3,7 +3,7 @@ import starlight from "@astrojs/starlight"
 
 export default defineConfig({
   publicDir: "../.assets",
-  site: process.env.DOCS_SITE ?? "https://gandharikos.github.io/.dotfiles",
+  site: process.env.DOCS_SITE ?? "https://gandharikos.github.io/dotfiles",
   base: process.env.DOCS_BASE ?? "/",
   integrations: [
     starlight({

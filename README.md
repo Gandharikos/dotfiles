@@ -27,25 +27,6 @@ Encrypted secrets are required for most real deployments. Read the docs before r
 - Declarative disks with Disko and installer-oriented host layouts
 - Wayland desktops with Hyprland, Niri, shells, themes, and tools
 
-## Docs
-
-Please read [document](docs/src/content/docs/index.md).
-
-Documentation lives at <https://gandharikos.github.io/.dotfiles/> and in [`docs/`](docs/). The docs
-site is built with Astro Starlight:
-
-```bash
-cd docs
-npm install
-npm run dev
-```
-
-Build a static copy with:
-
-```bash
-npm run build
-```
-
 ## Common Commands
 
 ```bash
@@ -55,6 +36,10 @@ just deploy <host>
 just check
 just fmt
 ```
+
+## Docs
+
+Please read the [static documentation](https://gandharikos.github.io/dotfiles/).
 
 ## License
 
