@@ -87,13 +87,19 @@ in
             ]
         );
 
-        fileWidgetCommand = find';
-        fileWidgetOptions = [ "--preview 'head {}'" ];
+        fileWidget = {
+          command = find';
+          options = [ "--preview 'head {}'" ];
+        };
 
-        changeDirWidgetCommand = find';
-        changeDirWidgetOptions = [
-          "--preview 'tree -C {} | head -200'"
-        ];
+        changeDirWidget = {
+          command = find';
+          options = [
+            "--preview 'tree -C {} | head -200'"
+          ];
+        };
+
+        historyWidget.command = "";
       };
     };
   };
