@@ -14,7 +14,7 @@ machines rather than a generic starter template.
 
 <div class="hero-actions">
   <a href="./getting-started/">Start reading</a>
-  <a href="https://github.com/Gandharikos/.dotfiles">View on GitHub</a>
+  <a href="https://github.com/Gandharikos/dotfiles">View on GitHub</a>
 </div>
 
 <img

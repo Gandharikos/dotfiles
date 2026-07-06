@@ -17,7 +17,7 @@ your own configuration deliberately.
 ## Clone
 
 ```bash
-git clone https://github.com/Gandharikos/.dotfiles ~/.dotfiles
+git clone https://github.com/Gandharikos/dotfiles ~/.dotfiles
 cd ~/.dotfiles
 ```
 

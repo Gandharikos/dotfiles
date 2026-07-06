@@ -14,7 +14,7 @@ export default defineConfig({
         {
           icon: "github",
           label: "GitHub",
-          href: "https://github.com/Gandharikos/.dotfiles",
+          href: "https://github.com/Gandharikos/dotfiles",
         },
       ],
       customCss: ["./src/styles/custom.css"],
