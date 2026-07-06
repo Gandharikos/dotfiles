@@ -37,6 +37,12 @@ test host=`hostname -s` *args: (builder "test" host args)
 
 [group('rebuild')]
 [no-exit-message]
+vm host="mimir" *args:
+    nix build path:{{ flake }}#nixosConfigurations.{{ host }}.config.system.build.vm {{ args }}
+    ./result/bin/run-{{ host }}-vm
+
+[group('rebuild')]
+[no-exit-message]
 rollback *args:
     {{ rebuild }} switch --rollback \
         {{ system-args }} \

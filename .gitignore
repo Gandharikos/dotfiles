@@ -14,3 +14,4 @@ QWEN.md
 /.codex
 !templates/*/.envrc
 /.omo/run-continuation
+/*.qcow2

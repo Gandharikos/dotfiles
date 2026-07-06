@@ -44,6 +44,5 @@ in
         dedsec-theme.enable = lib.mkForce false;
       };
     };
-
   };
 }
