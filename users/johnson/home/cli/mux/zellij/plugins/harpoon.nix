@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 let
-  harpoonWasm = "file:${pkgs.dot.harpoon}/bin/harpoon.wasm";
+  harpoonWasm = "file:${lib.getExe' pkgs.dot.harpoon "harpoon.wasm"}";
   launchHarpoon = {
     LaunchOrFocusPlugin = {
       _args = [ harpoonWasm ];

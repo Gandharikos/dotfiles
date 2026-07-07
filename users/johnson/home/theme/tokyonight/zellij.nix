@@ -15,7 +15,7 @@ let
     left = "";
     right = "";
   };
-  zjstatusWasm = "${pkgs.dot.zjstatus}/bin/zjstatus.wasm";
+  zjstatusWasm = "${lib.getExe' pkgs.dot.zjstatus "zjstatus.wasm"}";
 in
 {
   config = mkMerge [

@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 let
-  roomWasm = "file:${pkgs.dot.room}/bin/room.wasm";
+  roomWasm = "file:${lib.getExe' pkgs.dot.room "room.wasm"}";
   launchRoom = {
     LaunchOrFocusPlugin = {
       _args = [ roomWasm ];

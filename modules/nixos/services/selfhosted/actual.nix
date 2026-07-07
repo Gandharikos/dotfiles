@@ -75,21 +75,21 @@ in
     systemd.services = {
       actual = {
         preStart = lib.mkAfter ''
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o actual -g actual ${config.services.actual.settings.dataDir}
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o actual -g actual ${config.services.actual.settings.dataDir}
 
           if [ ! -s ${serverPasswordFile} ]; then
             umask 077
-            ${pkgs.openssl}/bin/openssl rand -base64 48 > ${serverPasswordFile}
+            ${lib.getExe' pkgs.openssl "openssl"} rand -base64 48 > ${serverPasswordFile}
           fi
 
-          ${pkgs.coreutils}/bin/chown actual:actual ${serverPasswordFile}
-          ${pkgs.coreutils}/bin/chmod 0400 ${serverPasswordFile}
+          ${lib.getExe' pkgs.coreutils "chown"} actual:actual ${serverPasswordFile}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0400 ${serverPasswordFile}
 
           if [ ! -e ${localPasswordMarker} ]; then
-            account_db="$(${pkgs.findutils}/bin/find ${config.services.actual.package}/lib/actual/packages/sync-server/chunks -maxdepth 1 -name 'account-db-*.js' -print -quit)"
-            ${pkgs.nodejs_22}/bin/node ${actualPasswordBootstrapScript} "$account_db" ${serverPasswordFile} ${localPasswordMarker}
-            ${pkgs.coreutils}/bin/chown actual:actual ${localPasswordMarker}
-            ${pkgs.coreutils}/bin/chmod 0600 ${localPasswordMarker}
+            account_db="$(${lib.getExe' pkgs.findutils "find"} ${config.services.actual.package}/lib/actual/packages/sync-server/chunks -maxdepth 1 -name 'account-db-*.js' -print -quit)"
+            ${lib.getExe' pkgs.nodejs_22 "node"} ${actualPasswordBootstrapScript} "$account_db" ${serverPasswordFile} ${localPasswordMarker}
+            ${lib.getExe' pkgs.coreutils "chown"} actual:actual ${localPasswordMarker}
+            ${lib.getExe' pkgs.coreutils "chmod"} 0600 ${localPasswordMarker}
           fi
         '';
         serviceConfig.DynamicUser = lib.mkForce false;

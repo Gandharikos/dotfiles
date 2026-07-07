@@ -45,7 +45,7 @@ stdenv.mkDerivation {
     # substituteInPlace $out/opt/main.py \
     #   --replace-fail "template_dir = 'config_template'" "template_dir = '$out/opt/config_template'"
 
-    makeWrapper ${pythonEnv}/bin/python $out/bin/sub2singbox \
+    makeWrapper ${lib.getExe' pythonEnv "python"} $out/bin/sub2singbox \
       --run "cd $out/opt" \
       --add-flags "$out/opt/main.py"
 

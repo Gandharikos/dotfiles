@@ -53,7 +53,7 @@ with osConfig.dot.keyboard.keys;
           pagers = [
             {
               colorArg = "always";
-              pager = "${pkgs.delta}/bin/delta --dark --paging=never";
+              pager = "${lib.getExe' pkgs.delta "delta"} --dark --paging=never";
               useConfig = false;
             }
           ];

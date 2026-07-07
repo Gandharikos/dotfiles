@@ -124,14 +124,14 @@ in
         script = ''
           install -d -m 0700 "${cfg.libraryDir}"
           if [ ! -f "${cfg.libraryDir}/metadata.db" ]; then
-            ${pkgs.calibre}/bin/calibredb --library-path "${cfg.libraryDir}" list >/dev/null
+            ${lib.getExe' pkgs.calibre "calibredb"} --library-path "${cfg.libraryDir}" list >/dev/null
           fi
         '';
       };
 
       calibre-web.serviceConfig.ExecStartPost = mkIf oidcEnabled (
         pkgs.writeShellScript "calibre-web-ensure-primary-user" ''
-          ${pkgs.sqlite}/bin/sqlite3 "${cfg.dataDir}/app.db" <<'SQL'
+          ${lib.getExe' pkgs.sqlite "sqlite3"} "${cfg.dataDir}/app.db" <<'SQL'
           update user
           set name = '${primaryUser}',
               email = '${primaryEmail}'

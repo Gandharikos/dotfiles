@@ -9,7 +9,7 @@ let
   inherit (lib.strings) optionalString;
   isColemak = osConfig.dot.keyboard.layout == "colemak";
 
-  clipboardCmd = if isDarwin then "pbcopy" else "${pkgs.wl-clipboard}/bin/wl-copy";
+  clipboardCmd = if isDarwin then "pbcopy" else "${lib.getExe' pkgs.wl-clipboard "wl-copy"}";
 in
 {
   programs.tmux.plugins = with pkgs.tmuxPlugins; [

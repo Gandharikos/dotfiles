@@ -100,21 +100,21 @@ in
           ];
           serviceConfig.Type = "oneshot";
           script = ''
-            ${pkgs.coreutils}/bin/install -d -m 0750 -o root -g kanidm ${oauth2SecretDir}
+            ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o root -g kanidm ${oauth2SecretDir}
 
             if [ ! -s ${oauth2ClientSecretFile} ]; then
-              ${pkgs.openssl}/bin/openssl rand -base64 48 | ${pkgs.coreutils}/bin/tr -d '\n' > ${oauth2ClientSecretFile}
+              ${lib.getExe' pkgs.openssl "openssl"} rand -base64 48 | ${lib.getExe' pkgs.coreutils "tr"} -d '\n' > ${oauth2ClientSecretFile}
             fi
 
-            ${pkgs.coreutils}/bin/chown root:kanidm ${oauth2ClientSecretFile}
-            ${pkgs.coreutils}/bin/chmod 0440 ${oauth2ClientSecretFile}
+            ${lib.getExe' pkgs.coreutils "chown"} root:kanidm ${oauth2ClientSecretFile}
+            ${lib.getExe' pkgs.coreutils "chmod"} 0440 ${oauth2ClientSecretFile}
 
             {
-              printf 'OIDC_CLIENT_SECRET=%s\n' "$(${pkgs.coreutils}/bin/cat ${oauth2ClientSecretFile})"
+              printf 'OIDC_CLIENT_SECRET=%s\n' "$(${lib.getExe' pkgs.coreutils "cat"} ${oauth2ClientSecretFile})"
             } > ${oauth2EnvFile}
 
-            ${pkgs.coreutils}/bin/chown root:root ${oauth2EnvFile}
-            ${pkgs.coreutils}/bin/chmod 0400 ${oauth2EnvFile}
+            ${lib.getExe' pkgs.coreutils "chown"} root:root ${oauth2EnvFile}
+            ${lib.getExe' pkgs.coreutils "chmod"} 0400 ${oauth2EnvFile}
           '';
         };
 

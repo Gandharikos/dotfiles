@@ -37,13 +37,13 @@ let
     source_dir=${cfg.stateDir}/source
     worktree_dir=${cfg.stateDir}/worktree
     public_next=${cfg.stateDir}/public-next
-    git_safe="${pkgs.git}/bin/git -c safe.directory=$source_dir"
+    git_safe="${lib.getExe' pkgs.git "git"} -c safe.directory=$source_dir"
 
     install -d -m 0755 ${cfg.stateDir} ${cfg.publicDir}
 
-    if ${pkgs.git}/bin/git ls-remote ${cfg.repositoryUrl} HEAD >/dev/null 2>&1; then
+    if ${lib.getExe' pkgs.git "git"} ls-remote ${cfg.repositoryUrl} HEAD >/dev/null 2>&1; then
       if [ ! -d "$source_dir" ]; then
-        ${pkgs.git}/bin/git clone --mirror ${cfg.repositoryUrl} "$source_dir"
+        ${lib.getExe' pkgs.git "git"} clone --mirror ${cfg.repositoryUrl} "$source_dir"
       else
         $git_safe -C "$source_dir" remote set-url origin ${cfg.repositoryUrl}
         $git_safe -C "$source_dir" remote update --prune
@@ -56,15 +56,15 @@ let
       if [ -e "$worktree_dir/package.json" ]; then
         cd "$worktree_dir"
         if [ -e pnpm-lock.yaml ]; then
-          ${pkgs.pnpm}/bin/pnpm install --frozen-lockfile
+          ${lib.getExe' pkgs.pnpm "pnpm"} install --frozen-lockfile
         else
-          ${pkgs.pnpm}/bin/pnpm install
+          ${lib.getExe' pkgs.pnpm "pnpm"} install
         fi
 
-        if ${pkgs.pnpm}/bin/pnpm exec quartz build --output "$public_next"; then
+        if ${lib.getExe' pkgs.pnpm "pnpm"} exec quartz build --output "$public_next"; then
           :
         else
-          ${pkgs.pnpm}/bin/pnpm exec quartz build
+          ${lib.getExe' pkgs.pnpm "pnpm"} exec quartz build
           if [ -d public ]; then
             cp -a public "$public_next"
           else
@@ -236,10 +236,10 @@ in
         install -d -m 0700 "$credential_dir"
 
         if ! "$forgejo" admin user list --config "$config_file" --work-path "$work_path" \
-          | ${pkgs.gawk}/bin/awk 'NR > 1 && $2 == "${cfg.repositoryOwner}" { found = 1 } END { exit !found }'
+          | ${lib.getExe' pkgs.gawk "awk"} 'NR > 1 && $2 == "${cfg.repositoryOwner}" { found = 1 } END { exit !found }'
         then
           if [ ! -s "$password_file" ]; then
-            ${pkgs.openssl}/bin/openssl rand -base64 24 > "$password_file"
+            ${lib.getExe' pkgs.openssl "openssl"} rand -base64 24 > "$password_file"
             chmod 0600 "$password_file"
           fi
 
@@ -247,7 +247,7 @@ in
             --config "$config_file" \
             --work-path "$work_path" \
             --username ${cfg.repositoryOwner} \
-            --password "$(${pkgs.coreutils}/bin/cat "$password_file")" \
+            --password "$(${lib.getExe' pkgs.coreutils "cat"} "$password_file")" \
             --email ${config.dot.admin.email} \
             --admin \
             --must-change-password=false
@@ -264,27 +264,27 @@ in
           chmod 0600 "$token_file"
         fi
 
-        token="$(${pkgs.coreutils}/bin/cat "$token_file")"
+        token="$(${lib.getExe' pkgs.coreutils "cat"} "$token_file")"
         auth_header="Authorization: token $token"
 
-        repo_status="$(${pkgs.curl}/bin/curl -sS -o /dev/null -w '%{http_code}' -H "$auth_header" "$api/repos/${cfg.repositoryOwner}/${cfg.repositoryName}")"
+        repo_status="$(${lib.getExe' pkgs.curl "curl"} -sS -o /dev/null -w '%{http_code}' -H "$auth_header" "$api/repos/${cfg.repositoryOwner}/${cfg.repositoryName}")"
         if [ "$repo_status" = 404 ]; then
-          repo_payload="$(${pkgs.jq}/bin/jq -cn \
+          repo_payload="$(${lib.getExe' pkgs.jq "jq"} -cn \
             --arg name ${cfg.repositoryName} \
             --arg branch ${cfg.branch} \
             '{name:$name, private:false, auto_init:true, default_branch:$branch, description:"Quartz source for notes.huwenqiang.dev"}')"
-          ${pkgs.curl}/bin/curl -fsS -X POST -H "$auth_header" -H 'Content-Type: application/json' --data "$repo_payload" "$api/user/repos" >/dev/null
+          ${lib.getExe' pkgs.curl "curl"} -fsS -X POST -H "$auth_header" -H 'Content-Type: application/json' --data "$repo_payload" "$api/user/repos" >/dev/null
         fi
 
-        hook_id="$(${pkgs.curl}/bin/curl -fsS -H "$auth_header" "$api/repos/${cfg.repositoryOwner}/${cfg.repositoryName}/hooks" \
-          | ${pkgs.jq}/bin/jq -r --arg url "$hook_url" '.[] | select(.config.url == $url) | .id' \
-          | ${pkgs.coreutils}/bin/head -n 1)"
+        hook_id="$(${lib.getExe' pkgs.curl "curl"} -fsS -H "$auth_header" "$api/repos/${cfg.repositoryOwner}/${cfg.repositoryName}/hooks" \
+          | ${lib.getExe' pkgs.jq "jq"} -r --arg url "$hook_url" '.[] | select(.config.url == $url) | .id' \
+          | ${lib.getExe' pkgs.coreutils "head"} -n 1)"
 
         if [ -z "$hook_id" ]; then
-          hook_payload="$(${pkgs.jq}/bin/jq -cn \
+          hook_payload="$(${lib.getExe' pkgs.jq "jq"} -cn \
             --arg url "$hook_url" \
             '{type:"forgejo", config:{url:$url, content_type:"json"}, events:["push"], active:true}')"
-          ${pkgs.curl}/bin/curl -fsS -X POST -H "$auth_header" -H 'Content-Type: application/json' --data "$hook_payload" "$api/repos/${cfg.repositoryOwner}/${cfg.repositoryName}/hooks" >/dev/null
+          ${lib.getExe' pkgs.curl "curl"} -fsS -X POST -H "$auth_header" -H 'Content-Type: application/json' --data "$hook_payload" "$api/repos/${cfg.repositoryOwner}/${cfg.repositoryName}/hooks" >/dev/null
         fi
       '';
     };

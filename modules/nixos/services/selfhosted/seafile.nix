@@ -159,27 +159,27 @@ in
           Type = "oneshot";
         };
         script = ''
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o root -g root ${cfg.dataDir}
-          ${pkgs.coreutils}/bin/install -d -m 0700 -o root -g root ${secretDir}
-          ${pkgs.coreutils}/bin/install -d -m 0700 -o ${mysqlUid} -g ${mysqlGid} ${cfg.dataDir}/mysql
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o root -g root ${cfg.dataDir}/shared
-          ${pkgs.coreutils}/bin/chown -R ${mysqlUid}:${mysqlGid} ${cfg.dataDir}/mysql
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o root -g root ${cfg.dataDir}
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0700 -o root -g root ${secretDir}
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0700 -o ${mysqlUid} -g ${mysqlGid} ${cfg.dataDir}/mysql
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o root -g root ${cfg.dataDir}/shared
+          ${lib.getExe' pkgs.coreutils "chown"} -R ${mysqlUid}:${mysqlGid} ${cfg.dataDir}/mysql
 
           if [ ! -s ${dbRootPasswordFile} ]; then
-            ${pkgs.openssl}/bin/openssl rand -base64 32 > ${dbRootPasswordFile}
+            ${lib.getExe' pkgs.openssl "openssl"} rand -base64 32 > ${dbRootPasswordFile}
           fi
           if [ ! -s ${dbPasswordFile} ]; then
-            ${pkgs.openssl}/bin/openssl rand -base64 32 > ${dbPasswordFile}
+            ${lib.getExe' pkgs.openssl "openssl"} rand -base64 32 > ${dbPasswordFile}
           fi
           if [ ! -s ${adminPasswordFile} ]; then
-            ${pkgs.openssl}/bin/openssl rand -base64 24 > ${adminPasswordFile}
+            ${lib.getExe' pkgs.openssl "openssl"} rand -base64 24 > ${adminPasswordFile}
           fi
           if [ ! -s ${jwtPrivateKeyFile} ]; then
-            ${pkgs.openssl}/bin/openssl rand -base64 48 > ${jwtPrivateKeyFile}
+            ${lib.getExe' pkgs.openssl "openssl"} rand -base64 48 > ${jwtPrivateKeyFile}
           fi
 
           if [ -f ${seahubSettingsFile} ]; then
-            existing_db_password="$(${pkgs.python3}/bin/python - <<'PY'
+            existing_db_password="$(${lib.getExe' pkgs.python3 "python"} - <<'PY'
           import ast
           from pathlib import Path
 
@@ -205,7 +205,7 @@ in
           fi
 
           if [ -f ${seahubSettingsFile} ]; then
-            ${pkgs.python3}/bin/python - <<'PY'
+            ${lib.getExe' pkgs.python3 "python"} - <<'PY'
           from pathlib import Path
 
           path = Path("${seahubSettingsFile}")
@@ -223,13 +223,13 @@ in
           PY
           fi
 
-          ${pkgs.coreutils}/bin/chown root:root ${secretDir}/*
-          ${pkgs.coreutils}/bin/chmod 0600 ${secretDir}/*
+          ${lib.getExe' pkgs.coreutils "chown"} root:root ${secretDir}/*
+          ${lib.getExe' pkgs.coreutils "chmod"} 0600 ${secretDir}/*
 
-          db_root_password="$(${pkgs.coreutils}/bin/cat ${dbRootPasswordFile})"
-          db_password="$(${pkgs.coreutils}/bin/cat ${dbPasswordFile})"
-          admin_password="$(${pkgs.coreutils}/bin/cat ${adminPasswordFile})"
-          jwt_private_key="$(${pkgs.coreutils}/bin/cat ${jwtPrivateKeyFile})"
+          db_root_password="$(${lib.getExe' pkgs.coreutils "cat"} ${dbRootPasswordFile})"
+          db_password="$(${lib.getExe' pkgs.coreutils "cat"} ${dbPasswordFile})"
+          admin_password="$(${lib.getExe' pkgs.coreutils "cat"} ${adminPasswordFile})"
+          jwt_private_key="$(${lib.getExe' pkgs.coreutils "cat"} ${jwtPrivateKeyFile})"
 
           {
             printf 'MYSQL_ROOT_PASSWORD=%s\n' "$db_root_password"
@@ -268,8 +268,8 @@ in
             printf 'SEAFILE_ADMIN_PASSWORD=%s\n' "$admin_password"
           } > ${envFile}
 
-          ${pkgs.coreutils}/bin/chown root:root ${envFile} ${dbEnvFile}
-          ${pkgs.coreutils}/bin/chmod 0600 ${envFile} ${dbEnvFile}
+          ${lib.getExe' pkgs.coreutils "chown"} root:root ${envFile} ${dbEnvFile}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0600 ${envFile} ${dbEnvFile}
         '';
       };
 

@@ -181,7 +181,7 @@ in
       };
       preStart = ''
         for attempt in $(seq 1 60); do
-          if ${pkgs.curl}/bin/curl -fsS https://${kanidm.hostName}/oauth2/openid/forgejo/.well-known/openid-configuration >/dev/null; then
+          if ${lib.getExe' pkgs.curl "curl"} -fsS https://${kanidm.hostName}/oauth2/openid/forgejo/.well-known/openid-configuration >/dev/null; then
             exit 0
           fi
           sleep 2
@@ -196,11 +196,11 @@ in
         forgejo='${getExe config.services.forgejo.package}'
         config_file='${config.services.forgejo.customDir}/conf/app.ini'
         work_path='${config.services.forgejo.stateDir}'
-        secret="$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.forgejo-kanidm-oauth2.path})"
+        secret="$(${lib.getExe' pkgs.coreutils "cat"} ${config.sops.secrets.forgejo-kanidm-oauth2.path})"
         discovery='https://${kanidm.hostName}/oauth2/openid/forgejo/.well-known/openid-configuration'
 
         auth_id="$("$forgejo" admin auth list --config "$config_file" --work-path "$work_path" --min-width 1 \
-          | ${pkgs.gawk}/bin/awk '
+          | ${lib.getExe' pkgs.gawk "awk"} '
             NR > 1 && $2 == "Kanidm" {
               print $1
               exit

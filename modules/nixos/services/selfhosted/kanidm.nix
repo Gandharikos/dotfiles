@@ -263,9 +263,9 @@ in
           Type = "oneshot";
         };
         script = ''
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o kanidm -g kanidm ${certDir}
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o kanidm -g kanidm ${certDir}
           if [ ! -s ${cert} ] || [ ! -s ${key} ]; then
-            ${pkgs.openssl}/bin/openssl req \
+            ${lib.getExe' pkgs.openssl "openssl"} req \
               -x509 \
               -newkey rsa:4096 \
               -sha256 \
@@ -276,8 +276,8 @@ in
               -subj "/CN=${cfg.hostName}" \
               -addext "subjectAltName=DNS:${cfg.hostName},DNS:localhost,IP:127.0.0.1"
           fi
-          ${pkgs.coreutils}/bin/chown kanidm:kanidm ${cert} ${key}
-          ${pkgs.coreutils}/bin/chmod 0440 ${cert} ${key}
+          ${lib.getExe' pkgs.coreutils "chown"} kanidm:kanidm ${cert} ${key}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0440 ${cert} ${key}
         '';
       };
 
@@ -313,7 +313,7 @@ in
             count=$((count + 1))
           done
 
-          KANIDM_IDM_ADMIN_PASSWORD="$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.kanidm-idm-admin-password.path})"
+          KANIDM_IDM_ADMIN_PASSWORD="$(${lib.getExe' pkgs.coreutils "cat"} ${config.sops.secrets.kanidm-idm-admin-password.path})"
           KANIDM_PROVISION_IDM_ADMIN_TOKEN="$KANIDM_IDM_ADMIN_PASSWORD" \
             ${getExe pkgs.kanidm-provision} \
               ${optionalString (!provision.autoRemove) "--no-auto-remove"} \

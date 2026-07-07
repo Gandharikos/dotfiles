@@ -71,7 +71,7 @@ in
 
           "claudeCode.preferredLocation" = "panel";
           "chat.disableAIFeatures" = false;
-          "clangd.path" = "${pkgs.clang-tools}/bin/clangd";
+          "clangd.path" = "${lib.getExe' pkgs.clang-tools "clangd"}";
           "editor.cursorBlinking" = "solid";
           "editor.cursorSmoothCaretAnimation" = "on";
           "editor.fontFamily" = "Fira Code";
@@ -95,7 +95,7 @@ in
           "gitlens.showWelcomeOnInstall" = false;
           "gitlens.showWhatsNewAfterUpgrades" = false;
           "redhat.telemetry.enabled" = false;
-          "rust-analyzer.server.path" = "${pkgs.rust-analyzer}/bin/rust-analyzer";
+          "rust-analyzer.server.path" = "${lib.getExe' pkgs.rust-analyzer "rust-analyzer"}";
           "security.workspace.trust.banner" = "never";
           "security.workspace.trust.startupPrompt" = "never";
           "security.workspace.trust.untrustedFiles" = "newWindow";

@@ -11,7 +11,7 @@ let
   chromiumManifest = builtins.toJSON {
     name = "brotab_mediator";
     description = "This mediator exposes interface over TCP to control browser's tabs";
-    path = "${pkgs.brotab}/bin/bt_mediator";
+    path = "${lib.getExe' pkgs.brotab "bt_mediator"}";
     type = "stdio";
     allowed_extensions = [ "brotab_mediator@example.org" ];
     allowed_origins = [

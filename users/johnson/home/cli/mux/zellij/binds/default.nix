@@ -5,7 +5,7 @@
   ...
 }:
 let
-  vimZellijNavigatorUri = "file:${pkgs.dot.vim-zellij-navigator}/bin/vim-zellij-navigator.wasm";
+  vimZellijNavigatorUri = "file:${lib.getExe' pkgs.dot.vim-zellij-navigator "vim-zellij-navigator.wasm"}";
 in
 {
   imports = lib.dot.scanPaths ./.;

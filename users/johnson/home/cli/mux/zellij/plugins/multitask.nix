@@ -1,10 +1,11 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
 let
-  multitask = "${pkgs.dot.multitask}/bin/multitask.wasm";
+  multitask = lib.getExe' pkgs.dot.multitask "multitask.wasm";
   shell = "${config.home.profileDirectory}/bin/${config.my.shell}";
 in
 {

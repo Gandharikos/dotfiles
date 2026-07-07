@@ -353,7 +353,7 @@ let
         mkdir -p "$(dirname ${escapeShellArg outputNodesPath})"
 
         temp_json_data="$(tr -d '\n' < ${providersArgFile})"
-        ${sub2singboxPkg}/bin/sub2singbox --template_index=0 --temp_json_data "$temp_json_data"
+        ${lib.getExe' sub2singboxPkg "sub2singbox"} --template_index=0 --temp_json_data "$temp_json_data"
         python ${mergeScript} ${escapeShellArg baseSettingsFile} ${escapeShellArg outputNodesPath} ${escapeShellArg outputConfigPath}
       '';
     };

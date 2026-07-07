@@ -262,7 +262,7 @@ in
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
       serviceConfig = {
-        ExecStart = "${pkgs.python3}/bin/python3 ${backupHealthScript}";
+        ExecStart = "${lib.getExe' pkgs.python3 "python3"} ${backupHealthScript}";
         Restart = "always";
         RestartSec = "10s";
         NoNewPrivileges = true;
@@ -286,7 +286,7 @@ in
       description = "Send self-hosted backup failure alert for %i";
       serviceConfig = {
         Type = "oneshot";
-        ExecStart = "${backupAlert}/bin/selfhosted-backup-alert %i";
+        ExecStart = "${lib.getExe' backupAlert "selfhosted-backup-alert"} %i";
       };
     };
   };

@@ -30,7 +30,7 @@ in
         };
 
         Service = {
-          ExecStart = "${pkgs.cloudflare-warp}/bin/warp-taskbar";
+          ExecStart = "${lib.getExe' pkgs.cloudflare-warp "warp-taskbar"}";
           ExecStop = "pkill warp-taskbar";
         };
 

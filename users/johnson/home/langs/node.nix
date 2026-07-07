@@ -10,7 +10,7 @@ let
   nodePkg = pkgs.nodejs_latest;
   inherit (lib.modules) mkMerge mkIf;
   inherit (lib.options) mkEnableOption;
-  inherit (lib.meta) getExe;
+  inherit (lib.meta) getExe getExe';
   inherit (config) xdg;
   yarn' = getExe pkgs.yarn;
 in
@@ -28,7 +28,7 @@ in
 
       # Run locally installed bin-script, e.g. n coffee file.coffee
       home.shellAliases = {
-        n = "PATH=\"$(${nodePkg}/bin/npm bin):$PATH\"";
+        n = "PATH=\"$(${getExe' nodePkg "npm"} bin):$PATH\"";
         ya = "yarn";
       };
 

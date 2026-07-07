@@ -120,21 +120,21 @@ in
           Type = "oneshot";
         };
         script = ''
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o root -g kanidm ${oidcDir}
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o root -g kanidm ${oidcDir}
 
           if [ ! -s ${oidcSecretFile} ]; then
-            ${pkgs.openssl}/bin/openssl rand -base64 48 | ${pkgs.coreutils}/bin/tr -d '\n' > ${oidcSecretFile}
+            ${lib.getExe' pkgs.openssl "openssl"} rand -base64 48 | ${lib.getExe' pkgs.coreutils "tr"} -d '\n' > ${oidcSecretFile}
           fi
 
-          ${pkgs.coreutils}/bin/chown root:kanidm ${oidcSecretFile}
-          ${pkgs.coreutils}/bin/chmod 0440 ${oidcSecretFile}
+          ${lib.getExe' pkgs.coreutils "chown"} root:kanidm ${oidcSecretFile}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0440 ${oidcSecretFile}
 
           {
-            printf 'VIKUNJA_AUTH_OPENID_PROVIDERS_KANIDM_CLIENTSECRET=%s\n' "$(${pkgs.coreutils}/bin/cat ${oidcSecretFile})"
+            printf 'VIKUNJA_AUTH_OPENID_PROVIDERS_KANIDM_CLIENTSECRET=%s\n' "$(${lib.getExe' pkgs.coreutils "cat"} ${oidcSecretFile})"
           } > ${oidcEnvFile}
 
-          ${pkgs.coreutils}/bin/chown root:root ${oidcEnvFile}
-          ${pkgs.coreutils}/bin/chmod 0400 ${oidcEnvFile}
+          ${lib.getExe' pkgs.coreutils "chown"} root:root ${oidcEnvFile}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0400 ${oidcEnvFile}
         '';
       };
 

@@ -202,30 +202,30 @@ in
           Type = "oneshot";
         };
         script = ''
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o code-server -g kanidm ${cfg.stateDir}
-          ${pkgs.coreutils}/bin/chown code-server:kanidm ${cfg.stateDir}
-          ${pkgs.coreutils}/bin/chmod 0750 ${cfg.stateDir}
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o root -g kanidm ${oauth2SecretDir}
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o code-server -g kanidm ${cfg.stateDir}
+          ${lib.getExe' pkgs.coreutils "chown"} code-server:kanidm ${cfg.stateDir}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0750 ${cfg.stateDir}
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o root -g kanidm ${oauth2SecretDir}
 
           if [ ! -s ${oauth2ClientSecretFile} ]; then
-            ${pkgs.openssl}/bin/openssl rand -base64 48 | ${pkgs.coreutils}/bin/tr -d '\n' > ${oauth2ClientSecretFile}
+            ${lib.getExe' pkgs.openssl "openssl"} rand -base64 48 | ${lib.getExe' pkgs.coreutils "tr"} -d '\n' > ${oauth2ClientSecretFile}
           fi
 
-          cookie_secret="$(${pkgs.coreutils}/bin/cat ${oauth2CookieSecretFile} 2>/dev/null || true)"
+          cookie_secret="$(${lib.getExe' pkgs.coreutils "cat"} ${oauth2CookieSecretFile} 2>/dev/null || true)"
           if [ ''${#cookie_secret} -ne 16 ] && [ ''${#cookie_secret} -ne 24 ] && [ ''${#cookie_secret} -ne 32 ]; then
-            ${pkgs.openssl}/bin/openssl rand -hex 16 > ${oauth2CookieSecretFile}
+            ${lib.getExe' pkgs.openssl "openssl"} rand -hex 16 > ${oauth2CookieSecretFile}
           fi
 
-          ${pkgs.coreutils}/bin/chown root:kanidm ${oauth2ClientSecretFile} ${oauth2CookieSecretFile}
-          ${pkgs.coreutils}/bin/chmod 0440 ${oauth2ClientSecretFile} ${oauth2CookieSecretFile}
+          ${lib.getExe' pkgs.coreutils "chown"} root:kanidm ${oauth2ClientSecretFile} ${oauth2CookieSecretFile}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0440 ${oauth2ClientSecretFile} ${oauth2CookieSecretFile}
 
           {
-            printf 'OAUTH2_PROXY_CLIENT_SECRET=%s\n' "$(${pkgs.coreutils}/bin/cat ${oauth2ClientSecretFile})"
-            printf 'OAUTH2_PROXY_COOKIE_SECRET=%s\n' "$(${pkgs.coreutils}/bin/cat ${oauth2CookieSecretFile})"
+            printf 'OAUTH2_PROXY_CLIENT_SECRET=%s\n' "$(${lib.getExe' pkgs.coreutils "cat"} ${oauth2ClientSecretFile})"
+            printf 'OAUTH2_PROXY_COOKIE_SECRET=%s\n' "$(${lib.getExe' pkgs.coreutils "cat"} ${oauth2CookieSecretFile})"
           } > ${oauth2EnvFile}
 
-          ${pkgs.coreutils}/bin/chown root:root ${oauth2EnvFile}
-          ${pkgs.coreutils}/bin/chmod 0400 ${oauth2EnvFile}
+          ${lib.getExe' pkgs.coreutils "chown"} root:root ${oauth2EnvFile}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0400 ${oauth2EnvFile}
         '';
       };
 

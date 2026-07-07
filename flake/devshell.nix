@@ -66,7 +66,7 @@
             help = "disko";
             name = "disko";
             command = ''
-              ${inputs'.disko.packages.disko}/bin/disko ''${@}
+              ${pkgs.lib.getExe' inputs'.disko.packages.disko "disko"} ''${@}
             '';
             category = "dev";
           }
@@ -74,14 +74,14 @@
             help = "nixos-anywhere";
             name = "nixos-anywhere";
             command = ''
-              ${inputs'.nixos-anywhere.packages.nixos-anywhere}/bin/nixos-anywhere ''${@}
+              ${pkgs.lib.getExe' inputs'.nixos-anywhere.packages.nixos-anywhere "nixos-anywhere"} ''${@}
             '';
             category = "dev";
           }
           {
             help = "Generate NixOS configuration with nixos-generators.";
             name = "generate";
-            command = "${inputs'.nixos-generators.packages.nixos-generate}/bin/nixos-generate $@";
+            command = "${pkgs.lib.getExe' inputs'.nixos-generators.packages.nixos-generate "nixos-generate"} $@";
             category = "dev";
           }
         ];

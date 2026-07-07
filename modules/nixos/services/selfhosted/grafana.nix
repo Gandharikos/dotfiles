@@ -219,29 +219,29 @@ in
       requiredBy = [ "grafana.service" ];
       serviceConfig.Type = "oneshot";
       script = ''
-        ${pkgs.coreutils}/bin/chgrp kanidm ${config.services.grafana.dataDir}
-        ${pkgs.coreutils}/bin/chmod 0750 ${config.services.grafana.dataDir}
-        ${pkgs.coreutils}/bin/install -d -m 0750 -o grafana -g kanidm ${secretDir}
+        ${lib.getExe' pkgs.coreutils "chgrp"} kanidm ${config.services.grafana.dataDir}
+        ${lib.getExe' pkgs.coreutils "chmod"} 0750 ${config.services.grafana.dataDir}
+        ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o grafana -g kanidm ${secretDir}
 
         if [ ! -s ${secretKeyFile} ]; then
-          ${pkgs.openssl}/bin/openssl rand -base64 48 > ${secretKeyFile}
+          ${lib.getExe' pkgs.openssl "openssl"} rand -base64 48 > ${secretKeyFile}
         fi
 
         if [ ! -s ${oauth2SecretFile} ]; then
-          ${pkgs.openssl}/bin/openssl rand -base64 48 | ${pkgs.coreutils}/bin/tr -d '\n' > ${oauth2SecretFile}
+          ${lib.getExe' pkgs.openssl "openssl"} rand -base64 48 | ${lib.getExe' pkgs.coreutils "tr"} -d '\n' > ${oauth2SecretFile}
         fi
 
-        ${pkgs.coreutils}/bin/chown grafana:grafana ${secretKeyFile}
-        ${pkgs.coreutils}/bin/chown grafana:kanidm ${oauth2SecretFile}
-        ${pkgs.coreutils}/bin/chmod 0400 ${secretKeyFile}
-        ${pkgs.coreutils}/bin/chmod 0440 ${oauth2SecretFile}
+        ${lib.getExe' pkgs.coreutils "chown"} grafana:grafana ${secretKeyFile}
+        ${lib.getExe' pkgs.coreutils "chown"} grafana:kanidm ${oauth2SecretFile}
+        ${lib.getExe' pkgs.coreutils "chmod"} 0400 ${secretKeyFile}
+        ${lib.getExe' pkgs.coreutils "chmod"} 0440 ${oauth2SecretFile}
 
         {
-          printf 'GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=%s\n' "$(${pkgs.coreutils}/bin/cat ${oauth2SecretFile})"
+          printf 'GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=%s\n' "$(${lib.getExe' pkgs.coreutils "cat"} ${oauth2SecretFile})"
         } > ${oauth2EnvFile}
 
-        ${pkgs.coreutils}/bin/chown root:root ${oauth2EnvFile}
-        ${pkgs.coreutils}/bin/chmod 0400 ${oauth2EnvFile}
+        ${lib.getExe' pkgs.coreutils "chown"} root:root ${oauth2EnvFile}
+        ${lib.getExe' pkgs.coreutils "chmod"} 0400 ${oauth2EnvFile}
       '';
     };
 

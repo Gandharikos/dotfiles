@@ -105,21 +105,21 @@ in
         ];
         serviceConfig.Type = "oneshot";
         script = ''
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o root -g kanidm ${kanidmOauth2SecretDir}
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o paperless -g paperless ${config.services.paperless.dataDir}
-          ${pkgs.coreutils}/bin/chown paperless:paperless ${config.services.paperless.dataDir}
-          ${pkgs.coreutils}/bin/chmod 0750 ${config.services.paperless.dataDir}
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o paperless -g paperless ${oauth2SecretDir}
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o root -g kanidm ${kanidmOauth2SecretDir}
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o paperless -g paperless ${config.services.paperless.dataDir}
+          ${lib.getExe' pkgs.coreutils "chown"} paperless:paperless ${config.services.paperless.dataDir}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0750 ${config.services.paperless.dataDir}
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o paperless -g paperless ${oauth2SecretDir}
 
           if [ ! -s ${kanidmOauth2ClientSecretFile} ]; then
-            ${pkgs.openssl}/bin/openssl rand -base64 48 | ${pkgs.coreutils}/bin/tr -d '\n' > ${kanidmOauth2ClientSecretFile}
+            ${lib.getExe' pkgs.openssl "openssl"} rand -base64 48 | ${lib.getExe' pkgs.coreutils "tr"} -d '\n' > ${kanidmOauth2ClientSecretFile}
           fi
 
-          ${pkgs.coreutils}/bin/chown root:kanidm ${kanidmOauth2ClientSecretFile}
-          ${pkgs.coreutils}/bin/chmod 0440 ${kanidmOauth2ClientSecretFile}
+          ${lib.getExe' pkgs.coreutils "chown"} root:kanidm ${kanidmOauth2ClientSecretFile}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0440 ${kanidmOauth2ClientSecretFile}
 
-          providers="$(${pkgs.jq}/bin/jq -cn \
-            --arg secret "$(${pkgs.coreutils}/bin/cat ${kanidmOauth2ClientSecretFile})" \
+          providers="$(${lib.getExe' pkgs.jq "jq"} -cn \
+            --arg secret "$(${lib.getExe' pkgs.coreutils "cat"} ${kanidmOauth2ClientSecretFile})" \
             --arg serverUrl "https://${kanidm.hostName}/oauth2/openid/paperless" \
             '{
               openid_connect: {
@@ -143,8 +143,8 @@ in
             }')"
 
           printf "PAPERLESS_SOCIALACCOUNT_PROVIDERS='%s'\n" "$providers" > ${oauth2EnvFile}
-          ${pkgs.coreutils}/bin/chown paperless:paperless ${oauth2EnvFile}
-          ${pkgs.coreutils}/bin/chmod 0400 ${oauth2EnvFile}
+          ${lib.getExe' pkgs.coreutils "chown"} paperless:paperless ${oauth2EnvFile}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0400 ${oauth2EnvFile}
         '';
       };
 
@@ -163,7 +163,7 @@ in
           Group = "paperless";
         };
         script = ''
-          ${config.services.paperless.manage}/bin/paperless-manage shell -c '
+          ${lib.getExe' config.services.paperless.manage "paperless-manage"} shell -c '
           from django.contrib.auth import get_user_model
           from allauth.socialaccount.models import SocialAccount
 
@@ -202,14 +202,14 @@ in
         requiredBy = [ "paperless-web.service" ];
         serviceConfig.Type = "oneshot";
         script = ''
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o paperless -g paperless ${config.services.paperless.dataDir}
-          ${pkgs.coreutils}/bin/chown paperless:paperless ${config.services.paperless.dataDir}
-          ${pkgs.coreutils}/bin/chmod 0750 ${config.services.paperless.dataDir}
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o paperless -g paperless ${config.services.paperless.dataDir}
+          ${lib.getExe' pkgs.coreutils "chown"} paperless:paperless ${config.services.paperless.dataDir}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0750 ${config.services.paperless.dataDir}
           if [ ! -s ${adminPasswordFile} ]; then
-            ${pkgs.openssl}/bin/openssl rand -base64 24 > ${adminPasswordFile}
+            ${lib.getExe' pkgs.openssl "openssl"} rand -base64 24 > ${adminPasswordFile}
           fi
-          ${pkgs.coreutils}/bin/chown paperless:paperless ${adminPasswordFile}
-          ${pkgs.coreutils}/bin/chmod 0400 ${adminPasswordFile}
+          ${lib.getExe' pkgs.coreutils "chown"} paperless:paperless ${adminPasswordFile}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0400 ${adminPasswordFile}
         '';
       };
     };

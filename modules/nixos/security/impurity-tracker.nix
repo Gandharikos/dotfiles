@@ -14,7 +14,7 @@ let
     # Execute the original program with original arguments
     getExe (
       pkgs.writeShellScriptBin name ''
-        echo "PID $PPID executed ${target}" |& ${config.systemd.package}/bin/systemd-cat --identifier=impurity >/dev/null 2>/dev/null
+        echo "PID $PPID executed ${target}" |& ${getExe' config.systemd.package "systemd-cat"} --identifier=impurity >/dev/null 2>/dev/null
         exec -a "$0" '${exe}' "$@"
       ''
     );

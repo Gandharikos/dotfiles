@@ -56,7 +56,7 @@ in
       };
 
       Service = {
-        ExecStart = "${package}/bin/headroom proxy --host ${cfg.host} --port ${toString cfg.port}";
+        ExecStart = "${lib.getExe' package "headroom"} proxy --host ${cfg.host} --port ${toString cfg.port}";
         Restart = "on-failure";
         RestartSec = 5;
         # First run downloads ~500MB of compression models into ~/.cache.

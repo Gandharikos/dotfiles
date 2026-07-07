@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 let
-  chooseTreeWasm = "file:${pkgs.dot.zellij-choose-tree}/bin/zellij-choose-tree.wasm";
+  chooseTreeWasm = "file:${lib.getExe' pkgs.dot.zellij-choose-tree "zellij-choose-tree.wasm"}";
   launchChooseTree = {
     LaunchOrFocusPlugin = {
       _args = [ chooseTreeWasm ];

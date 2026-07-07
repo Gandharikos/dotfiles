@@ -74,14 +74,14 @@ in
             input_extensions = [ "json" ];
             output_extension = "json";
             mode = "text";
-            command = [ "${pkgs.jaq}/bin/jaq" ];
+            command = [ "${lib.getExe' pkgs.jaq "jaq"}" ];
           }
           {
             input_extensions = [ "pdf" ];
             output_extension = "png";
             mode = "image";
             command = [
-              "${pkgs.mupdf}/bin/mutool"
+              "${lib.getExe' pkgs.mupdf "mutool"}"
               "draw"
               "-w"
               "1000"
@@ -97,7 +97,7 @@ in
             output_extension = "png";
             mode = "image";
             command = [
-              "${pkgs.d2}/bin/d2"
+              "${lib.getExe' pkgs.d2 "d2"}"
               "{input-path}"
               "{output-path}"
             ];

@@ -29,13 +29,13 @@ let
         export HOME=${cfg.dataDir}
         source_dir=${cfg.dataDir}/source
         worktree_dir=${cfg.dataDir}/worktree
-        git_safe="${pkgs.git}/bin/git -c safe.directory=$source_dir"
+        git_safe="${lib.getExe' pkgs.git "git"} -c safe.directory=$source_dir"
 
         install -d -m 0750 -o fava -g ${dataDirGroup} ${cfg.dataDir}
 
-        if ${pkgs.git}/bin/git ls-remote ${cfg.repositoryUrl} HEAD >/dev/null 2>&1; then
+        if ${lib.getExe' pkgs.git "git"} ls-remote ${cfg.repositoryUrl} HEAD >/dev/null 2>&1; then
           if [ ! -d "$source_dir" ]; then
-            ${pkgs.git}/bin/git clone --mirror ${cfg.repositoryUrl} "$source_dir"
+            ${lib.getExe' pkgs.git "git"} clone --mirror ${cfg.repositoryUrl} "$source_dir"
           else
             $git_safe -C "$source_dir" remote set-url origin ${cfg.repositoryUrl}
             $git_safe -C "$source_dir" remote update --prune
@@ -48,26 +48,26 @@ let
           if [ -s "$worktree_dir/${cfg.ledgerFileName}" ]; then
             install -m 0640 -o fava -g fava "$worktree_dir/${cfg.ledgerFileName}" ${cfg.ledgerFile}
           elif [ ! -s ${cfg.ledgerFile} ]; then
-            ${pkgs.coreutils}/bin/cat > ${cfg.ledgerFile} <<'EOF'
+            ${lib.getExe' pkgs.coreutils "cat"} > ${cfg.ledgerFile} <<'EOF'
     option "title" "Johnson Ledger"
     option "operating_currency" "USD"
 
     2026-01-01 open Assets:Cash USD
     2026-01-01 open Equity:Opening-Balances USD
     EOF
-            ${pkgs.coreutils}/bin/chown fava:fava ${cfg.ledgerFile}
-            ${pkgs.coreutils}/bin/chmod 0640 ${cfg.ledgerFile}
+            ${lib.getExe' pkgs.coreutils "chown"} fava:fava ${cfg.ledgerFile}
+            ${lib.getExe' pkgs.coreutils "chmod"} 0640 ${cfg.ledgerFile}
           fi
         elif [ ! -s ${cfg.ledgerFile} ]; then
-          ${pkgs.coreutils}/bin/cat > ${cfg.ledgerFile} <<'EOF'
+          ${lib.getExe' pkgs.coreutils "cat"} > ${cfg.ledgerFile} <<'EOF'
     option "title" "Johnson Ledger"
     option "operating_currency" "USD"
 
     2026-01-01 open Assets:Cash USD
     2026-01-01 open Equity:Opening-Balances USD
     EOF
-          ${pkgs.coreutils}/bin/chown fava:fava ${cfg.ledgerFile}
-          ${pkgs.coreutils}/bin/chmod 0640 ${cfg.ledgerFile}
+          ${lib.getExe' pkgs.coreutils "chown"} fava:fava ${cfg.ledgerFile}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0640 ${cfg.ledgerFile}
         fi
   '';
   inherit (lib) getExe;
@@ -232,30 +232,30 @@ in
           Type = "oneshot";
         };
         script = ''
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o fava -g kanidm ${cfg.dataDir}
-          ${pkgs.coreutils}/bin/chown fava:kanidm ${cfg.dataDir}
-          ${pkgs.coreutils}/bin/chmod 0750 ${cfg.dataDir}
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o root -g kanidm ${oauth2SecretDir}
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o fava -g kanidm ${cfg.dataDir}
+          ${lib.getExe' pkgs.coreutils "chown"} fava:kanidm ${cfg.dataDir}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0750 ${cfg.dataDir}
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o root -g kanidm ${oauth2SecretDir}
 
           if [ ! -s ${oauth2ClientSecretFile} ]; then
-            ${pkgs.openssl}/bin/openssl rand -base64 48 | ${pkgs.coreutils}/bin/tr -d '\n' > ${oauth2ClientSecretFile}
+            ${lib.getExe' pkgs.openssl "openssl"} rand -base64 48 | ${lib.getExe' pkgs.coreutils "tr"} -d '\n' > ${oauth2ClientSecretFile}
           fi
 
-          cookie_secret="$(${pkgs.coreutils}/bin/cat ${oauth2CookieSecretFile} 2>/dev/null || true)"
+          cookie_secret="$(${lib.getExe' pkgs.coreutils "cat"} ${oauth2CookieSecretFile} 2>/dev/null || true)"
           if [ ''${#cookie_secret} -ne 16 ] && [ ''${#cookie_secret} -ne 24 ] && [ ''${#cookie_secret} -ne 32 ]; then
-            ${pkgs.openssl}/bin/openssl rand -hex 16 > ${oauth2CookieSecretFile}
+            ${lib.getExe' pkgs.openssl "openssl"} rand -hex 16 > ${oauth2CookieSecretFile}
           fi
 
-          ${pkgs.coreutils}/bin/chown root:kanidm ${oauth2ClientSecretFile} ${oauth2CookieSecretFile}
-          ${pkgs.coreutils}/bin/chmod 0440 ${oauth2ClientSecretFile} ${oauth2CookieSecretFile}
+          ${lib.getExe' pkgs.coreutils "chown"} root:kanidm ${oauth2ClientSecretFile} ${oauth2CookieSecretFile}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0440 ${oauth2ClientSecretFile} ${oauth2CookieSecretFile}
 
           {
-            printf 'OAUTH2_PROXY_CLIENT_SECRET=%s\n' "$(${pkgs.coreutils}/bin/cat ${oauth2ClientSecretFile})"
-            printf 'OAUTH2_PROXY_COOKIE_SECRET=%s\n' "$(${pkgs.coreutils}/bin/cat ${oauth2CookieSecretFile})"
+            printf 'OAUTH2_PROXY_CLIENT_SECRET=%s\n' "$(${lib.getExe' pkgs.coreutils "cat"} ${oauth2ClientSecretFile})"
+            printf 'OAUTH2_PROXY_COOKIE_SECRET=%s\n' "$(${lib.getExe' pkgs.coreutils "cat"} ${oauth2CookieSecretFile})"
           } > ${oauth2EnvFile}
 
-          ${pkgs.coreutils}/bin/chown root:root ${oauth2EnvFile}
-          ${pkgs.coreutils}/bin/chmod 0400 ${oauth2EnvFile}
+          ${lib.getExe' pkgs.coreutils "chown"} root:root ${oauth2EnvFile}
+          ${lib.getExe' pkgs.coreutils "chmod"} 0400 ${oauth2EnvFile}
         '';
       };
 
@@ -267,7 +267,7 @@ in
           Type = "oneshot";
         };
         script = ''
-          ${pkgs.coreutils}/bin/install -d -m 0750 -o fava -g ${dataDirGroup} ${cfg.dataDir}
+          ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o fava -g ${dataDirGroup} ${cfg.dataDir}
           if [ ! -s ${cfg.ledgerFile} ]; then
             ${deployScript}
           fi
@@ -324,10 +324,10 @@ in
           install -d -m 0700 "$credential_dir"
 
           if ! "$forgejo" admin user list --config "$config_file" --work-path "$work_path" \
-            | ${pkgs.gawk}/bin/awk 'NR > 1 && $2 == "${cfg.repositoryOwner}" { found = 1 } END { exit !found }'
+            | ${lib.getExe' pkgs.gawk "awk"} 'NR > 1 && $2 == "${cfg.repositoryOwner}" { found = 1 } END { exit !found }'
           then
             if [ ! -s "$password_file" ]; then
-              ${pkgs.openssl}/bin/openssl rand -base64 24 > "$password_file"
+              ${lib.getExe' pkgs.openssl "openssl"} rand -base64 24 > "$password_file"
               chmod 0600 "$password_file"
             fi
 
@@ -335,7 +335,7 @@ in
               --config "$config_file" \
               --work-path "$work_path" \
               --username ${cfg.repositoryOwner} \
-              --password "$(${pkgs.coreutils}/bin/cat "$password_file")" \
+              --password "$(${lib.getExe' pkgs.coreutils "cat"} "$password_file")" \
               --email ${config.dot.admin.email} \
               --admin \
               --must-change-password=false
@@ -352,19 +352,19 @@ in
             chmod 0600 "$token_file"
           fi
 
-          token="$(${pkgs.coreutils}/bin/cat "$token_file")"
+          token="$(${lib.getExe' pkgs.coreutils "cat"} "$token_file")"
           auth_header="Authorization: token $token"
 
-          repo_status="$(${pkgs.curl}/bin/curl -sS -o /dev/null -w '%{http_code}' -H "$auth_header" "$api/repos/${cfg.repositoryOwner}/${cfg.repositoryName}")"
+          repo_status="$(${lib.getExe' pkgs.curl "curl"} -sS -o /dev/null -w '%{http_code}' -H "$auth_header" "$api/repos/${cfg.repositoryOwner}/${cfg.repositoryName}")"
           if [ "$repo_status" = 404 ]; then
             for old_repo in ${lib.escapeShellArgs cfg.oldRepositoryNames}; do
-              old_status="$(${pkgs.curl}/bin/curl -sS -o /dev/null -w '%{http_code}' -H "$auth_header" "$api/repos/${cfg.repositoryOwner}/$old_repo")"
+              old_status="$(${lib.getExe' pkgs.curl "curl"} -sS -o /dev/null -w '%{http_code}' -H "$auth_header" "$api/repos/${cfg.repositoryOwner}/$old_repo")"
               if [ "$old_status" = 200 ]; then
-                rename_payload="$(${pkgs.jq}/bin/jq -cn \
+                rename_payload="$(${lib.getExe' pkgs.jq "jq"} -cn \
                   --arg name ${cfg.repositoryName} \
                   --arg description "Private Beancount ledger source for ${cfg.hostName}" \
                   '{name:$name, private:true, description:$description}')"
-                ${pkgs.curl}/bin/curl -fsS -X PATCH -H "$auth_header" -H 'Content-Type: application/json' --data "$rename_payload" "$api/repos/${cfg.repositoryOwner}/$old_repo" >/dev/null
+                ${lib.getExe' pkgs.curl "curl"} -fsS -X PATCH -H "$auth_header" -H 'Content-Type: application/json' --data "$rename_payload" "$api/repos/${cfg.repositoryOwner}/$old_repo" >/dev/null
                 repo_status=200
                 break
               fi
@@ -372,22 +372,22 @@ in
           fi
 
           if [ "$repo_status" = 404 ]; then
-            repo_payload="$(${pkgs.jq}/bin/jq -cn \
+            repo_payload="$(${lib.getExe' pkgs.jq "jq"} -cn \
               --arg name ${cfg.repositoryName} \
               --arg branch ${cfg.branch} \
               '{name:$name, private:true, auto_init:true, default_branch:$branch, description:"Private Beancount ledger source"}')"
-            ${pkgs.curl}/bin/curl -fsS -X POST -H "$auth_header" -H 'Content-Type: application/json' --data "$repo_payload" "$api/user/repos" >/dev/null
+            ${lib.getExe' pkgs.curl "curl"} -fsS -X POST -H "$auth_header" -H 'Content-Type: application/json' --data "$repo_payload" "$api/user/repos" >/dev/null
           fi
 
-          hook_id="$(${pkgs.curl}/bin/curl -fsS -H "$auth_header" "$api/repos/${cfg.repositoryOwner}/${cfg.repositoryName}/hooks" \
-            | ${pkgs.jq}/bin/jq -r --arg url "$hook_url" '.[] | select(.config.url == $url) | .id' \
-            | ${pkgs.coreutils}/bin/head -n 1)"
+          hook_id="$(${lib.getExe' pkgs.curl "curl"} -fsS -H "$auth_header" "$api/repos/${cfg.repositoryOwner}/${cfg.repositoryName}/hooks" \
+            | ${lib.getExe' pkgs.jq "jq"} -r --arg url "$hook_url" '.[] | select(.config.url == $url) | .id' \
+            | ${lib.getExe' pkgs.coreutils "head"} -n 1)"
 
           if [ -z "$hook_id" ]; then
-            hook_payload="$(${pkgs.jq}/bin/jq -cn \
+            hook_payload="$(${lib.getExe' pkgs.jq "jq"} -cn \
               --arg url "$hook_url" \
               '{type:"forgejo", config:{url:$url, content_type:"json"}, events:["push"], active:true}')"
-            ${pkgs.curl}/bin/curl -fsS -X POST -H "$auth_header" -H 'Content-Type: application/json' --data "$hook_payload" "$api/repos/${cfg.repositoryOwner}/${cfg.repositoryName}/hooks" >/dev/null
+            ${lib.getExe' pkgs.curl "curl"} -fsS -X POST -H "$auth_header" -H 'Content-Type: application/json' --data "$hook_payload" "$api/repos/${cfg.repositoryOwner}/${cfg.repositoryName}/hooks" >/dev/null
           fi
         '';
       };
