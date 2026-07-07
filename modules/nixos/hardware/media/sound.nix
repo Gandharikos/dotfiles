@@ -10,6 +10,12 @@ let
 in
 {
   config = mkIf config.dot.gui.enable {
+    # no thanks lol
+    services.pulseaudio.enable = lib.mkForce false;
+
+    # Allows PipeWire to request realtime scheduling for low-latency audio.
+    security.rtkit.enable = lib.mkForce config.services.pipewire.enable;
+
     # pipewire is newer and just better
     services.pipewire = {
       enable = true;
@@ -22,6 +28,8 @@ in
         enable = true;
         support32Bit = isx86Linux pkgs;
       };
+
+      extraLadspaPackages = [ pkgs.rnnoise-plugin ];
 
       extraConfig.pipewire = {
         "10-loopback" = {
@@ -49,11 +57,6 @@ in
           ];
         };
       };
-    };
-
-    systemd.user.services = {
-      pipewire.wantedBy = [ "default.target" ];
-      pipewire-pulse.wantedBy = [ "default.target" ];
     };
   };
 }
