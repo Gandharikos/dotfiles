@@ -7,7 +7,6 @@
 let
   inherit (lib.modules) mkAfter mkDefault mkIf;
   cfg = config.nixporn.colorschemes.catppuccin;
-  tmux = config.my.tmux;
   enable = config.nixporn.colorscheme == "catppuccin" && config.my.tmux.enable;
   plugin = pkgs.tmuxPlugins.mkTmuxPlugin {
     pluginName = "catppuccin";
@@ -43,7 +42,6 @@ in
     ];
 
     programs.tmux.extraConfig = mkAfter ''
-      set -g status-position ${tmux.statusPosition}
       set -g status-right-length 100
       set -g status-left-length 100
       set -g status-left ""

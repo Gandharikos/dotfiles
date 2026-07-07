@@ -13,15 +13,6 @@ let
 in
 {
   programs.tmux.plugins = with pkgs.tmuxPlugins; [
-    # theme
-    # {
-    #   plugin = catppuccin;
-    #   extraConfig = ''
-    #     set -g @catppuccin_pill_theme_enabled on
-    #     set -g @catppuccin_window_tabs_enabled on
-    #     set -g @catppuccin_date_time "%H:%M"
-    #   '';
-    # }
     {
       plugin = resurrect;
       extraConfig = ''
@@ -51,18 +42,11 @@ in
         set -g @thumbs-command 'echo -n {} | ${clipboardCmd} && tmux display-message "Copied to clipboard: {}"'
       '';
     }
-    {
-      plugin = tmux-which-key;
-      extraConfig = ''
-        set -g @tmux-which-key-xdg-enable 1;
-        set -g @tmux-which-key-disable-autobuild 1
-      '';
-    }
     yank
     {
       plugin = tmux-fzf;
       extraConfig = ''
-        TMUX_FZF_LAUNCH_KEY="/"
+        TMUX_FZF_LAUNCH_KEY="Space"
         TMUX_FZF_ORDER="session|window|pane|command|keybinding|clipboard|process"
       '';
     }

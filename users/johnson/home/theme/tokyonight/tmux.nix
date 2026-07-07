@@ -8,7 +8,6 @@ let
   inherit (lib.modules) mkDefault mkIf;
   inherit (config.nixporn) palette;
   transparent = config.nixporn.transparent;
-  tmux = config.my.tmux;
   pad = {
     left = "";
     right = "";
@@ -49,7 +48,6 @@ in
 
             set -g status on
             set -g status-justify centre
-            set -g status-position ${tmux.statusPosition}
             set -g status-left-length 90
             set -g status-right-length 90
             set -g status-style ${status_bg}

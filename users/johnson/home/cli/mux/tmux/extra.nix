@@ -10,6 +10,7 @@ let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
   inherit (lib.meta) getExe';
   shell = "${config.home.profileDirectory}/bin/${config.my.shell}";
+  tmux = config.my.tmux;
 in
 {
   programs.tmux.extraConfig = with osConfig.dot.keyboard.keys; ''
@@ -31,6 +32,7 @@ in
 
     # display time
     set -g display-time 4000
+    set -g status-position ${tmux.statusPosition}
 
     setw xterm-keys on
     set -sg repeat-time 300
@@ -102,6 +104,7 @@ in
     # repeat bindings
     bind [ previous-window
     bind ] next-window
+    bind w choose-tree -Zw
 
     # When pressing prefix+s to list sessions, I want them sorted by time
     # That way my latest used sessions show at the top of the list
