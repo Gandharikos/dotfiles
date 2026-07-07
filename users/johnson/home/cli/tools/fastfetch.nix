@@ -11,10 +11,17 @@ let
   cfg = config.my.fastfetch;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
-  fetch_greeting = ''
-    if ! [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
+  fetchGreeting = ''
+    if [ -n "$DISPLAY" ] \
+      && [ "$XDG_VTNR" = 1 ]; then
       fastfetch
     fi
+  '';
+  fishGreeting = ''
+    if set -q DISPLAY
+       and test "$XDG_VTNR" = 1
+      fastfetch
+    end
   '';
 in
 {
@@ -27,14 +34,17 @@ in
     # programs.nushell = {inherit shellAliases;};
     programs = {
       fish.functions.fish_greeting = mkIf cfg.startOnLogin {
-        body = "fastfetch";
+        body = fishGreeting;
       };
-      zsh.initContent = mkIf cfg.startOnLogin fetch_greeting;
-      bash.initExtra = mkIf cfg.startOnLogin fetch_greeting;
+      zsh.initContent = mkIf cfg.startOnLogin fetchGreeting;
+      bash.initExtra = mkIf cfg.startOnLogin fetchGreeting;
       fastfetch = {
         enable = true;
         settings = {
           "$schema" = "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json";
+          general = {
+            detectVersion = false;
+          };
           logo = {
             type = if kitty.enable then "kitty-direct" else "chafa";
             # width = 60;
@@ -73,11 +83,6 @@ in
               type = "kernel";
               key = "   Kernel";
               keyColor = "red";
-            }
-            {
-              type = "packages";
-              key = "  󰏓 Packages";
-              keyColor = "green";
             }
             {
               type = "display";
