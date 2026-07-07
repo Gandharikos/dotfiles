@@ -31,7 +31,7 @@ let
     inherit symbol;
     format = segment color "$symbol" "( $version)";
   };
-  os = icon: fg: "[${icon} ](fg:crust bg:${fg})";
+  os = icon: "[${icon} ](fg:crust bg:${cfg.accent})";
 in
 {
   config = mkIf enable {
@@ -67,20 +67,20 @@ in
       os = {
         disabled = false;
         format = concatStringsSep "" [
-          "[](fg:blue)"
+          "[](fg:${cfg.accent})"
           "$symbol"
         ];
         symbols = {
-          Arch = os "" "blue";
-          Alpine = os "" "blue";
-          Debian = os "" "red";
-          EndeavourOS = os "" "mauve";
-          Fedora = os "" "blue";
-          NixOS = os "" "blue";
-          openSUSE = os "" "green";
-          SUSE = os "" "green";
-          Ubuntu = os "" "mauve";
-          Macos = os "" "subtext0";
+          Arch = os "";
+          Alpine = os "";
+          Debian = os "";
+          EndeavourOS = os "";
+          Fedora = os "";
+          NixOS = os "";
+          openSUSE = os "";
+          SUSE = os "";
+          Ubuntu = os "";
+          Macos = os "";
         };
       };
 
