@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
   dot = {
     primaryUser = "johnson";
@@ -15,6 +15,21 @@
       type = "vm";
       cpu = "vm-intel";
     };
+
+    boot.kernel = pkgs.linuxPackages;
+
+    virtual.podman.enable = true;
+  };
+
+  users.users.johnson.autoSubUidGidRange = true;
+
+  services.userborn.enable = lib.mkForce false;
+
+  security.account-utils.enable = lib.mkForce false;
+
+  system = {
+    nixos-init.enable = lib.mkForce false;
+    etc.overlay.enable = lib.mkForce false;
   };
 
   environment = {
@@ -24,6 +39,32 @@
   };
 
   networking.firewall.allowedTCPPorts = [ 80 ];
+
+  boot.supportedFilesystems = [ "zfs" ];
+
+  environment.systemPackages = with pkgs; [
+    zfs
+  ];
+
+  services.zfs = {
+    autoScrub = {
+      enable = true;
+      interval = "weekly";
+    };
+  };
+
+  systemd.tmpfiles.settings.mimir = {
+    "/var/lib/mimir".d = {
+      user = "root";
+      group = "root";
+      mode = "0750";
+    };
+    "/var/lib/mimir/uptime-kuma".d = {
+      user = "root";
+      group = "root";
+      mode = "0750";
+    };
+  };
 
   services.nginx = {
     enable = true;
@@ -36,7 +77,13 @@
       default = true;
       locations = {
         "/" = {
-          root = "/etc/mimir";
+          proxyPass = "http://127.0.0.1:3001";
+          extraConfig = ''
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_read_timeout 300s;
+          '';
         };
         "/healthz" = {
           return = "200 'mimir: healthy\n'";
@@ -48,11 +95,23 @@
     };
   };
 
+  virtualisation.oci-containers = {
+    backend = "podman";
+    containers.uptime-kuma = {
+      image = "docker.io/louislam/uptime-kuma:1";
+      autoStart = true;
+      ports = [ "127.0.0.1:3001:3001" ];
+      volumes = [ "/var/lib/mimir/uptime-kuma:/app/data" ];
+      extraOptions = [ "--security-opt=no-new-privileges" ];
+    };
+  };
+
   virtualisation.vmVariant = {
     virtualisation = {
       cores = 2;
       memorySize = 2048;
       diskSize = 8192;
+      emptyDiskImages = [ 4096 ];
       graphics = false;
       forwardPorts = [
         {
