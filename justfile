@@ -83,18 +83,17 @@ install host target *args:
     nixos-anywhere \
         --flake {{ flake }}#{{ host }} \
         --copy-host-keys \
-        --build-on remote \
-        {{ target }} \
-        {{ args }}
+        --build-on auto \
+        {{ args }} \
+        {{ target }}
 
 [group('install')]
 [no-exit-message]
 disko host *args:
-    sudo nix --extra-experimental-features "nix-command flakes" run github:nix-community/disko -- \
-        --mode disko \
-        --flake {{ flake }}#{{ host }}
-
-    sudo nixos-install --flake {{ flake }}#{{ host }} {{ args }}
+    sudo nix --extra-experimental-features "nix-command flakes" run github:nix-community/disko/latest#disko-install -- \
+        --write-efi-boot-entries \
+        --flake {{ flake }}#{{ host }} \
+        {{ args }}
 
 # ------------------------------------------------------------------------------
 # dev
@@ -168,7 +167,7 @@ add program:
 # ------------------------------------------------------------------------------
 
 [group('secret')]
-init-local host=`hostname -s`:
+bootstrap host=`hostname -s`:
     #!/usr/bin/env bash
     mkdir -p ~/.ssh
     sops -d --extract '["data"]' secrets/{{ user }}/core/id_ed25519.yaml > ~/.ssh/id_ed25519
@@ -181,7 +180,7 @@ init-local host=`hostname -s`:
     sudo chmod 644 /etc/ssh/ssh_host_ed25519_key.pub
 
 [group('secret')]
-init-remote host ip:
+bootstrap-remote host ip:
     #!/usr/bin/env bash
     set -euo pipefail
 
