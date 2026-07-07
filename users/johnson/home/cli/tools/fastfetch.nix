@@ -114,18 +114,6 @@ in
               keyColor = "blue";
             }
             {
-              type = "gpu";
-              format = "{2}";
-              key = "   GPU";
-              keyColor = "blue";
-            }
-            {
-              type = "gpu";
-              format = "{3}";
-              key = "   GPU Driver";
-              keyColor = "magenta";
-            }
-            {
               type = "memory";
               key = "   Memory";
               keyColor = "magenta";
