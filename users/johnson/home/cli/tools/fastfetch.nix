@@ -13,13 +13,21 @@ let
   inherit (lib.modules) mkIf;
   fetchGreeting = ''
     if [ -n "$DISPLAY" ] \
-      && [ "$XDG_VTNR" = 1 ]; then
+      && { [ "$XDG_VTNR" = 1 ] \
+        || [ -n "$TMUX" ] \
+        || [ -n "$ZELLIJ" ] \
+        || [ -n "$ZELLIJ_SESSION_NAME" ]; }; then
       fastfetch
     fi
   '';
   fishGreeting = ''
     if set -q DISPLAY
-       and test "$XDG_VTNR" = 1
+       and begin
+         test "$XDG_VTNR" = 1
+         or set -q TMUX
+         or set -q ZELLIJ
+         or set -q ZELLIJ_SESSION_NAME
+       end
       fastfetch
     end
   '';
