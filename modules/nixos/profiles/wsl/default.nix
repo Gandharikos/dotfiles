@@ -21,15 +21,15 @@ in
         cpu = null;
         hasTPM = false;
       };
+      kernel.tweaks.enable = true;
       boot = {
         loader = "none";
         secureBoot = false;
         tmpOnTmpfs = true;
-        enableKernelTweaks = true;
         plymouth.enable = false;
 
         initrd = {
-          enableTweaks = true;
+          tweaks.enable = true;
           optimizeCompressor = true;
         };
       };
@@ -87,5 +87,7 @@ in
       variables.BROWSER = mkForce "wsl-open";
       systemPackages = [ pkgs.wsl-open ];
     };
+
+    boot.kernel.sysctl = mkForce { };
   };
 }

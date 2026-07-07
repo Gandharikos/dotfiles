@@ -5,10 +5,10 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  isHeadless = !config.dot.gui.enable;
+  cfg = config.dot.profiles.headless;
 in
 {
-  config = mkIf isHeadless {
+  config = mkIf cfg.enable {
     # https://github.com/numtide/srvos/blob/main/nixos/server/default.nix
     systemd = {
       # given that our systems are headless, emergency mode is useless.

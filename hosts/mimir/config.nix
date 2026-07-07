@@ -16,9 +16,11 @@
       cpu = "vm-intel";
     };
 
-    boot.kernel = pkgs.linuxPackages;
+    kernel.packages = pkgs.linuxPackages;
 
     virtual.podman.enable = true;
+
+    services.zfs.enable = true;
   };
 
   users.users.johnson.autoSubUidGidRange = true;
@@ -39,19 +41,6 @@
   };
 
   networking.firewall.allowedTCPPorts = [ 80 ];
-
-  boot.supportedFilesystems = [ "zfs" ];
-
-  environment.systemPackages = with pkgs; [
-    zfs
-  ];
-
-  services.zfs = {
-    autoScrub = {
-      enable = true;
-      interval = "weekly";
-    };
-  };
 
   systemd.tmpfiles.settings.mimir = {
     "/var/lib/mimir".d = {

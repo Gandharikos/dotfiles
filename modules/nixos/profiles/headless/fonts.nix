@@ -6,10 +6,10 @@
 let
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.attrsets) mapAttrs;
-  isHeadless = !config.dot.gui.enable;
+  cfg = config.dot.profiles.headless;
 in
 {
-  config = mkIf isHeadless {
+  config = mkIf cfg.enable {
     # we don't need fonts on a server
     # since there are no fonts to be configured outside the console
     fonts = mapAttrs (_: mkForce) {

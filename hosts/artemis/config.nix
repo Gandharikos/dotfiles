@@ -15,15 +15,15 @@
     security = {
       auditd.enable = lib.mkForce false;
     };
+    kernel.tweaks.enable = true;
 
     boot = {
       secureBoot = false;
       tmpOnTmpfs = false;
-      enableKernelTweaks = true;
       plymouth.enable = false;
 
       initrd = {
-        enableTweaks = true;
+        tweaks.enable = true;
         optimizeCompressor = true;
       };
     };

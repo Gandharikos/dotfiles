@@ -12,16 +12,16 @@ in
   config = mkIf isVm {
     dot = {
       profiles.minimal.enable = mkDefault true;
+      kernel.tweaks.enable = mkDefault false;
 
       boot = {
         loader = mkDefault "none";
         secureBoot = mkDefault false;
         tmpOnTmpfs = mkDefault false;
-        enableKernelTweaks = mkDefault false;
         plymouth.enable = mkDefault false;
 
         initrd = {
-          enableTweaks = mkDefault false;
+          tweaks.enable = mkDefault false;
           optimizeCompressor = mkDefault false;
         };
       };

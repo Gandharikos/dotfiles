@@ -1,6 +1,24 @@
+# the holy handbook to kernel parameters
+# <https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html>
+{ lib, config, ... }:
+let
+  inherit (lib.lists) optionals;
+  inherit (lib.options) mkEnableOption;
+  cfg = config.dot;
+in
 {
+  options.dot = {
+    boot.silent = mkEnableOption ''
+      almost entirely silent boot process through `quiet` kernel parameter
+    '';
+
+    kernel.tweaks.enable = mkEnableOption "security and performance related kernel parameters" // {
+      default = true;
+    };
+  };
+
   # https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html
-  boot.kernelParams = [
+  config.boot.kernelParams = [
     # NixOS produces many wakeups per second, which is bad for battery life.
     # This kernel parameter disables the timer tick on the last 4 cores
     "nohz_full=4-7"
@@ -44,5 +62,62 @@
 
     # prevent the kernel from blanking plymouth out of the fb
     "fbcon=nodefer"
+  ]
+  ++ optionals cfg.kernel.tweaks.enable [
+    # https://en.wikipedia.org/wiki/Kernel_page-table_isolation
+    # auto means kernel will automatically decide the pti state
+    "pti=auto" # on || off
+
+    # NOTE: do NOT add "idle=nomwait" here. It disables MWAIT, which forces the
+    # kernel off intel_idle onto acpi_idle, whose coarse ACPI C-states have huge
+    # exit latencies (~1ms C3 on Alder Lake). That wakeup latency causes audio
+    # xruns (crackle) and network stalls at idle. intel_idle gives fine-grained,
+    # low-latency C-states and is the correct driver on modern Intel.
+
+    # enable IOMMU for devices used in passthrough and provide better host performance
+    "iommu=pt"
+
+    # disable usb autosuspend
+    "usbcore.autosuspend=-1"
+
+    # isables resume and restores original swap space
+    "noresume"
+
+    # allow systemd to set and save the backlight state
+    "acpi_backlight=native"
+
+    # prevent the kernel from blanking plymouth out of the fb
+    "fbcon=nodefer"
+
+    # disable boot logo
+    "logo.nologo"
+
+    # disable the cursor in vt to get a black screen during intermissions
+    "vt.global_cursor_default=0"
+  ]
+  ++ optionals cfg.boot.silent [
+    # tell the kernel to not be verbose, the voices are too loud
+    "quiet"
+
+    # kernel log message level
+    "loglevel=3" # 1: system is unusable | 3: error condition | 7: very verbose
+
+    # udev log message level
+    "udev.log_level=3"
+
+    # lower the udev log level to show only errors or worse
+    "rd.udev.log_level=3"
+
+    # disable systemd status messages
+    # rd prefix means systemd-udev will be used instead of initrd
+    "systemd.show_status=auto"
+    "rd.systemd.show_status=auto"
+  ]
+  ++ optionals config.dot.profiles.headless.enable [
+    # since these are machines where we cannot interact with them. just reboot on panic
+    "panic=1"
+    "boot.panic_on_fail"
+    "vga=0x317"
+    "nomodeset"
   ];
 }

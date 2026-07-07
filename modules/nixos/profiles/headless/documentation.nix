@@ -6,10 +6,10 @@
 let
   inherit (lib.modules) mkIf mkForce;
   inherit (lib.attrsets) mapAttrs;
-  isHeadless = !config.dot.gui.enable;
+  cfg = config.dot.profiles.headless;
 in
 {
-  config = mkIf isHeadless {
+  config = mkIf cfg.enable {
     documentation = mapAttrs (_: mkForce) {
       enable = false;
       dev.enable = false;

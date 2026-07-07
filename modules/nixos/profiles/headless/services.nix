@@ -5,10 +5,10 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  isHeadless = !config.dot.gui.enable;
+  cfg = config.dot.profiles.headless;
 in
 {
-  config = mkIf isHeadless {
+  config = mkIf cfg.enable {
     # a headless system should not mount any removable media
     # without explicit user action
     services.udisks2.enable = lib.modules.mkForce false;

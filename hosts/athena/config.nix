@@ -75,11 +75,11 @@ in
     primaryUser = "johnson";
     virtual.podman.enable = true;
     users.johnson.home.my.direnv.enable = lib.mkForce false;
+    kernel.tweaks.enable = true;
 
     boot = {
-      enableKernelTweaks = true;
       initrd = {
-        enableTweaks = true;
+        tweaks.enable = true;
         optimizeCompressor = false;
       };
     };

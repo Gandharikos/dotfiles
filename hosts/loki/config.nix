@@ -7,14 +7,14 @@
 
   dot = {
     primaryUser = "johnson";
+    kernel.tweaks.enable = true;
     boot = {
       secureBoot = false;
       tmpOnTmpfs = false;
-      enableKernelTweaks = true;
       plymouth.enable = false;
 
       initrd = {
-        enableTweaks = true;
+        tweaks.enable = true;
         optimizeCompressor = true;
       };
     };

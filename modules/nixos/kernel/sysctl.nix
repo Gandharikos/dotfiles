@@ -8,15 +8,12 @@
 # a good place to quickly find what each setting does
 # https://sysctl-explorer.net/
 #
-# we disable sysctl tweaks on wsl since they don't work
 {
-  lib,
   config,
-  options,
   ...
 }:
 {
-  boot.kernel.sysctl = lib.mkIf (!(options ? "wsl")) {
+  boot.kernel.sysctl = {
     # The Magic SysRq key is a key combo that allows users connected to the
     # system console of a Linux kernel to perform some low-level commands.
     # Disable it, since we don't need it, and is a potential security concern.
@@ -99,5 +96,9 @@
     # unless the user ID of the follower matches the symlink, or the
     # directory owner matches the symlink
     "fs.protected_symlinks" = 1;
+
+    # increase the map count, this is important for applications that require a lot of memory mappings
+    # such as games and emulators
+    "vm.max_map_count" = 2147483642;
   };
 }

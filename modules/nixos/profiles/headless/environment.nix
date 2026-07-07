@@ -5,10 +5,10 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  isHeadless = !config.dot.gui.enable;
+  cfg = config.dot.profiles.headless;
 in
 {
-  config = mkIf isHeadless {
+  config = mkIf cfg.enable {
     # print the URL instead on servers
     environment.variables.BROWSER = "echo";
   };

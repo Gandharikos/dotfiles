@@ -12,15 +12,15 @@
     security = {
       fixWebcam = true;
     };
+    kernel.tweaks.enable = true;
     boot = {
       secureBoot = false;
       tmpOnTmpfs = false;
-      enableKernelTweaks = true;
       # DISABLED: Potential conflict with NVIDIA/ASUS drivers
       plymouth.enable = false;
 
       initrd = {
-        enableTweaks = true;
+        tweaks.enable = true;
         optimizeCompressor = true;
       };
     };
