@@ -216,6 +216,15 @@
     };
 
     # AI tools
+    hermes-agent = {
+      url = "github:NousResearch/hermes-agent";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        uv2nix.inputs.pyproject-nix.follows = "hermes-agent/pyproject-nix";
+      };
+    };
+
     llm-agents = {
       url = "github:numtide/llm-agents.nix";
       inputs = {
