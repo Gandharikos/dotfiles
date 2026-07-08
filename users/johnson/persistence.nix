@@ -55,6 +55,7 @@ in
       ])
       (mkIf config.dot.gui.game.enable [
         ".cache/Steam"
+        ".config/unity3d"
         ".local/share/Steam"
         ".steam"
       ])
