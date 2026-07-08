@@ -272,6 +272,7 @@ local theme = merge(default_theme, generated_theme, env_theme)
 local M = {
   generated = generated,
   backends = backends,
+  plugins = generated.plugins or {},
   mod = env("HYPR_MOD", generated.mod or "SUPER"),
   workspaces = number_env("HYPR_WORKSPACES", generated.workspaces or 10),
   theme = theme,
