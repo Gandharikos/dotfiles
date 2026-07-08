@@ -4,9 +4,10 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
   cfg = config.dot.services.fail2ban;
+  vaultwarden = config.dot.selfhosted.services.vaultwarden;
 in
 {
   options.dot.services.fail2ban = {
@@ -35,57 +36,55 @@ in
         "192.168.0.0/16"
         "8.8.8.8"
       ];
-      jails = {
-        sshd.settings = {
-          mode = "aggressive";
-          filter = "sshd";
-          backend = "systemd";
-          maxretry = 3;
-        };
+      jails = mkMerge [
+        {
+          sshd.settings = {
+            mode = "aggressive";
+            filter = "sshd";
+            backend = "systemd";
+            maxretry = 3;
+          };
+        }
+        (mkIf vaultwarden.enable {
+          vaultwarden = {
+            filter = {
+              INCLUDES.before = "common.conf";
+              Definition = {
+                failregex = "^.*Username or password is incorrect\\. Try again\\. IP: <ADDR>\\. Username:.*$";
+                ignoreregex = "";
+              };
+            };
+            settings = {
+              port = "80,443,${toString vaultwarden.port}";
+              backend = "systemd";
+              journalmatch = "_SYSTEMD_UNIT=vaultwarden.service";
+              banaction = "%(banaction_allports)s";
+              maxretry = 3;
+              bantime = 14400;
+              findtime = 14400;
+            };
+          };
 
-        # nginx-http-auth = ''
-        #   enabled = true
-        #   port    = http,https
-        #   filter  = nginx-http-auth
-        #   backend = systemd
-        #   journalmatch = _SYSTEMD_UNIT=nginx.service
-        # '';
-        #
-        # nginx-botsearch = ''
-        #   enabled = true
-        #   port    = http,https
-        #   filter  = nginx-botsearch
-        #   backend = systemd
-        #   journalmatch = _SYSTEMD_UNIT=nginx.service
-        # '';
-        #
-        # nginx-bad-request = ''
-        #   enabled = true
-        #   port    = http,https
-        #   filter  = nginx-bad-request
-        #   backend = systemd
-        #   journalmatch = _SYSTEMD_UNIT=nginx.service
-        # '';
-        #
-        # authelia = ''
-        #   enabled = true
-        #   port    = http,https
-        #   filter  = authelia
-        #   backend = systemd
-        #   journalmatch = _SYSTEMD_UNIT=authelia-main.service + _COMM=authelia
-        # '';
-      };
-      # environment.etc = {
-      #   "fail2ban/filter.d/authelia.conf".text = ''
-      #     [Definition]
-      #     failregex = ^.*Unsuccessful 1FA authentication attempt by user .*remote_ip="?<HOST>"? stack.*
-      #                 ^.*Unsuccessful (TOTP|Duo|U2F) authentication attempt by user .*remote_ip="?<HOST>"? stack.*
-      #
-      #     ignoreregex = ^.*level=debug.*
-      #                   ^.*level=info.*
-      #                   ^.*level=warning.*
-      #   '';
-      # };
+          vaultwarden-admin = {
+            filter = {
+              INCLUDES.before = "common.conf";
+              Definition = {
+                failregex = "^.*Invalid admin token\\. IP: <ADDR>.*$";
+                ignoreregex = "";
+              };
+            };
+            settings = {
+              port = "80,443,${toString vaultwarden.port}";
+              backend = "systemd";
+              journalmatch = "_SYSTEMD_UNIT=vaultwarden.service";
+              banaction = "%(banaction_allports)s";
+              maxretry = 3;
+              bantime = 14400;
+              findtime = 14400;
+            };
+          };
+        })
+      ];
     };
   };
 }
