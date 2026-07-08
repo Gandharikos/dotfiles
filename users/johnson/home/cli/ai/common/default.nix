@@ -24,10 +24,10 @@ let
 
   skillSpecs = {
     "ai-commands" = {
-      content = renderEntries "ai-commands" aiCommands.commands;
+      content = renderEntries "ai-commands" aiCommands.toCodexSkills;
     };
     "ai-agents" = {
-      content = renderEntries "ai-agents" aiAgents.agents;
+      content = renderEntries "ai-agents" aiAgents.toClaudeMarkdown;
     };
   }
   // aiSkills.skills;
@@ -68,11 +68,14 @@ in
     antigravityCli = {
       commands = aiCommands.toAntigravityCommands;
       agents = aiAgents.toAntigravityAgents;
-      inherit skills;
+      skills = skills // aiAgents.toAntigravitySkills;
     };
 
     codex = {
+      agents = aiAgents.toCodexAgents;
+      commandSkillFiles = aiCommands.toCodexSkillFiles;
       context = base;
+      contextOverride = base;
       customInstructions = base;
       inherit skillsDir;
       inherit skills;
@@ -80,7 +83,23 @@ in
 
     opencode = {
       commands = aiCommands.toOpenCodeMarkdown;
-      agents = aiAgents.toOpenCodeMarkdown;
+      inherit (aiAgents) agents;
+      renderAgents = aiAgents.toOpenCodeMarkdown;
+      inherit skillsDir;
+      skills = skillsDir;
+    };
+
+    githubCopilotCli = {
+      agents = aiAgents.toCopilotMarkdown;
+      commandSkills = aiCommands.toCopilotSkills;
+      commands = aiCommands.toClaudeMarkdown;
+      context = base;
+      skills = aiCommands.toCopilotSkills;
+      inherit base;
+    };
+
+    piCodingAgent = {
+      skills = skillsDir;
     };
 
     mergeCommands = existingCommands: newCommands: existingCommands // newCommands;

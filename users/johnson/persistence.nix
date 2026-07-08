@@ -156,6 +156,9 @@ in
       (mkIf my.pet.enable [
         ".config/pet"
       ])
+      (mkIf my.pi.enable [
+        ".pi"
+      ])
       (mkIf my.security.gpg.enable [
         {
           directory = ".gnupg";
