@@ -64,6 +64,12 @@ let
     '';
   };
 
+  clangNoCpp = pkgs.runCommand "clang-no-cpp" { nativeBuildInputs = [ pkgs.makeWrapper ]; } ''
+    mkdir -p "$out/bin"
+    makeWrapper ${lib.getExe pkgs.llvmPackages.clang} "$out/bin/clang"
+    makeWrapper ${pkgs.llvmPackages.clang}/bin/clang++ "$out/bin/clang++"
+  '';
+
   mkWrapper =
     package: postBuild:
     let
@@ -87,6 +93,7 @@ in
         with pkgs;
         [
           gcc
+          clangNoCpp
           llvmPackages.clang-tools
           bear
           cmake

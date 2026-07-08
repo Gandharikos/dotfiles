@@ -92,6 +92,10 @@ in
         enable = true;
       };
 
+      ebpf = {
+        enable = true;
+      };
+
       python = {
         enable = true;
       };
