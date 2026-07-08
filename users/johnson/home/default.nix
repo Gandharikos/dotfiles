@@ -73,7 +73,7 @@ in
 
     gui.apps.clash.enable = false;
 
-    gui.apps.discord.enable = false;
+    gui.apps.discord.enable = !isMinimal;
 
     gui.apps.helium.enable = !isMinimal;
 
@@ -140,6 +140,8 @@ in
     pay-respects.enable = !isMinimal;
 
     pet.enable = !isMinimal;
+
+    pi.enable = !isMinimal;
 
     polymarket.enable = !isMinimal;
 
