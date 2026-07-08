@@ -17,7 +17,7 @@ in
     # Fix colors and enable true color support and italics
     if 'infocmp -x tmux-256color > /dev/null 2>&1' 'set -g default-terminal "tmux-256color"'
     # sets
-    set -s extended-keys
+    set -g extended-keys on
     set -as terminal-features 'xterm*:extkeys'
     set -gs exit-empty on
 
