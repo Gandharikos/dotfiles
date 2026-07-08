@@ -29,12 +29,36 @@
 
   security.account-utils.enable = lib.mkForce false;
 
+  boot.kernel.sysctl = {
+    # This VM is intentionally permissive for eBPF learning and tracing.
+    "kernel.ftrace_enabled" = lib.mkForce true;
+    "kernel.kptr_restrict" = lib.mkForce 0;
+    "kernel.perf_event_paranoid" = lib.mkForce 1;
+    "kernel.unprivileged_bpf_disabled" = lib.mkForce false;
+    "net.core.bpf_jit_enable" = lib.mkForce true;
+    "net.core.bpf_jit_harden" = lib.mkForce 0;
+  };
+
   system = {
     nixos-init.enable = lib.mkForce false;
     etc.overlay.enable = lib.mkForce false;
   };
 
   environment = {
+    systemPackages = with pkgs; [
+      bpftools
+      bpftrace
+      clang
+      elfutils
+      gcc
+      gnumake
+      libbpf
+      llvmPackages.clang-tools
+      perf
+      pkg-config
+      zlib
+    ];
+
     etc."mimir/index.html".text = ''
       mimir: ok
     '';
