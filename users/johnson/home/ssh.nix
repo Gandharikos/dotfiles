@@ -67,6 +67,14 @@ in
             ForwardAgent = mkDefault true;
           };
 
+          "mimir" = {
+            HostName = mkDefault "localhost";
+            Port = mkDefault 10022;
+            User = mkDefault "johnson";
+            StrictHostKeyChecking = mkDefault "no";
+            UserKnownHostsFile = mkDefault "/dev/null";
+          };
+
           "nidhogg" = {
             HostName = mkDefault "nidhogg.local";
             ForwardAgent = mkDefault true;
