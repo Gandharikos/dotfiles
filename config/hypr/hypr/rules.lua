@@ -43,7 +43,6 @@ function M.setup()
     match = { class = "^(gcr-prompter|xdg-desktop-portal-gtk|Soteria|polkit-gnome-authentication-agent-1)$" },
     dim_around = true,
   })
-  hl.window_rule({ match = { xwayland = true }, rounding = 0 })
   hl.window_rule({
     match = { class = ".*jetbrains.*", title = "^(Confirm Exit|Open Project|win424|win201|splash)$" },
     center = true,
