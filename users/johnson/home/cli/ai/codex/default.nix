@@ -17,6 +17,7 @@ let
     optionals
     ;
   headroomEnabled = cfg.useHeadroom;
+  mcpModuleEnabled = config.my.mcp.enable or false;
 in
 {
   options.my.codex = {
@@ -29,18 +30,9 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.shellAliases = {
-      codex-deep = "codex --profile deep";
-      codex-nano = "codex --profile nano";
-      codex-offline = "codex --profile offline";
-      codex-quick = "codex --profile quick";
-      codex-spark = "codex --profile spark";
-      codex-unsafe = "codex --profile unsafe";
-    };
-
     programs.codex = {
       enable = true;
-      enableMcpIntegration = true;
+      enableMcpIntegration = mcpModuleEnabled;
 
       settings = {
         features = {

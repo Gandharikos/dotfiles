@@ -25,7 +25,7 @@ in
   config = mkIf cfg.enable {
     programs.antigravity-cli = {
       enable = true;
-      enableMcpIntegration = mkIf mcpModuleEnabled true;
+      enableMcpIntegration = mcpModuleEnabled;
 
       settings = {
         context = {

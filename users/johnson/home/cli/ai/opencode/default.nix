@@ -35,20 +35,13 @@ in
   config = mkIf cfg.enable {
     sops.secrets.openrouter_api_key = { };
 
-    home.shellAliases = {
-      opencode-coding = "opencode --model ${quickModel}";
-      opencode-deep = "opencode --model ${mainModel}";
-      opencode-nano = "opencode --model ${nanoModel}";
-      opencode-research = "opencode --agent ${defaultAgent}";
-    };
-
     programs.opencode = {
       enable = true;
       package = pkgs.writeShellScriptBin "opencode" ''
         export OPENROUTER_API_KEY="$(${cat'} ${config.sops.secrets.openrouter_api_key.path})"
         exec ${getExe pkgs.opencode} "$@"
       '';
-      enableMcpIntegration = mkIf mcpModuleEnabled true;
+      enableMcpIntegration = mcpModuleEnabled;
 
       tui.theme = mkDefault "opencode";
 

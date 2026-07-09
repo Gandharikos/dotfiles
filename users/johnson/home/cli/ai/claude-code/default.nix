@@ -36,7 +36,7 @@ in
 
     programs.claude-code = {
       enable = true;
-      enableMcpIntegration = mkIf mcpModuleEnabled true;
+      enableMcpIntegration = mcpModuleEnabled;
 
       plugins = [
         (pkgs.fetchFromGitHub {
