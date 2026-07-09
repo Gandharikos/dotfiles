@@ -30,7 +30,6 @@
       printing.enable = true;
       fwupd.enable = true;
       asus.enable = true;
-      hermes-agent.enable = true;
     };
     gui.game.enable = true;
     virtual.enable = true;
