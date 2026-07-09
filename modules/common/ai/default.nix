@@ -102,6 +102,14 @@ in
       skills = skillsDir;
     };
 
+    hermesAgent = {
+      documents = {
+        "AGENTS.md" = base;
+        "AI_AGENTS.md" = skills."ai-agents";
+        "AI_COMMANDS.md" = skills."ai-commands";
+      };
+    };
+
     mergeCommands = existingCommands: newCommands: existingCommands // newCommands;
   };
 }

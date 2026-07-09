@@ -46,7 +46,7 @@ in
       enable = true;
       package = pkgs.writeShellScriptBin "opencode" ''
         export OPENROUTER_API_KEY="$(${cat'} ${config.sops.secrets.openrouter_api_key.path})"
-        exec ${getExe pkgs.llm-agents.opencode} "$@"
+        exec ${getExe pkgs.opencode} "$@"
       '';
       enableMcpIntegration = mkIf mcpModuleEnabled true;
 

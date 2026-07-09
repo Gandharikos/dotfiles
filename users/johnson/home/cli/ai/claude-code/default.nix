@@ -36,7 +36,6 @@ in
 
     programs.claude-code = {
       enable = true;
-      package = pkgs.llm-agents.claude-code;
       enableMcpIntegration = mkIf mcpModuleEnabled true;
 
       plugins = [

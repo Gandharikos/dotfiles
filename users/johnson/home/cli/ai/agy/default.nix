@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   aiCommon,
   ...
 }:
@@ -26,7 +25,6 @@ in
   config = mkIf cfg.enable {
     programs.antigravity-cli = {
       enable = true;
-      package = pkgs.llm-agents.antigravity-cli;
       enableMcpIntegration = mkIf mcpModuleEnabled true;
 
       settings = {
@@ -124,7 +122,7 @@ in
       };
 
       context = {
-        AGENTS = lib.dot.getFile "users/johnson/home/cli/ai/common/base.md";
+        AGENTS = sharedAiTools.base;
       };
 
       commands = sharedAiTools.antigravityCli.commands // sharedAiTools.antigravityCli.agents;

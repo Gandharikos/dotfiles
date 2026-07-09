@@ -1,5 +1,7 @@
 { lib, ... }:
 {
   _class = "homeManager";
-  imports = lib.dot.scanPaths ./.;
+  imports = (lib.dot.scanPaths ./.) ++ [
+    ../common/ai
+  ];
 }

@@ -9,8 +9,8 @@ let
   userOptions = lib.dot.mkUserOptions {
     inherit (pkgs.stdenv.hostPlatform) isLinux;
     config = config.my;
-    inferName = false;
-    name = "my";
+    defaultNameFromNamespace = false;
+    namespace = "my";
   };
   username = config.my.name;
   inherit (config.my) homeDirectory;

@@ -1,5 +1,6 @@
 {
   config,
+  aiCommon,
   inputs,
   lib,
   pkgs,
@@ -7,6 +8,11 @@
 }:
 let
   cfg = config.dot.services.hermes-agent;
+  desktopDeviceTypes = [
+    "workstation"
+    "laptop"
+    "desktop"
+  ];
   workingDirectory = "${cfg.stateDir}/workspace";
   auxiliaryModel = "gpt-5.3-codex-spark";
 in
@@ -18,7 +24,14 @@ in
   ) inputs.hermes-agent.nixosModules.default;
 
   options.dot.services.hermes-agent = {
-    enable = lib.mkEnableOption "Hermes agent";
+    enable = lib.mkEnableOption "Hermes agent" // {
+      default =
+        !config.dot.profiles.minimal.enable && builtins.elem config.dot.device.type desktopDeviceTypes;
+      defaultText = lib.literalExpression ''
+        !config.dot.profiles.minimal.enable
+        && builtins.elem config.dot.device.type [ "workstation" "laptop" "desktop" ]
+      '';
+    };
 
     environmentFiles = lib.mkOption {
       type = lib.types.listOf (lib.types.either lib.types.path lib.types.str);
@@ -190,7 +203,7 @@ in
         };
       } cfg.settings;
 
-      documents."AGENTS.md" = lib.mkDefault (lib.dot.getFile "users/johnson/home/cli/ai/common/base.md");
+      documents = lib.mapAttrs (_: lib.mkDefault) aiCommon.hermesAgent.documents;
 
       mcpServers = lib.optionalAttrs cfg.enableDefaultMcpServers {
         filesystem = {
