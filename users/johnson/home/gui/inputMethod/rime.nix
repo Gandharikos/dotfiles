@@ -38,16 +38,12 @@ in
       "${cfg.dir}/default.custom.yaml".text = ''
         patch:
           __include: rime_ice_suggestion:/
+          "ascii_composer/switch_key/Shift_L": commit_code
+          "ascii_composer/switch_key/Shift_R": noop
           schema_list:
             - schema: luna_pinyin
             - schema: double_pinyin_flypy
             - schema: rime_ice
-      '';
-
-      "${cfg.dir}/rime_ice_suggestion.custom.yaml".text = ''
-        patch:
-          "ascii_composer/switch_key/Shift_L": noop
-          "ascii_composer/switch_key/Shift_R": commit_code
       '';
 
       "${cfg.dir}/grammar.yaml".source = pkgs.fetchurl {
