@@ -6,12 +6,7 @@ docs/node_modules
 .pre-commit-config.yaml
 .direnv
 .Trash-1000
-.claude
-CLAUDE.md
-GEMINI.md
-QWEN.md
 .cache/nix
-/.codex
 !templates/*/.envrc
 /.omo/run-continuation
 /*.qcow2

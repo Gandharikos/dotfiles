@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(just switch:*)",
+      "WebFetch(domain:pypi.org)",
+      "Bash(nix-prefetch-url https://pypi.io/packages/source/h/headroom-ai/headroom_ai-0.27.0.tar.gz)",
+      "Bash(nix hash *)",
+      "Bash(tar xzf *)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('\\\\n'.join\\(k for k in d['locks']['nodes']['root']['inputs']\\)\\)\")",
+      "Bash(echo \"=== exit: $? ===\")",
+      "Bash(python3 -m json.tool)",
+      "Read(//nix/store/qg36qcb19529xclfziha1a4z7i93vx33-python3.13-headroom-ai-0.27.0/**)",
+      "Bash(/tmp/claude-1000/-home-johnson--dotfiles/7d0e1a24-0f9a-44f4-a02d-88abbbd51f4c/scratchpad/headroom-result/bin/headroom --help)",
+      "Bash(/tmp/claude-1000/-home-johnson--dotfiles/7d0e1a24-0f9a-44f4-a02d-88abbbd51f4c/scratchpad/hr2/bin/headroom proxy *)",
+      "Bash(just --list)"
+    ]
+  }
+}
