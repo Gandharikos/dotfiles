@@ -37,7 +37,8 @@ in
           main = {
             capslock = "overload(control, esc)";
             tab = "overload(tab_layer, tab)";
-            leftshift = "overload(shift, macro(leftshift))";
+            leftshift = "overloadt2(shift, leftshift, 150)";
+            rightshift = "overloadt2(shift, rightshift, 150)";
             leftcontrol = "layer(meta)";
             leftmeta = "layer(control)";
             rightalt = "rightmeta";
@@ -104,7 +105,10 @@ in
       };
     };
 
-    # Palm rejection fix for keyd virtual keyboard
+    # keyd exposes remapped events through a virtual keyboard. libinput may otherwise
+    # classify it like an external serial keyboard, which can disable laptop palm
+    # rejection heuristics while typing. Mark it as an internal keyboard so touchpad
+    # palm rejection keeps working with keyd enabled.
     environment.etc."libinput/local-overrides.quirks".text = ''
       [Serial Keyboards]
       MatchUdevType=keyboard
@@ -112,6 +116,9 @@ in
       AttrKeyboardIntegration=internal
     '';
 
+    # keyd emits some Unicode mappings through XCompose sequences, including the
+    # German umlauts in tab_layer. Expose keyd's compose table to the user session
+    # so toolkits can resolve those sequences consistently.
     dot.users.${config.dot.primaryUser}.home.home.file.".XCompose".source =
       "${pkgs.keyd}/share/keyd/keyd.compose";
   };
