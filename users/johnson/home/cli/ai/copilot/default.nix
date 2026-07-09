@@ -24,7 +24,7 @@ in
       settings = {
         model = "gpt-5.5";
         effortLevel = "high";
-        theme = "dark";
+        theme = "default";
         banner = "once";
         autoUpdate = false;
         renderMarkdown = true;
