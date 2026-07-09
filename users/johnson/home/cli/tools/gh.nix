@@ -18,7 +18,6 @@ in
     programs.gh = {
       enable = true;
       extensions = with pkgs; [
-        github-copilot-cli
         gh-markdown-preview
         gh-dash
         gh-notify

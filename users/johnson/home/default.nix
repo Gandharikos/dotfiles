@@ -65,6 +65,8 @@ in
 
     git.enable = true;
 
+    github-copilot-cli.enable = !isMinimal;
+
     glow.enable = !isMinimal;
 
     gui.apps.anki.enable = !isMinimal;

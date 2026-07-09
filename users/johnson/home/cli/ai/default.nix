@@ -15,8 +15,6 @@ in
     with pkgs;
     [
       cursor-agent
-      github-copilot-cli
-      qwen-code
     ]
     ++ optionals hermesEnabled [
       hermes-hud
