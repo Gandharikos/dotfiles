@@ -14,8 +14,11 @@ let
   mkUserOptions =
     {
       isLinux,
-      inferName ? true,
-      name,
+      # When true, default the login name from the containing option namespace.
+      # Use false for Home Manager's `my` namespace, which is not an actual
+      # system username.
+      defaultNameFromNamespace ? true,
+      namespace,
       config,
     }:
     {
@@ -25,11 +28,11 @@ let
           type = str;
           description = "The user's login name.";
         }
-        // optionalAttrs inferName {
-          default = name;
+        // optionalAttrs defaultNameFromNamespace {
+          default = namespace;
         }
       );
-      enable = mkEnableOption "dot user ${name}";
+      enable = mkEnableOption "dot user ${namespace}";
       fullName = mkOption {
         type = str;
         default = config.name;
@@ -88,18 +91,21 @@ in
   mkUserType =
     {
       isLinux,
-      inferName ? true,
+      defaultNameFromNamespace ? true,
     }:
     submodule (
       { name, config, ... }:
+      let
+        namespace = name;
+      in
       {
         options =
           (mkUserOptions {
             inherit
               config
-              inferName
+              defaultNameFromNamespace
               isLinux
-              name
+              namespace
               ;
           })
           // {
