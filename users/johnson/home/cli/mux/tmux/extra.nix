@@ -18,6 +18,7 @@ in
     if 'infocmp -x tmux-256color > /dev/null 2>&1' 'set -g default-terminal "tmux-256color"'
     # sets
     set -g extended-keys on
+    set -g extended-keys-format csi-u
     set -as terminal-features 'xterm*:extkeys'
     set -gs exit-empty on
 
