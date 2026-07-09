@@ -98,6 +98,7 @@ in
         smart-splits-nvim
         R-nvim
         dropbar-nvim
+        git-blame-nvim
         scope-nvim
         obsidian-nvim
         zk-nvim
