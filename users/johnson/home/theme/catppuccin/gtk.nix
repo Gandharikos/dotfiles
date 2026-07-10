@@ -17,7 +17,7 @@ in
     gtk = {
       theme = {
         name = themeName;
-        package = pkgs.catppuccin-gtk.override {
+        package = pkgs.nixporn.catppuccin.gtkPackage.override {
           accents = [ cfg.accent ];
           variant = cfg.flavor;
         };
