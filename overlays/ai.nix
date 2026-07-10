@@ -34,4 +34,19 @@
       };
       inherit (llmAgentPackages) hermes-hud;
     };
+
+  zz-ai-python-fixes = _final: prev: {
+    pythonPackagesExtensions = (prev.pythonPackagesExtensions or [ ]) ++ [
+      (_pythonFinal: pythonPrev: {
+        catppuccin = pythonPrev.catppuccin.overridePythonAttrs (old: {
+          # catppuccin 2.5.0 still imports matplotlib.style.core during the
+          # test/import checks, which is gone in newer matplotlib.
+          doCheck = false;
+          pythonImportsCheck = builtins.filter (module: module != "catppuccin") (
+            old.pythonImportsCheck or [ ]
+          );
+        });
+      })
+    ];
+  };
 }
