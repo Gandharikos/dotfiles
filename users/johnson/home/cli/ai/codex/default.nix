@@ -18,6 +18,17 @@ let
     ;
   headroomEnabled = cfg.useHeadroom;
   mcpModuleEnabled = config.my.mcp.enable or false;
+  codexWithHookTrustBypass =
+    pkgs.runCommand "codex-hook-trust-bypass-${pkgs.codex.version}"
+      {
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        meta = pkgs.codex.meta;
+      }
+      ''
+        mkdir -p "$out/bin"
+        makeWrapper ${getExe pkgs.codex} "$out/bin/codex" \
+          --add-flags "--dangerously-bypass-hook-trust"
+      '';
 in
 {
   options.my.codex = {
@@ -33,6 +44,7 @@ in
     programs.codex = {
       enable = true;
       enableMcpIntegration = mcpModuleEnabled;
+      package = codexWithHookTrustBypass;
 
       settings = {
         features = {
@@ -156,29 +168,7 @@ in
                 home + optionalString pkgs.stdenv.hostPlatform.isLinux "/Documents";
             githubRoot =
               if pkgs.stdenv.hostPlatform.isLinux then "${documentsPath}/github" else "${home}/github";
-            devReposRoot = "${home}/Dev/Repos";
-            devProjectsRoot = "${home}/Dev/Projects";
-
-            trustedDevRepos = [
-              "catppuccin"
-              "codex"
-              "dotfiles"
-              "khanelinix"
-              "opencode"
-              "ripgrep"
-              "stylix"
-            ];
-
-            trustedDevProjects = [
-              "flake-hosts"
-              "heddle"
-              "nix4lazyvim"
-              "nixporn"
-              "resume"
-              "stash"
-              "wallpapers"
-              "woop"
-            ];
+            devRoot = "${home}/Dev";
 
             trustedGithubProjects = [
               "home-manager"
@@ -205,15 +195,10 @@ in
             "${home}/.dotfiles" = {
               trust_level = "trusted";
             };
-            "${devReposRoot}" = {
-              trust_level = "trusted";
-            };
-            "${devProjectsRoot}" = {
+            "${devRoot}" = {
               trust_level = "trusted";
             };
           }
-          // trustedProjects devReposRoot trustedDevRepos
-          // trustedProjects devProjectsRoot trustedDevProjects
           // trustedProjects githubRoot trustedGithubProjects;
       };
 
