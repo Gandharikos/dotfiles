@@ -47,7 +47,7 @@ in
           umask 077
           ${lib.getExe' pkgs.openssl "openssl"} rand -base64 48 > ${restic.passwordFile}
         fi
-        ${lib.getExe' pkgs.sudo "sudo"} -u postgres ${lib.getExe' config.services.postgresql.package "pg_dumpall"} \
+        ${lib.getExe' pkgs.util-linux "runuser"} -u postgres -- ${lib.getExe' config.services.postgresql.package "pg_dumpall"} \
           | ${lib.getExe' pkgs.zstd "zstd"} -T0 -19 -o ${cfg.backups.postgresqlDumpFile}.tmp > /dev/null
         mv ${cfg.backups.postgresqlDumpFile}.tmp ${cfg.backups.postgresqlDumpFile}
         ${lib.getExe' exportPackage "selfhosted-export"} ${cfg.backups.exportDir}/selfhosted-latest.tar.zst
