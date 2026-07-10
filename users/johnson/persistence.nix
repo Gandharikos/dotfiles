@@ -46,6 +46,10 @@ in
       (mkIf my.gui.apps.obs.enable [
         ".config/obs-studio"
       ])
+      (mkIf my.gui.apps.slack.enable [
+        ".cache/Slack"
+        ".config/Slack"
+      ])
       (mkIf my.gui.apps.spotify.enable [
         ".cache/spotify"
         ".config/spotify"

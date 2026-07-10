@@ -71,8 +71,9 @@ let
     // (lib.optionalAttrs (browserDesktopId != null) (lib.genAttrs browser (_: [ browserDesktopId ])))
     // {
       "application/pdf" = [ "org.pwmt.zathura.desktop" ];
-      "x-scheme-handler/spotify" = [ "spotify.desktop" ];
       "x-scheme-handler/discord" = [ "Discord.desktop" ];
+      "x-scheme-handler/slack" = [ "slack.desktop" ];
+      "x-scheme-handler/spotify" = [ "spotify.desktop" ];
       "x-scheme-handler/tg" = [ "org.telegram.desktop" ];
       "x-scheme-handler/tonsite" = [ "org.telegram.desktop" ];
       "inode/directory" = [ "thunar.desktop" ];
