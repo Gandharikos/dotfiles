@@ -9,7 +9,7 @@ let
   inherit (lib.options) mkEnableOption;
   inherit (lib.meta) getExe;
   weston' = getExe pkgs.weston;
-  waydroid' = getExe pkgs.waydroid;
+  waydroid' = getExe pkgs.waydroid-nftables;
 
   cfg = config.dot.virtual.waydroid;
 
@@ -34,12 +34,15 @@ in
 
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
-      waydroid
+      waydroid-nftables
       waydroid-ui
     ];
 
     virtualisation = {
-      waydroid.enable = true;
+      waydroid = {
+        enable = true;
+        package = pkgs.waydroid-nftables;
+      };
     };
   };
 }
