@@ -59,6 +59,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    systemd.tmpfiles.rules = [
+      "d ${cfg.stateDir}/.hermes 2770 hermes hermes -"
+      "Z ${cfg.stateDir}/.hermes - hermes hermes -"
+    ];
+
     services.hermes-agent = {
       enable = true;
       addToSystemPackages = true;
@@ -72,7 +77,7 @@ in
       settings = lib.recursiveUpdate {
         model = {
           provider = "openai-codex";
-          default = "gpt-5.4";
+          default = "gpt-5.6-sol";
         };
 
         fallback_providers = [
