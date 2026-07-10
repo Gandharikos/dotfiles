@@ -144,6 +144,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # bubblewrap-based per-application sandboxing
+    nixpak = {
+      url = "github:nixpak/nixpak";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # disko for declarative partitioning
     disko = {
       url = "github:nix-community/disko";
