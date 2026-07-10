@@ -37,19 +37,43 @@ in
       settings = {
         features = {
           apps = true;
+          browsesr_use = true;
+          browser_user_external = true;
+          computer_use = true;
+          # TODO:remove after upstream fix
+          # https://github.com/numtide/llm-agents.nix/issues/6630
+          code_mode_host = false;
+          enable_request_compression = true;
           fast_mode = true;
+          goals = true;
+          guardian_approval = true;
+          hooks = true;
+          image_generation = true;
+          in_app_browser = true;
+          memories = true;
           multi_agent = true;
+          personality = true;
+          plugin_sharing = true;
+          plugins = true;
           prevent_idle_sleep = true;
           shell_snapshot = true;
           skill_mcp_dependency_install = true;
+          terminal_resize_reflow = true;
+          tool_call_mcp_elicitaition = true;
+          tool_suggestions = true;
           unified_exec = true;
-          undo = true;
+          workspace_dependencies = true;
+        }
+        // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+          # Required by codex-browser-use-linux-chromium (codex >= 0.133) so
+          # plugin MCP servers are discovered instead of deferred.
+          tool_search_always_defer_mcp_tools = false;
         };
 
         agents = {
           job_max_runtime_seconds = 3600;
           max_depth = 1;
-          max_threads = 6;
+          max_threads = 12;
         };
 
         history = {
@@ -57,7 +81,9 @@ in
           persistence = "save-all";
         };
 
-        model = "gpt-5.5";
+        notice.hide_rate_limit_model_nudge = true;
+
+        model = "gpt-5.6-sol";
         model_provider = mkIf headroomEnabled "headroom";
         model_providers = mkIf headroomEnabled {
           headroom = {
@@ -120,29 +146,101 @@ in
           "five-hour-limit"
         ];
 
-        projects = {
-          "${config.home.homeDirectory}/.dotfiles" = {
-            trust_level = "trusted";
-          };
-          "${config.home.homeDirectory}/Dev/Projects" = {
-            trust_level = "trusted";
-          };
-        };
+        projects =
+          let
+            home = config.home.homeDirectory;
+            documentsPath =
+              if config.xdg.userDirs.enable then
+                config.xdg.userDirs.documents
+              else
+                home + optionalString pkgs.stdenv.hostPlatform.isLinux "/Documents";
+            githubRoot =
+              if pkgs.stdenv.hostPlatform.isLinux then "${documentsPath}/github" else "${home}/github";
+            devReposRoot = "${home}/Dev/Repos";
+            devProjectsRoot = "${home}/Dev/Projects";
+
+            trustedDevRepos = [
+              "catppuccin"
+              "codex"
+              "dotfiles"
+              "khanelinix"
+              "opencode"
+              "ripgrep"
+              "stylix"
+            ];
+
+            trustedDevProjects = [
+              "flake-hosts"
+              "heddle"
+              "nix4lazyvim"
+              "nixporn"
+              "resume"
+              "stash"
+              "wallpapers"
+              "woop"
+            ];
+
+            trustedGithubProjects = [
+              "home-manager"
+              "khanelivim"
+              "nixpkgs"
+              "nixvim"
+              "Austin-Horstman"
+              "neotest-nix"
+              "waybar"
+            ];
+
+            trustedProjects =
+              root: projects:
+              builtins.listToAttrs (
+                map (project: {
+                  name = "${root}/${project}";
+                  value = {
+                    trust_level = "trusted";
+                  };
+                }) projects
+              );
+          in
+          {
+            "${home}/.dotfiles" = {
+              trust_level = "trusted";
+            };
+            "${devReposRoot}" = {
+              trust_level = "trusted";
+            };
+            "${devProjectsRoot}" = {
+              trust_level = "trusted";
+            };
+          }
+          // trustedProjects devReposRoot trustedDevRepos
+          // trustedProjects devProjectsRoot trustedDevProjects
+          // trustedProjects githubRoot trustedGithubProjects;
       };
 
       profiles = {
+        # Deep analysis and live-research mode. Intentionally expensive.
         deep = {
-          model = "gpt-5.4";
-          model_auto_compact_token_limit = 900000;
-          model_context_window = 1050000;
-          model_reasoning_effort = "high";
+          model = "gpt-5.6-sol";
+          model_reasoning_effort = "xhigh";
           model_verbosity = "high";
           plan_mode_reasoning_effort = "xhigh";
           web_search = "live";
         };
 
+        # Large-context escape hatch. The alias passes context overrides directly
+        # via CLI -c because those fields are top-level settings in the published
+        # schema.
+        long = {
+          model = "gpt-5.4";
+          model_reasoning_effort = "xhigh";
+          model_verbosity = "high";
+          plan_mode_reasoning_effort = "xhigh";
+          web_search = "live";
+        };
+
+        # Cheapest local utility profile for triage and simple transforms.
         nano = {
-          model = "gpt-5.4-nano";
+          model = "gpt-5.4-mini";
           model_reasoning_effort = "none";
           model_verbosity = "low";
           plan_mode_reasoning_effort = "low";
@@ -150,14 +248,10 @@ in
           web_search = "disabled";
         };
 
-        offline = {
-          sandbox_workspace_write.network_access = false;
-          web_search = "disabled";
-        };
-
+        # Faster implementation loop for routine coding tasks.
         quick = {
-          model = "gpt-5.3-codex-spark";
           model_reasoning_effort = "medium";
+          model = "gpt-5.6-luna";
           model_reasoning_summary = "none";
           model_verbosity = "low";
           plan_mode_reasoning_effort = "medium";
@@ -165,6 +259,7 @@ in
           web_search = "disabled";
         };
 
+        # Trivial latency-first profile for obvious, low-risk work.
         spark = {
           model = "gpt-5.3-codex-spark";
           model_reasoning_effort = "medium";
@@ -174,6 +269,13 @@ in
           web_search = "disabled";
         };
 
+        # Force local-only behavior when you do not want network access.
+        offline = {
+          sandbox_workspace_write.network_access = false;
+          web_search = "disabled";
+        };
+
+        # Token-enabled profile for package updates and other API-heavy workflows.
         unsafe = {
           approval_policy = "on-request";
           sandbox_mode = "danger-full-access";
