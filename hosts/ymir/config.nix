@@ -14,7 +14,7 @@
     };
     kernel.tweaks.enable = true;
     boot = {
-      secureBoot = false;
+      secureBoot = true;
       tmpOnTmpfs = false;
       # DISABLED: Potential conflict with NVIDIA/ASUS drivers
       plymouth.enable = false;
