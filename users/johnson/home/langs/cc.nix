@@ -8,7 +8,7 @@ let
   cfg = config.my.langs.cc;
   enable = config.my.langs.enable && cfg.enable;
   inherit (lib.options) mkEnableOption;
-  inherit (lib.modules) mkMerge mkIf;
+  inherit (lib.modules) mkIf;
   inherit (builtins) isList elemAt;
 
   cpp17 = pkgs.writeShellApplication {
@@ -87,90 +87,86 @@ in
     enable = mkEnableOption "C/C++ development environment";
   };
 
-  config = mkMerge [
-    (mkIf enable {
-      home.packages =
-        with pkgs;
-        [
-          gcc
-          clangNoCpp
-          llvmPackages.clang-tools
-          bear
-          cmake
-          llvmPackages.libcxx
+  config = mkIf enable {
+    home.packages =
+      with pkgs;
+      [
+        gcc
+        clangNoCpp
+        llvmPackages.clang-tools
+        bear
+        cmake
+        llvmPackages.libcxx
 
-          # Respect XDG, damn it!
-          (mkWrapper gdb ''
-            wrapProgram "$out/bin/gdb" --add-flags '-q -x "$XDG_CONFIG_HOME/gdb/init"'
-          '')
-        ]
-        ++ [
-          cpp17
-          cpp20
-          cpp23
-          cppdbg
-          cpprun
-        ];
+        # Respect XDG, damn it!
+        (mkWrapper gdb ''
+          wrapProgram "$out/bin/gdb" --add-flags '-q -x "$XDG_CONFIG_HOME/gdb/init"'
+        '')
+      ]
+      ++ [
+        cpp17
+        cpp20
+        cpp23
+        cppdbg
+        cpprun
+      ];
 
-      programs.fish.shellAbbrs = {
-        cc = "cpp23";
-        cxx = "cpp23";
-        cxx17 = "cpp17";
-        cxx20 = "cpp20";
-        cxx23 = "cpp23";
-        cxxdbg = "cppdbg";
-        cpr = "cpprun";
-      };
+    programs.fish.shellAbbrs = {
+      cc = "cpp23";
+      cxx = "cpp23";
+      cxx17 = "cpp17";
+      cxx20 = "cpp20";
+      cxx23 = "cpp23";
+      cxxdbg = "cppdbg";
+      cpr = "cpprun";
+    };
 
-      programs.zsh.zsh-abbr.abbreviations = {
-        cc = "cpp23";
-        cxx = "cpp23";
-        cxx17 = "cpp17";
-        cxx20 = "cpp20";
-        cxx23 = "cpp23";
-        cxxdbg = "cppdbg";
-        cpr = "cpprun";
-      };
-    })
+    programs.zsh.zsh-abbr.abbreviations = {
+      cc = "cpp23";
+      cxx = "cpp23";
+      cxx17 = "cpp17";
+      cxx20 = "cpp20";
+      cxx23 = "cpp23";
+      cxxdbg = "cppdbg";
+      cpr = "cpprun";
+    };
 
-    (mkIf enable {
-      xdg.configFile."clangd/config.yaml".text = ''
-        If:
-          PathMatch: '.*\.(cc|cpp|cxx|c\+\+|hpp|hh|hxx|h\+\+)$'
-        CompileFlags:
-          Add: [-std=c++23, -Wall, -Wextra]
-        Diagnostics:
-          ClangTidy:
-            Add: [clang-analyzer-*, bugprone-*, performance-*, portability-*, modernize-*]
-            Remove: [modernize-use-trailing-return-type]
-      '';
+    xdg.configFile."clangd/config.yaml".text = ''
+      If:
+        PathMatch: '.*\.(cc|cpp|cxx|c\+\+|hpp|hh|hxx|h\+\+)$'
+      CompileFlags:
+        Add: [-std=c++23, -Wall, -Wextra]
+      Diagnostics:
+        ClangTidy:
+          Add: [clang-analyzer-*, bugprone-*, performance-*, portability-*, modernize-*]
+          Remove: [modernize-use-trailing-return-type]
+    '';
 
-      home.file.".clang-format".text = ''
-        BasedOnStyle: LLVM
-        Standard: Latest
-        IndentWidth: 2
-        ColumnLimit: 100
-        AllowShortFunctionsOnASingleLine: Empty
-        DerivePointerAlignment: false
-        PointerAlignment: Left
-        SortIncludes: CaseSensitive
-      '';
+    home.file.".clang-format".text = ''
+      BasedOnStyle: LLVM
+      Standard: Latest
+      IndentWidth: 2
+      ColumnLimit: 100
+      AllowShortFunctionsOnASingleLine: Empty
+      DerivePointerAlignment: false
+      PointerAlignment: Left
+      SortIncludes: CaseSensitive
+    '';
 
-      home.file.".clang-tidy".text = ''
-        Checks: >
-          clang-diagnostic-*,
-          clang-analyzer-*,
-          bugprone-*,
-          performance-*,
-          portability-*,
-          modernize-*,
-          -modernize-use-trailing-return-type,
-          -readability-identifier-length,
-          -readability-magic-numbers
-        WarningsAsErrors: ""
-        HeaderFilterRegex: ""
-        FormatStyle: file
-      '';
-    })
-  ];
+    home.file.".clang-tidy".text = ''
+      Checks: >
+        clang-diagnostic-*,
+        clang-analyzer-*,
+        bugprone-*,
+        performance-*,
+        portability-*,
+        modernize-*,
+        -modernize-use-trailing-return-type,
+        -readability-identifier-length,
+        -readability-magic-numbers
+      WarningsAsErrors: ""
+      HeaderFilterRegex: ""
+      FormatStyle: file
+    '';
+  };
 }

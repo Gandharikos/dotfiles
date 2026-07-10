@@ -100,6 +100,10 @@ in
         enable = true;
       };
 
+      node = {
+        enable = true;
+      };
+
       python = {
         enable = true;
       };

@@ -7,7 +7,7 @@
 let
   cfg = config.my.langs.r;
   enable = config.my.langs.enable && cfg.enable;
-  inherit (lib.modules) mkIf mkMerge;
+  inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
 
   nvimcom = pkgs.rPackages.buildRPackage {
@@ -65,50 +65,46 @@ in
     enable = mkEnableOption "R development environment";
   };
 
-  config = mkMerge [
-    (mkIf enable {
-      # --- Packages ----------------------------------------------------------
-      home.packages = with pkgs; [
-        (rWrapper.override {
-          inherit packages;
-        })
+  config = mkIf enable {
+    # --- Packages ----------------------------------------------------------
+    home.packages = with pkgs; [
+      (rWrapper.override {
+        inherit packages;
+      })
 
-        (rstudioWrapper.override {
-          inherit packages;
-        })
-        # publisher tools
-        pkgs.pandoc
-        pkgs.quarto
-      ];
+      (rstudioWrapper.override {
+        inherit packages;
+      })
+      # publisher tools
+      pkgs.pandoc
+      pkgs.quarto
+    ];
 
-      # --- Aliases -----------------------------------------------------------
-      home.shellAliases = {
-        r = "R";
-        rs = "Rscript";
-        rgd = "R -q -e 'httpgd::hgd()'"; # quick plot server
-      };
-    })
+    # --- Aliases -----------------------------------------------------------
+    home.shellAliases = {
+      r = "R";
+      rs = "Rscript";
+      rgd = "R -q -e 'httpgd::hgd()'"; # quick plot server
+    };
 
-    (mkIf enable {
-      # --- XDG mapping -------------------------------------------------------
-      # Environment wiring for interop (only when enabled)
-      home.sessionVariables = {
-        # Prefer a consistent CRAN mirror; override per-project if needed
-        R_REPOS = "https://cran.r-project.org";
-        # Where user-installed R libs would go (if you ever install in R)
-        R_LIBS_USER = "${config.xdg.dataHome}/R/library";
+    # --- XDG mapping -------------------------------------------------------
+    # Environment wiring for interop (only when enabled)
+    home.sessionVariables = {
+      # Prefer a consistent CRAN mirror; override per-project if needed
+      R_REPOS = "https://cran.r-project.org";
+      # Where user-installed R libs would go (if you ever install in R)
+      R_LIBS_USER = "${config.xdg.dataHome}/R/library";
 
-        # Config files
-        R_PROFILE_USER = "${config.xdg.configHome}/R/Rprofile";
-        R_ENVIRON_USER = "${config.xdg.configHome}/R/Renviron";
+      # Config files
+      R_PROFILE_USER = "${config.xdg.configHome}/R/Rprofile";
+      R_ENVIRON_USER = "${config.xdg.configHome}/R/Renviron";
 
-        # History (R >= 4.4 honors R_HISTFILE)
-        R_HISTFILE = "${config.xdg.stateHome}/R/history";
+      # History (R >= 4.4 honors R_HISTFILE)
+      R_HISTFILE = "${config.xdg.stateHome}/R/history";
 
-        # Open things sanely
-        R_BROWSER = "xdg-open";
-        R_PDFVIEWER = "xdg-open";
-      };
-    })
-  ];
+      # Open things sanely
+      R_BROWSER = "xdg-open";
+      R_PDFVIEWER = "xdg-open";
+    };
+  };
 }
