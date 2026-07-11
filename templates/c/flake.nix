@@ -13,6 +13,7 @@
 
   outputs =
     inputs@{
+      self,
       nixpkgs,
       devenv,
       ...
@@ -39,5 +40,38 @@
           };
         }
       );
+
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.stdenv.mkDerivation {
+            pname = "hello";
+            version = "1.0";
+
+            src = ./.;
+
+            nativeBuildInputs = [
+              pkgs.autoconf
+              pkgs.automake
+              pkgs.libtool
+              pkgs.pkg-config
+            ];
+
+            preConfigure = ''
+              autoreconf -fi
+            '';
+          };
+        }
+      );
+
+      apps = forAllSystems (system: {
+        default = {
+          type = "app";
+          program = "${self.packages.${system}.default}/bin/hello";
+        };
+      });
     };
 }

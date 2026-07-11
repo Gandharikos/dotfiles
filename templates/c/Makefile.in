@@ -9,5 +9,5 @@ clean:
 	rm -f hello
 
 install: hello
-	install -d $(bindir)
-	install -t $(bindir) hello
+	install -d $(DESTDIR)$(bindir)
+	install hello $(DESTDIR)$(bindir)/hello

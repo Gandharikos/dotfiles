@@ -1,7 +1,11 @@
 {
+  description = "Rust project template using devenv";
+
   inputs = {
     nixpkgs.url = "github:cachix/devenv-nixpkgs/rolling";
     devenv.url = "github:cachix/devenv";
+    rust-overlay.url = "github:oxalica/rust-overlay";
+    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   nixConfig = {
@@ -11,6 +15,7 @@
 
   outputs =
     inputs@{
+      self,
       nixpkgs,
       devenv,
       ...
@@ -34,6 +39,36 @@
           default = devenv.lib.mkShell {
             inherit inputs pkgs;
             modules = [ ./devenv.nix ];
+          };
+        }
+      );
+
+      packages = forAllSystems (
+        system:
+        let
+          cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.rustPlatform.buildRustPackage {
+            pname = cargoToml.package.name;
+            inherit (cargoToml.package) version;
+
+            src = ./.;
+            cargoLock.lockFile = ./Cargo.lock;
+          };
+        }
+      );
+
+      apps = forAllSystems (
+        system:
+        let
+          cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
+        in
+        {
+          default = {
+            type = "app";
+            program = "${self.packages.${system}.default}/bin/${cargoToml.package.name}";
           };
         }
       );

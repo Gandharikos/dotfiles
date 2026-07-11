@@ -1,5 +1,4 @@
 .devenv/
 .direnv/
 result
-build
-node_modules
+target/

@@ -1,3 +1,6 @@
 #include "stdio.h"
 
-int main(int argc, char **argv) { printf("Hello Nixers!\n"); }
+int main(void) {
+  printf("Hello Nixers!\n");
+  return 0;
+}

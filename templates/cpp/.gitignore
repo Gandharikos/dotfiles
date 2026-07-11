@@ -1,3 +1,5 @@
 # ignore build artifacts
+.devenv/
+.direnv/
 result
 build

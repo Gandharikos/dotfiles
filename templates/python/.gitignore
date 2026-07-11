@@ -2,4 +2,5 @@ result
 __pycache__
 dist
 .venv
+.devenv/
 .direnv/

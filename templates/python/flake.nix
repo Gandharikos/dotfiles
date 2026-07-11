@@ -13,6 +13,7 @@
 
   outputs =
     inputs@{
+      self,
       nixpkgs,
       devenv,
       ...
@@ -36,6 +37,39 @@
           default = devenv.lib.mkShell {
             inherit inputs pkgs;
             modules = [ ./devenv.nix ];
+          };
+        }
+      );
+
+      packages = forAllSystems (
+        system:
+        let
+          pyproject = builtins.fromTOML (builtins.readFile ./pyproject.toml);
+          pkgs = nixpkgs.legacyPackages.${system};
+          python = pkgs.python3;
+        in
+        {
+          default = python.pkgs.buildPythonApplication {
+            pname = pyproject.project.name;
+            inherit (pyproject.project) version;
+
+            src = ./.;
+            pyproject = true;
+
+            build-system = [ python.pkgs.uv-build ];
+          };
+        }
+      );
+
+      apps = forAllSystems (
+        system:
+        let
+          pyproject = builtins.fromTOML (builtins.readFile ./pyproject.toml);
+        in
+        {
+          default = {
+            type = "app";
+            program = "${self.packages.${system}.default}/bin/${pyproject.project.name}";
           };
         }
       );

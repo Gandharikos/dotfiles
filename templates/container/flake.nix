@@ -13,6 +13,7 @@
 
   outputs =
     inputs@{
+      self,
       nixpkgs,
       devenv,
       ...
@@ -39,5 +40,36 @@
           };
         }
       );
+
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.writeShellApplication {
+            name = "container-tools";
+            runtimeInputs = [
+              pkgs.dive
+              pkgs.docker-compose
+              pkgs.podman
+              pkgs.skopeo
+            ];
+            text = ''
+              podman --version
+              docker-compose --version
+              skopeo --version
+              dive --version
+            '';
+          };
+        }
+      );
+
+      apps = forAllSystems (system: {
+        default = {
+          type = "app";
+          program = "${self.packages.${system}.default}/bin/container-tools";
+        };
+      });
     };
 }

@@ -13,6 +13,7 @@
 
   outputs =
     inputs@{
+      self,
       nixpkgs,
       devenv,
       ...
@@ -36,6 +37,38 @@
           default = devenv.lib.mkShell {
             inherit inputs pkgs;
             modules = [ ./devenv.nix ];
+          };
+        }
+      );
+
+      packages = forAllSystems (
+        system:
+        let
+          packageJson = builtins.fromJSON (builtins.readFile ./package.json);
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.buildNpmPackage {
+            pname = packageJson.name;
+            inherit (packageJson) version;
+
+            src = ./.;
+            npmDepsHash = "sha256-n8Skk1Gt2MgGhrYeSya0IFsXVZ1gAwQRZb80xbcZkrQ=";
+            npmBuildScript = "build";
+          };
+        }
+      );
+
+      apps = forAllSystems (
+        system:
+        let
+          packageJson = builtins.fromJSON (builtins.readFile ./package.json);
+          packageBin = builtins.elemAt (builtins.attrNames packageJson.bin) 0;
+        in
+        {
+          default = {
+            type = "app";
+            program = "${self.packages.${system}.default}/bin/${packageBin}";
           };
         }
       );

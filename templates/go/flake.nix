@@ -13,6 +13,7 @@
 
   outputs =
     inputs@{
+      self,
       nixpkgs,
       devenv,
       ...
@@ -39,5 +40,29 @@
           };
         }
       );
+
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.buildGoModule {
+            pname = "sample-go";
+            version = "0.1.0";
+
+            src = ./.;
+            vendorHash = null;
+            subPackages = [ "cmd/sample-go" ];
+          };
+        }
+      );
+
+      apps = forAllSystems (system: {
+        default = {
+          type = "app";
+          program = "${self.packages.${system}.default}/bin/sample-go";
+        };
+      });
     };
 }
