@@ -51,10 +51,8 @@ in
           apps = true;
           browsesr_use = true;
           browser_user_external = true;
+          code_mode_host = true;
           computer_use = true;
-          # TODO:remove after upstream fix
-          # https://github.com/numtide/llm-agents.nix/issues/6630
-          code_mode_host = false;
           enable_request_compression = true;
           fast_mode = true;
           goals = true;
@@ -69,6 +67,7 @@ in
           plugins = true;
           prevent_idle_sleep = true;
           shell_snapshot = true;
+          shell_tool = true;
           skill_mcp_dependency_install = true;
           terminal_resize_reflow = true;
           tool_call_mcp_elicitaition = true;
@@ -106,8 +105,8 @@ in
           };
         };
         model_reasoning_effort = "high";
-        plan_mode_reasoning_effort = "xhigh";
-        service_tier = "fast";
+        plan_mode_reasoning_effort = "high";
+        # service_tier = "fast";
 
         notify =
           let
