@@ -15,7 +15,8 @@ let
   inherit (config.my.gui) desktop;
 
   enable = osConfig.dot.gui.desktop.wayland.enable && desktop.launcher.default == "vicinae";
-  vicinae = getExe config.programs.vicinae.package;
+  vicinaePackage = inputs.vicinae.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  vicinae = getExe vicinaePackage;
   vicinaeCmd = [
     vicinae
     "toggle"
@@ -25,7 +26,7 @@ let
   browserLinkManifest = builtins.toJSON {
     name = "com.vicinae.vicinae";
     description = "IPC Native Messaging Host";
-    path = "${config.programs.vicinae.package}/libexec/vicinae/vicinae-browser-link";
+    path = "${vicinaePackage}/libexec/vicinae/vicinae-browser-link";
     type = "stdio";
     allowed_origins = [ "chrome-extension://kcmipingpfbohfjckomimmahknoddnke/" ];
   };
@@ -39,6 +40,7 @@ in
   config = mkIf enable {
     programs.vicinae = {
       enable = true;
+      package = vicinaePackage;
       enableFirefoxIntegration = true;
       systemd.enable = true;
 
