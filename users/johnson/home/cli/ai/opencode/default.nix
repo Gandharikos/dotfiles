@@ -85,7 +85,7 @@ in
 
       inherit (sharedAiTools.opencode) commands;
       agents = sharedAiTools.opencode.renderAgents;
-      skills = "${sharedAiTools.skillsDir}";
+      skills = sharedAiTools.opencode.skills;
       context = "${sharedAiTools.base}";
     };
   };

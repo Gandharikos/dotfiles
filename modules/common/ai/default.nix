@@ -36,15 +36,25 @@ let
   getSkillContent = spec: if builtins.isAttrs spec then spec.content else spec;
   getSkillPath =
     spec: if builtins.isAttrs spec && spec ? path then spec.path else mkSkillDir (getSkillContent spec);
+  getSkillValue = getSkillContent;
 
-  skillEntries = lib.mapAttrsToList (name: spec: {
+  skillValues = lib.mapAttrs (_: getSkillValue) skillSpecs;
+  skillPaths = lib.mapAttrs (_: getSkillPath) skillSpecs;
+  skillEntries = lib.mapAttrsToList (name: path: {
     inherit name;
-    path = getSkillPath spec;
-  }) skillSpecs;
+    inherit path;
+  }) skillPaths;
 
   skillsDir = pkgs.linkFarm "shared-ai-skills" skillEntries;
 
-  skills = lib.mapAttrs (_: getSkillContent) skillSpecs;
+  portableSkillValues = lib.mapAttrs (_: getSkillValue) aiSkills.skills;
+  portableSkillPaths = lib.mapAttrs (_: getSkillPath) aiSkills.skills;
+  portableSkillEntries = lib.mapAttrsToList (name: path: {
+    inherit name path;
+  }) portableSkillPaths;
+  portableSkillsDir = pkgs.linkFarm "portable-ai-skills" portableSkillEntries;
+
+  skills = skillValues;
 
   inherit (aiCommands) commands;
   inherit (aiAgents) agents;
@@ -68,7 +78,7 @@ in
     antigravityCli = {
       commands = aiCommands.toAntigravityCommands;
       agents = aiAgents.toAntigravityAgents;
-      skills = skills // aiAgents.toAntigravitySkills;
+      skills = portableSkillValues;
     };
 
     codex = {
@@ -86,7 +96,7 @@ in
       inherit (aiAgents) agents;
       renderAgents = aiAgents.toOpenCodeMarkdown;
       inherit skillsDir;
-      skills = skillsDir;
+      skills = skillValues;
     };
 
     githubCopilotCli = {
@@ -94,19 +104,20 @@ in
       commandSkills = aiCommands.toCopilotSkills;
       commands = aiCommands.toClaudeMarkdown;
       context = base;
-      skills = aiCommands.toCopilotSkills;
+      skills = aiCommands.toCopilotSkills // portableSkillValues;
       inherit base;
     };
 
     piCodingAgent = {
-      skills = skillsDir;
+      skills = portableSkillsDir;
     };
 
     hermesAgent = {
+      skills = portableSkillPaths;
       documents = {
         "AGENTS.md" = base;
-        "AI_AGENTS.md" = skills."ai-agents";
-        "AI_COMMANDS.md" = skills."ai-commands";
+        "AI_AGENTS.md" = getSkillContent skillSpecs."ai-agents";
+        "AI_COMMANDS.md" = getSkillContent skillSpecs."ai-commands";
       };
     };
 

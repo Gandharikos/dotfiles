@@ -8,7 +8,6 @@ let
   inherit (lib) mkDefault mkEnableOption mkIf;
 
   cfg = config.my.agy;
-  codexEnabled = config.my.codex.enable or false;
   mcpModuleEnabled = config.my.mcp.enable or false;
 
   sharedAiTools = aiCommon;
@@ -126,7 +125,7 @@ in
       };
 
       commands = sharedAiTools.antigravityCli.commands // sharedAiTools.antigravityCli.agents;
-      skills = mkIf (!codexEnabled) sharedAiTools.antigravityCli.skills;
+      skills = sharedAiTools.antigravityCli.skills;
     };
 
     home.activation.installAgyWakatime = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
