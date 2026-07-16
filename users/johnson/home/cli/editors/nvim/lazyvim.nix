@@ -10,6 +10,16 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.dot) relativeToConfig;
   cfg = config.my.neovim;
+  nvim-treesitter-cpp-tools = pkgs.vimUtils.buildVimPlugin {
+    pname = "nvim-treesitter-cpp-tools";
+    version = "unstable-2026-07-13";
+    src = pkgs.fetchFromGitHub {
+      owner = "Badhi";
+      repo = "nvim-treesitter-cpp-tools";
+      rev = "3343f8f693497a249823f81270a3b4f2b5f46844";
+      hash = "sha256-LKzfk7vN/WSyyJR87kZV2ei8dpW3hnIBRjhHJGubQ6g=";
+    };
+  };
 in
 {
   imports = [ inputs.nix4lazyvim.homeModules.default ];
@@ -103,6 +113,8 @@ in
         obsidian-nvim
         zk-nvim
         vim-wakatime
+        nvim-treesitter-cpp-tools
+        nvim-treesitter-parsers.cpp
       ];
     };
   };

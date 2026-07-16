@@ -23,7 +23,13 @@ return {
       }
 
       local keys = clangd.keys or {}
-      keys[#keys + 1] = { "s<space>", "<cmd>ClangdSwitchSourceHeader<cr>", desc = "Switch Source/Header (C/C++)" }
+      keys[#keys + 1] = {
+        "s<space>",
+        function()
+          require("util.cpp").switch_source_header()
+        end,
+        desc = "Switch Source/Header (C/C++)",
+      }
       clangd.keys = keys
     end,
   },
