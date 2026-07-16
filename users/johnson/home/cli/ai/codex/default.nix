@@ -149,6 +149,8 @@ in
         approval_policy = "on-request";
         sandbox_mode = "danger-full-access";
 
+        tui.keymap.global.clear_terminal = "ctrl-x";
+
         tui.status_line = [
           "model-with-reasoning"
           "current-dir"
