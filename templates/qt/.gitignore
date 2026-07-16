@@ -1,0 +1,9 @@
+/.cache/
+/.direnv/
+!/.envrc
+/.pre-commit-config.yaml
+/build*/
+/compile_commands.json
+/result
+*.o
+*.user

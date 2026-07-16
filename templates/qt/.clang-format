@@ -1,0 +1,6 @@
+BasedOnStyle: LLVM
+ColumnLimit: 100
+DerivePointerAlignment: false
+PointerAlignment: Left
+IncludeBlocks: Regroup
+SortIncludes: CaseSensitive
