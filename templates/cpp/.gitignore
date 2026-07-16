@@ -1,5 +1,9 @@
-# ignore build artifacts
-.devenv/
-.direnv/
-result
-build
+/.cache/
+/.direnv/
+!/.envrc
+/.pre-commit-config.yaml
+/build*/
+/compile_commands.json
+/result
+*.o
+*.user

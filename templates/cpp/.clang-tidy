@@ -1,13 +1,11 @@
 Checks: >
-  clang-diagnostic-*,
-  clang-analyzer-*,
+  -*,
   bugprone-*,
-  performance-*,
-  portability-*,
-  modernize-*,
+  clang-analyzer-*,
+  modernize-use-*,
   -modernize-use-trailing-return-type,
-  -readability-identifier-length,
-  -readability-magic-numbers
-WarningsAsErrors: ""
-HeaderFilterRegex: ""
+  performance-*,
+  portability-*
+WarningsAsErrors: '*'
+HeaderFilterRegex: '^(include|src)/'
 FormatStyle: file

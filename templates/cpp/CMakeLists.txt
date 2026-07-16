@@ -1,14 +1,30 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.24)
 
 project(
-  sample-cpp
+  cpp_app
   VERSION 0.1.0
-  LANGUAGES CXX
-)
+  DESCRIPTION "A minimal C++20 application"
+  LANGUAGES CXX)
 
-add_executable(sample-cpp src/main.cpp)
+include(GNUInstallDirs)
 
-target_compile_features(sample-cpp PRIVATE cxx_std_23)
-target_compile_options(sample-cpp PRIVATE -Wall -Wextra -Wpedantic)
+option(CPP_APP_ENABLE_CLANG_TIDY "Run clang-tidy while compiling" OFF)
 
-install(TARGETS sample-cpp RUNTIME DESTINATION bin)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+if(CPP_APP_ENABLE_CLANG_TIDY)
+  find_program(CLANG_TIDY_EXECUTABLE NAMES clang-tidy REQUIRED)
+  set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXECUTABLE}")
+endif()
+
+add_executable(cpp-app src/main.cpp)
+target_compile_features(cpp-app PRIVATE cxx_std_20)
+target_compile_definitions(cpp-app PRIVATE CPP_APP_VERSION="${PROJECT_VERSION}")
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+  target_compile_options(cpp-app PRIVATE -Wall -Wextra -Wpedantic -Wconversion
+                                         -Wsign-conversion)
+endif()
+
+install(TARGETS cpp-app RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+project_root="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+build_dir="$project_root/.cache/clang-tidy"
+
+cmake --fresh -S "$project_root" -B "$build_dir" -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON >/dev/null
+cmake -E rm -f "$build_dir/.ninja_deps" "$build_dir/.ninja_log"
+cmake --build "$build_dir" >/dev/null
+
+if (($# == 0)); then
+  mapfile -t source_files < <(find "$project_root/src" -type f -name '*.cpp')
+else
+  source_files=("$@")
+fi
+
+clang-tidy -p "$build_dir" --warnings-as-errors='*' "${source_files[@]}"
