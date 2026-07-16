@@ -3,7 +3,7 @@ local M = {}
 function M.setup()
   hl.config({
     input = {
-      follow_mouse = 0,
+      follow_mouse = 1,
       accel_profile = "flat",
       repeat_rate = 25,
       repeat_delay = 200,
