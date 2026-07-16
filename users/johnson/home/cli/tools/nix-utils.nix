@@ -27,6 +27,7 @@ in
       nix-diff # Another differ
       nix-output-monitor # Better nix build output
       nh # Nix helper
+      omnix # Interactive Nix flake template initialization
       nurl # Generate nix fetcher calls
       nix-prefetch-github # Fetch GitHub repo hash
       statix

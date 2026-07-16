@@ -8,11 +8,18 @@ let
   templateNames = builtins.attrNames (
     lib.attrsets.filterAttrs (_name: typ: typ == "directory") entries
   );
-in
-{
-  # Expose all templates for `nix flake init -t .#<name>` or `nix flake new <dst> -t .#<name>`
-  flake.templates = lib.genAttrs templateNames (name: {
+  templates = lib.genAttrs templateNames (name: {
     path = lib.path.append templateDir name;
     description = "Project template: ${name}";
   });
+in
+{
+  # Expose all templates for `nix flake init -t .#<name>` or `nix flake new <dst> -t .#<name>`
+  flake.templates = templates;
+
+  # Omnix wraps standard flake templates so `om init .` can present one interactive menu.
+  flake.om.templates = lib.mapAttrs (_name: template: {
+    inherit template;
+    params = [ ];
+  }) templates;
 }
