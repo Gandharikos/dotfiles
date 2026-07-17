@@ -1,0 +1,10 @@
+default:
+    @just --list
+
+check:
+    cargo fmt --check
+    cargo clippy --all-targets -- --deny warnings
+    cargo test
+
+watch *ARGS:
+    bacon --job run -- -- {{ARGS}}

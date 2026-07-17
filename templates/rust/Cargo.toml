@@ -1,5 +1,7 @@
 [package]
 name = "sample-rust"
-version = "0.0.1"
-license = "MIT"
+version = "0.1.0"
+description = "A minimal Rust application with reproducible Nix tooling"
 edition = "2024"
+license = "MIT"
+rust-version = "1.85"
