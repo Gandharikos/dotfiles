@@ -8,6 +8,19 @@ let
   cfg = config.my.nix-utils;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
+
+  templateInit = pkgs.writeShellApplication {
+    name = "init";
+    runtimeInputs = [ pkgs.omnix ];
+    text = ''
+      if [ "$#" -ne 1 ]; then
+        echo "usage: init <output-directory>" >&2
+        exit 2
+      fi
+
+      exec om init "${config.home.homeDirectory}/.dotfiles" --output "$1"
+    '';
+  };
 in
 {
   options.my.nix-utils = {
@@ -19,6 +32,7 @@ in
   config = mkIf cfg.enable {
     # ======== Nix Development Tools ========
     home.packages = with pkgs; [
+      templateInit
       devenv # Declarative development environments
       nixd # Nix LSP
       nil # Nix LSP
