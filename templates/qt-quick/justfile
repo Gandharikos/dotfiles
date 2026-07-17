@@ -1,0 +1,7 @@
+default:
+    @just --list
+
+check:
+    cmake --preset dev
+    cmake --build --preset dev
+    ctest --preset dev

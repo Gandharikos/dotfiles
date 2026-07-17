@@ -19,10 +19,10 @@ direnv allow
 
 ```console
 nix develop
-cmake --preset dev
-cmake --build --preset dev
-ctest --preset dev
+just check
 ```
+
+`just check` configures and builds the `dev` CMake preset, then runs its Qt tests.
 
 Entering the development shell configures the Qt plugin and QML import paths and installs the Git
 hooks. Generate a compilation database for clangd with:

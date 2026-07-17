@@ -168,6 +168,7 @@
               ++ [
                 pkgs.clang-tools
                 pkgs.cmake-format
+                pkgs.just
                 pkgs.qt6.qttools
                 (generateCompileCommandsFor pkgs)
                 (runClangTidyFor pkgs)
@@ -181,7 +182,7 @@
               export QML_IMPORT_PATH="${qmlImportPath}''${QML_IMPORT_PATH:+:$QML_IMPORT_PATH}"
               export NIXPKGS_QT6_QML_IMPORT_PATH="${qmlImportPath}''${NIXPKGS_QT6_QML_IMPORT_PATH:+:$NIXPKGS_QT6_QML_IMPORT_PATH}"
               echo "Qt ${pkgs.qt6.qtbase.version} Quick development environment"
-              echo "Run 'cmake --preset dev' to configure the project."
+              echo "Run 'just check' to configure, build, and test the project."
             '';
           };
         }
