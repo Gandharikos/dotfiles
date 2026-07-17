@@ -18,7 +18,6 @@ return {
         "clangd",
         "--background-index",
         "--clang-tidy",
-        "--fallback-style=file",
         "--header-insertion=iwyu",
       }
 
