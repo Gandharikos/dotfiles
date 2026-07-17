@@ -1,0 +1,29 @@
+[project]
+name = "sample-python"
+version = "0.1.0"
+description = "A reproducible Python application built with uv2nix"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+sample-python = "sample_python.__main__:main"
+
+[dependency-groups]
+dev = ["pytest", "ruff"]
+
+[build-system]
+requires = ["uv_build>=0.11.0,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "SIM", "UP"]
+
+[tool.uv.build-backend]
+module-name = "sample_python"

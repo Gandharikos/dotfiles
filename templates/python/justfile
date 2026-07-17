@@ -1,0 +1,12 @@
+default:
+    @just --list
+
+check:
+    uv lock --check
+    ruff format --check .
+    ruff check .
+    pytest
+
+fmt:
+    ruff check --fix .
+    ruff format .

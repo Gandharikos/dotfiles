@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+
+      - name: Check the development workflow
+        run: nix develop --command just check
+
+      - name: Build the Nix package
+        run: nix build -L
+
+      - name: Run the packaged application
+        run: nix run . -- --version
+
+      - name: Check flake outputs and hooks
+        run: nix flake check -L

@@ -1,0 +1,11 @@
+/.direnv/
+!/.envrc
+/.pre-commit-config.yaml
+/.pytest_cache/
+/.ruff_cache/
+/.venv/
+/__pycache__/
+/dist/
+/result
+*.egg-info/
+*.py[cod]
