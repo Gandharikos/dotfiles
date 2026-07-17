@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+project_root="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+build_dir="$project_root/.cache/compile-commands"
+
+cmake --preset dev -B "$build_dir" "$@"
+
+ln -sfn "$build_dir/compile_commands.json" "$project_root/compile_commands.json"
+echo "compile_commands.json -> $build_dir/compile_commands.json"

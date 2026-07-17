@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+
+      - name: Build and test with CMake presets
+        run: |
+          nix develop --command cmake --preset dev
+          nix develop --command cmake --build --preset dev
+          nix develop --command ctest --preset dev
+
+      - name: Build the Nix package
+        run: nix build -L
+
+      - name: Smoke test the QML application
+        run: QT_QPA_PLATFORM=offscreen nix run . -- --smoke-test
+
+      - name: Check flake outputs and hooks
+        run: nix flake check -L

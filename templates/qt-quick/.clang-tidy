@@ -1,0 +1,11 @@
+Checks: >
+  -*,
+  bugprone-*,
+  clang-analyzer-*,
+  modernize-use-*,
+  -modernize-use-trailing-return-type,
+  performance-*,
+  portability-*
+WarningsAsErrors: '*'
+HeaderFilterRegex: '^(include|src|tests)/'
+FormatStyle: file
