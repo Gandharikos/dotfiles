@@ -39,7 +39,7 @@ just fmt
 
 ## Docs
 
-Please read the [static documentation](https://gandharikos.github.io/dotfiles/).
+Please read the [documentation](https://gandharikos.github.io/dotfiles/).
 
 ## License
 
