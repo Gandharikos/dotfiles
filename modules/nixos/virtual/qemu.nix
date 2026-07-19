@@ -39,6 +39,9 @@ in
       qemu
     ];
 
+    # Keep Secure Boot firmware with Microsoft-enrolled keys in the system closure.
+    system.extraDependencies = [ pkgs.OVMFFull.fd ];
+
     virtualisation = {
       kvmgt.enable = true;
       spiceUSBRedirection.enable = true;
@@ -52,6 +55,9 @@ in
           verbatimConfig = ''
             namespaces = []
 
+            swtpm_user = "qemu-libvirtd"
+            swtpm_group = "qemu-libvirtd"
+
             # Whether libvirt should dynamically change file ownership
             dynamic_ownership = 0
           '';
@@ -60,6 +66,12 @@ in
         onBoot = "ignore";
         onShutdown = "shutdown";
       };
+    };
+
+    systemd.tmpfiles.settings."10-swtpm-localca"."/var/lib/swtpm-localca".d = {
+      user = "qemu-libvirtd";
+      group = "qemu-libvirtd";
+      mode = "0700";
     };
 
     # This allows libvirt to use pulseaudio socket

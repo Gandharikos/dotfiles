@@ -5,6 +5,8 @@ flake := env('FLAKE', justfile_directory())
 user := `whoami`
 rebuild := if os() == "macos" { "sudo darwin-rebuild" } else { "nixos-rebuild" }
 system-args := if os() == "macos" { "" } else { "--elevate run0 --no-reexec" }
+libvirt-uri := "qemu:///system"
+windows-domain := "windows11"
 
 [private]
 default:
@@ -71,6 +73,104 @@ deploy host action="switch" *args:
         echo
         echo "===== {{ host }} ({{ action }}) ====="
         ssh {{ host }} TERM=xterm-256color nix store diff-closures "$before" "$after" || true
+    fi
+
+# ------------------------------------------------------------------------------
+# virtualization
+# ------------------------------------------------------------------------------
+
+[group('virtualization')]
+[no-exit-message]
+windows:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    uri="{{ libvirt-uri }}"
+    domain="{{ windows-domain }}"
+    state="$(virsh --connect "$uri" domstate "$domain")"
+
+    case "$state" in
+      running)
+        ;;
+      paused)
+        virsh --connect "$uri" resume "$domain"
+        ;;
+      "shut off" | crashed)
+        virsh --connect "$uri" start "$domain"
+        ;;
+      *)
+        echo "Cannot open $domain while it is $state" >&2
+        exit 1
+        ;;
+    esac
+
+    exec virt-viewer \
+      --connect "$uri" \
+      --attach \
+      --reconnect \
+      --full-screen \
+      --auto-resize=always \
+      --hotkeys=toggle-fullscreen=shift+f11,release-cursor=ctrl+alt \
+      --domain-name \
+      "$domain"
+
+[group('virtualization')]
+[no-exit-message]
+windows-stop timeout="60":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    uri="{{ libvirt-uri }}"
+    domain="{{ windows-domain }}"
+    timeout="{{ timeout }}"
+    state="$(virsh --connect "$uri" domstate "$domain")"
+
+    if [[ "$state" == "shut off" ]]; then
+      echo "$domain is already shut off"
+      exit 0
+    fi
+
+    if [[ "$state" == "paused" ]]; then
+      virsh --connect "$uri" resume "$domain"
+    elif [[ "$state" != "running" ]]; then
+      echo "Cannot gracefully stop $domain while it is $state" >&2
+      exit 1
+    fi
+
+    if virsh --connect "$uri" qemu-agent-command "$domain" '{"execute":"guest-ping"}' >/dev/null 2>&1; then
+      virsh --connect "$uri" shutdown "$domain" --mode agent
+    else
+      virsh --connect "$uri" shutdown "$domain" --mode acpi
+    fi
+
+    for ((seconds = 0; seconds < timeout; seconds++)); do
+      if [[ "$(virsh --connect "$uri" domstate "$domain")" == "shut off" ]]; then
+        echo "$domain shut down cleanly"
+        exit 0
+      fi
+      sleep 1
+    done
+
+    echo "$domain did not shut down within ${timeout}s; it was not force-stopped" >&2
+    exit 1
+
+[group('virtualization')]
+[no-exit-message]
+windows-status:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    uri="{{ libvirt-uri }}"
+    domain="{{ windows-domain }}"
+    state="$(virsh --connect "$uri" domstate "$domain")"
+
+    virsh --connect "$uri" dominfo "$domain"
+    echo
+    virsh --connect "$uri" domblkinfo "$domain" --all --human
+
+    if [[ "$state" == "running" ]]; then
+      echo
+      virsh --connect "$uri" domifaddr "$domain" --source lease --full
     fi
 
 # ------------------------------------------------------------------------------
