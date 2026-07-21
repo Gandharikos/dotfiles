@@ -15,7 +15,7 @@ in
     with pkgs;
     [
       cursor-agent
-      dot.zaly
+      llm-agents.zaly
     ]
     ++ optionals hermesEnabled [
       hermes-hud
