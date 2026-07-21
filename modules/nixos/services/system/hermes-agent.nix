@@ -59,15 +59,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.tmpfiles.rules = [
-      "d ${cfg.stateDir}/.hermes 2770 hermes hermes -"
-      "d ${cfg.stateDir}/.hermes/skills 2770 hermes hermes -"
-      "Z ${cfg.stateDir}/.hermes - hermes hermes -"
-    ]
-    ++ lib.mapAttrsToList (
-      name: path: "L+ ${cfg.stateDir}/.hermes/skills/nix-managed-${name} - - - - ${path}"
-    ) aiCommon.hermesAgent.skills;
-
     services.hermes-agent = {
       enable = true;
       addToSystemPackages = true;

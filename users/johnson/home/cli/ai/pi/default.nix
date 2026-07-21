@@ -23,7 +23,6 @@ in
         enableTelemetry = false;
         collapseChangelogs = true;
         transport = "auto";
-        skills = [ (toString aiCommon.piCodingAgent.skills) ];
         compaction = {
           reserveTokens = 20000;
           keepRecentTokens = 50000;

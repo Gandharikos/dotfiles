@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  aiCommon,
   ...
 }:
 let
@@ -127,13 +126,6 @@ in
           auto_refresh_on_start = true;
           refresh_timeout_ms = 5000;
         };
-
-        skills.sources = [
-          {
-            path = toString aiCommon.skillsDir;
-            recursive = true;
-          }
-        ];
 
         experimental = {
           task_system = true;

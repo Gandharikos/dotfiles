@@ -77,7 +77,6 @@ in
       };
 
       inherit (sharedAiTools.claudeCode) agents commands;
-      inherit (sharedAiTools) skills;
       context = sharedAiTools.base;
     };
   };

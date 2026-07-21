@@ -20,7 +20,7 @@ in
       enable = true;
       enableMcpIntegration = mcpModuleEnabled;
 
-      inherit (aiCommon.githubCopilotCli) context agents skills;
+      inherit (aiCommon.githubCopilotCli) context agents;
       settings = {
         model = "gpt-5.5";
         effortLevel = "high";

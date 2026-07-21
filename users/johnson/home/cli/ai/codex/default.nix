@@ -269,7 +269,7 @@ in
         };
       };
 
-      inherit (aiCommon.codex) skills context;
+      inherit (aiCommon.codex) context;
       rules = import ./rules.nix;
     };
   };

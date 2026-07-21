@@ -125,7 +125,6 @@ in
       };
 
       commands = sharedAiTools.antigravityCli.commands // sharedAiTools.antigravityCli.agents;
-      skills = sharedAiTools.antigravityCli.skills;
     };
 
     home.activation.installAgyWakatime = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
