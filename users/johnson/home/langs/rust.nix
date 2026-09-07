@@ -13,7 +13,7 @@ let
   inherit (lib.lists) optionals;
   inherit (config) xdg;
   fenixPkgs = inputs'.fenix.packages;
-  rustToolchain = fenixPkgs.stable.withComponents [
+  rustToolchain = fenixPkgs.complete.withComponents [
     "cargo"
     "clippy"
     "rust-src"
@@ -29,7 +29,7 @@ in
   config = mkIf enable {
     home.packages = [
       rustToolchain
-      fenixPkgs.stable.rust-analyzer
+      fenixPkgs.rust-analyzer
       pkgs.bacon
       pkgs.cargo-audit
       pkgs.cargo-deny
