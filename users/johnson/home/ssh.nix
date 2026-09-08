@@ -17,12 +17,13 @@ let
     IdentityAgent = mkDefault gpgAgentSshSocket;
     RemoteForward = mkDefault "${remoteGpgAgentSocket} ${gpgAgentExtraSocket}";
   };
-  gpgAgentForwardingHosts = builtins.listToAttrs (
-    map (host: {
+  gpgAgentForwardingHosts =
+    cfg.gpgAgentForwarding.hosts
+    |> map (host: {
       name = host;
       value = gpgAgentForwardingSettings;
-    }) cfg.gpgAgentForwarding.hosts
-  );
+    })
+    |> builtins.listToAttrs;
   yubikeys = osConfig.dot.yubikey.names;
   secretsCore = lib.dot.getFile "secrets/johnson/core";
   hasSecretsCore = builtins.pathExists secretsCore;
@@ -117,23 +118,24 @@ in
           };
         })
 
-        (builtins.listToAttrs (
-          builtins.filter (x: x != null) (
-            map (
-              name:
-              let
-                pubKeyPath = keysDir + "/id_${name}.pub";
-              in
-              if hasSecretsCore && builtins.pathExists pubKeyPath then
-                {
-                  name = ".ssh/id_${name}.pub";
-                  value.source = pubKeyPath;
-                }
-              else
-                null
-            ) yubikeys
+        (
+          yubikeys
+          |> map (
+            name:
+            let
+              pubKeyPath = keysDir + "/id_${name}.pub";
+            in
+            if hasSecretsCore && builtins.pathExists pubKeyPath then
+              {
+                name = ".ssh/id_${name}.pub";
+                value.source = pubKeyPath;
+              }
+            else
+              null
           )
-        ))
+          |> builtins.filter (x: x != null)
+          |> builtins.listToAttrs
+        )
       ];
     })
   ]);

@@ -18,7 +18,11 @@ let
       hasFrontmatter = lib.length parts >= 3;
       frontmatter = if hasFrontmatter then lib.elemAt parts 1 else "";
       content = if hasFrontmatter then lib.concatStringsSep "---" (lib.drop 2 parts) else text;
-      lines = lib.filter (line: line != "") (map lib.trim (lib.splitString "\n" frontmatter));
+      lines =
+        frontmatter
+        |> lib.splitString "\n"
+        |> map lib.trim
+        |> lib.filter (line: line != "");
       parseLine =
         line:
         let
@@ -32,7 +36,7 @@ let
         };
     in
     {
-      attrs = builtins.listToAttrs (map parseLine lines);
+      attrs = lines |> map parseLine |> builtins.listToAttrs;
       content = lib.trim content;
     };
 

@@ -15,7 +15,7 @@ rec {
           if builtins.tail values == [ ] then
             builtins.head values
           else if builtins.all builtins.isList values then
-            lib.unique (lib.concatLists values)
+            values |> lib.concatLists |> lib.unique
           else if builtins.all builtins.isAttrs values then
             merge (path ++ [ n ]) values
           else
@@ -38,19 +38,10 @@ rec {
       module;
 
   # Imports and merges a list of module paths.
-  importAndMerge =
-    paths: args:
-    let
-      modules = builtins.map (file: import file args) paths;
-    in
-    deepMerge modules;
+  importAndMerge = paths: args: paths |> builtins.map (file: import file args) |> deepMerge;
 
   # Override nixpkgs.lib.types.attrs to be deep-mergible. This avoids configs
   # from mistakenly overriding values due to the use of `//`.
   types.attrs.merge =
-    _: definitions:
-    let
-      values = builtins.map (definition: definition.value) definitions;
-    in
-    deepMerge values;
+    _: definitions: definitions |> builtins.map (definition: definition.value) |> deepMerge;
 }

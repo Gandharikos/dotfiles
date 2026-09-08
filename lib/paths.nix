@@ -1,12 +1,8 @@
 { lib, ... }:
 let
   getNixFiles' =
-    path:
-    let
-      entries = builtins.readDir path;
-    in
-    lib.filter (name: lib.hasSuffix ".nix" name) (builtins.attrNames entries);
-  mergeAttrs' = attrsList: lib.foldl' (acc: attrs: acc // attrs) { } attrsList;
+    path: builtins.readDir path |> builtins.attrNames |> lib.filter (name: lib.hasSuffix ".nix" name);
+  mergeAttrs' = attrsList: attrsList |> lib.foldl' (acc: attrs: acc // attrs) { };
 in
 {
   # use path relative to the root of the project
@@ -17,26 +13,20 @@ in
   # Convenience function combining importFiles and mergeAttrs
   # Usage: importDir ./hooks { inherit pkgs; }
   importDir =
-    path: args:
-    let
-      nixFiles = getNixFiles' path;
-      imported = map (name: import (path + "/${name}") args) nixFiles;
-    in
-    mergeAttrs' imported;
+    path: args: getNixFiles' path |> map (name: import (path + "/${name}") args) |> mergeAttrs';
   scanPaths =
     path:
-    builtins.map (f: (path + "/${f}")) (
-      builtins.attrNames (
-        lib.attrsets.filterAttrs (
-          name: _type:
-          (_type == "directory" && builtins.pathExists (path + "/${name}/default.nix")) # include directories
-          || (
-            (name != "default.nix") # ignore default.nix
-            && (lib.strings.hasSuffix ".nix" name) # include .nix files
-          )
-        ) (builtins.readDir path)
+    builtins.readDir path
+    |> lib.attrsets.filterAttrs (
+      name: _type:
+      (_type == "directory" && builtins.pathExists (path + "/${name}/default.nix")) # include directories
+      || (
+        (name != "default.nix") # ignore default.nix
+        && (lib.strings.hasSuffix ".nix" name) # include .nix files
       )
-    );
+    )
+    |> builtins.attrNames
+    |> builtins.map (f: (path + "/${f}"));
 
   sourceLua =
     path:

@@ -9,7 +9,9 @@ let
   overlaysPath = ../overlays;
   dynamicOverlaysSet =
     if builtins.pathExists overlaysPath then
-      lib.foldl' (
+      builtins.readDir overlaysPath
+      |> builtins.attrNames
+      |> lib.foldl' (
         acc: name:
         let
           overlayPath = overlaysPath + "/${name}";
@@ -19,7 +21,7 @@ let
             lib.isAttrs resolved && resolved != { } && lib.all lib.isFunction (builtins.attrValues resolved);
         in
         if isOverlaySet then acc // resolved else acc // { ${name} = resolved; }
-      ) { } (builtins.attrNames (builtins.readDir overlaysPath))
+      ) { }
     else
       { };
 

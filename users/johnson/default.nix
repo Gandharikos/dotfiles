@@ -4,7 +4,7 @@
 }:
 let
   inherit (lib.filesystem) listFilesRecursive;
-  inherit (lib.lists) forEach optionals;
+  inherit (lib.lists) optionals;
   secretsCore = lib.dot.getFile "secrets/johnson/core";
   regularKey = secretsCore + "/id_ed25519.pub";
   extraKeysDir = secretsCore + "/keys";
@@ -23,9 +23,9 @@ in
         (builtins.readFile regularKey)
       ]
       ++ optionals (builtins.pathExists extraKeysDir) (
-        forEach (lib.filter (path: lib.hasSuffix ".pub" (toString path)) (
-          listFilesRecursive extraKeysDir
-        )) (key: builtins.readFile key)
+        listFilesRecursive extraKeysDir
+        |> lib.filter (path: lib.hasSuffix ".pub" (toString path))
+        |> map builtins.readFile
       );
     home.imports = [ ./home ];
   };

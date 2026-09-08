@@ -8,6 +8,7 @@
 }:
 let
   inherit (lib.modules) mkForce mkIf;
+  inherit (lib.lists) optionals;
   inherit (pkgs.stdenv.hostPlatform) isLinux;
   # Check names before types to avoid fetching excluded inputs.
   flakeInputs = lib.filterAttrs (
@@ -62,8 +63,28 @@ in
         # enables the nix3 commands, a requirement for flakes
         "nix-command"
 
-        # enables cgroups
+        # enables cgroups, allows Nix to execute builds inside cgroups
+        # remember you must also enable use-cgroups below for this to work
         "cgroups"
+      ]
+      ++ optionals (config.nix.package.pname == "lix") [
+        # adds a new command called `lix` which allows you to run nix plugins,
+        # similar to how cargo works
+        "lix-custom-sub-commands"
+
+        # allow usage of the pipe operator in nix expressions
+        "pipe-operator"
+
+        # TODO: maybe re-add later. i deal too much with people who use ref nix
+        # allow nix to automatically coerce integers to strings
+        # "coerce-integers"
+      ]
+      ++ optionals (config.nix.package.pname == "nix") [
+        # content addressable store paths created by git's hashing algo
+        "git-hashing"
+
+        # the pipe-operator from lix is but with a different name lol
+        "pipe-operators"
       ];
       # users or groups that are allowed ot do anything with the Nix daemon
       allowed-users = [ sudoers ];
