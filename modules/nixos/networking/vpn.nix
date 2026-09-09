@@ -12,14 +12,28 @@ let
   cfg = config.dot.networking.vpn;
   mullvad' = "${config.services.mullvad-vpn.package}/bin/mullvad";
   cat' = getExe' pkgs.coreutils "cat";
+  sleep' = getExe' pkgs.coreutils "sleep";
   mullvadAutoLoginScript = pkgs.writeShellScript "mullvad-auto-login.sh" ''
-    set -e
-    ${mullvad'} auto-connect set off
-    case "$(${mullvad'} account get 2>/dev/null || true)" in
-      ""|*"Not logged in"*)
-        ${mullvad'} account login "$(${cat'} ${config.sops.secrets.mullvad_vpn_account_number.path})"
+    set -eu
+
+    attempt=0
+    until ${mullvad'} status >/dev/null 2>&1; do
+      attempt=$((attempt + 1))
+      if [ "$attempt" -ge 30 ]; then
+        echo "Mullvad daemon did not become ready" >&2
+        exit 1
+      fi
+      ${sleep'} 1
+    done
+
+    account_status="$(${mullvad'} account get 2>&1 || true)"
+    case "$account_status" in
+      ""|*"Not logged in"*|*"revoked"*)
+        ${mullvad'} account logout >/dev/null 2>&1 || true
+        ${mullvad'} account login "$(${cat'} ${config.sops.secrets.mullvad_vpn_account_number.path})" >/dev/null
         ;;
     esac
+
     ${mullvad'} auto-connect set off
     ${mullvad'} disconnect --wait || true
   '';
