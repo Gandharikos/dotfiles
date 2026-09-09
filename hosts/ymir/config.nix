@@ -21,7 +21,16 @@
 
   dot = {
     primaryUser = "johnson";
-    users.johnson.shell = "nushell";
+    users.johnson = {
+      shell = "nushell";
+      persistence.directories = [
+        {
+          directory = ".config/onedrive";
+          mode = "0700";
+        }
+        "OneDrive"
+      ];
+    };
     security = {
       fixWebcam = true;
     };
@@ -75,6 +84,8 @@
   };
 
   nixporn.colorscheme = "rose-pine";
+
+  services.onedrive.enable = true;
 
   home-manager.sharedModules = [
     {
