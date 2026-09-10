@@ -1,5 +1,5 @@
 set shell := ["bash", "-c"]
-export NIX_CONFIG := "experimental-features = nix-command flakes"
+export NIX_CONFIG := "extra-experimental-features = nix-command flakes"
 
 flake := env('FLAKE', justfile_directory())
 user := `whoami`

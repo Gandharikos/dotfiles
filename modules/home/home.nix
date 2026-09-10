@@ -26,6 +26,7 @@ in
     # paths it should manage.
     home = {
       inherit username homeDirectory stateVersion;
+      fileActivator = "putter";
       sessionPath = [
         "$HOME/.local/bin"
         "/opt/homebrew/bin"
