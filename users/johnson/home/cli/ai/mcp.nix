@@ -33,7 +33,7 @@ in
         };
 
         filesystem = {
-          command = getExe mcpPkgs.mcp-server-filesystem;
+          command = getExe pkgs.mcp-server-filesystem;
           args = mkDefault [
             config.home.homeDirectory
             "${config.home.homeDirectory}/Documents"
@@ -43,7 +43,7 @@ in
         };
 
         sequential-thinking = {
-          command = getExe mcpPkgs.mcp-server-sequential-thinking;
+          command = getExe pkgs.mcp-server-sequential-thinking;
         };
 
         git = {
