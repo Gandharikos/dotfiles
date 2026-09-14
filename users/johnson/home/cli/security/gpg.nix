@@ -129,7 +129,7 @@ in
 
     home = {
       packages =
-        lib.optionals config.gtk.enable [ pkgs.gcr ]
+        lib.optionals config.gtk.enable [ pkgs.gcr_3 ]
         ++ lib.optional pkgs.stdenv.hostPlatform.isDarwin pkgs.pinentry_mac;
     };
 
