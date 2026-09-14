@@ -40,9 +40,20 @@ let
       }) workspaceNumbers
     );
 
+  niri = getExe pkgs.niri;
   playerctl = getExe pkgs.playerctl;
   wpctl = getExe' pkgs.wireplumber "wpctl";
   brightnessctl = getExe pkgs.brightnessctl;
+  moveFloatingWindow = x: y: [
+    niri
+    "msg"
+    "action"
+    "move-floating-window"
+    "--x"
+    x
+    "--y"
+    y
+  ];
   playerctlCmd = args: uwsmAppArgs pkgs playerctl args;
   wpctlCmd = args: uwsmAppArgs pkgs wpctl args;
   brightnessctlCmd = args: uwsmAppArgs pkgs brightnessctl args;
@@ -220,6 +231,7 @@ with osConfig.dot.keyboard.keys;
           # Floating / fullscreen.
           "${modKey}+F".action.fullscreen-window = [ ];
           "${modKey}+Shift+F".action.toggle-window-floating = [ ];
+          "${modKey}+Ctrl+F".action.switch-focus-between-floating-and-tiling = [ ];
           "${modKey}+M".action.maximize-column = [ ];
           "${modKey}+Shift+M".action.maximize-window-to-edges = [ ];
           "${modKey}+C".action.center-column = [ ];
@@ -227,6 +239,14 @@ with osConfig.dot.keyboard.keys;
           "${modKey}+Shift+R".action.switch-preset-window-height = [ ];
           "${modKey}+Minus".action.set-column-width = "-10%";
           "${modKey}+Equal".action.set-column-width = "+10%";
+          "${modKey}+Left".action.spawn = moveFloatingWindow "-50" "+0";
+          "${modKey}+Right".action.spawn = moveFloatingWindow "+50" "+0";
+          "${modKey}+Up".action.spawn = moveFloatingWindow "+0" "-50";
+          "${modKey}+Down".action.spawn = moveFloatingWindow "+0" "+50";
+          "${modKey}+Shift+Left".action.set-window-width = "-10%";
+          "${modKey}+Shift+Right".action.set-window-width = "+10%";
+          "${modKey}+Shift+Up".action.set-window-height = "-10%";
+          "${modKey}+Shift+Down".action.set-window-height = "+10%";
 
           # Monitor focus / move workspace.
           "${modKey}+Comma".action.focus-monitor-left = [ ];
