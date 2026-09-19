@@ -2,6 +2,7 @@
   self,
   inputs,
   pkgs,
+  lib,
   config,
   ...
 }:
@@ -21,6 +22,11 @@ in
     age.sshKeyPaths = [ "${homeDirectory}/.ssh/id_ed25519" ];
     # Keep GPG support for Yubikey when available
     # gnupg.home = "${homeDirectory}/.gnupg";
+  };
+
+  # Multiple dependent services must not repeatedly start the completed installer.
+  systemd.user.services.sops-nix = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+    Service.RemainAfterExit = true;
   };
 
   # some security tools
