@@ -37,6 +37,21 @@ just check
 just fmt
 ```
 
+## Chromium Extension Updates
+
+The **Update Chromium extensions** GitHub Action runs daily and supports manual dispatch. It opens a
+PR updating extension versions and SHA-256 hashes in `users/johnson/home/gui/browsers/chromium.nix`.
+Enable GitHub Actions pull request creation in repository settings. Review updates before merging;
+Chrome Web Store download URLs are mutable. Extensions returning HTTP 204 retain their existing pins
+with a warning; other download or validation errors abort the update without writing changes.
+
+To run locally:
+
+```bash
+python3 scripts/update-chromium-extensions.py
+python3 -m unittest discover -s scripts/tests -v
+```
+
 ## Docs
 
 Please read the [documentation](https://gandharikos.github.io/dotfiles/).

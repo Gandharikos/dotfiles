@@ -1,0 +1,50 @@
+name: Update Chromium extensions
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "18 5 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: update-chromium-extensions
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Test updater
+        run: python3 -m unittest discover -s scripts/tests -v
+      - name: Update extension versions and hashes
+        run: python3 scripts/update-chromium-extensions.py
+      - name: Check diff
+        run: git diff --check
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/chromium-extensions
+          delete-branch: true
+          add-paths: users/johnson/home/gui/browsers/chromium.nix
+          commit-message: "chore(chromium): refresh extension versions and hashes"
+          title: "chore(chromium): update extensions"
+          body: |
+            Updates Chromium extension versions and SHA-256 hashes from the Chrome Web Store.
+
+            Downloads use the Chromium major version from the locked ymir configuration.
+            Versions are read from each CRX manifest; hashes cover the complete CRX file.
+            All downloaded CRXs and manifests must validate before the configuration is updated.
+            Extensions unavailable from the store (HTTP 204) retain their existing pins with a warning.
+
+            Review the extension changes before merging. Upstream download URLs are mutable.

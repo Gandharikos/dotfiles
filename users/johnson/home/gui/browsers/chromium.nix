@@ -89,8 +89,8 @@ in
         # Dark Reader
         {
           id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
-          version = "4.9.130";
-          hash = "sha256-hPyoKRkZ9of85y7XLHFpel8gOvbsQB52eOjrRFQARr0=";
+          version = "4.9.132";
+          hash = "sha256-ZlcL/o4r8SJGdyXDAywSWpgr3rkBqsu8NBCuRC7UMg0=";
         }
 
         # Vimium C
@@ -145,8 +145,8 @@ in
         # Linkwarden
         {
           id = "pnidmkljnhbjfffciajlcpeldoljnidn";
-          version = "1.5.4";
-          hash = "sha256-EMi7YP40UNYQ1qZ5Rf1eRWvfaIJIGqma0PepcyIyl4k=";
+          version = "1.5.6";
+          hash = "sha256-H4ZeN0dOUuGXRdNQm6oWYMVzo40TpW9gSZbqzGC3FLk=";
         }
 
         # uBlock Origin
@@ -208,15 +208,15 @@ in
         # Control Panel for Twitter
         {
           id = "kpmjjdhbcfebfjgdnpjagcndoelnidfj";
-          version = "4.24.0";
-          hash = "sha256-ayBmfQ+qN1MUL4uc3tdsxos4WgqnweVWhU7VTZzSwQI=";
+          version = "4.24.1";
+          hash = "sha256-wgeJUzlG0G5zSFC2aOt59OHocyNIY6JB+o8RI5GtIU4=";
         }
 
         # refined github
         {
           id = "hlepfoohegkhhmjieoechaddaejaokhf";
-          version = "26.9";
-          hash = "sha256-YpNxRQ1IkD/sYTW3wSoSvlYR9kyH5i5kyB1PwEfKF/c=";
+          version = "26.9.12";
+          hash = "sha256-6nU91pne+T/1bYhL92cn+aJbXlOyF/Pr3s+iWuJ3EXo=";
         }
       ];
 
