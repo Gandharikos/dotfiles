@@ -32,7 +32,7 @@ jobs:
       - name: Check diff
         run: git diff --check
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           branch: automation/chromium-extensions
           delete-branch: true
