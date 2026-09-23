@@ -37,6 +37,7 @@ in
             accent = mkDefault osConfig.nixporn.colorschemes.catppuccin.accent;
             flavor = mkDefault osConfig.nixporn.colorschemes.catppuccin.flavor;
           };
+          kanagawa.variant = mkDefault osConfig.nixporn.colorschemes.kanagawa.variant;
           tokyonight.style = mkDefault osConfig.nixporn.colorschemes.tokyonight.style;
         };
       };

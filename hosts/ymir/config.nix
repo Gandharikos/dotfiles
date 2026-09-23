@@ -83,7 +83,7 @@
     };
   };
 
-  nixporn.colorscheme = "rose-pine";
+  nixporn.colorscheme = "kanagawa";
 
   services.onedrive.enable = true;
 
