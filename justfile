@@ -217,6 +217,17 @@ check *args:
 [group('dev')]
 [no-exit-message]
 update *inputs:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    github_token="${GITHUB_TOKEN:-}"
+    if [[ -z "$github_token" ]] && command -v gh >/dev/null; then
+      github_token="$(gh auth token 2>/dev/null || true)"
+    fi
+    if [[ -n "$github_token" ]]; then
+      export NIX_CONFIG="${NIX_CONFIG}"$'\n'"access-tokens = github.com=$github_token"
+    fi
+
     nix flake update {{ inputs }} --flake {{ flake }}
 
 [group('dev')]
