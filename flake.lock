@@ -1843,11 +1843,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790185040,
-        "narHash": "sha256-WFP8/jQbdbPKdbhRGoQ1ZcZNUmEclH7D/8kJIVl4x0I=",
+        "lastModified": 1790187765,
+        "narHash": "sha256-YFtSb+HJm7/yPR2Yu9OqvkG+pzjVD4NaL4ynnZE7r5I=",
         "owner": "Gandharikos",
         "repo": "nixporn",
-        "rev": "6dcc0015d2e8d9bddaf163b8a86d3e6fd9646150",
+        "rev": "80af41b52205f7aea1eaebee6521b36d8099d30d",
         "type": "github"
       },
       "original": {
