@@ -1,14 +1,6 @@
 { inputs, ... }:
 {
   nixpkgs-fixes = final: prev: {
-    # d2 only uses Chromium for image export; avoid pulling in the broken
-    # Playwright WebKit package (missing libmanette in nixpkgs).
-    d2 = prev.d2.override {
-      playwright-driver = prev.playwright-driver // {
-        browsers = prev.playwright-driver.browsers-chromium;
-      };
-    };
-
     pythonPackagesExtensions = (prev.pythonPackagesExtensions or [ ]) ++ [
       (_pythonFinal: pythonPrev: {
         mpv = pythonPrev.mpv.overridePythonAttrs (_old: {
