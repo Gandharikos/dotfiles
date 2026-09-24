@@ -119,7 +119,7 @@ in
       tailscale = {
         enable = true;
         autoConnect = true;
-        role = "client";
+        role = "exit-node";
         acceptRoutes = false;
         acceptDns = false;
       };

@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   self,
   ...
 }:
@@ -12,18 +11,6 @@ let
   secretsFile = "${self}/secrets/services/linkwarden.yaml";
   inherit (lib.attrsets) optionalAttrs;
   inherit (lib.modules) mkIf;
-
-  package =
-    pkgs.runCommand "linkwarden-kanidm-patched-${pkgs.linkwarden.version}"
-      { meta = pkgs.linkwarden.meta; }
-      ''
-        cp -a --reflink=auto ${pkgs.linkwarden}/. $out/
-        chmod -R u+w $out
-
-        authFile="$out/share/linkwarden/apps/web/.next/server/pages/api/v1/auth/[...nextauth].js"
-        substituteInPlace "$authFile" \
-          --replace-fail '"not-before-policy":' 'issued_token_type:__issued_token_type,"not-before-policy":'
-      '';
 in
 {
   options.dot.selfhosted.services.linkwarden = lib.dot.mkSelfhostedServiceOptions {
@@ -97,7 +84,6 @@ in
 
     services.linkwarden = {
       enable = true;
-      inherit package;
       inherit (cfg) host port;
       enableRegistration = false;
       environment = {
