@@ -24,10 +24,7 @@ let
     else
       provisionStateJson;
   generatedOauthSecretServices =
-    lib.optionals (services.code-server.enable && services.kanidm.enable) [
-      "code-server-oauth2-secrets.service"
-    ]
-    ++ lib.optionals (services.paperless.enable && services.kanidm.enable) [
+    lib.optionals (services.paperless.enable && services.kanidm.enable) [
       "paperless-oauth2-secrets.service"
     ]
     ++ lib.optionals (services.dawarich.enable && services.kanidm.enable) [
@@ -49,10 +46,7 @@ let
       "seafile-oidc-secret.service"
     ];
   oauthConsumerServices =
-    lib.optionals (services.code-server.enable && services.kanidm.enable) [
-      "oauth2-proxy-code-server.service"
-    ]
-    ++ lib.optionals (services.paperless.enable && services.kanidm.enable) [
+    lib.optionals (services.paperless.enable && services.kanidm.enable) [
       "paperless-web.service"
       "paperless-kanidm-admin.service"
     ]

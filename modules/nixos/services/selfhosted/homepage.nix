@@ -160,13 +160,6 @@ in
         {
           Tools = [
             {
-              Code = {
-                href = serviceUrl selfhosted.services.code-server;
-                description = "Remote editor";
-                icon = "code-server.svg";
-              };
-            }
-            {
               Wakapi = {
                 href = serviceUrl selfhosted.services.wakapi;
                 description = "Coding activity";

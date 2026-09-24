@@ -40,6 +40,8 @@ in
 
   networking.domain = "huwenqiang.dev";
 
+  home-manager.users.johnson.dconf.enable = lib.mkForce false;
+
   sops.secrets.rsshub-access-key = {
     sopsFile = "${self}/secrets/services/rsshub.yaml";
     key = "access-key";
@@ -160,7 +162,6 @@ in
         enable = true;
         localHostAlias = false;
       };
-      services.code-server.enable = true;
       services.calibre.enable = true;
       services.seafile.enable = true;
       services.pingvinShare.enable = true;
