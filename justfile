@@ -1,9 +1,9 @@
 set shell := ["bash", "-c"]
-export NIX_CONFIG := "extra-experimental-features = nix-command flakes"
+export NIX_CONFIG := "extra-experimental-features = nix-command flakes pipe-operators"
 
 flake := env('FLAKE', justfile_directory())
 user := `whoami`
-rebuild := if os() == "macos" { "sudo darwin-rebuild" } else { "nixos-rebuild" }
+rebuild := if os() == "macos" { "sudo --preserve-env=NIX_CONFIG darwin-rebuild" } else { "nixos-rebuild" }
 system-args := if os() == "macos" { "" } else { "--elevate run0 --no-reexec" }
 libvirt-uri := "qemu:///system"
 windows-domain := "windows11"
