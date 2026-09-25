@@ -10,6 +10,10 @@ let
 in
 {
   config = mkIf cfg.enable {
+    home-manager.sharedModules = [
+      { dconf.enable = mkForce false; }
+    ];
+
     xdg = mapAttrs (_: mkForce) {
       sounds.enable = false;
       mime.enable = false;

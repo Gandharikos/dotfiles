@@ -40,8 +40,6 @@ in
 
   networking.domain = "huwenqiang.dev";
 
-  home-manager.users.johnson.dconf.enable = lib.mkForce false;
-
   sops.secrets.rsshub-access-key = {
     sopsFile = "${self}/secrets/services/rsshub.yaml";
     key = "access-key";
