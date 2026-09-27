@@ -31,14 +31,12 @@ in
         ];
         settings = {
           global = {
-            chord_timeout = "30";
+            chord_timeout = "45";
           };
 
           main = {
             capslock = "overload(control, esc)";
             tab = "overload(tab_layer, tab)";
-            leftshift = "overloadt2(shift, leftshift, 150)";
-            rightshift = "overloadt2(shift, rightshift, 150)";
             leftcontrol = "layer(meta)";
             leftmeta = "layer(control)";
             rightalt = "rightmeta";

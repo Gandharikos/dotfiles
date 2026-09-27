@@ -59,7 +59,7 @@
             "manipulators": [
               {
                 "type": "basic",
-                "parameters": { "basic.simultaneous_threshold_milliseconds": 30 },
+                "parameters": { "basic.simultaneous_threshold_milliseconds": 45 },
                 "from": {
                   "simultaneous": [{ "key_code": "u" }, { "key_code": "i" }],
                   "simultaneous_options": {
@@ -73,7 +73,7 @@
               },
               {
                 "type": "basic",
-                "parameters": { "basic.simultaneous_threshold_milliseconds": 30 },
+                "parameters": { "basic.simultaneous_threshold_milliseconds": 45 },
                 "from": {
                   "simultaneous": [{ "key_code": "u" }, { "key_code": "i" }],
                   "simultaneous_options": {
@@ -87,7 +87,7 @@
               },
               {
                 "type": "basic",
-                "parameters": { "basic.simultaneous_threshold_milliseconds": 30 },
+                "parameters": { "basic.simultaneous_threshold_milliseconds": 45 },
                 "from": {
                   "simultaneous": [{ "key_code": "i" }, { "key_code": "o" }],
                   "simultaneous_options": {
@@ -101,7 +101,7 @@
               },
               {
                 "type": "basic",
-                "parameters": { "basic.simultaneous_threshold_milliseconds": 30 },
+                "parameters": { "basic.simultaneous_threshold_milliseconds": 45 },
                 "from": {
                   "simultaneous": [{ "key_code": "i" }, { "key_code": "o" }],
                   "simultaneous_options": {

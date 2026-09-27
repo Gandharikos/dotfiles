@@ -55,6 +55,7 @@
         quick-tap 125
         oneshot-timeout 1000
         chord-timeout 30
+        bracket-chord-timeout 45
       )
 
       (defalias
@@ -78,8 +79,8 @@
       )
 
       (defchordsv2
-        (u i) @lp  $chord-timeout all-released ()
-        (i o) @rp  $chord-timeout all-released ()
+        (u i) @lp  $bracket-chord-timeout all-released ()
+        (i o) @rp  $bracket-chord-timeout all-released ()
         (w e) [    $chord-timeout all-released ()
         (e r) ]    $chord-timeout all-released ()
         (m ,) S--  $chord-timeout all-released ()
