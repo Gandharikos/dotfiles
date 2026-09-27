@@ -10,6 +10,12 @@ let
   inherit (lib.types) str;
 
   cfg = config.my.gui.rime;
+  flypy = pkgs.fetchFromGitHub {
+    owner = "cubercsl";
+    repo = "rime-flypy";
+    rev = "9ee464765e325dfd4b04926028d79d60882e653e";
+    hash = "sha256-93LIHP1Ho/Jo2OOS0Dkmu+IFOJcUAFVxiKs3e5BxEK8=";
+  };
 in
 {
   options.my.gui.rime = {
@@ -35,6 +41,20 @@ in
         recursive = true;
       };
 
+      "${cfg.dir}/flypy" = {
+        source = "${flypy}/flypy";
+        recursive = true;
+      };
+      "${cfg.dir}/flypy.schema.yaml".source = "${flypy}/flypy.schema.yaml";
+      "${cfg.dir}/flypy.dict.yaml".source = "${flypy}/flypy.dict.yaml";
+      "${cfg.dir}/flypydz.schema.yaml".source = "${flypy}/flypydz.schema.yaml";
+      "${cfg.dir}/flypydz.dict.yaml".source = "${flypy}/flypydz.dict.yaml";
+      "${cfg.dir}/flypyok.schema.yaml".source = "${flypy}/flypyok.schema.yaml";
+      "${cfg.dir}/flypyok.dict.yaml".source = "${flypy}/flypyok.dict.yaml";
+      "${cfg.dir}/lua/calculator_translator.lua".source = "${flypy}/lua/calculator_translator.lua";
+      "${cfg.dir}/lua/flypy_date_translator.lua".source = "${flypy}/lua/flypy_date_translator.lua";
+      "${cfg.dir}/lua/flypy_time_translator.lua".source = "${flypy}/lua/flypy_time_translator.lua";
+
       "${cfg.dir}/default.custom.yaml".text = ''
         patch:
           __include: rime_ice_suggestion:/
@@ -44,6 +64,7 @@ in
             - schema: luna_pinyin
             - schema: double_pinyin_flypy
             - schema: rime_ice
+            - schema: flypy
       '';
 
       "${cfg.dir}/grammar.yaml".source = pkgs.fetchurl {
