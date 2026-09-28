@@ -10,12 +10,30 @@ let
   inherit (lib.types) str;
 
   cfg = config.my.gui.rime;
-  flypy = pkgs.fetchFromGitHub {
-    owner = "cubercsl";
-    repo = "rime-flypy";
-    rev = "9ee464765e325dfd4b04926028d79d60882e653e";
-    hash = "sha256-93LIHP1Ho/Jo2OOS0Dkmu+IFOJcUAFVxiKs3e5BxEK8=";
-  };
+  rimeIceData = "${pkgs.dot.rime-ice-zhwiki}/share/rime-data";
+  octagramData = "${pkgs.dot.rime-octagram-data}/share/rime-data";
+  rimePackages = [
+    pkgs.dot.rime-flypy
+    pkgs.dot.rime-yuhao
+  ];
+  packageFiles = lib.concatMap (
+    package:
+    let
+      dataDir = "${package}/share/rime-data";
+      mkFile = path: {
+        name = "${cfg.dir}/${path}";
+        value.source = "${dataDir}/${path}";
+      };
+      mkDirectory = path: {
+        name = "${cfg.dir}/${path}";
+        value = {
+          source = "${dataDir}/${path}";
+          recursive = true;
+        };
+      };
+    in
+    map mkFile package.rimeFiles ++ map mkDirectory package.rimeDirectories
+  ) rimePackages;
 in
 {
   options.my.gui.rime = {
@@ -36,25 +54,6 @@ in
 
   config = mkIf cfg.enable {
     home.file = {
-      ${cfg.dir} = {
-        source = "${pkgs.rime-ice}/share/rime-data";
-        recursive = true;
-      };
-
-      "${cfg.dir}/flypy" = {
-        source = "${flypy}/flypy";
-        recursive = true;
-      };
-      "${cfg.dir}/flypy.schema.yaml".source = "${flypy}/flypy.schema.yaml";
-      "${cfg.dir}/flypy.dict.yaml".source = "${flypy}/flypy.dict.yaml";
-      "${cfg.dir}/flypydz.schema.yaml".source = "${flypy}/flypydz.schema.yaml";
-      "${cfg.dir}/flypydz.dict.yaml".source = "${flypy}/flypydz.dict.yaml";
-      "${cfg.dir}/flypyok.schema.yaml".source = "${flypy}/flypyok.schema.yaml";
-      "${cfg.dir}/flypyok.dict.yaml".source = "${flypy}/flypyok.dict.yaml";
-      "${cfg.dir}/lua/calculator_translator.lua".source = "${flypy}/lua/calculator_translator.lua";
-      "${cfg.dir}/lua/flypy_date_translator.lua".source = "${flypy}/lua/flypy_date_translator.lua";
-      "${cfg.dir}/lua/flypy_time_translator.lua".source = "${flypy}/lua/flypy_time_translator.lua";
-
       "${cfg.dir}/default.custom.yaml".text = ''
         patch:
           __include: rime_ice_suggestion:/
@@ -65,23 +64,34 @@ in
             - schema: double_pinyin_flypy
             - schema: rime_ice
             - schema: flypy
+            - schema: yustar
+            - schema: yuming
       '';
 
-      "${cfg.dir}/grammar.yaml".source = pkgs.fetchurl {
-        url = "https://github.com/lotem/rime-octagram-data/raw/master/grammar.yaml";
-        sha256 = "0aa14rvypnja38dm15hpq34xwvf06al6am9hxls6c4683ppyk355";
-      };
+      # The twelfth binding in the pinned Flypy schema toggles simplified/traditional output.
+      "${cfg.dir}/flypy.custom.yaml".text = ''
+        patch:
+          "key_binder/bindings/@11/accept": "Control+semicolon"
+      '';
 
-      "${cfg.dir}/zh-hans-t-essay-bgw.gram".source = pkgs.fetchurl {
-        url = "https://github.com/lotem/rime-octagram-data/raw/hans/zh-hans-t-essay-bgw.gram";
-        sha256 = "0ygcpbhp00lb5ghi56kpxl1mg52i7hdlrznm2wkdq8g3hjxyxfqi";
-      };
+      "${cfg.dir}/grammar.yaml".source = "${octagramData}/grammar.yaml";
+      "${cfg.dir}/zh-hans-t-essay-bgw.gram".source = "${octagramData}/zh-hans-t-essay-bgw.gram";
 
       "${cfg.dir}/luna_pinyin.custom.yaml".text = ''
         patch:
           __include: grammar:/hans
           translator/dictionary: rime_ice
       '';
-    };
+    }
+    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+      ${cfg.dir} = {
+        source = rimeIceData;
+        recursive = true;
+      };
+    }
+    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+      "${cfg.dir}/rime_ice.dict.yaml".source = "${rimeIceData}/rime_ice.dict.yaml";
+    }
+    // lib.listToAttrs packageFiles;
   };
 }
