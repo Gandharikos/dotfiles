@@ -60,10 +60,8 @@ in
           "ascii_composer/switch_key/Shift_L": commit_code
           "ascii_composer/switch_key/Shift_R": noop
           schema_list:
-            - schema: luna_pinyin
-            - schema: double_pinyin_flypy
-            - schema: rime_ice
             - schema: flypy
+            - schema: rime_ice
             - schema: yustar
             - schema: yuming
       '';
@@ -77,10 +75,9 @@ in
       "${cfg.dir}/grammar.yaml".source = "${octagramData}/grammar.yaml";
       "${cfg.dir}/zh-hans-t-essay-bgw.gram".source = "${octagramData}/zh-hans-t-essay-bgw.gram";
 
-      "${cfg.dir}/luna_pinyin.custom.yaml".text = ''
+      "${cfg.dir}/rime_ice.custom.yaml".text = ''
         patch:
           __include: grammar:/hans
-          translator/dictionary: rime_ice
       '';
     }
     // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
