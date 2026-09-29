@@ -66,10 +66,11 @@ in
             - schema: yuming
       '';
 
-      # The twelfth binding in the pinned Flypy schema toggles simplified/traditional output.
+      # These indexes match the pinned Flypy schema's second-candidate and simplification bindings.
       "${cfg.dir}/flypy.custom.yaml".text = ''
         patch:
-          "key_binder/bindings/@11/accept": "Control+semicolon"
+          "key_binder/bindings/@4/accept": apostrophe
+          "key_binder/bindings/@11/accept": "Control+apostrophe"
       '';
 
       "${cfg.dir}/grammar.yaml".source = "${octagramData}/grammar.yaml";
