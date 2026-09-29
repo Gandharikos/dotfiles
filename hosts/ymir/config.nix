@@ -8,7 +8,8 @@
   ];
 
   boot.lanzaboote = {
-    configurationLimit = 8;
+    # systemd-pcrlock limits measured-boot generations on the ESP to four.
+    configurationLimit = 4;
     measuredBoot = {
       enable = true;
       pcrs = [
