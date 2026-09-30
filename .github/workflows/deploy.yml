@@ -38,6 +38,8 @@ jobs:
         uses: cachix/install-nix-action@v31
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            extra-experimental-features = pipe-operators
 
       - name: Compute deploy targets
         id: plan
@@ -123,6 +125,8 @@ jobs:
         uses: cachix/install-nix-action@v31
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            extra-experimental-features = pipe-operators
 
       - name: Connect Tailscale
         if: env.TAILSCALE_OAUTH_CLIENT_ID != '' && env.TAILSCALE_OAUTH_SECRET != ''
