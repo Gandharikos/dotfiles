@@ -39,7 +39,7 @@ jobs:
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           extra_nix_config: |
-            extra-experimental-features = pipe-operators
+            experimental-features = nix-command flakes pipe-operators
 
       - name: Compute deploy targets
         id: plan
@@ -126,7 +126,7 @@ jobs:
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           extra_nix_config: |
-            extra-experimental-features = pipe-operators
+            experimental-features = nix-command flakes pipe-operators
 
       - name: Connect Tailscale
         if: env.TAILSCALE_OAUTH_CLIENT_ID != '' && env.TAILSCALE_OAUTH_SECRET != ''
