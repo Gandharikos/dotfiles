@@ -176,23 +176,6 @@ in
                 minWidth = 574.0;
                 minHeight = 220.0;
               })
-              (appRule "app.zen-browser.zen" {
-                assignToWorkspace = "1";
-                initialContainerPrimarySpan = 1.0;
-                minWidth = 500.0;
-                minHeight = 495.0;
-              })
-              (appRule "org.mozilla.com.zen.browser" {
-                assignToWorkspace = "1";
-                initialContainerPrimarySpan = 1.0;
-                minWidth = 500.0;
-                minHeight = 495.0;
-              })
-              (appRule "org.mozilla.com.zen.browser" {
-                titleSubstring = "picture-in-picture";
-                layout = "float";
-                assignToWorkspace = "1";
-              })
               (appRule "org.mozilla.firefox" {
                 initialContainerPrimarySpan = 1.0;
                 minWidth = 500.0;

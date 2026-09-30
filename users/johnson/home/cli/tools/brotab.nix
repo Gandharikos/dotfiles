@@ -36,16 +36,6 @@ in
           text = chromiumManifest;
         };
       }
-      // optionalAttrs config.programs.helium.enable {
-        ".config/net.imput.helium/NativeMessagingHosts/brotab_mediator.json" = {
-          force = true;
-          text = chromiumManifest;
-        };
-        ".config/helium/NativeMessagingHosts/brotab_mediator.json" = {
-          force = true;
-          text = chromiumManifest;
-        };
-      }
     );
   };
 }

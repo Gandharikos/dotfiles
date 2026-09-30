@@ -312,18 +312,6 @@
     # manager vencord by nix
     nixcord.url = "github:kaylorben/nixcord";
 
-    # zen browser
-    zen = {
-      url = "github:0xc000022070/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # helium browser
-    helium-browser = {
-      url = "github:oxcl/nix-flake-helium-browser";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # launcher
     vicinae = {
       url = "github:vicinaehq/vicinae";

@@ -38,10 +38,8 @@ in
   options.my.gui.browser = {
     default = mkOption {
       type = nullOr (enum [
-        "zen"
         "chromium"
         "firefox"
-        "helium"
       ]);
       default = if osConfig.dot.gui.enable && osClass == "nixos" then "chromium" else null;
       description = "The browser to use";

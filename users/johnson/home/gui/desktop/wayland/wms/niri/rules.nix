@@ -9,10 +9,8 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.lists) singleton;
   browserAppIds = [
-    "zen"
     "firefox"
     "org.mozilla.firefox"
-    "helium"
     "chromium"
     "chromium-browser"
     "google-chrome"

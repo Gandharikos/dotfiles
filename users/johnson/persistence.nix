@@ -32,12 +32,6 @@ in
         ".cache/mozilla/firefox"
         ".mozilla/firefox"
       ])
-      (mkIf my.gui.apps.helium.enable [
-        ".cache/helium"
-        ".cache/net.imput.helium"
-        ".config/helium"
-        ".config/net.imput.helium"
-      ])
       (mkIf my.gui.apps.chromium.enable [
         ".cache/chromium"
         ".config/chromium"
@@ -69,10 +63,6 @@ in
       (mkIf my.gui.apps.wezterm.enable [
         ".cache/wezterm"
         ".local/share/wezterm"
-      ])
-      (mkIf my.gui.apps.zen.enable [
-        ".cache/zen"
-        ".config/zen"
       ])
       (mkIf (my.gui.desktop.shell.default == "dank-material-shell") [
         ".cache/DankMaterialShell"

@@ -144,7 +144,6 @@
       "vlc" # video player
       # "karabiner-elements" # keyboard remap
       "yubico-authenticator" # for yubikey
-      "zen" # web browser
       # keep-sorted end
     ];
   };

@@ -119,16 +119,6 @@ in
           text = browserLinkManifest;
         };
       }
-      // optionalAttrs config.programs.helium.enable {
-        ".config/net.imput.helium/NativeMessagingHosts/com.vicinae.vicinae.json" = {
-          force = true;
-          text = browserLinkManifest;
-        };
-        ".config/helium/NativeMessagingHosts/com.vicinae.vicinae.json" = {
-          force = true;
-          text = browserLinkManifest;
-        };
-      }
     );
   };
 }

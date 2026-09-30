@@ -644,26 +644,6 @@
         "type": "github"
       }
     },
-    "helium-browser": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1790255647,
-        "narHash": "sha256-VGsihdN8HxpBeNHB2AK/G5PJP2fFMLBCTy0c1ti0fIg=",
-        "owner": "oxcl",
-        "repo": "nix-flake-helium-browser",
-        "rev": "5334f268b6cec49c58f69093b8f3198d3516e566",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxcl",
-        "repo": "nix-flake-helium-browser",
-        "type": "github"
-      }
-    },
     "hercules-ci-effects": {
       "inputs": {
         "flake-parts": [
@@ -776,27 +756,6 @@
       "original": {
         "owner": "nix-community",
         "ref": "release-26.05",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
-    "home-manager_4": {
-      "inputs": {
-        "nixpkgs": [
-          "zen",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1789430117,
-        "narHash": "sha256-t+U1mijItLJ64xZOifpfQ17kpAL73nU7pDI48ScacVc=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "cda90fd8838825c689fde9d3f3b4e937937790df",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
         "repo": "home-manager",
         "type": "github"
       }
@@ -2137,7 +2096,6 @@
         "flake-parts": "flake-parts",
         "flake-utils": "flake-utils",
         "hardware": "hardware",
-        "helium-browser": "helium-browser",
         "hermes-agent": "hermes-agent",
         "home-manager": "home-manager_2",
         "hypr-dynamic-cursors": "hypr-dynamic-cursors",
@@ -2176,8 +2134,7 @@
         "vicinae": "vicinae",
         "vicinae-extensions": "vicinae-extensions",
         "wallpapers": "wallpapers",
-        "wsl": "wsl",
-        "zen": "zen"
+        "wsl": "wsl"
       }
     },
     "rust-analyzer-src": {
@@ -2711,27 +2668,6 @@
       "original": {
         "owner": "Supreeeme",
         "repo": "xwayland-satellite",
-        "type": "github"
-      }
-    },
-    "zen": {
-      "inputs": {
-        "home-manager": "home-manager_4",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1790402100,
-        "narHash": "sha256-f/tmhFat/UHra627JbVg6calQ3/ZkEydQZJR71BBX0M=",
-        "owner": "0xc000022070",
-        "repo": "zen-browser-flake",
-        "rev": "b851b56b787a61b900751aca2f17e4a5ca6c394a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "0xc000022070",
-        "repo": "zen-browser-flake",
         "type": "github"
       }
     }

@@ -147,9 +147,6 @@ with osConfig.dot.keyboard.keys;
                   # Custom shortcuts
                   "${modKey}-enter" = "exec-and-forget open -n /applications/ghostty.app";
 
-                  # cmd-b = 'exec-and-forget open -n /Applications/Arc.app'
-                  "${modKey}-b" = "exec-and-forget open -a \"zen browser\"";
-
                   # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
                   "${modKey}-tab" = "workspace-back-and-forth";
                   # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
@@ -233,13 +230,6 @@ with osConfig.dot.keyboard.keys;
               };
             };
             on-window-detected = [
-              {
-                "if" = {
-                  app-id = "org.mozilla.com.zen.browser";
-                  window-title-regex-substring = "picture-in-picture";
-                };
-                run = "move-node-to-workspace 1";
-              }
               {
                 "if" = {
                   app-id = "com.mitchellh.ghostty";
