@@ -86,6 +86,13 @@ in
           hash = "sha256-H32I06Rx3LArg1/ysJfcsapIpwWlUufkwu9Xamx1NGc=";
         }
 
+        # LuLu Translate
+        {
+          id = "djbfechcnkppbknmlhfcaoifgnicolin";
+          version = "26.9.0";
+          hash = "sha256-+drihozMxyEPI/ivKzOVSZkAtE97bTnZQM9mdKsjDDc=";
+        }
+
         # Dark Reader
         {
           id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
