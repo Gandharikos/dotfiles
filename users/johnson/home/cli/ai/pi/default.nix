@@ -18,11 +18,12 @@ in
       context = aiCommon.base;
       settings = {
         defaultProvider = "openai-codex";
-        defaultModel = "gpt-5.6-sol";
+        defaultModel = "gpt-6-astra";
         defaultThinkingLevel = "high";
         enableTelemetry = false;
         collapseChangelogs = true;
         transport = "auto";
+        packages = [ "https://github.com/amosblomqvist/pi-interactive-subagents.git" ];
         compaction = {
           reserveTokens = 20000;
           keepRecentTokens = 50000;
