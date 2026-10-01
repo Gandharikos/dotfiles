@@ -19,16 +19,25 @@ in
       readOnly = true;
       description = "Whether to enable keyd keyboard remapping";
     };
+    keyboardIds = mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        "*"
+        "-1234:5678" # vicinae-snippet-virtual-keyboard
+      ];
+      description = "keyd device IDs to remap; an empty list matches no keyboards";
+    };
   };
 
   config = mkIf cfg.enable {
+    warnings = lib.optional (
+      cfg.keyboardIds == [ ]
+    ) "keyd keyboardIds is empty; no keyboards will be remapped";
+
     services.keyd = {
       enable = true;
       keyboards.default = {
-        ids = [
-          "*"
-          "-1234:5678" # vicinae-snippet-virtual-keyboard
-        ];
+        ids = cfg.keyboardIds;
         settings = {
           global = {
             chord_timeout = "45";

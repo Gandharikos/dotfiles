@@ -53,6 +53,11 @@
       printing.enable = true;
       fwupd.enable = true;
       asus.enable = true;
+      # The built-in ITE keyboard exposes a combined keyboard/mouse event device.
+      kanata.keyboardDevices = [
+        "/dev/input/by-id/usb-ITE_Tech._Inc._ITE_Device_8910_-event-mouse"
+      ];
+      keyd.keyboardIds = [ "0b05:19b6" ];
       logind.powerKey = "ignore";
     };
     gui = {

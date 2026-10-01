@@ -5,6 +5,7 @@
     {
       isLinux ? pkgs.stdenv.hostPlatform.isLinux,
       isDarwin ? pkgs.stdenv.hostPlatform.isDarwin,
+      linuxDevices ? [ ],
     }:
     let
       # Define the bottom row based on the OS (6 keys each)
@@ -34,6 +35,12 @@
         (defcfg
           process-unmapped-keys yes
           concurrent-tap-hold yes
+          ${lib.optionalString (isLinux && linuxDevices != [ ]) ''
+            linux-dev (${lib.concatMapStringsSep " " builtins.toJSON linuxDevices})
+          ''}
+          ${lib.optionalString (isLinux && linuxDevices == [ ]) ''
+            linux-dev-names-exclude ("vicinae-snippet-virtual-keyboard")
+          ''}
           ${lib.optionalString isLinux ''
             linux-continue-if-no-devs-found yes
           ''}
