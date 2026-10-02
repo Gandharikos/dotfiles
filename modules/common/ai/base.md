@@ -34,7 +34,33 @@ principles apply across all programming languages, frameworks, and development e
 - **Ask when uncertain**: Don't guess or make assumptions - ask for clarification
 - **Document reasoning**: Capture the "why" behind non-obvious decisions
 
-### 4. Documentation
+### 4. Make Outputs Easy to Understand
+
+Adapted from [Andrej Karpathy's post](https://x.com/karpathy/status/2105819303471976479), with
+project-specific safeguards below. Help the user understand and oversee the work, not just receive
+its output.
+
+- **Plain language first**: Use short sentences, active voice, consistent terms, and one idea per
+  sentence. For English explanations, aim roughly 80% of the way toward ASD-STE100 simplified
+  technical English, without claiming formal compliance. Keep the user's language; apply the same
+  clarity principles to Chinese rather than switching to English.
+- **Diagrams for relationships**: Prefer a small diagram over dense prose when explaining
+  architecture, dependencies, data flow, or state transitions. Use Mermaid when rendering is
+  available, or ASCII in a terminal. Include a short text explanation.
+- **Interactive HTML for exploration**: When interaction would materially improve understanding,
+  offer a focused, self-contained HTML explainer with examples, controls, or step-by-step views.
+  Generate it when requested or agreed; prefer local, offline operation without new dependencies.
+- **Videos for processes over time**: When requested, create a bespoke visual explainer with a
+  storyboard, animation, and optional narration. Check available tools first; prefer local or free
+  narration options, and get approval before using paid services. Never embed API keys in artifacts.
+- **Choose the simplest effective format**: Do not turn every answer into a webpage or video. Small
+  tasks need concise text. Custom explainers can be disposable; agree on their location and do not
+  add generated media or dependencies to the repository without approval.
+- **Keep explanations verifiable**: Ground diagrams and demos in the actual code or cited sources.
+  Distinguish facts, assumptions, and unverified behavior. Summarize what changed, why it matters,
+  and what was tested; attractive presentation does not replace correctness checks.
+
+### 5. Documentation
 
 - **Minimalist comments**: Use comments sparingly and strategically:
   - Explain **why**, not **what** (the code shows what)
