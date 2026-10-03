@@ -75,8 +75,8 @@ in
         # OneTab
         {
           id = "chphlpgkkbolifaimnlloiipkdnihall";
-          version = "2.18";
-          hash = "sha256-BWg/RRnN6/lVmf1Pc07vzA3noGaNX3J64IrCKuAV5Qk=";
+          version = "2.21";
+          hash = "sha256-jCjPqfSn5su3J7AESK5YD7o3I6X6YStG+PlCmp0Qd2o=";
         }
 
         # Obsidian Web Clipper
@@ -96,8 +96,8 @@ in
         # Dark Reader
         {
           id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
-          version = "4.9.132";
-          hash = "sha256-ZlcL/o4r8SJGdyXDAywSWpgr3rkBqsu8NBCuRC7UMg0=";
+          version = "4.9.133";
+          hash = "sha256-7jjyDR1QeJ9LSCyaGl2tq1mbhoL9Kn37feIfroVhuRg=";
         }
 
         # Vimium C
@@ -166,15 +166,15 @@ in
         # stylus
         {
           id = "clngdbkpkpeebahjckkjfobafhncgmne";
-          version = "2.4.11";
-          hash = "sha256-7JnTWC0q3DykvmwJaDvEaLKUDK65iPC7T7EXwS/AHfY=";
+          version = "2.4.14";
+          hash = "sha256-82toCWp5v/Crf35et50ISOw2Q66ZhJrCx59rhDVTRPk=";
         }
 
         # Bitwarden
         {
           id = "nngceckbapebfimnlniiiahkandclblb";
-          version = "2026.8.0";
-          hash = "sha256-0aWULZwjTQM4LamSeZMgVQZMquejLMmxV5QMhjFl1Z8=";
+          version = "2026.9.3";
+          hash = "sha256-mWT2YKEQI8sZpzC3+Qg1PsHa53oCfIGSMV0Kfz2O+SE=";
         }
 
         # at://wormhole
@@ -215,15 +215,15 @@ in
         # Control Panel for Twitter
         {
           id = "kpmjjdhbcfebfjgdnpjagcndoelnidfj";
-          version = "4.24.1";
-          hash = "sha256-wgeJUzlG0G5zSFC2aOt59OHocyNIY6JB+o8RI5GtIU4=";
+          version = "4.24.3";
+          hash = "sha256-vrwlEh3jEBuSg3bWc4TgTUbSW/GJaqGmt2z/gG1/Vjw=";
         }
 
         # refined github
         {
           id = "hlepfoohegkhhmjieoechaddaejaokhf";
-          version = "26.9.12";
-          hash = "sha256-6nU91pne+T/1bYhL92cn+aJbXlOyF/Pr3s+iWuJ3EXo=";
+          version = "26.10";
+          hash = "sha256-Ua3DlSiSkXx7VefXwbdG7M95wTf3qe3lVmSdQOu3Q58=";
         }
       ];
 
