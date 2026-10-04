@@ -35,11 +35,19 @@ let
     '';
   };
 
+  cpp26 = pkgs.writeShellApplication {
+    name = "cpp26";
+    runtimeInputs = [ pkgs.gcc ];
+    text = ''
+      exec c++ -std=c++26 -Wall -Wextra -O2 "$@"
+    '';
+  };
+
   cppdbg = pkgs.writeShellApplication {
     name = "cppdbg";
     runtimeInputs = [ pkgs.gcc ];
     text = ''
-      exec c++ -std=c++23 -Wall -Wextra -Wshadow -g -O0 -fsanitize=address,undefined -fno-omit-frame-pointer "$@"
+      exec c++ -std=c++26 -Wall -Wextra -Wshadow -g -O0 -fsanitize=address,undefined -fno-omit-frame-pointer "$@"
     '';
   };
 
@@ -59,7 +67,7 @@ let
       shift
       output_file="''${TMPDIR:-/tmp}/$(basename "''${source_file%.*}")"
 
-      c++ -std=c++23 -Wall -Wextra -O2 "$source_file" -o "$output_file"
+      c++ -std=c++26 -Wall -Wextra -O2 "$source_file" -o "$output_file"
       exec "$output_file" "$@"
     '';
   };
@@ -107,16 +115,18 @@ in
         cpp17
         cpp20
         cpp23
+        cpp26
         cppdbg
         cpprun
       ];
 
     my.shellAbbrs = {
-      cc = "cpp23";
-      cxx = "cpp23";
+      cc = "cpp26";
+      cxx = "cpp26";
       cxx17 = "cpp17";
       cxx20 = "cpp20";
       cxx23 = "cpp23";
+      cxx26 = "cpp26";
       cxxdbg = "cppdbg";
       cpr = "cpprun";
     };
@@ -125,7 +135,7 @@ in
       If:
         PathMatch: '.*\.(cc|cpp|cxx|c\+\+|hpp|hh|hxx|h\+\+)$'
       CompileFlags:
-        Add: [-std=c++23, -Wall, -Wextra]
+        Add: [-std=c++26, -Wall, -Wextra]
       Diagnostics:
         ClangTidy:
           Add: [clang-analyzer-*, bugprone-*, performance-*, portability-*, modernize-*]
