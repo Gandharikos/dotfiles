@@ -215,8 +215,8 @@ in
         # Control Panel for Twitter
         {
           id = "kpmjjdhbcfebfjgdnpjagcndoelnidfj";
-          version = "4.24.5";
-          hash = "sha256-8P0vsBeA28y79iAaXAU75KJAps4TBFyX0Z4asZsEVGY=";
+          version = "4.25.0";
+          hash = "sha256-ptJoobYFWLcOK3ZUl8ZpQw+/c8f66/QDr85ROJLw7MY=";
         }
 
         # refined github
