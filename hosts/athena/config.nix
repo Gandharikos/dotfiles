@@ -40,6 +40,11 @@ in
 
   networking.domain = "huwenqiang.dev";
 
+  # Keep old backup paths usable for rollback and operator scripts after migration.
+  systemd.tmpfiles.rules = [
+    "L /var/backup - - - - /var/lib/selfhosted-backup/storage"
+  ];
+
   sops.secrets.rsshub-access-key = {
     sopsFile = "${self}/secrets/services/rsshub.yaml";
     key = "access-key";
@@ -140,9 +145,19 @@ in
       reverseProxy = "caddy";
       monitoring = "gatus";
       backup = "restic";
-      backups.taildrop = {
-        enable = true;
-        target = "ymir";
+      backups = {
+        exportDir = "/var/lib/selfhosted-backup/storage/selfhosted";
+        postgresqlDumpFile = "/var/lib/selfhosted-backup/storage/postgresql/all.sql.zst";
+        restic.repository = "/var/lib/selfhosted-backup/storage/restic/selfhosted";
+        health.diskPaths = [
+          "/"
+          "/nix"
+          "/var/lib"
+        ];
+        taildrop = {
+          enable = true;
+          target = "ymir";
+        };
       };
       services.mailserver = {
         enable = true;

@@ -20,6 +20,14 @@ let
     url = "http://127.0.0.1:${toString cfg.backups.health.port}/health";
     interval = "5m";
     conditions = [ "[STATUS] == 200" ];
+    alerts = optional cfg.services.ntfy.enable {
+      type = "custom";
+      enabled = true;
+      failure-threshold = 2;
+      success-threshold = 2;
+      send-on-resolved = true;
+      description = "Check backup freshness and filesystem space/inode usage.";
+    };
   };
 in
 {
@@ -82,6 +90,17 @@ in
       settings = {
         web.port = gatus.port;
         endpoints = gatus.endpoints ++ optional cfg.backups.health.enable backupEndpoint;
+        alerting.custom = mkIf (cfg.backups.health.enable && cfg.services.ntfy.enable) {
+          url = cfg.backups.alert.ntfyUrl;
+          method = "POST";
+          headers = {
+            Content-Type = "text/plain";
+            Title = "Selfhosted backup / storage health";
+            Priority = "high";
+            Tags = "warning";
+          };
+          body = "${config.networking.hostName}: [ENDPOINT_NAME] [ALERT_TRIGGERED_OR_RESOLVED]. [ALERT_DESCRIPTION]";
+        };
       };
     };
   };

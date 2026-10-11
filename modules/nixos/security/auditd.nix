@@ -6,6 +6,8 @@
 }:
 let
   cfg = config.dot.security.auditd;
+  rotationEnabled = cfg.autoPrune.enable && config.security.auditd.enable;
+  logFile = config.security.auditd.settings.log_file or "/var/log/audit/audit.log";
   auditctl = lib.getExe' config.security.audit.package "auditctl";
   auditRules = pkgs.writeTextDir "audit.rules" ''
     -D
@@ -51,28 +53,41 @@ in
     };
 
     autoPrune = {
-      enable = mkEnableOption "Enable auto-pruning of audit logs via logrotate" // {
+      enable = mkEnableOption "bounded native auditd log rotation" // {
         default = true;
       };
 
       size = mkOption {
-        type = int;
-        default = 524288000; # ~500 megabytes
-        description = "The maximum size of the audit log in bytes";
+        type = lib.types.ints.positive;
+        default = 67108864;
+        description = "Maximum audit log size in bytes, rounded up to whole MiB by auditd.";
+      };
+
+      keep = mkOption {
+        type = lib.types.ints.between 2 999;
+        default = 8;
+        description = "Number of audit log files retained by native rotation.";
       };
 
       dates = mkOption {
         type = str;
         default = "daily";
         example = "weekly";
-        description = "How often the audit log should be rotated";
+        description = "How often to check for an oversized audit log in addition to native size-based rotation.";
       };
     };
   };
 
   config = mkIf cfg.enable {
     security = {
-      auditd.enable = true;
+      auditd = {
+        enable = true;
+        settings = mkIf rotationEnabled {
+          max_log_file = builtins.div (cfg.autoPrune.size + 1048575) 1048576;
+          max_log_file_action = "rotate";
+          num_logs = cfg.autoPrune.keep;
+        };
+      };
 
       audit = {
         enable = true;
@@ -85,7 +100,7 @@ in
       };
     };
 
-    # the audit log can grow quite large, so we _can_ automatically prune it
+    # Never unlink a live audit log: auditd would keep writing to the deleted inode.
     systemd = {
       services.audit-rules-nixos.serviceConfig = {
         # The kernel parameters already set audit=1 and audit_backlog_limit.
@@ -94,8 +109,8 @@ in
         ExecStopPost = mkForce [ "${auditctl} -D" ];
       };
 
-      timers."clean-audit-log" = mkIf cfg.autoPrune.enable {
-        description = "Periodically clean audit log";
+      timers."clean-audit-log" = mkIf rotationEnabled {
+        description = "Periodically check audit log rotation";
         wantedBy = [ "timers.target" ];
         timerConfig = {
           OnCalendar = cfg.autoPrune.dates;
@@ -103,13 +118,14 @@ in
         };
       };
 
-      services."clean-audit-log" = mkIf cfg.autoPrune.enable {
+      services."clean-audit-log" = mkIf rotationEnabled {
+        requires = [ "auditd.service" ];
+        after = [ "auditd.service" ];
         script = ''
           set -eu
-          if [[ $(stat -c "%s" /var/log/audit/audit.log) -gt ${toString cfg.autoPrune.size} ]]; then
-            echo "Clearing Audit Log";
-            rm -rvf /var/log/audit/audit.log;
-            echo "Done!"
+          log_file=${lib.escapeShellArg logFile}
+          if [[ -f "$log_file" ]] && [[ $(stat -c "%s" "$log_file") -ge ${toString cfg.autoPrune.size} ]]; then
+            ${auditctl} --signal rotate
           fi
         '';
 

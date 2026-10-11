@@ -96,9 +96,11 @@ let
 
         output="''${1:-/var/backup/selfhosted/selfhosted-$(date -u +%Y%m%dT%H%M%SZ).tar.zst}"
         workdir="$(mktemp -d)"
-        trap 'rm -rf "$workdir"' EXIT
+        output_tmp=""
+        trap 'rm -rf -- "$workdir"; if [ -n "$output_tmp" ]; then rm -f -- "$output_tmp"; fi' EXIT
 
         mkdir -p "$(dirname "$output")" "$workdir/postgresql" "$workdir/var/lib"
+        output_tmp="$(mktemp "$output.XXXXXX")"
 
         if systemctl is-active --quiet postgresql.service; then
           runuser -u postgres -- pg_dumpall \
@@ -112,13 +114,16 @@ let
               done
         fi
 
-        for directory in actual caddy dawarich fava filebrowser forgejo gatus immich kanidm linkwarden mailserver miniflux ntfy-sh outline paperless roundcube vaultwarden wakapi; do
+        for directory in actual caddy calibre-web dawarich fava filebrowser forgejo gatus immich kanidm linkwarden mailserver miniflux ntfy-sh outline paperless roundcube vaultwarden wakapi; do
           if [ -e "/var/lib/$directory" ]; then
             tar -C /var/lib -cpf "$workdir/var/lib/$directory.tar" "$directory"
           fi
         done
 
-        tar -C "$workdir" --zstd -cpf "$output" .
+        tar -C "$workdir" --zstd -cpf "$output_tmp" .
+        zstd -q -t "$output_tmp"
+        mv -- "$output_tmp" "$output"
+        output_tmp=""
         echo "$output"
       '';
     };

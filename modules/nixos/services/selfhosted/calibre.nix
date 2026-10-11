@@ -110,7 +110,16 @@ in
       };
     };
 
+    # Keep upload spooling off /tmp and outside the library's backup paths.
+    systemd.tmpfiles.rules = [
+      "e /var/lib/calibre-web-upload 0700 ${config.services.calibre-web.user} ${config.services.calibre-web.group} 7d"
+    ];
+
     systemd.services = {
+      calibre-web.environment.TMPDIR = "/var/lib/calibre-web-upload";
+      calibre-web.serviceConfig.StateDirectory = "calibre-web-upload";
+      calibre-web.serviceConfig.StateDirectoryMode = "0700";
+
       calibre-web-library-init = mkIf (cfg.libraryDir != null) {
         description = "Initialize Calibre-Web library";
         before = [ "calibre-web.service" ];

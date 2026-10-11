@@ -18,65 +18,9 @@ let
 
   selfhostedExport = lib.dot.mkSelfhostedExportPackage pkgs;
   selfhostedTaildrop = lib.dot.mkSelfhostedTaildropPackage pkgs config;
-  backupHealthScript = pkgs.writeText "selfhosted-backup-health.py" ''
-    import json
-    import os
-    import time
-    from http.server import BaseHTTPRequestHandler, HTTPServer
-
-    last_success_path = os.environ["SELFHOSTED_BACKUP_LAST_SUCCESS"]
-    pg_dump_path = os.environ["SELFHOSTED_BACKUP_PG_DUMP"]
-    max_age_seconds = int(os.environ["SELFHOSTED_BACKUP_MAX_AGE_SECONDS"])
-    disk_warn_percent = int(os.environ["SELFHOSTED_BACKUP_DISK_WARN_PERCENT"])
-    port = int(os.environ["SELFHOSTED_BACKUP_PORT"])
-
-    def read_int(path):
-      with open(path, "r", encoding="utf-8") as handle:
-        return int(handle.read().strip())
-
-    class Handler(BaseHTTPRequestHandler):
-      def do_GET(self):
-        if self.path != "/health":
-          self.send_response(404)
-          self.end_headers()
-          return
-
-        now = int(time.time())
-        checks = {}
-
-        try:
-          last_success = read_int(last_success_path)
-          checks["last_success_age_seconds"] = now - last_success
-          checks["last_success_fresh"] = checks["last_success_age_seconds"] <= max_age_seconds
-        except Exception as error:
-          checks["last_success_error"] = str(error)
-          checks["last_success_fresh"] = False
-
-        try:
-          checks["postgresql_dump_size"] = os.path.getsize(pg_dump_path)
-          checks["postgresql_dump_present"] = checks["postgresql_dump_size"] > 0
-        except Exception as error:
-          checks["postgresql_dump_error"] = str(error)
-          checks["postgresql_dump_present"] = False
-
-        usage = os.statvfs("/")
-        used = usage.f_blocks - usage.f_bfree
-        checks["root_disk_used_percent"] = int(used * 100 / usage.f_blocks)
-        checks["root_disk_ok"] = checks["root_disk_used_percent"] < disk_warn_percent
-
-        ok = all(value for key, value in checks.items() if key.endswith(("_fresh", "_present", "_ok")))
-        body = json.dumps({"ok": ok, "checks": checks}, sort_keys=True).encode("utf-8")
-        self.send_response(200 if ok else 503)
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
-
-      def log_message(self, format, *args):
-        return
-
-    HTTPServer(("127.0.0.1", port), Handler).serve_forever()
-  '';
+  backupHealthScript = pkgs.writeText "selfhosted-backup-health.py" (
+    builtins.readFile ./backup-health.py
+  );
   backupMarkSuccess = pkgs.writeShellApplication {
     name = "selfhosted-backup-mark-success";
     runtimeInputs = [ pkgs.coreutils ];
@@ -163,9 +107,15 @@ in
       };
 
       diskUsageWarningPercent = mkOption {
-        type = int;
+        type = lib.types.ints.between 1 100;
         default = 85;
-        description = "Root filesystem usage percentage that makes backup health fail.";
+        description = "Filesystem block or inode usage percentage that makes backup health fail.";
+      };
+
+      diskPaths = mkOption {
+        type = listOf str;
+        default = [ "/" ];
+        description = "Paths whose filesystems are checked for available space and inodes. The root filesystem is always checked.";
       };
     };
 
@@ -272,6 +222,7 @@ in
         SELFHOSTED_BACKUP_PG_DUMP = cfg.backups.postgresqlDumpFile;
         SELFHOSTED_BACKUP_MAX_AGE_SECONDS = toString (cfg.backups.health.maxAgeHours * 3600);
         SELFHOSTED_BACKUP_DISK_WARN_PERCENT = toString cfg.backups.health.diskUsageWarningPercent;
+        SELFHOSTED_BACKUP_DISK_PATHS = builtins.toJSON cfg.backups.health.diskPaths;
         SELFHOSTED_BACKUP_PORT = toString cfg.backups.health.port;
       };
     };

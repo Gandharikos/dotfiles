@@ -50,15 +50,39 @@ in
       };
       inherit (restic) pruneOpts;
       backupPrepareCommand = ''
-        install -d -m 0700 ${cfg.backups.exportDir} "$(dirname ${restic.repository})"
+        set -eo pipefail
+        install -d -m 0700 ${lib.escapeShellArg cfg.backups.exportDir} \
+          ${lib.escapeShellArg (builtins.dirOf cfg.backups.postgresqlDumpFile)} \
+          ${lib.optionalString (lib.hasPrefix "/" restic.repository) (
+            lib.escapeShellArg (builtins.dirOf restic.repository)
+          )}
+        dump_file=${lib.escapeShellArg cfg.backups.postgresqlDumpFile}
+        dump_tmp=$(mktemp "''${dump_file}.XXXXXX")
+        trap 'rm -f -- "$dump_tmp"' EXIT
         ${lib.getExe' pkgs.util-linux "runuser"} -u postgres -- ${lib.getExe' config.services.postgresql.package "pg_dumpall"} \
-          | ${lib.getExe' pkgs.zstd "zstd"} -T0 -19 -o ${cfg.backups.postgresqlDumpFile}.tmp > /dev/null
-        mv ${cfg.backups.postgresqlDumpFile}.tmp ${cfg.backups.postgresqlDumpFile}
-        ${lib.getExe' exportPackage "selfhosted-export"} ${cfg.backups.exportDir}/selfhosted-latest.tar.zst
+          | ${lib.getExe' pkgs.zstd "zstd"} -T0 -19 -c > "$dump_tmp"
+        ${lib.getExe' pkgs.zstd "zstd"} -q -t "$dump_tmp"
+        mv -- "$dump_tmp" "$dump_file"
+        trap - EXIT
+        ${lib.getExe' exportPackage "selfhosted-export"} ${lib.escapeShellArg "${cfg.backups.exportDir}/selfhosted-latest.tar.zst"}
       '';
     };
 
     systemd.services.restic-backups-selfhosted = {
+      unitConfig.RequiresMountsFor = [
+        cfg.backups.exportDir
+        (builtins.dirOf cfg.backups.postgresqlDumpFile)
+      ]
+      ++ lib.optional (lib.hasPrefix "/" restic.repository) restic.repository;
+      environment = {
+        RESTIC_CACHE_DIR = lib.mkForce "/var/lib/selfhosted-backup/cache";
+        TMPDIR = "/var/lib/selfhosted-backup/tmp";
+      };
+      serviceConfig.StateDirectory = [
+        "selfhosted-backup/cache"
+        "selfhosted-backup/tmp"
+      ];
+      serviceConfig.StateDirectoryMode = "0700";
       onFailure = mkIf cfg.services.ntfy.enable [ "selfhosted-backup-alert@%n.service" ];
       serviceConfig.ExecStartPost = [
         "${lib.getExe' markSuccessPackage "selfhosted-restic-mark-success"}"
