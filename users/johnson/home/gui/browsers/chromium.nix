@@ -75,8 +75,8 @@ in
         # OneTab
         {
           id = "chphlpgkkbolifaimnlloiipkdnihall";
-          version = "2.21";
-          hash = "sha256-jCjPqfSn5su3J7AESK5YD7o3I6X6YStG+PlCmp0Qd2o=";
+          version = "2.24";
+          hash = "sha256-e9tguLeVyjXBAgZFFDrrjbCLdaAVa5WOzwDDXftOVVE=";
         }
 
         # Obsidian Web Clipper
@@ -215,8 +215,8 @@ in
         # Control Panel for Twitter
         {
           id = "kpmjjdhbcfebfjgdnpjagcndoelnidfj";
-          version = "4.24.5";
-          hash = "sha256-8P0vsBeA28y79iAaXAU75KJAps4TBFyX0Z4asZsEVGY=";
+          version = "4.25.0";
+          hash = "sha256-ptJoobYFWLcOK3ZUl8ZpQw+/c8f66/QDr85ROJLw7MY=";
         }
 
         # refined github
