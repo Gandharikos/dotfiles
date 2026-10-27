@@ -222,8 +222,8 @@ in
         # refined github
         {
           id = "hlepfoohegkhhmjieoechaddaejaokhf";
-          version = "26.10.20";
-          hash = "sha256-uij61TGNjBAqIVkKQjYNpfrK07EH8oNJxBA/WHVcMRE=";
+          version = "26.10.26";
+          hash = "sha256-Zc1hPio5K0R+SL3dtq9ZrTTxstchX86vswkpbpGCM8Q=";
         }
       ];
 
