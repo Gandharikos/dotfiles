@@ -24,6 +24,7 @@ in
   config = mkIf cfg.enable {
     programs.antigravity-cli = {
       enable = true;
+      mutableSettings = true;
       enableMcpIntegration = mcpModuleEnabled;
 
       settings = {
