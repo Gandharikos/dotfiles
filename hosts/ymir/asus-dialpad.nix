@@ -17,7 +17,9 @@ let
 
   patchedPackage = basePackage.overrideAttrs (old: {
     postPatch = (old.postPatch or "") + ''
+      # keyd grabs the built-in ITE keyboard; listen to its remapped output.
       substituteInPlace dialpad.py \
+        --replace-fail '("Name=\"AT Translated Set 2 keyboard" in line or' '("Name=\"keyd virtual keyboard\"" in line or "Name=\"AT Translated Set 2 keyboard" in line or' \
         --replace-fail 'coactivator_keys = None' 'coactivator_keys = []'
       substituteInPlace dialpad.py \
         --replace-fail 'global udev, dev, modifiers' 'global udev, dev, modifiers, uinput_device' \
@@ -72,13 +74,17 @@ in
     "uinput"
   ];
 
-  systemd.user.services.asus-dialpad-driver.serviceConfig = {
-    ExecStart = mkForce "${getExe startDriver} %E/asus-dialpad-driver";
-    Environment = mkForce [
-      "LOG=INFO"
-      "XDG_SESSION_TYPE=wayland"
-      "WAYLAND_DISPLAY=wayland-1"
-    ];
-    WorkingDirectory = mkForce "${patchedPackage}/share/asus-dialpad-driver";
+  systemd.user.services.asus-dialpad-driver = {
+    # Niri exports WAYLAND_DISPLAY before making graphical-session.target ready.
+    after = [ "graphical-session.target" ];
+    serviceConfig = {
+      ExecStart = mkForce "${getExe startDriver} %E/asus-dialpad-driver";
+      ConfigurationDirectoryMode = "0700";
+      Environment = mkForce [
+        "LOG=INFO"
+        "XDG_SESSION_TYPE=wayland"
+      ];
+      WorkingDirectory = mkForce "${patchedPackage}/share/asus-dialpad-driver";
+    };
   };
 }
