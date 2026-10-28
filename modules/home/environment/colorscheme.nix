@@ -29,6 +29,7 @@ in
     }
     (mkIf hasSystemTheme {
       nixporn = {
+        avatar = mkDefault osConfig.nixporn.avatar;
         colorscheme = mkDefault osConfig.nixporn.colorscheme;
         transparent = mkDefault osConfig.nixporn.transparent;
 
@@ -38,6 +39,8 @@ in
             flavor = mkDefault osConfig.nixporn.colorschemes.catppuccin.flavor;
           };
           kanagawa.variant = mkDefault osConfig.nixporn.colorschemes.kanagawa.variant;
+          rose-pine.variant = mkDefault osConfig.nixporn.colorschemes.rose-pine.variant;
+          solarized-osaka.variant = mkDefault osConfig.nixporn.colorschemes.solarized-osaka.variant;
           tokyonight.style = mkDefault osConfig.nixporn.colorschemes.tokyonight.style;
         };
       };

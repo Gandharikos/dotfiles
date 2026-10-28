@@ -89,7 +89,7 @@
     };
   };
 
-  nixporn.colorscheme = "kanagawa";
+  nixporn.colorscheme = "solarized-osaka";
 
   services.onedrive.enable = true;
   # System-wide user units also run for lingering service accounts such as hermes.
