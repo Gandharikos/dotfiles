@@ -132,9 +132,6 @@ in
   config = mkIf cfg.enable {
     preservation.enable = true;
 
-    # preservation requires initrd systemd.
-    boot.initrd.systemd.enable = true;
-
     environment.systemPackages = [
       # `sudo ncdu -x /`
       pkgs.ncdu

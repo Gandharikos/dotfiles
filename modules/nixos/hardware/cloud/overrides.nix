@@ -19,7 +19,7 @@ in
     systemd.services.qemu-guest-agent.path = [ pkgs.shadow ];
 
     boot = {
-      growPartition = !config.boot.initrd.systemd.enable;
+      growPartition = false;
       kernelParams = [ "net.ifnames=0" ];
       kernel.sysctl = {
         "net.ipv4.ip_forward" = true;
@@ -46,7 +46,6 @@ in
           "virtio_gpu"
           "virtio_rng"
         ];
-        systemd.enable = true;
       };
       loader.grub = {
         efiSupport = mkForce false;
