@@ -117,8 +117,8 @@ in
         # Vicinae Integration
         {
           id = "kcmipingpfbohfjckomimmahknoddnke";
-          version = "1.0.0";
-          hash = "sha256-P9ZWnHGwYhdOMEU0onWb8nAPfczi//HpgQ4H/yLdPx0=";
+          version = "1.1.0";
+          hash = "sha256-jxc0S5dAd1+sOtwmoff3/spwuRJ3tHxX+JE2tdtkvo4=";
         }
 
         # Unhook
@@ -166,8 +166,8 @@ in
         # stylus
         {
           id = "clngdbkpkpeebahjckkjfobafhncgmne";
-          version = "2.4.14";
-          hash = "sha256-82toCWp5v/Crf35et50ISOw2Q66ZhJrCx59rhDVTRPk=";
+          version = "2.4.17";
+          hash = "sha256-1yfPvbpfVGHr5/Be5XViWEvWxfongTL3ve9Ag+mn94o=";
         }
 
         # Bitwarden
@@ -201,8 +201,8 @@ in
         # scriptcat
         {
           id = "ndcooeababalnlpkfedmmbbbgkljhpjf";
-          version = "1.4.0";
-          hash = "sha256-8YLHEQogwSB+EDKIFqJycj5JcGHhRZxLwxYMS22ZRZ0=";
+          version = "1.5.0";
+          hash = "sha256-wVa9vp4cHePENd+otDaP+RQ3A4QFh/XxGOUc+ZcWJ2g=";
         }
 
         # ff2mpv
@@ -222,8 +222,8 @@ in
         # refined github
         {
           id = "hlepfoohegkhhmjieoechaddaejaokhf";
-          version = "26.10.20";
-          hash = "sha256-uij61TGNjBAqIVkKQjYNpfrK07EH8oNJxBA/WHVcMRE=";
+          version = "26.10.26";
+          hash = "sha256-Zc1hPio5K0R+SL3dtq9ZrTTxstchX86vswkpbpGCM8Q=";
         }
       ];
 
