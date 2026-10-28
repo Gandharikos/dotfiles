@@ -1,6 +1,18 @@
 _: _final: prev: {
   vimPlugins = prev.vimPlugins.extend (
-    _f: _p: {
+    _f: p: {
+      # Pin smart-splits.nvim to v2: v3.0.0 removed built-in multiplexer
+      # backends and smart-splits.tmux into separate repositories.
+      smart-splits-nvim = p.smart-splits-nvim.overrideAttrs (_old: {
+        version = "2.1.0-unstable-2026-09-07";
+        src = prev.fetchFromGitHub {
+          owner = "smart-splits-nvim";
+          repo = "smart-splits.nvim";
+          rev = "ec76708f1617ef9e2ac353357fe52d2c997a0f06";
+          hash = "sha256-wTNNFmVARLSbhYvr7dkPc+9jJBLEeRah0JB3j4W/7uM=";
+        };
+      });
+
       R-nvim = prev.vimUtils.buildVimPlugin {
         pname = "R.nvim";
         version = "0.1.0";
