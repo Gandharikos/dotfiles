@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ config, inputs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -92,6 +92,14 @@
   nixporn.colorscheme = "kanagawa";
 
   services.onedrive.enable = true;
+  # System-wide user units also run for lingering service accounts such as hermes.
+  systemd.user.services = {
+    onedrive-launcher.unitConfig.ConditionUser = config.dot.primaryUser;
+    "onedrive@".unitConfig = {
+      ConditionUser = config.dot.primaryUser;
+      ConditionFileNotEmpty = "%h/.config/%i/refresh_token";
+    };
+  };
 
   home-manager.sharedModules = [
     {
