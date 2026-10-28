@@ -45,8 +45,9 @@ in
     # performance improvement for direct-mapped memory-side-cache utilization, reduces the predictability of page allocations
     "page_alloc.shuffle=1"
 
-    # for debugging kernel-level slab issues
+    # Keep slab checks without exposing kernel addresses in diagnostic output.
     "slub_debug=FZP"
+    "hash_pointers=always"
 
     # disable sysrq keys. sysrq is seful for debugging, but also insecure
     "sysrq_always_enabled=0" # 0 | 1 # 0 means disabled
