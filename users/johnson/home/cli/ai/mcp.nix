@@ -29,7 +29,15 @@ in
       enable = true;
       servers = {
         fetch = {
-          command = getExe mcpPkgs.mcp-server-fetch;
+          command = getExe (
+            mcpPkgs.mcp-server-fetch.overridePythonAttrs (old: {
+              pythonRelaxDeps = (old.pythonRelaxDeps or [ ]) ++ [ "mcp" ];
+              postPatch = (old.postPatch or "") + ''
+                substituteInPlace src/mcp_server_fetch/server.py \
+                  --replace-fail McpError MCPError
+              '';
+            })
+          );
         };
 
         filesystem = {
@@ -47,7 +55,11 @@ in
         };
 
         git = {
-          command = getExe mcpPkgs.mcp-server-git;
+          command = getExe (
+            mcpPkgs.mcp-server-git.overridePythonAttrs (old: {
+              pythonRelaxDeps = (old.pythonRelaxDeps or [ ]) ++ [ "mcp" ];
+            })
+          );
         };
 
         tavily = {
