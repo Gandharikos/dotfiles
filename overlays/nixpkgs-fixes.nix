@@ -11,6 +11,11 @@
       })
     ];
 
+    cargo-llvm-cov = prev.cargo-llvm-cov.overrideAttrs (_old: {
+      # Tests segfault in the Nix build sandbox with rustc 1.99.0 / llvm 22.
+      doCheck = false;
+    });
+
     vulkan-validation-layers =
       (final.callPackage (inputs.nixpkgs + "/pkgs/by-name/vu/vulkan-validation-layers/package.nix") { })
       .overrideAttrs
