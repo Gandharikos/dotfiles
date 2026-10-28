@@ -65,34 +65,30 @@ in
   sops.secrets.forgejo-actions-runner-token = {
     sopsFile = "${self}/secrets/services/forgejo.yaml";
     key = "actions-runner-token";
-  };
-
-  sops.templates.forgejo-actions-runner-env = {
-    owner = "root";
-    group = "root";
-    mode = "0400";
-    content = ''
-      TOKEN=${config.sops.placeholder.forgejo-actions-runner-token}
-    '';
-    restartUnits = [ "gitea-runner-athena.service" ];
+    restartUnits = [ "forgejo-runner-athena.service" ];
   };
 
   services.forgejo.settings.actions.ENABLED = true;
 
-  services.gitea-actions-runner = {
+  services.forgejo-runner = {
     package = pkgs.forgejo-runner;
     instances.athena = {
       enable = true;
-      name = "athena";
-      url = "https://${forgejo.hostName}";
-      tokenFile = config.sops.templates.forgejo-actions-runner-env.path;
-      labels = [
-        "docker:docker://catthehacker/ubuntu:act-latest"
-        "ubuntu-latest:docker://catthehacker/ubuntu:act-latest"
-      ];
-      settings.container = {
-        network = "host";
-        options = "--add-host=${forgejo.hostName}:127.0.0.1";
+      secrets.server.connections.default.token_url =
+        config.sops.secrets.forgejo-actions-runner-token.path;
+      settings = {
+        server.connections.default = {
+          url = "https://${forgejo.hostName}";
+          uuid = "7bca46ac-0814-4cc3-b7a9-da1aef1564a1";
+        };
+        runner.labels = [
+          "docker:docker://catthehacker/ubuntu:act-latest"
+          "ubuntu-latest:docker://catthehacker/ubuntu:act-latest"
+        ];
+        container = {
+          network = "host";
+          options = "--add-host=${forgejo.hostName}:127.0.0.1";
+        };
       };
     };
   };
