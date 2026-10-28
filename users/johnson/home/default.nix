@@ -1,4 +1,9 @@
-{ lib, osConfig, ... }:
+{
+  lib,
+  osConfig,
+  pkgs,
+  ...
+}:
 let
   isMinimal = osConfig ? dot && osConfig.dot.profiles.minimal.enable or false;
 in
@@ -75,7 +80,7 @@ in
 
     gui.apps.bitwarden.enable = !isMinimal;
 
-    gui.apps.clash.enable = false;
+    gui.apps.clash.enable = !isMinimal && pkgs.stdenv.hostPlatform.isLinux;
 
     gui.apps.discord.enable = !isMinimal;
 
