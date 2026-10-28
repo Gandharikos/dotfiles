@@ -25,8 +25,10 @@ with osConfig.dot.keyboard.keys;
       enableNushellIntegration = true;
       settings = {
         gui = {
-          authorColors = { };
-          branchColors = { };
+          theme = {
+            authorColors = { };
+            branchColorPatterns = { };
+          };
           scrollHeight = 2;
           scrollPastBottom = true;
           mouseEvents = true;
