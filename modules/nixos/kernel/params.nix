@@ -39,9 +39,6 @@ in
     # that is recoverable. This will make it unrecoverable, and therefore safe to those attacks
     "oops=panic"
 
-    # only allow signed modules
-    "module.sig_enforce=1"
-
     # enable buddy allocator free poisoning
     "page_poison=on"
 
