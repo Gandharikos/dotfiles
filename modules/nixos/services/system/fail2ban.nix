@@ -8,6 +8,8 @@ let
   inherit (lib.options) mkEnableOption;
   cfg = config.dot.services.fail2ban;
   vaultwarden = config.dot.selfhosted.services.vaultwarden;
+  # Follow journal rotation instead of caching filenames that can disappear.
+  systemdBackend = "systemd[rotated=1]";
 in
 {
   options.dot.services.fail2ban = {
@@ -41,7 +43,7 @@ in
           sshd.settings = {
             mode = "aggressive";
             filter = "sshd";
-            backend = "systemd";
+            backend = systemdBackend;
             maxretry = 3;
           };
         }
@@ -56,7 +58,7 @@ in
             };
             settings = {
               port = "80,443,${toString vaultwarden.port}";
-              backend = "systemd";
+              backend = systemdBackend;
               journalmatch = "_SYSTEMD_UNIT=vaultwarden.service";
               banaction = "%(banaction_allports)s";
               maxretry = 3;
@@ -75,7 +77,7 @@ in
             };
             settings = {
               port = "80,443,${toString vaultwarden.port}";
-              backend = "systemd";
+              backend = systemdBackend;
               journalmatch = "_SYSTEMD_UNIT=vaultwarden.service";
               banaction = "%(banaction_allports)s";
               maxretry = 3;
