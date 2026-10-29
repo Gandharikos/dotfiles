@@ -96,8 +96,8 @@ in
         # Dark Reader
         {
           id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
-          version = "4.9.133";
-          hash = "sha256-7jjyDR1QeJ9LSCyaGl2tq1mbhoL9Kn37feIfroVhuRg=";
+          version = "4.9.134";
+          hash = "sha256-hkpzAcaEGzQGbDU3wS6rHBei9MyPJ8XwXs4rEbJhVYY=";
         }
 
         # Vimium C
