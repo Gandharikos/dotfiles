@@ -34,6 +34,44 @@ let
     in
     map mkFile package.rimeFiles ++ map mkDirectory package.rimeDirectories
   ) rimePackages;
+  rimeFiles = {
+    "${cfg.dir}/default.custom.yaml".text = ''
+      patch:
+        __include: rime_ice_suggestion:/
+        "ascii_composer/switch_key/Shift_L": commit_code
+        "ascii_composer/switch_key/Shift_R": noop
+        schema_list:
+          - schema: flypy
+          - schema: rime_ice
+          - schema: yustar
+          - schema: yuming
+    '';
+
+    # These indexes match the pinned Flypy schema's second-candidate and simplification bindings.
+    "${cfg.dir}/flypy.custom.yaml".text = ''
+      patch:
+        "key_binder/bindings/@4/accept": apostrophe
+        "key_binder/bindings/@11/accept": "Control+apostrophe"
+    '';
+
+    "${cfg.dir}/grammar.yaml".source = "${octagramData}/grammar.yaml";
+    "${cfg.dir}/zh-hans-t-essay-bgw.gram".source = "${octagramData}/zh-hans-t-essay-bgw.gram";
+
+    "${cfg.dir}/rime_ice.custom.yaml".text = ''
+      patch:
+        __include: grammar:/hans
+    '';
+  }
+  // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+    ${cfg.dir} = {
+      source = rimeIceData;
+      recursive = true;
+    };
+  }
+  // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+    "${cfg.dir}/rime_ice.dict.yaml".source = "${rimeIceData}/rime_ice.dict.yaml";
+  }
+  // lib.listToAttrs packageFiles;
 in
 {
   options.my.gui.rime = {
@@ -53,43 +91,25 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.file = {
-      "${cfg.dir}/default.custom.yaml".text = ''
-        patch:
-          __include: rime_ice_suggestion:/
-          "ascii_composer/switch_key/Shift_L": commit_code
-          "ascii_composer/switch_key/Shift_R": noop
-          schema_list:
-            - schema: flypy
-            - schema: rime_ice
-            - schema: yustar
-            - schema: yuming
-      '';
-
-      # These indexes match the pinned Flypy schema's second-candidate and simplification bindings.
-      "${cfg.dir}/flypy.custom.yaml".text = ''
-        patch:
-          "key_binder/bindings/@4/accept": apostrophe
-          "key_binder/bindings/@11/accept": "Control+apostrophe"
-      '';
-
-      "${cfg.dir}/grammar.yaml".source = "${octagramData}/grammar.yaml";
-      "${cfg.dir}/zh-hans-t-essay-bgw.gram".source = "${octagramData}/zh-hans-t-essay-bgw.gram";
-
-      "${cfg.dir}/rime_ice.custom.yaml".text = ''
-        patch:
-          __include: grammar:/hans
-      '';
-    }
-    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
-      ${cfg.dir} = {
-        source = rimeIceData;
-        recursive = true;
+    home.file =
+      rimeFiles
+      // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+        "${cfg.dir}/.nix-rime-inputs" = {
+          text = lib.concatMapStringsSep "\n" (name: "${name} ${config.home.file.${name}.source}") (
+            builtins.attrNames rimeFiles
+          );
+          onChange = ''
+            rime_build="${config.home.homeDirectory}"/${lib.escapeShellArg cfg.dir}/build
+            squirrel='/Library/Input Methods/Squirrel.app/Contents/MacOS/Squirrel'
+            if [[ -x "$squirrel" ]]; then
+              # Store inputs share a fixed mtime, so Rime may reuse stale compiled YAML.
+              if [[ -d "$rime_build" ]]; then
+                run ${pkgs.findutils}/bin/find "$rime_build" -maxdepth 1 -type f -name '*.yaml' -exec rm -f -- {} +
+              fi
+              run "$squirrel" --reload
+            fi
+          '';
+        };
       };
-    }
-    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
-      "${cfg.dir}/rime_ice.dict.yaml".source = "${rimeIceData}/rime_ice.dict.yaml";
-    }
-    // lib.listToAttrs packageFiles;
   };
 }
