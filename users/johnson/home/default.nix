@@ -131,7 +131,7 @@ in
     mcp.enable = !isMinimal;
 
     mux = {
-      default = if isMinimal then null else "tmux";
+      default = if isMinimal then null else "herdr";
       autoStart = !isMinimal;
     };
 
@@ -160,6 +160,8 @@ in
 
     polymarket.enable = !isMinimal;
 
+    rex.enable = !isMinimal;
+
     ripgrep.enable = true;
 
     security.gpg.enableSshSupport = osConfig.dot.yubikey.enable;
@@ -174,6 +176,8 @@ in
     tailcat.enable = !isMinimal;
 
     tealdeer.enable = !isMinimal;
+
+    tmux.enable = !isMinimal;
 
     topgrade.enable = !isMinimal;
 

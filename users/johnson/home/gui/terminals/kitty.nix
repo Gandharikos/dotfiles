@@ -38,6 +38,8 @@ in
         background_opacity = terminal.opacity;
         background_blur = 64;
         enabled_layouts = "Splits,Stack";
+        allow_remote_control = "socket-only";
+        listen_on = "unix:\${HOME}/.cache/kitty-{kitty_pid}";
         hide_window_decorations = "yes";
         tab_bar_style = "powerline";
         tab_separator = " ";

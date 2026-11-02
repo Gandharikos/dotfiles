@@ -116,7 +116,7 @@ return {
     end,
   },
   {
-    "mrjones2014/smart-splits.nvim",
+    "smart-splits-nvim/smart-splits.nvim",
     optional = true,
     keys = function(_, keys)
       return replace_keys(keys, {
@@ -218,12 +218,6 @@ return {
           mode = { "n", "t" },
         },
       })
-    end,
-    opts = function(_, opts)
-      opts = opts or {}
-      opts.resize_mode = opts.resize_mode or {}
-      opts.resize_mode.resize_keys = { "n", "e", "i", "o" }
-      return opts
     end,
   },
   {

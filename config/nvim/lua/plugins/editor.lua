@@ -158,11 +158,18 @@ return {
     opts = { use_default_keymaps = false, max_join_length = 150 },
   },
   {
-    "mrjones2014/smart-splits.nvim",
-    build = "./kitty/install-kittens.bash",
+    "smart-splits-nvim/smart-splits.nvim",
+    version = "3.0.0",
     lazy = false,
+    dependencies = {
+      { "smart-splits-nvim/backend-tmux", main = "smart-splits-backend-tmux", opts = {} },
+      { "smart-splits-nvim/backend-zellij-lua", main = "smart-splits-backend-zellij-lua", opts = {} },
+      { "smart-splits-nvim/backend-kitty", main = "smart-splits-backend-kitty", opts = {} },
+      { "smart-splits-nvim/backend-wezterm", main = "smart-splits-backend-wezterm", opts = {} },
+      { "adriankarlen/smart-splits-backend-herdr", main = "smart-splits-backend-herdr", opts = {} },
+      { "rawnly/smart-splits-backend-rex", main = "smart-splits-backend-rex", opts = {} },
+    },
     keys = {
-      { "<leader>wr", "<Cmd>SmartResizeMode<CR>", mode = "n", desc = "Resize mode" },
       -- resizing splits
       {
         mode = { "n", "t" },
@@ -271,24 +278,20 @@ return {
         "qf",
       },
       ignored_buftypes = { "NvimTree", "neo-tree" },
-      default_amount = 3,
-      move_cursor_same_row = false,
-      resize_mode = {
-        quit_key = "<ESC>",
-        resize_keys = { "h", "j", "k", "l" },
-        silent = false,
-        hooks = {
-          on_enter = function()
-            vim.notify("Entering resize mode")
-          end,
-          on_leave = function()
-            vim.notify("Exiting resize mode, bye")
-          end,
-        },
+      resize = {
+        amount = 3,
+        ignored_events = { "BufEnter", "WinEnter" },
       },
-      ignored_events = {
-        "BufEnter",
-        "WinEnter",
+      move = { at_edge = "stop", same_row = false },
+      mux = {
+        backend = {
+          "smart-splits-backend-herdr",
+          "smart-splits-backend-tmux",
+          "smart-splits-backend-zellij-lua",
+          "smart-splits-backend-rex",
+          "smart-splits-backend-kitty",
+          "smart-splits-backend-wezterm",
+        },
       },
     },
   },

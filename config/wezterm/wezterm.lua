@@ -6,6 +6,14 @@ wezterm.log_info("reloading")
 require("tabs").setup(config)
 require("mouse").setup(config)
 require("keys").setup(config)
+wezterm.plugin.require("https://github.com/smart-splits-nvim/backend-wezterm").apply_to_config(config, {
+  direction_keys = {
+    move = { "n", "e", "i", "o" },
+    resize = { "LeftArrow", "DownArrow", "UpArrow", "RightArrow" },
+  },
+  modifiers = { move = "CTRL", resize = "CTRL" },
+  at_edge = "stop",
+})
 require("links").setup(config)
 require("theme").setup(config)
 

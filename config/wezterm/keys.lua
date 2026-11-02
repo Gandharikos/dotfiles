@@ -93,14 +93,6 @@ function M.setup(config)
     -- { mods = "CTRL", key = "i", action = act.SendString("\x1b[105;5u") },
     -- { mods = "CTRL", key = "Enter", action = act.SendString("\x1b[105;5u") },
     -- { mods = "SHIFT", key = "\r", action = act.SendString("\033[\015;2u") },
-    M.smart_nav("resize", "CTRL", "LeftArrow", "Left"),
-    M.smart_nav("resize", "CTRL", "RightArrow", "Right"),
-    M.smart_nav("resize", "CTRL", "UpArrow", "Up"),
-    M.smart_nav("resize", "CTRL", "DownArrow", "Down"),
-    M.smart_nav("move", "CTRL", "n", "Left"),
-    M.smart_nav("move", "CTRL", "e", "Down"),
-    M.smart_nav("move", "CTRL", "i", "Up"),
-    M.smart_nav("move", "CTRL", "o", "Right"),
   }
   config.key_tables = {
     copy_mode = {
@@ -343,40 +335,6 @@ function M.setup(config)
       { key = "UpArrow", mods = "NONE", action = act.CopyMode("MoveUp") },
       { key = "DownArrow", mods = "NONE", action = act.CopyMode("MoveDown") },
     },
-  }
-end
-
-function M.smart_nav(resize_or_move, mods, key, dir)
-  local event = "smart_" .. resize_or_move .. "_" .. dir
-  wezterm.on(event, function(win, pane)
-    if M.is_vim(pane) then
-      -- pass the keys through to vim/nvim
-      win:perform_action({ SendKey = { key = key, mods = mods } }, pane)
-    else
-      if resize_or_move == "resize" then
-        win:perform_action({ AdjustPaneSize = { dir, 3 } }, pane)
-      else
-        local panes = pane:tab():panes_with_info()
-        local is_zoomed = false
-        for _, p in ipairs(panes) do
-          if p.is_zoomed then
-            is_zoomed = true
-          end
-        end
-        wezterm.log_info("is_zoomed: ", tostring(is_zoomed))
-        if is_zoomed then
-          dir = dir == "Up" or dir == "Right" and "Next" or "Prev"
-          wezterm.log_info("dir: " .. dir)
-        end
-        win:perform_action({ ActivatePaneDirection = dir }, pane)
-        win:perform_action({ SetPaneZoomState = is_zoomed }, pane)
-      end
-    end
-  end)
-  return {
-    key = key,
-    mods = mods,
-    action = wezterm.action.EmitEvent(event),
   }
 end
 

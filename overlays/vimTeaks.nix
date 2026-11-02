@@ -1,17 +1,81 @@
 _: _final: prev: {
   vimPlugins = prev.vimPlugins.extend (
     _f: p: {
-      # Pin smart-splits.nvim to v2: v3.0.0 removed built-in multiplexer
-      # backends and smart-splits.tmux into separate repositories.
       smart-splits-nvim = p.smart-splits-nvim.overrideAttrs (_old: {
-        version = "2.1.0-unstable-2026-09-07";
+        version = "3.0.0";
         src = prev.fetchFromGitHub {
           owner = "smart-splits-nvim";
           repo = "smart-splits.nvim";
-          rev = "ec76708f1617ef9e2ac353357fe52d2c997a0f06";
-          hash = "sha256-wTNNFmVARLSbhYvr7dkPc+9jJBLEeRah0JB3j4W/7uM=";
+          rev = "v3.0.0";
+          hash = "sha256-IWkFxNGmxwHx9KFg9z9EnWhy3yp+kNMXKDmB0Qhxuic=";
         };
       });
+
+      smart-splits-backend-tmux = prev.vimUtils.buildVimPlugin {
+        pname = "smart-splits-backend-tmux";
+        version = "unstable-2026-11-02";
+        src = prev.fetchFromGitHub {
+          owner = "smart-splits-nvim";
+          repo = "backend-tmux";
+          rev = "9e9e6aa9b3eb7a8d3896a993611622ac97abff52";
+          hash = "sha256-RcJdM6wFHZOEOK+cXVIT10anktqGgIilPmojFpdY+4g=";
+        };
+      };
+
+      smart-splits-backend-zellij-lua = prev.vimUtils.buildVimPlugin {
+        pname = "smart-splits-backend-zellij-lua";
+        version = "unstable-2026-11-02";
+        src = prev.fetchFromGitHub {
+          owner = "smart-splits-nvim";
+          repo = "backend-zellij-lua";
+          rev = "4e3e588795efb95548dd2ebeaf385a7823821ceb";
+          hash = "sha256-QAKX3jHYd2xHjhs8uf44OB04Q+Gl+wXVZOqS09IcRSk=";
+        };
+      };
+
+      smart-splits-backend-kitty = prev.vimUtils.buildVimPlugin {
+        pname = "smart-splits-backend-kitty";
+        version = "unstable-2026-11-02";
+        src = prev.fetchFromGitHub {
+          owner = "smart-splits-nvim";
+          repo = "backend-kitty";
+          rev = "c8dddf4cea5ce84f2d3d5310acb40565845f19b3";
+          hash = "sha256-Xxkji+1yNbYJeBhasPuiMQY5Ba1yR3fPbGPoq/rPeFs=";
+        };
+      };
+
+      smart-splits-backend-wezterm = prev.vimUtils.buildVimPlugin {
+        pname = "smart-splits-backend-wezterm";
+        version = "unstable-2026-11-02";
+        src = prev.fetchFromGitHub {
+          owner = "smart-splits-nvim";
+          repo = "backend-wezterm";
+          rev = "ae840db696791f638c190c3e0534d2ddfcd5e6a7";
+          hash = "sha256-9kDZAoYqQMtSGAE9w70UtkW/DLUmmwVAwCxDxk8om1E=";
+        };
+      };
+
+      smart-splits-backend-herdr = prev.vimUtils.buildVimPlugin {
+        pname = "smart-splits-backend-herdr";
+        version = "unstable-2026-10-19";
+        src = prev.fetchFromGitHub {
+          owner = "adriankarlen";
+          repo = "smart-splits-backend-herdr";
+          rev = "da1e50ae7bec7a7c2781aaf5a531eff350bdab20";
+          hash = "sha256-dLWDAWvWvLT4pZepKj4f38pQGoQjo9UpQkCiAUeBkdU=";
+        };
+      };
+
+      smart-splits-backend-rex = prev.vimUtils.buildVimPlugin {
+        pname = "smart-splits-backend-rex";
+        version = "unstable-2026-11-02";
+        src = prev.fetchFromGitHub {
+          owner = "rawnly";
+          repo = "smart-splits-backend-rex";
+          rev = "45785cf5d15dd5e0e6cf25ab9682a146acb93379";
+          hash = "sha256-lqLdyVticzh0uv0dX1LBhfep3doRpKuidkp8QbzVG6Y=";
+        };
+      };
 
       R-nvim = prev.vimUtils.buildVimPlugin {
         pname = "R.nvim";

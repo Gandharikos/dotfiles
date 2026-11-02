@@ -2067,6 +2067,23 @@
         "type": "github"
       }
     },
+    "rex": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793420730,
+        "narHash": "sha256-FeZ29POvbzzKRmiMbqRVqfi/9QUtcs2jgSi/GNixkg0=",
+        "type": "tarball",
+        "url": "https://pkgs.superlogical.com/rex/nix/snapshot/0.0.1793420730-g6d0d9a.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://pkgs.superlogical.com/rex/nix/snapshot.tar.gz"
+      }
+    },
     "root": {
       "inputs": {
         "asus-dialpad-driver": "asus-dialpad-driver",
@@ -2113,6 +2130,7 @@
         "omniwm": "omniwm",
         "pre-commit-hooks": "pre-commit-hooks",
         "preservation": "preservation",
+        "rex": "rex",
         "simple-nixos-mailserver": "simple-nixos-mailserver",
         "sops": "sops",
         "spicetify-nix": "spicetify-nix",

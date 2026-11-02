@@ -106,6 +106,12 @@ in
         treesj
         nvim-spider
         smart-splits-nvim
+        smart-splits-backend-tmux
+        smart-splits-backend-zellij-lua
+        smart-splits-backend-kitty
+        smart-splits-backend-wezterm
+        smart-splits-backend-herdr
+        smart-splits-backend-rex
         R-nvim
         dropbar-nvim
         git-blame-nvim

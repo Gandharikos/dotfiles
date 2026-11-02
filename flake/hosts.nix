@@ -23,6 +23,8 @@
         if class == "nixos" then
           [
             inputs.home-manager.nixosModules.home-manager
+            inputs.rex.nixosModules.default
+            { home-manager.sharedModules = [ inputs.rex.homeManagerModules.default ]; }
             inputs.disko.nixosModules.disko
             # inputs.niri.nixosModules.niri
             inputs.sops.nixosModules.sops
@@ -30,6 +32,7 @@
         else if class == "darwin" then
           [
             inputs.home-manager.darwinModules.home-manager
+            { home-manager.sharedModules = [ inputs.rex.homeManagerModules.default ]; }
             inputs.sops.darwinModules.sops
           ]
         else

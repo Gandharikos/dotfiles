@@ -10,9 +10,9 @@ let
   isColemak = osConfig.dot.keyboard.layout == "colemak";
   smartSplits = pkgs.tmuxPlugins.mkTmuxPlugin {
     pluginName = "smart-splits";
-    version = pkgs.vimPlugins.smart-splits-nvim.version;
+    version = pkgs.vimPlugins.smart-splits-backend-tmux.version;
     rtpFilePath = "smart-splits.tmux";
-    src = pkgs.vimPlugins.smart-splits-nvim.src;
+    src = pkgs.vimPlugins.smart-splits-backend-tmux.src;
   };
 
   clipboardCmd = if isDarwin then "pbcopy" else "${lib.getExe' pkgs.wl-clipboard "wl-copy"}";
@@ -59,7 +59,7 @@ in
     {
       plugin = smartSplits;
       extraConfig = with osConfig.dot.keyboard.keys; ''
-        set -g @smart-splits_no_wrap \'\'
+        set -g @smart-splits_at_edge 'stop'
         set -g @smart-splits_move_left_key  'C-${h}' # key-mapping for navigation.
         set -g @smart-splits_move_down_key  'C-${j}' #  --"--
         set -g @smart-splits_move_up_key    'C-${k}' #  --"--

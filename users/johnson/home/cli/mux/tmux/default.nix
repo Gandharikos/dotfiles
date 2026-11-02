@@ -50,6 +50,7 @@ in
              and test -z "$INSIDE_PYCHARM"
              and test -z "$ZED_TERMINAL"
              and test -z "$ZELLIJ_SESSION_NAME"
+             and test "$TERM_PROGRAM" != "rex"
              and test "$TERM_PROGRAM" != "vscode"
             tmux attach-session; or tmux
           end
@@ -71,6 +72,7 @@ in
             and (($env.INSIDE_PYCHARM? | default "") | is-empty)
             and (($env.ZED_TERMINAL? | default "") | is-empty)
             and (($env.ZELLIJ_SESSION_NAME? | default "") | is-empty)
+            and (($env.TERM_PROGRAM? | default "") != "rex")
             and (($env.TERM_PROGRAM? | default "") != "vscode")
           ) {
             tmux attach-session
@@ -100,6 +102,7 @@ in
               && [[ -z "$INSIDE_EMACS" ]] \
               && [[ -z "$ZED_TERMINAL" ]] \
               && [[ -z "$ZELLIJ_SESSION_NAME" ]] \
+              && [[ "$TERM_PROGRAM" != "rex" ]] \
               && [[ "$TERM_PROGRAM" != "vscode" ]]
             then
               tmux attach-session || tmux;
