@@ -105,11 +105,26 @@ in
         winshift-nvim
         treesj
         nvim-spider
-        smart-splits-nvim
-        smart-splits-backend-tmux
-        smart-splits-backend-zellij-lua
-        smart-splits-backend-kitty
-        smart-splits-backend-wezterm
+        {
+          name = "smart-splits.nvim";
+          path = smart-splits-nvim;
+        }
+        {
+          name = "backend-tmux";
+          path = smart-splits-backend-tmux;
+        }
+        {
+          name = "backend-zellij-lua";
+          path = smart-splits-backend-zellij-lua;
+        }
+        {
+          name = "backend-kitty";
+          path = smart-splits-backend-kitty;
+        }
+        {
+          name = "backend-wezterm";
+          path = smart-splits-backend-wezterm;
+        }
         smart-splits-backend-herdr
         smart-splits-backend-rex
         R-nvim
