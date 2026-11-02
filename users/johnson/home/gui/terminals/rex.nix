@@ -32,17 +32,21 @@ in
 
         dofile("${pkgs.vimPlugins.smart-splits-backend-rex}/rex/lua/smart-splits-rex/init.lua").setup({ resize_amount = 3 })
 
+        local function is_vim_or_unknown()
+          local process = rex.block.call("com.superlogical.terminal", "process", {})
+          local name = process and process.foreground and process.foreground.name
+          local vim_processes = {
+            vim = true, nvim = true, view = true, gvim = true,
+            vimdiff = true, nvimdiff = true,
+          }
+          return not name or vim_processes[name]
+        end
+
         rex.action{
           name = "smart_close_pane",
           title = "Close Pane (unless in Vim)",
           run = function()
-            local process = rex.block.call("com.superlogical.terminal", "process", {})
-            local name = process and process.foreground and process.foreground.name
-            local vim_processes = {
-              vim = true, nvim = true, view = true, gvim = true,
-              vimdiff = true, nvimdiff = true,
-            }
-            if not name or vim_processes[name] then
+            if is_vim_or_unknown() then
               rex.client.queue("pane.send_key", { key = "ctrl+q" })
             else
               rex.client.queue("pane.close")
@@ -50,6 +54,13 @@ in
           end,
         }
         rex.bind("ctrl+q", "smart_close_pane")
+
+        ${bind "f" "client.find.open"}
+
+        rex.bind("${prefix}p", "client.mode.enter", { name = "prompt" })
+        rex.bind("prompt/j", "client.prompt.next")
+        rex.bind("prompt/k", "client.prompt.previous")
+        rex.bind("prompt/escape", "client.mode.exit")
 
         -- Tmux prefix: Ctrl+A. Press it twice to send Ctrl+A to the terminal.
         rex.bind("${prefix}ctrl+a", "pane.send_key", { key = "ctrl+a" })
