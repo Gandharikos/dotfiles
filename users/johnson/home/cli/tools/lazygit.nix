@@ -19,6 +19,23 @@ with osConfig.dot.keyboard.keys;
     enable = mkEnableOption "lazygit";
   };
 
+  # The theme still supplies the pre-0.66 key. Migrate it before writing read-only YAML.
+  options.programs.lazygit.settings = lib.mkOption {
+    apply =
+      settings:
+      if settings ? gui.authorColors then
+        settings
+        // {
+          gui = removeAttrs settings.gui [ "authorColors" ] // {
+            theme = (settings.gui.theme or { }) // {
+              authorColors = settings.gui.authorColors // (settings.gui.theme.authorColors or { });
+            };
+          };
+        }
+      else
+        settings;
+  };
+
   config = mkIf cfg.enable {
     programs.lazygit = {
       enable = true;
@@ -26,7 +43,6 @@ with osConfig.dot.keyboard.keys;
       settings = {
         gui = {
           theme = {
-            authorColors = { };
             branchColorPatterns = { };
           };
           scrollHeight = 2;
