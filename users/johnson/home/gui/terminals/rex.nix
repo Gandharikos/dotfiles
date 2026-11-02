@@ -27,7 +27,8 @@ in
     programs.rex = {
       enable = true;
       config = ''
-        rex.bind("ctrl+space", "client.palette.toggle")
+        ${bind "space" "client.palette.toggle"}
+        rex.bind("ctrl+enter", "pane.split.auto")
 
         dofile("${pkgs.vimPlugins.smart-splits-backend-rex}/rex/lua/smart-splits-rex/init.lua").setup({ resize_amount = 3 })
 
@@ -55,22 +56,25 @@ in
         ${bind "ctrl+r" "client.config.reload"}
 
         ${bind "t" "client.tab.new"}
+        for index = 1, 9 do
+          rex.bind("${prefix}" .. index, "client.tab.goto", { index = index })
+        end
+        ${bind "shift+g" "pane.go_to_directory"}
         ${bind "q" "client.tab.close"}
         ${bind "shift+q" "session.close"}
-        ${bind "backspace" "session.close"}
         ${bind "[" "client.tab.previous"}
         ${bind "]" "client.tab.next"}
         ${bind "shift+[" "client.tab.move.backward"}
         ${bind "shift+]" "client.tab.move.forward"}
         ${bind "s" "session.switch"}
-        ${bind "space" "session.switch"}
         ${bind "shift+s" "session.new"}
         ${bind "r" "session.refresh"}
         ${bind "tab" "session.previous"}
         ${bind "shift+tab" "session.next"}
         ${bind "z" "pane.zoom"}
         ${bind "x" "pane.close"}
-        ${bind "p" "pane.focus_next"}
+        ${bind "-" "pane.focus_previous"}
+        ${bind "=" "pane.focus_next"}
         ${bind "b" "pane.balance"}
         ${bind "enter" "pane.float"}
         ${bind "/" "client.sidebar.toggle"}
