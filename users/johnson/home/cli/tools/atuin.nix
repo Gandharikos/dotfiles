@@ -1,6 +1,5 @@
 {
   config,
-  osConfig,
   lib,
   pkgs,
   ...
@@ -39,11 +38,6 @@ in
 {
   options.my.atuin = {
     enable = mkEnableOption "atuin";
-    enableDesktop = mkEnableOption "atuin desktop" // {
-      internal = true;
-      readOnly = true;
-      default = osConfig.dot.gui.enable;
-    };
     autoLogin = mkEnableOption "atuin auto login";
   };
 
@@ -97,11 +91,6 @@ in
         atuin_keys = { };
       };
     }
-    (mkIf cfg.enableDesktop {
-      home.packages = [
-        pkgs.atuin-desktop
-      ];
-    })
     (mkIf isDarwin {
       # On macOS, use a custom LaunchAgent that unlinks a stale socket
       # before starting the daemon. Disable the built-in daemon unit to avoid
