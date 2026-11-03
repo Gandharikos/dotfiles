@@ -191,6 +191,8 @@ in
 
     zk.enable = !isMinimal;
 
+    zlib.enable = !isMinimal;
+
     zoxide.enable = true;
     # keep-sorted end
   };
