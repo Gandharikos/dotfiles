@@ -68,12 +68,12 @@ _: _final: prev: {
 
       smart-splits-backend-rex = prev.vimUtils.buildVimPlugin {
         pname = "smart-splits-backend-rex";
-        version = "unstable-2026-11-02";
+        version = "unstable-2026-11-03";
         src = prev.fetchFromGitHub {
-          owner = "rawnly";
+          owner = "Gandharikos";
           repo = "smart-splits-backend-rex";
-          rev = "45785cf5d15dd5e0e6cf25ab9682a146acb93379";
-          hash = "sha256-lqLdyVticzh0uv0dX1LBhfep3doRpKuidkp8QbzVG6Y=";
+          rev = "80aef6400c57a844d381ed602f1e5b04ed58d955";
+          hash = "sha256-BEv3y9Bvsc7P0fWFsl9QvT9cnTEJRsvIMLBkyMPFFRo=";
         };
       };
 
