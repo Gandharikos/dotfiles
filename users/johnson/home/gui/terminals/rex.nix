@@ -88,6 +88,7 @@ in
         ${bind "=" "pane.focus_next"}
         ${bind "b" "pane.balance"}
         ${bind "enter" "pane.float"}
+        ${bind "m" "pane.minimize_floating"}
         ${bind "/" "client.sidebar.toggle"}
         ${bind "." "client.sidebar.activity.toggle"}
 
