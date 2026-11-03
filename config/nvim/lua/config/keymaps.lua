@@ -6,6 +6,13 @@ map("x", "#", [[y?\V<C-R>=escape(@", '?\')<CR><CR>]])
 -- select all
 map({ "n", "x", "i" }, "<C-a>", "<cmd>normal! ggVG<cr>")
 
+map({ "i", "n", "s" }, "<esc>", function()
+  vim.cmd("noh")
+  LazyVim.cmp.actions.snippet_stop()
+  vim.api.nvim_buf_clear_namespace(0, vim.api.nvim_create_namespace("nvim.multicursor"), 0, -1)
+  return "<esc>"
+end, { expr = true, desc = "Escape and Clear Search / Multicursors" })
+
 -- inc/dec number
 map({ "n", "v" }, "+", "<C-a>", { desc = "Increment number" })
 map({ "n", "v" }, "-", "<C-x>", { desc = "Decrement number" })

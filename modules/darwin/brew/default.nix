@@ -34,8 +34,8 @@
       "homebrew/homebrew-cask" = pkgs.fetchFromGitHub {
         owner = "homebrew";
         repo = "homebrew-cask";
-        rev = "75ef427de1fe55af91b43e19da5bb6646b5dae41";
-        hash = "sha256-Wt9sns5IPQAWxo8o5KmrzGhhOr2hyxvVBJhHmAFZtx8=";
+        rev = "609279b03b71da0c9c956d1bd6caa3d955b2cb3a";
+        hash = "sha256-aQEB25d/A59KfFFg6JcoeeS13RizsonDwVJEuiDePUU=";
       };
       "nikitabobko/homebrew-tap" = pkgs.fetchFromGitHub {
         owner = "nikitabobko";
@@ -118,8 +118,9 @@
       "eudic" # dictionary
       "ghostty" # terminal
       "granola"
+      "herdr-app"
       "keycastr" # show keystrokes on screen
-      "linear-linear"
+      "linear"
       "loom"
       "macfuse" # required by veracrypt
       "mullvad-vpn" # vpn
