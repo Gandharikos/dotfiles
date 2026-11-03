@@ -94,6 +94,7 @@ in
         # other
         copy-on-select = "clipboard";
         # shell-integration-features = "cursor,sudo,no-title,ssh-env";
+        shell-integration-features = "ssh-env,ssh-terminfo";
         quit-after-last-window-closed = !systemd.enable;
         # quit-after-last-window-closed-delay = "10m";
         confirm-close-surface = false;
