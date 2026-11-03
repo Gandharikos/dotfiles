@@ -31,6 +31,7 @@ in
     programs = {
       fish.interactiveShellInit = mkIf autoStart ''
         if not set -q HERDR_ENV
+           and not set -q HC_TERMINAL_ID
            and not set -q TMUX
            and test -z "$ZELLIJ_SESSION_NAME"
            and test -z "$REX_SESSION"
@@ -52,7 +53,7 @@ in
       '';
 
       bash.initExtra = mkIf autoStart ''
-        if [[ $- == *i* && -t 0 && -z "$HERDR_ENV" && -z "$TMUX" \
+        if [[ $- == *i* && -t 0 && -z "$HERDR_ENV" && -z "$HC_TERMINAL_ID" && -z "$TMUX" \
           && -z "$ZELLIJ_SESSION_NAME" && -z "$REX_SESSION" \
           && -z "$SSH_TTY" && -z "$SSH_CONNECTION" && -z "$SSH_CLIENT" \
           && -z "$WSL_DISTRO_NAME" && -z "$INSIDE_EMACS" && -z "$EMACS" \
@@ -64,7 +65,7 @@ in
       '';
 
       zsh.initContent = mkIf autoStart (mkBefore ''
-        if [[ -o interactive && -t 0 && -z "$HERDR_ENV" && -z "$TMUX" \
+        if [[ -o interactive && -t 0 && -z "$HERDR_ENV" && -z "$HC_TERMINAL_ID" && -z "$TMUX" \
           && -z "$ZELLIJ_SESSION_NAME" && -z "$REX_SESSION" \
           && -z "$SSH_TTY" && -z "$SSH_CONNECTION" && -z "$SSH_CLIENT" \
           && -z "$WSL_DISTRO_NAME" && -z "$INSIDE_EMACS" && -z "$EMACS" \
@@ -79,6 +80,7 @@ in
         if (
           $nu.is-interactive
           and (($env.HERDR_ENV? | default "") | is-empty)
+          and (($env.HC_TERMINAL_ID? | default "") | is-empty)
           and (($env.TMUX? | default "") | is-empty)
           and (($env.ZELLIJ_SESSION_NAME? | default "") | is-empty)
           and (($env.REX_SESSION? | default "") | is-empty)
@@ -103,6 +105,8 @@ in
         enable = true;
         package = pkgs.herdr;
         settings = {
+          onboarding = false;
+
           keys = {
             prefix = "ctrl+a";
             detach = "prefix+d";
