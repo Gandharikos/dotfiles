@@ -2,6 +2,7 @@
   config,
   osConfig,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -9,13 +10,14 @@ let
   inherit (config.home) homeDirectory;
   cfg = config.my.ssh;
   inherit (cfg.gpgAgentForwarding) socketDir;
-  gpgAgentSocketDir = socketDir;
-  gpgAgentExtraSocket = "${gpgAgentSocketDir}/S.gpg-agent.extra";
-  gpgAgentSshSocket = "${gpgAgentSocketDir}/S.gpg-agent.ssh";
-  remoteGpgAgentSocket = "${gpgAgentSocketDir}/S.gpg-agent";
+  localGpgAgentSocketDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "${homeDirectory}/.gnupg" else socketDir;
+  remoteGpgAgentSocket = "${socketDir}/S.gpg-agent";
   gpgAgentForwardingSettings = {
-    IdentityAgent = mkDefault gpgAgentSshSocket;
-    RemoteForward = mkDefault "${remoteGpgAgentSocket} ${gpgAgentExtraSocket}";
+    IdentityAgent = mkDefault "${localGpgAgentSocketDir}/S.gpg-agent.ssh";
+    RemoteForward = mkDefault "${remoteGpgAgentSocket} ${localGpgAgentSocketDir}/S.gpg-agent.extra";
+    ExitOnForwardFailure = mkDefault true;
+    StreamLocalBindUnlink = mkDefault true;
   };
   gpgAgentForwardingHosts =
     cfg.gpgAgentForwarding.hosts
