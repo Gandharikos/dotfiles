@@ -29,6 +29,8 @@ let
     name = "codex";
     runtimeInputs = [ pkgs.coreutils ];
     meta = pkgs.codex.meta;
+    # Home Manager gates plugin and config support on the package version.
+    derivationArgs = { inherit (pkgs.codex) version; };
     text = ''
       launchDirectory="$PWD"
       expectsDirectory=false
@@ -106,6 +108,8 @@ in
   config = mkIf cfg.enable {
     programs.codex = {
       enable = true;
+      # Preserve settings and plugin registrations written by Codex itself.
+      mutableSettings = true;
       enableMcpIntegration = mcpModuleEnabled;
       package = codexWithTrustedDevProjects;
 
