@@ -11,6 +11,7 @@ let
   selfhosted = config.dot.selfhosted;
   inherit (selfhosted) domain;
   secretsFile = "${self}/secrets/services/mailserver.yaml";
+  accountSecretsFile = "${self}/secrets/services/mailserver-accounts.yaml";
   acmeWebroot = "/var/lib/acme/acme-challenge";
   relayEnabled = cfg.delivery.mode == "relay";
   relayHost = "[${cfg.delivery.relay.host}]:${toString cfg.delivery.relay.port}";
@@ -103,6 +104,14 @@ in
           sopsFile = secretsFile;
           key = "johnson";
         };
+        mailserver-jobs = {
+          sopsFile = accountSecretsFile;
+          key = "jobs";
+        };
+        mailserver-signup = {
+          sopsFile = accountSecretsFile;
+          key = "signup";
+        };
         mailserver-ai = {
           sopsFile = secretsFile;
           key = "ai";
@@ -178,6 +187,14 @@ in
               "postmaster"
               "postmaster@${domain}"
             ];
+          };
+
+          "jobs@${domain}" = {
+            passwordFile = config.sops.secrets.mailserver-jobs.path;
+          };
+
+          "signup@${domain}" = {
+            passwordFile = config.sops.secrets.mailserver-signup.path;
           };
 
           "ai@${domain}" = {
@@ -328,6 +345,16 @@ in
           message = "dot.selfhosted.services.mailserver.delivery.relay.username must be set when delivery.mode is relay.";
         }
       ];
+
+      # The policy daemon must be able to bind its Unix socket after the socket unit creates its directory.
+      systemd.services.postfix-tlspol = {
+        requires = [ "postfix-tlspol.socket" ];
+        serviceConfig.RestrictAddressFamilies = mkForce [
+          "AF_UNIX"
+          "AF_INET"
+          "AF_INET6"
+        ];
+      };
 
       systemd.services.postfix-relay-setup = mkIf relayEnabled {
         description = "Setup Postfix SMTP relay credentials";
