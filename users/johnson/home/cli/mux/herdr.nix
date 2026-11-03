@@ -103,35 +103,62 @@ in
         enable = true;
         package = pkgs.herdr;
         settings = {
-          keys.command = with osConfig.dot.keyboard.keys; [
-            {
-              key = "ctrl+${h}";
-              type = "plugin_action";
-              command = "smart-splits-backend-herdr.left";
-              description = "navigate left (neovim/herdr)";
-            }
-            {
-              key = "ctrl+${j}";
-              type = "plugin_action";
-              command = "smart-splits-backend-herdr.down";
-              description = "navigate down (neovim/herdr)";
-            }
-            {
-              key = "ctrl+${k}";
-              type = "plugin_action";
-              command = "smart-splits-backend-herdr.up";
-              description = "navigate up (neovim/herdr)";
-            }
-            {
-              key = "ctrl+${l}";
-              type = "plugin_action";
-              command = "smart-splits-backend-herdr.right";
-              description = "navigate right (neovim/herdr)";
-            }
-          ];
-
-          theme = {
-            name = "tokyo-night";
+          keys = {
+            prefix = "ctrl+a";
+            detach = "prefix+d";
+            reload_config = "prefix+ctrl+r";
+            settings = "prefix+comma";
+            workspace_picker = "prefix+s";
+            goto = "prefix+w";
+            close_workspace = "prefix+shift+q";
+            new_tab = "prefix+t";
+            close_tab = "prefix+q";
+            previous_tab = "prefix+[";
+            next_tab = "prefix+]";
+            move_tab_previous = "prefix+shift+[";
+            move_tab_next = "prefix+shift+]";
+            copy_mode = "prefix+esc";
+            cycle_pane_previous = "prefix+minus";
+            cycle_pane_next = [
+              "prefix+p"
+              "prefix+="
+            ];
+            toggle_sidebar = [
+              "prefix+b"
+              "prefix+slash"
+            ];
+            focus_pane_left = "prefix+left";
+            focus_pane_down = "prefix+down";
+            focus_pane_up = "prefix+up";
+            focus_pane_right = "prefix+right";
+            split_vertical = "prefix+${osConfig.dot.keyboard.keys.l}";
+            split_horizontal = "prefix+${osConfig.dot.keyboard.keys.j}";
+            command = with osConfig.dot.keyboard.keys; [
+              {
+                key = "ctrl+${h}";
+                type = "plugin_action";
+                command = "smart-splits-backend-herdr.left";
+                description = "navigate left (neovim/herdr)";
+              }
+              {
+                key = "ctrl+${j}";
+                type = "plugin_action";
+                command = "smart-splits-backend-herdr.down";
+                description = "navigate down (neovim/herdr)";
+              }
+              {
+                key = "ctrl+${k}";
+                type = "plugin_action";
+                command = "smart-splits-backend-herdr.up";
+                description = "navigate up (neovim/herdr)";
+              }
+              {
+                key = "ctrl+${l}";
+                type = "plugin_action";
+                command = "smart-splits-backend-herdr.right";
+                description = "navigate right (neovim/herdr)";
+              }
+            ];
           };
 
           terminal = {
@@ -149,7 +176,6 @@ in
             mouse_capture = true;
             pane_borders = true;
             pane_gaps = true;
-            accent = "blue";
             toast = {
               delivery = "terminal";
             };
