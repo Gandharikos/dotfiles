@@ -30,6 +30,8 @@ let
   advertiseRoutesFlag = optionals (isSubnetRouter && cfg.advertiseRoutes != [ ]) [
     "--advertise-routes=${concatStringsSep "," cfg.advertiseRoutes}"
   ];
+  selectedExitNode = cfg.exitNode != null && cfg.exitNode != "";
+  exitNodeFlags = optionals (cfg.exitNode != null) [ "--exit-node=${cfg.exitNode}" ];
   boolFlag = name: value: "--${name}=${if value then "true" else "false"}";
   routeAndDnsFlags = [
     (boolFlag "accept-dns" cfg.acceptDns)
@@ -62,9 +64,8 @@ in
       extraUpFlags =
         cfg.defaultFlags
         ++ routeAndDnsFlags
-        ++ optionals isExitNode [
-          "--advertise-exit-node"
-        ]
+        ++ exitNodeFlags
+        ++ [ (boolFlag "advertise-exit-node" isExitNode) ]
         ++ advertiseRoutesFlag
         ++ optionals isRoutingServer [
           "--operator=${dot.primaryUser}"
@@ -74,9 +75,8 @@ in
       extraSetFlags =
         cfg.defaultFlags
         ++ routeAndDnsFlags
-        ++ optionals isExitNode [
-          "--advertise-exit-node"
-        ]
+        ++ exitNodeFlags
+        ++ [ (boolFlag "advertise-exit-node" isExitNode) ]
         ++ advertiseRoutesFlag
         ++ optionals isRoutingServer [
           "--operator=${dot.primaryUser}"
@@ -116,6 +116,14 @@ in
     };
 
     assertions = [
+      {
+        assertion = !selectedExitNode || isClient;
+        message = "Selecting a Tailscale exit node requires dot.networking.tailscale.role = client.";
+      }
+      {
+        assertion = !(selectedExitNode && config.dot.networking.vpn.enable);
+        message = "Disable the standalone Mullvad VPN before selecting a Tailscale exit node.";
+      }
       {
         assertion = !isSubnetRouter || cfg.advertiseRoutes != [ ];
         message = "Tailscale roles `subnet-router` and `router-exit-node` require `dot.networking.tailscale.advertiseRoutes` to be non-empty.";

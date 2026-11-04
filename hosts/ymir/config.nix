@@ -22,10 +22,18 @@
 
   dot = {
     primaryUser = "johnson";
-    networking.proxy = {
-      enable = true;
-      backend = "clash-verge";
-      autoStart = true;
+    networking = {
+      proxy = {
+        enable = false;
+        backend = "clash-verge";
+        autoStart = false;
+      };
+      vpn.enable = false;
+      tailscale = {
+        role = "client";
+        # Tailscale Mullvad add-on: us-chi-wg-301.mullvad.ts.net.
+        exitNode = "100.117.167.110";
+      };
     };
     users.johnson = {
       shell = "nushell";
@@ -111,6 +119,7 @@
     {
       my.gui.apps.chromium.vaapiDriver = "radeonsi";
       my.gui.desktop.idle.suspend.enable = false;
+      my.rex.service.tailscale.enable = true;
       programs.niri.settings.debug.render-drm-device = "/dev/dri/by-path/pci-0000:65:00.0-render";
     }
   ];

@@ -165,6 +165,13 @@ in
       (mkIf my.pi.enable [
         ".pi"
       ])
+      (mkIf (my.rex.enable && my.rex.service.enable && my.rex.service.tailscale.enable) [
+        {
+          # Keep Rex's host ID and Tailscale identity across tmpfs-root reboots.
+          directory = ".local/state/rex";
+          mode = "0700";
+        }
+      ])
       (mkIf my.security.gpg.enable [
         {
           directory = ".gnupg";

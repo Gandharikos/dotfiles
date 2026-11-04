@@ -5,6 +5,7 @@ let
     bool
     enum
     listOf
+    nullOr
     str
     ;
 in
@@ -47,6 +48,16 @@ in
       description = ''
         High-level Tailscale role for this host.
         `subnet-router` and `router-exit-node` require `advertiseRoutes` to be set.
+      '';
+    };
+
+    exitNode = mkOption {
+      type = nullOr str;
+      default = null;
+      example = "100.117.167.110";
+      description = ''
+        Exit node IP or name to use on NixOS clients. Null leaves the selection
+        unmanaged; an empty string explicitly disables use of an exit node.
       '';
     };
 

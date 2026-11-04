@@ -44,7 +44,22 @@ let
   '';
 in
 {
-  options.my.rex.enable = lib.mkEnableOption "Rex terminal multiplexer";
+  options.my.rex = {
+    enable = lib.mkEnableOption "Rex terminal multiplexer";
+    service = {
+      enable = lib.mkEnableOption "personal Rex server" // {
+        default = pkgs.stdenv.hostPlatform.isLinux;
+      };
+      tailscale = {
+        enable = lib.mkEnableOption "Rex server access over Tailscale";
+        hostname = lib.mkOption {
+          type = lib.types.str;
+          default = "${osConfig.networking.hostName}-rex";
+          description = "Tailnet hostname for the personal Rex server.";
+        };
+      };
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     programs.rex = {
@@ -223,6 +238,11 @@ in
     };
 
     # The Rex app owns the server on macOS; Linux uses a personal user service.
-    services.rex.enable = pkgs.stdenv.hostPlatform.isLinux;
+    services.rex = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+      inherit (cfg.service) enable;
+      tailscale = {
+        inherit (cfg.service.tailscale) enable hostname;
+      };
+    };
   };
 }
