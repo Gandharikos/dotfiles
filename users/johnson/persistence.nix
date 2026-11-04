@@ -37,6 +37,12 @@ in
         ".config/chromium"
         ".local/share/pki"
       ])
+      (mkIf (config.dot.networking.proxy.clashVerge.enabledUser == my.name) [
+        {
+          directory = ".local/share/io.github.clash-verge-rev.clash-verge-rev";
+          mode = "0700";
+        }
+      ])
       (mkIf my.gui.apps.obs.enable [
         ".config/obs-studio"
       ])

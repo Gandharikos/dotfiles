@@ -22,6 +22,11 @@
 
   dot = {
     primaryUser = "johnson";
+    networking.proxy = {
+      enable = true;
+      backend = "clash-verge";
+      autoStart = true;
+    };
     users.johnson = {
       shell = "nushell";
       persistence.directories = [

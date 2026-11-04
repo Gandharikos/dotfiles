@@ -7,19 +7,17 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (lib.options) mkEnableOption;
-  inherit (pkgs.stdenv.hostPlatform) isLinux;
 
-  cfg = config.my.gui.apps.clash;
+  cfg = osConfig.programs.clash-verge;
+  proxy = osConfig.dot.networking.proxy;
+  enable = proxy.clashVerge.enabledUser == config.home.username;
 
-  # Enable when GUI is enabled and clash-verge is enabled
-  # Note: This is just the GUI frontend. The mihomo core service is configured separately at the NixOS level.
-  enable = osConfig.dot.gui.enable && cfg.enable;
+  inherit (cfg) package;
+  dataDir = "${config.xdg.dataHome}/io.github.clash-verge-rev.clash-verge-rev";
 
   # Verge.yaml configuration using Nix attrset
   vergeConfig = {
-    # Enable system proxy
-    enable_system_proxy = true;
+    enable_system_proxy = !cfg.tunMode;
 
     # Theme settings
     theme_mode = "auto";
@@ -30,30 +28,32 @@ let
     # Traffic graph
     enable_traffic_graph = true;
 
-    # Auto launch (controlled by dot.networking.proxy.autoStart at system level)
+    # Home Manager manages the XDG autostart entry instead of the GUI.
     enable_auto_launch = false;
 
-    # Tun mode is handled by the mihomo service
-    enable_tun_mode = false;
+    enable_tun_mode = cfg.tunMode;
   };
 
   yamlFormat = pkgs.formats.yaml { };
+  vergeConfigFile = yamlFormat.generate "verge.yaml" vergeConfig;
 in
 {
-  options.my.gui.apps.clash = {
-    enable = mkEnableOption "Clash Verge GUI" // {
-      default = osConfig.dot.gui.enable && isLinux;
-    };
-  };
-
   config = mkIf enable {
-    home = {
-      # Install Clash Verge as a user application
-      packages = with pkgs; [ clash-verge-rev ];
+    xdg.configFile."autostart/clash-verge.desktop" = mkIf proxy.autoStart {
+      source = "${package}/share/applications/clash-verge.desktop";
+    };
 
-      # Generate verge.yaml from Nix configuration
-      # Note: The .config/clash-verge directory is created by sops for config.yaml
-      file.".config/clash-verge/verge.yaml".source = yamlFormat.generate "verge.yaml" vergeConfig;
+    home = {
+      # Clash Verge writes this file itself; a read-only store symlink breaks GUI settings.
+      activation.clashVergeConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        run mkdir -p ${lib.escapeShellArg dataDir}
+        if [[ -e ${lib.escapeShellArg "${dataDir}/verge.yaml"} ]]; then
+          run ${lib.getExe pkgs.yq-go} --inplace '. *= load("${vergeConfigFile}")' \
+            ${lib.escapeShellArg "${dataDir}/verge.yaml"}
+        else
+          run install -m 0600 ${vergeConfigFile} ${lib.escapeShellArg "${dataDir}/verge.yaml"}
+        fi
+      '';
     };
   };
 }

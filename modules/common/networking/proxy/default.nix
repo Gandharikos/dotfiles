@@ -7,9 +7,9 @@
 }:
 let
   inherit (lib.options) mkEnableOption mkOption;
-  inherit (lib.types) enum;
+  inherit (lib.types) enum nullOr str;
   inherit (lib) mkIf mkMerge;
-  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+  inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
 
   cfg = config.dot.networking.proxy;
 
@@ -37,20 +37,44 @@ in
   imports = lib.dot.scanPaths ./.;
 
   options.dot.networking.proxy = {
-    enable = mkEnableOption "proxy service (mihomo or sing-box)";
-    autoStart = mkEnableOption "auto start proxy on boot (NixOS only)";
+    enable = mkEnableOption "proxy backend (mihomo, sing-box or Clash Verge)";
+    autoStart = mkEnableOption "proxy auto start on boot, or desktop login for Clash Verge (NixOS only)";
 
     backend = mkOption {
-      type = enum [
-        "mihomo"
-        "sing-box"
-      ];
+      type = enum (
+        [
+          "mihomo"
+          "sing-box"
+        ]
+        ++ lib.optionals config.dot.gui.enable [ "clash-verge" ]
+      );
       default = "mihomo";
       description = "Proxy backend to activate for this host.";
+    };
+
+    clashVerge.enabledUser = mkOption {
+      type = nullOr str;
+      internal = true;
+      readOnly = true;
+      default =
+        if isLinux && config.dot.gui.enable && cfg.enable && cfg.backend == "clash-verge" then
+          config.dot.primaryUser
+        else
+          null;
+      description = "User running the desktop-managed Clash Verge backend, or null when inactive.";
     };
   };
 
   config = mkMerge [
+    (mkIf (cfg.enable && cfg.backend == "clash-verge") {
+      assertions = [
+        {
+          assertion = !isDarwin && config.dot.gui.enable;
+          message = "The Clash Verge proxy backend requires a NixOS desktop.";
+        }
+      ];
+    })
+
     (mkIf (cfg.enable && cfg.backend == "mihomo") {
       sops.secrets.proxy_config = {
         sopsFile = "${self}/secrets/services/clash.yaml";

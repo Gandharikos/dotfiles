@@ -1,7 +1,6 @@
 {
   lib,
   osConfig,
-  pkgs,
   ...
 }:
 let
@@ -79,8 +78,6 @@ in
     gui.apps.anki.enable = !isMinimal;
 
     gui.apps.bitwarden.enable = !isMinimal;
-
-    gui.apps.clash.enable = !isMinimal && pkgs.stdenv.hostPlatform.isLinux;
 
     gui.apps.discord.enable = !isMinimal;
 
