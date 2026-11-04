@@ -190,7 +190,8 @@ in
         ${bind "b" "pane.balance"}
         ${bind "enter" "pane.float"}
         ${bind "shift+enter" "pane.new_floating"}
-        ${bind "shift+m" "pane.minimize_floating"}
+        ${bind "m" "pane.minimize_floating"}
+        ${bind "shift+m" "pane.minimize_all_floating"}
         ${bind "/" "client.sidebar.toggle"}
         ${bind "." "client.sidebar.activity.toggle"}
 
