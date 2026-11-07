@@ -16,6 +16,23 @@
       doCheck = false;
     });
 
+    opencode = prev.opencode.overrideAttrs (
+      old:
+      prev.lib.optionalAttrs (old.version == "2.2.5") {
+        # Backport nixpkgs c399e1b7fb90789e3e032784ef8ad98ba9907169:
+        # Bun's dependency output needs separate Linux and Darwin hashes.
+        node_modules = old.node_modules.overrideAttrs (_old: {
+          outputHash =
+            if prev.stdenv.hostPlatform.isLinux then
+              "sha256-prx9dX7kUvs/E3zopkaPk5LXh3xJAy5sZeum/W8L7cA="
+            else if prev.stdenv.hostPlatform.isDarwin then
+              "sha256-dIveiaiPFGSItwLyeMuPDxTE9gpvvnlTCB/+nG24qCc="
+            else
+              throw "Unsupported OpenCode platform";
+        });
+      }
+    );
+
     vulkan-validation-layers =
       (final.callPackage (inputs.nixpkgs + "/pkgs/by-name/vu/vulkan-validation-layers/package.nix") { })
       .overrideAttrs
