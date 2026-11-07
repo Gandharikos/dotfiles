@@ -29,15 +29,7 @@ in
       enable = true;
       servers = {
         fetch = {
-          command = getExe (
-            mcpPkgs.mcp-server-fetch.overridePythonAttrs (old: {
-              pythonRelaxDeps = (old.pythonRelaxDeps or [ ]) ++ [ "mcp" ];
-              postPatch = (old.postPatch or "") + ''
-                substituteInPlace src/mcp_server_fetch/server.py \
-                  --replace-fail McpError MCPError
-              '';
-            })
-          );
+          command = getExe mcpPkgs.mcp-server-fetch;
         };
 
         filesystem = {
