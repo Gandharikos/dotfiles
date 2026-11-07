@@ -96,8 +96,8 @@ in
         # Dark Reader
         {
           id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
-          version = "4.9.134";
-          hash = "sha256-hkpzAcaEGzQGbDU3wS6rHBei9MyPJ8XwXs4rEbJhVYY=";
+          version = "4.9.135";
+          hash = "sha256-C3hXrpL9Ouq0KSu3VaoPEI3mtovBLxjQyH/nV83UCp0=";
         }
 
         # Vimium C
@@ -222,8 +222,8 @@ in
         # refined github
         {
           id = "hlepfoohegkhhmjieoechaddaejaokhf";
-          version = "26.10.26";
-          hash = "sha256-Zc1hPio5K0R+SL3dtq9ZrTTxstchX86vswkpbpGCM8Q=";
+          version = "26.11.6";
+          hash = "sha256-02S39HJ5fSmV7DihXwv1U7WxtFTtcerxI15Req/wCpo=";
         }
       ];
 
