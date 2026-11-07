@@ -89,6 +89,8 @@ in
 
     herdr.enable = !isMinimal;
 
+    hunk.enable = !isMinimal;
+
     jjui.enable = !isMinimal;
 
     jujutsu.enable = !isMinimal;
