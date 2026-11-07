@@ -7,21 +7,26 @@
 }:
 let
   inherit (lib.options) mkEnableOption mkOption;
-  inherit (lib.types) enum nullOr str;
+  inherit (lib.types)
+    enum
+    nullOr
+    path
+    str
+    ;
   inherit (lib) mkIf mkMerge;
   inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
 
   cfg = config.dot.networking.proxy;
 
-  # On NixOS: mihomo runs as a system service, config goes to /var/lib/mihomo/
+  # NixOS passes the root-owned secret to the DynamicUser service with LoadCredential.
   # On Darwin: clash-verge includes mihomo core, config goes to user's home
   proxyConfigPath =
     if isDarwin then
       "${config.dot.admin.homeDirectory}/.config/clash-verge/config.yaml"
     else
-      "/var/lib/mihomo/config.yaml";
-  proxyConfigOwner = if isDarwin then config.dot.primaryUser else "mihomo";
-  proxyConfigGroup = if isDarwin then "staff" else "mihomo";
+      "/run/secrets/mihomo-config.yaml";
+  proxyConfigOwner = if isDarwin then config.dot.primaryUser else "root";
+  proxyConfigGroup = if isDarwin then "staff" else "root";
   proxyConfigMode = if isDarwin then "0600" else "0400";
 
   proxySourceConfigPath =
@@ -52,6 +57,12 @@ in
       description = "Proxy backend to activate for this host.";
     };
 
+    mihomo.configFile = mkOption {
+      type = nullOr path;
+      default = null;
+      description = "Runtime Mihomo configuration path; null uses the shared SOPS clash_config secret.";
+    };
+
     clashVerge.enabledUser = mkOption {
       type = nullOr str;
       internal = true;
@@ -75,7 +86,7 @@ in
       ];
     })
 
-    (mkIf (cfg.enable && cfg.backend == "mihomo") {
+    (mkIf (cfg.enable && cfg.backend == "mihomo" && cfg.mihomo.configFile == null) {
       sops.secrets.proxy_config = {
         sopsFile = "${self}/secrets/services/clash.yaml";
         key = "clash_config";
@@ -86,7 +97,7 @@ in
       };
     })
 
-    (mkIf (cfg.enable && cfg.backend == "sing-box") {
+    (mkIf (cfg.enable && cfg.backend == "sing-box" && cfg.singBox.configFile == null) {
       sops.secrets.proxy_source_config = {
         sopsFile = "${self}/secrets/services/clash.yaml";
         key = "clash_config";

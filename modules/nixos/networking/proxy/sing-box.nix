@@ -31,7 +31,19 @@ in
       ];
       requires = [ "sops-install-secrets.service" ];
       wants = [ "network-online.target" ];
-      serviceConfig.ExecStartPre = mkForce "+${lib.getExe generateConfig}";
+      serviceConfig = {
+        ExecStartPre = mkIf (cfg.singBox.configFile == null) (mkForce "+${lib.getExe generateConfig}");
+        # settings = {} otherwise makes the upstream unit read /etc/sing-box,
+        # not the runtime configuration produced by either generator.
+        ExecStart = mkForce [
+          ""
+          "${lib.getExe config.services.sing-box.package} -D /var/lib/sing-box -c ${
+            lib.escapeShellArg (
+              if cfg.singBox.configFile == null then "/run/sing-box/config.json" else cfg.singBox.configFile
+            )
+          } run"
+        ];
+      };
       wantedBy = if cfg.autoStart then [ "multi-user.target" ] else mkForce [ ];
     };
   };

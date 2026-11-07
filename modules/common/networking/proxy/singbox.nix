@@ -364,6 +364,12 @@ let
 in
 {
   options.dot.networking.proxy.singBox = {
+    configFile = mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = "Runtime native sing-box configuration; null uses the legacy subscription generator.";
+    };
+
     extraOutbounds = mkOption {
       type = listOf attrs;
       default = [ ];

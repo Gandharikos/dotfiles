@@ -1,0 +1,158 @@
+mixed-port: 7890
+allow-lan: false
+bind-address: 127.0.0.1
+mode: rule
+log-level: info
+find-process-mode: strict
+ipv6: true
+external-controller: 127.0.0.1:9090
+secret: "__CONTROLLER_SECRET__"
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+# Keep system tailscaled's marked transport outside this TUN. The additional
+# policy rules in hosts/ymir/mihomo.nix handle Tailnet destinations and replies.
+tun:
+  enable: true
+  device: mihomo
+  stack: gvisor
+  auto-route: true
+  auto-redirect: false
+  auto-detect-interface: true
+  strict-route: false
+  dns-mode: disabled
+  dns-hijack:
+    - any:53
+    - tcp://any:53
+  mtu: 1500
+  iproute2-table-index: 2022
+  iproute2-rule-index: 9000
+  inet6-address:
+    - fdfe:dcba:9876::1/126
+  exclude-interface:
+    - tailscale0
+  route-exclude-address:
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+    - 169.254.0.0/16
+    - fe80::/10
+    - ff00::/8
+
+dns:
+  enable: true
+  listen: 127.0.0.1:1053
+  ipv6: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    - "*.lan"
+    - "*.local"
+    - "+.tail2cfd9e.ts.net"
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  proxy-server-nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+  direct-nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+  nameserver:
+    - "https://dns.google/dns-query#Proxy"
+    - "https://cloudflare-dns.com/dns-query#Proxy"
+  nameserver-policy:
+    "+.tail2cfd9e.ts.net": "tailscale://Tailnet"
+    # System tailscaled and Rex must be able to bootstrap without the subscription.
+    "+.tailscale.com,+.tailscale.io":
+      - https://dns.alidns.com/dns-query
+      - https://doh.pub/dns-query
+    "rule-set:cn-domain":
+      - https://dns.alidns.com/dns-query
+      - https://doh.pub/dns-query
+
+proxy-providers:
+  WgetCloud:
+    type: http
+    url: "__SUBSCRIPTION_URL__"
+    path: ./providers/wgetcloud.yaml
+    interval: 86400
+    # The encrypted bootstrap cache keeps startup independent of download availability.
+    proxy: DIRECT
+    header:
+      User-Agent:
+        - "ClashMeta/1.19.33"
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+
+proxies:
+  - name: Tailnet
+    type: tailscale
+    hostname: ymir-mihomo
+    state-dir: ./tailscale
+    ephemeral: false
+    udp: true
+    accept-routes: false
+    # No shared auth key/state: first access prints an interactive login URL.
+    # Only the embedded identity uses the subscription for control/DERP traffic.
+    dialer-proxy: Proxy
+
+proxy-groups:
+  - name: Proxy
+    type: select
+    proxies:
+      - Auto
+    use:
+      - WgetCloud
+  - name: Auto
+    type: url-test
+    use:
+      - WgetCloud
+    # An unavailable/empty subscription must not silently become DIRECT.
+    proxies:
+      - REJECT
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    lazy: false
+
+rule-providers:
+  cn-domain:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs
+    path: ./rules/cn-domain.mrs
+    interval: 86400
+    proxy: DIRECT
+  cn-ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs
+    path: ./rules/cn-ip.mrs
+    interval: 86400
+    proxy: DIRECT
+
+rules:
+  # Rex owns a separate tsnet stack; do not tunnel its transport through the subscription.
+  - PROCESS-NAME,rex,DIRECT
+  - DOMAIN-SUFFIX,tail2cfd9e.ts.net,Tailnet
+  - IP-CIDR,100.64.0.0/10,Tailnet,no-resolve
+  - IP-CIDR6,fd7a:115c:a1e0::/48,Tailnet,no-resolve
+  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+  - IP-CIDR,169.254.0.0/16,DIRECT,no-resolve
+  - IP-CIDR6,::1/128,DIRECT,no-resolve
+  - IP-CIDR6,fc00::/7,DIRECT,no-resolve
+  - IP-CIDR6,fe80::/10,DIRECT,no-resolve
+  - DOMAIN-SUFFIX,lan,DIRECT
+  - DOMAIN-SUFFIX,local,DIRECT
+  - RULE-SET,cn-domain,DIRECT
+  - RULE-SET,cn-ip,DIRECT,no-resolve
+  - MATCH,Proxy

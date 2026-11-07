@@ -1,0 +1,154 @@
+# ymir: retained Mihomo profile
+
+The declared backend is now sing-box; see [SING-BOX.md](SING-BOX.md). This page describes the
+retained Mihomo alternative, enabled by setting `dot.networking.proxy.backend = "mihomo"`.
+
+## Status before activation
+
+The replacement subscription returned HTTP 200 through the existing Mullvad exit, with 32 Trojan
+nodes. A request bound directly to `wlan0` still returned HTTP 403 (Cloudflare). Both the URL and a
+nodes-only bootstrap snapshot are encrypted in `secrets/hosts/ymir/mihomo.yaml`. The service seeds
+its cache before startup, so it does not require a successful first subscription download. Online
+subscription updates use **DIRECT**. The local 403 is not treated as a universal restriction: other
+devices on the same Wi-Fi can download directly. Successful parsing does not prove node health. With
+an empty provider, `Proxy` defaults to `Auto`, which selects `REJECT`, not a direct fallback.
+
+The retained Mihomo profile was built but not activated. Sing-box is now active, with the system
+Mullvad exit node cleared; see [SING-BOX.md](SING-BOX.md) for current validation and pending items.
+
+## Responsibilities
+
+| Identity      | Purpose                                                                                                   |
+| ------------- | --------------------------------------------------------------------------------------------------------- |
+| `ymir`        | Existing system `tailscaled`; inbound SSH/Taildrop; no exit node, accepted subnet routes, or DNS takeover |
+| `ymir-mihomo` | Independent embedded `tsnet` identity; selected Tailnet outbounds                                         |
+| `ymir-rex`    | Existing Rex identity; Rex transport matches a direct process rule                                        |
+
+```text
+Applications -> Mihomo TUN -> domestic/LAN: DIRECT
+                          -> other Internet: subscription
+                          -> Tailnet: embedded Tailscale
+Remote peers -> system tailscaled -> local SSH/Taildrop
+Remote peers -> Rex's embedded Tailscale -> Rex
+```
+
+Mihomo runs as a background system service, without Clash Verge. MetaCubeXD is served locally by
+Mihomo, not fetched from an external dashboard site. The mixed proxy (`127.0.0.1:7890`) and
+controller/WebUI (`127.0.0.1:9090`) are loopback-only; API access requires the controller secret.
+
+## WebUI and node selection
+
+After activation, open **http://127.0.0.1:9090/ui/** on ymir. In MetaCubeXD, add the backend
+`http://127.0.0.1:9090` and enter the token from `/run/secrets/mihomo_controller_secret`
+(root-readable). Do not put the token in a URL, screenshot, or Git file. The static dashboard can
+load without a token, but it cannot control Mihomo without API authentication.
+
+In the **Proxy** group:
+
+- Select **Auto** for automatic latency-based node selection (the default).
+- Select an individual subscription node to pin it manually.
+- Select **Auto** again to return to automatic selection.
+
+Selections persist across restarts through `profile.store-selected`. The **Auto** group tests nodes
+every 300 seconds with a 50 ms tolerance. It uses `REJECT` when no subscription nodes are available.
+Internet traffic and the embedded Tailscale transport both follow the selected **Proxy** entry;
+changing it can interrupt existing connections. System `ymir` and Rex retain their separate paths.
+
+No firewall port is opened for the dashboard. For access from another computer, use SSH forwarding
+instead of changing the controller to `0.0.0.0`, for example:
+
+```sh
+ssh -N -L 19090:127.0.0.1:9090 johnson@ymir
+```
+
+Then open `http://127.0.0.1:19090/ui/` and use `http://127.0.0.1:19090` as the backend, with the
+same token.
+
+## Configuration and secrets
+
+- `config/mihomo/ymir.yaml`: public configuration, with credential placeholders.
+- `hosts/ymir/mihomo.nix`: SOPS rendering, DNS ownership and policy-routing service.
+- `secrets/hosts/ymir/mihomo.yaml`: encrypted subscription URL, nodes-only bootstrap snapshot and
+  controller token. Edit with SOPS.
+- `/run/secrets/rendered/ymir-mihomo.yaml`: root-only runtime configuration, passed to the dynamic
+  service user via systemd `LoadCredential`.
+- `/var/lib/private/mihomo`: persistent provider/rule caches and the embedded Tailscale state. The
+  host already preserves `/var/lib`. Do not copy the system tailscaled or Rex state here.
+
+The subscription supplies **nodes only** through a provider. Its groups, DNS, controller and rules
+do not replace the local configuration. Providers refresh daily. The bootstrap snapshot is passed as
+a separate systemd credential and copied to the private provider cache on first startup. A hash
+marker preserves newer online updates across restarts; changing the encrypted snapshot replaces the
+cache on the next start. Neither node passwords nor the subscription URL enter the Nix store in
+plaintext. Keep the encrypted snapshot current when rotating subscription credentials.
+
+Subscription refreshes use **DIRECT**. A cached provider loads before its online refresh, so a
+failed initial download does not remove the bootstrap nodes. If a direct refresh fails, the cache
+remains usable; investigate the host-specific download failure and retry in the WebUI. CN rule
+providers are still fetched directly; their endpoints must be reachable, or their caches must be
+provisioned before activation.
+
+`systemd-resolved` forwards to Mihomo on `127.0.0.1:1053`. Tailnet names under `tail2cfd9e.ts.net`
+use the embedded resolver. Node/bootstrap DNS and Tailscale control-plane DNS have direct upstreams
+to avoid depending on the subscription. There is no general DNS fallback when Mihomo is down;
+stopping only Mihomo is not a complete rollback.
+
+## Routing invariants
+
+Tailscaled's transport-mark rules at priorities 5210–5250 remain untouched. Two additional rules per
+address family run before its table-52 rule at priority 5270:
+
+1. Priority **5260**: local traffic sourced from Tailscale addresses uses table 52. Replies to
+   incoming system-Tailscale connections keep the system identity.
+2. Priority **5261**: other local traffic destined for Tailnet addresses uses Mihomo table 2022. A
+   missing TUN table falls through to system tailscaled rather than blackholing Tailnet traffic.
+
+Only local traffic (`iif lo`) matches these rules. Mihomo excludes incoming `tailscale0` traffic and
+does not install TCP auto-redirect rules. Its ordinary TUN policy rules start at 9000. The routing
+service refuses to overwrite occupied priorities, cleans up partial failures, and removes its rules
+when stopped with Mihomo.
+
+These table numbers and priorities are implementation details: rerun the tests after upgrading
+Tailscale/Mihomo. Explicitly binding an application to the system Tailscale source address keeps
+that connection on the system identity. The embedded identity is not used for those connections.
+
+## Validation and activation
+
+```sh
+bash scripts/tests/test-mihomo-tailnet-routing.sh
+nix build --no-link .#nixosConfigurations.ymir.config.system.build.toplevel
+seed_program=$(nix eval --raw --apply builtins.head .#nixosConfigurations.ymir.config.systemd.services.mihomo.serviceConfig.ExecStartPre)
+bash scripts/tests/test-mihomo-provider-seed.sh "$seed_program"
+```
+
+The routing test uses an unprivileged network namespace and dummy interfaces. It covers IPv4/IPv6
+outbounds, system-identity replies, transport-mark bypass, LAN/local access, occupied priorities,
+partial-install rollback, absent-TUN fallback and cleanup. An additional isolated test with the
+actual Mihomo 1.19.33 TUN confirmed the same routing decisions and empty-provider rejection. Neither
+test proves live Tailnet authentication, ACL permissions, NAT traversal or provider health.
+
+The seed test checks cache permissions, preservation of online updates, snapshot rotation and
+recovery from a missing/empty cache. An isolated Mihomo startup also loaded all 32 downloaded nodes
+from the seeded HTTP-provider cache without Internet access.
+
+Activate only after reviewing the change, from the local console or with a separate recovery
+session. Check node health and subscription refresh in the WebUI, then trigger an embedded Tailnet
+connection, for example:
+
+```sh
+curl --proxy http://127.0.0.1:7890 --connect-timeout 5 --max-time 10 http://100.80.170.40/
+journalctl -u mihomo -n 80
+```
+
+This request is only a login trigger; the peer need not serve HTTP. On first use, follow the
+interactive Tailscale login URL in the journal to authorize `ymir-mihomo`. Initial requests may time
+out. Do not share unredacted logs: login links and provider errors may contain credentials.
+
+Verify from another device that SSH to the original `ymir` address and Rex access still work. Verify
+ordinary Tailnet outbounds use the new identity and that public/Chinese/LAN traffic follows the
+intended rules. The existing system `tailscale status` command does not describe the embedded
+identity; check it in the Tailnet admin console and Mihomo logs.
+
+For rollback, switch to the previous NixOS generation (for example `just rollback`) rather than only
+stopping Mihomo. This restores the previous DNS and routing configuration, including its previous
+exit-node selection. No existing Tailscale identity/state is deleted by this change.

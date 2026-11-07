@@ -3,6 +3,8 @@
   imports = [
     ./hardware-configuration.nix
     ./asus-dialpad.nix
+    ./mihomo.nix
+    ./sing-box.nix
     inputs.vicinae.nixosModules.default
     (import ../common/disko/luks-btrfs-tmpfs.nix { })
   ];
@@ -24,15 +26,17 @@
     primaryUser = "johnson";
     networking = {
       proxy = {
-        enable = false;
-        backend = "clash-verge";
-        autoStart = false;
+        enable = true;
+        backend = "sing-box";
+        autoStart = true;
       };
       vpn.enable = false;
       tailscale = {
         role = "client";
-        # Tailscale Mullvad add-on: us-chi-wg-301.mullvad.ts.net.
-        exitNode = "100.117.167.110";
+        # Keep the system identity for inbound access, without a global VPN exit or DNS takeover.
+        exitNode = "";
+        acceptRoutes = false;
+        acceptDns = false;
       };
     };
     users.johnson = {
