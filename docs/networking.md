@@ -46,6 +46,14 @@ restart iwd and interrupt Wi-Fi; use a local console or an independent recovery 
 Disabling NetworkManager does not automatically enable standalone iwd IP configuration. A future
 standalone iwd host must explicitly define network ownership and update the ownership tests.
 
+### WSL hosts-file ownership
+
+The shared WSL profile now correctly sets `wsl.wslConf.network.generateHosts = false`. The previous
+misspelling, `gnerateHosts`, was an unused INI key and left `generateHosts = true`. NixOS now
+declares ownership of `/etc/hosts` on nidhogg. This does not change `generateResolvConf`, DHCP,
+routes or the WSL firewall exception. The corrected setting has not been activated by these edits;
+verify the resulting file after a separately approved WSL restart.
+
 ### Approved follow-up: nftables declaration and ymir trial
 
 `firewall.nix` now sets `networking.nftables.enable = true`. The shared declaration applies to

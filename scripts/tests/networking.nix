@@ -263,6 +263,10 @@ in
         (managerOverride.networking.wireless.iwd.settings.General.EnableNetworkConfiguration or null)
         == false;
       true;
+    wslHostFileOwnedByNixos =
+      assert systems.nidhogg.config.wsl.wslConf.network.generateHosts == false;
+      assert !(systems.nidhogg.config.wsl.wslConf.network ? gnerateHosts);
+      true;
     ymirDnsAndBypassesPreserved =
       assert ymir.services.resolved.settings.Resolve.DNS == [ "127.0.0.1:1053" ];
       assert ymir.services.resolved.settings.Resolve.DNSSEC == false;
