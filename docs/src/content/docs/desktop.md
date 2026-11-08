@@ -29,13 +29,19 @@ to `open -b`; Rex launch arguments are macOS open targets, not terminal `-e` com
 remains available separately. macOS default-browser associations are not overwritten by this
 configuration; select Chrome in System Settings if needed.
 
+`tyr` keeps Ghostty as its default terminal. On macOS, the terminal command uses
+`/usr/bin/open -n -b com.mitchellh.ghostty` to open the Homebrew app, avoiding the GTK/Wayland build
+dependencies of `pkgs.ghostty`. Linux retains the Nix-packaged Ghostty command and its `+new-window`
+argument.
+
 The Darwin AeroSpace module corrects a path bug in the pinned Home Manager module: stripping the
 home directory from `xdg.configHome` leaves a leading slash, which Putter interprets as a root path
 such as `/.config/aerospace/aerospace.toml`. The local target override keeps the configuration under
 the configured XDG directory without changing its generated contents or reload hook. Putter remains
 enabled; no root-directory permission changes are needed.
 
-Validate the default XDG path, a custom XDG directory under the user home, and XDG-disabled mode:
+Validate application defaults, macOS/Linux Ghostty commands, the default and custom XDG paths, and
+XDG-disabled mode:
 
 ```sh
 nix --extra-experimental-features pipe-operators eval --impure --json \

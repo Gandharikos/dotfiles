@@ -71,6 +71,14 @@ in
       default =
         if terminal.default == null then
           [ ]
+        else if pkgs.stdenv.hostPlatform.isDarwin && terminal.default == "ghostty" then
+          # macOS uses the Homebrew app; pkgs.ghostty pulls in GTK/Wayland dependencies.
+          [
+            "/usr/bin/open"
+            "-n"
+            "-b"
+            "com.mitchellh.ghostty"
+          ]
         else if osConfig.dot.gui.desktop.uwsm.enable then
           uwsmAppArgs pkgs terminalProgram terminalArgs
         else
