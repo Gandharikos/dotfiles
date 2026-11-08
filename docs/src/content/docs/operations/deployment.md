@@ -27,6 +27,29 @@ default. It can restart services and interrupt networking: it is not a build-onl
 review the changes first, then follow the network recovery gates before a network-related
 activation. Use the Darwin build command above for build-only validation on macOS.
 
+## Minimal Darwin Host
+
+`tyr` declares `dot.profiles.minimal.enable = true`, disables the repository's optional GUI
+configuration, and uses no keyboard-remapping backend. The existing minimal Home Manager profile
+omits development environments and optional tools; macOS itself, Remote Login and Screen Sharing are
+not disabled by `dot.gui.enable = false`.
+
+On minimal Darwin hosts, the shared Homebrew module contributes no formulae or casks and disables
+activation-time upgrades and cleanup. Homebrew and its pinned taps remain available. Existing
+applications and their data are intentionally retained; this is not an uninstall or disk-cleanup
+operation. Other modules can still add Homebrew packages. Non-minimal hosts retain their existing
+package lists, upgrades and `zap` cleanup policy.
+
+Build before activation:
+
+```bash
+nix --extra-experimental-features pipe-operators build --no-link .#darwinConfigurations.tyr.system
+```
+
+These declarations do not change `tyr`'s Tailscale role, advertised subnet, proxy or routing policy.
+They are not proof of deployment or successful remote forwarding. Review the generated activation
+and preserve a recovery path before switching a headless host.
+
 ## Remote Deployment
 
 ```bash

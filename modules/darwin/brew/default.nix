@@ -1,9 +1,13 @@
 {
   inputs,
   config,
+  lib,
   pkgs,
   ...
 }:
+let
+  isMinimal = config.dot.profiles.minimal.enable;
+in
 {
   imports = [
     inputs.nix-homebrew.darwinModules.nix-homebrew
@@ -55,9 +59,9 @@
 
     onActivation = {
       # autoUpdate = true; # this should be managered by nix-homebrew
-      upgrade = true; # Upgrade outdated casks, formulae, and App Store apps
-      # 'zap': uninstalls all formulae(and related files) not listed in the generated Brewfile
-      cleanup = "zap";
+      upgrade = !isMinimal;
+      # Switching to minimal must not delete existing apps or their data.
+      cleanup = if isMinimal then "none" else "zap";
     };
 
     # Applications to install from Mac App Store using mas
@@ -81,9 +85,8 @@
     taps = builtins.attrNames config.nix-homebrew.taps;
 
     # `brew install`
-    brews = [
+    brews = lib.optionals (!isMinimal) [
       # keep-sorted start
-
       "aria2" # download tool
       "bitwarden-cli"
       "curl"
@@ -107,7 +110,7 @@
     ];
 
     # `brew install --cask`
-    casks = [
+    casks = lib.optionals (!isMinimal) [
       # keep-sorted start
       # "spotify" # music
       "1password" # password manager
@@ -117,11 +120,8 @@
       # "stats" # beautiful system monitor
       "eudic" # dictionary
       "ghostty" # terminal
-      "granola"
       "herdr-app"
       "keycastr" # show keystrokes on screen
-      "linear"
-      "loom"
       "macfuse" # required by veracrypt
       "mullvad-vpn" # vpn
       "obs" # stream / recoding software
