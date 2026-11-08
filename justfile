@@ -282,16 +282,7 @@ add program:
 
 [group('secret')]
 bootstrap host=`hostname -s`:
-    #!/usr/bin/env bash
-    mkdir -p ~/.ssh
-    sops -d --extract '["data"]' secrets/{{ user }}/core/id_ed25519.yaml > ~/.ssh/id_ed25519
-    chmod 600 ~/.ssh/id_ed25519
-
-    sudo mkdir -p /etc/ssh
-    sops -d --extract '["data"]' secrets/{{ user }}/core/{{ host }}.yaml | sudo tee /etc/ssh/ssh_host_ed25519_key > /dev/null
-    sudo chmod 600 /etc/ssh/ssh_host_ed25519_key
-    sudo cp secrets/{{ user }}/core/{{ host }}.pub /etc/ssh/ssh_host_ed25519_key.pub
-    sudo chmod 644 /etc/ssh/ssh_host_ed25519_key.pub
+    bash "{{ flake }}/scripts/bootstrap-ssh-keys.sh" "{{ flake }}/secrets/{{ user }}/core" "{{ host }}"
 
 [group('secret')]
 bootstrap-remote host ip:

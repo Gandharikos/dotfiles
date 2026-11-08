@@ -41,13 +41,17 @@ sops -d secrets/services/default.yaml >/dev/null
 Initialize local keys for an existing host:
 
 ```bash
-just init-local <host>
+just bootstrap <host>
 ```
 
-Initialize a remote machine:
+Local bootstrap validates both decrypted keys against their public keys before staging atomic
+per-file replacements. It does not restart SSH. Tests use generated fixture keys and mocked SOPS and
+sudo; they never read live private keys.
+
+Initialize a remote machine (the existing SCP/install workflow, not the local atomic workflow):
 
 ```bash
-just init-remote <host> <ip>
+just bootstrap-remote <host> <ip>
 ```
 
 For the longer operational notes, see the Markdown source at `docs/SOPS.md`.

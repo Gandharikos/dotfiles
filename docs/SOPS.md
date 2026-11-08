@@ -159,7 +159,7 @@ user SSH key.
 2. Decrypt the user and host SSH keys:
 
    ```bash
-   just init-local <host>
+   just bootstrap <host>
    ```
 
    This writes:
@@ -169,6 +169,12 @@ user SSH key.
    /etc/ssh/ssh_host_ed25519_key
    ```
 
+   The local bootstrap decrypts both keys into private temporary files, validates them with
+   `ssh-keygen`, and checks them against the repository public keys before writing live keys.
+   Decryption, validation, privilege and staging failures leave the existing key files intact. Each
+   final replacement is an atomic rename on its destination filesystem; the three files are not a
+   single cross-filesystem transaction. No SSH service is restarted automatically.
+
 3. Rebuild:
 
    ```bash
@@ -177,8 +183,8 @@ user SSH key.
 
 ## Remote Initialization
 
-`just init-remote <host> <ip>` assumes the local username and remote username are the same. This
-matters because Home Manager profiles and Nix per-user profile directories are created for that
+`just bootstrap-remote <host> <ip>` assumes the local username and remote username are the same.
+This matters because Home Manager profiles and Nix per-user profile directories are created for that
 exact user.
 
 The command copies:
@@ -188,12 +194,14 @@ The command copies:
 
 It installs them into the live remote paths only. If a host persists `/etc/ssh`, the user home, or
 the Nix profile directory through mounts or bind mounts, writing those live paths is enough and does
-not require `init-remote` to know about `/persist`.
+not require `bootstrap-remote` to know about `/persist`. The remote command retains its existing
+SCP/install workflow; the local atomic-replacement safeguards described above do not apply to remote
+bootstrap.
 
 Run:
 
 ```bash
-just init-remote <host> <ip>
+just bootstrap-remote <host> <ip>
 ```
 
 Then deploy or switch the host:
@@ -322,5 +330,5 @@ This is expected. The file lives under the core bootstrap rule and is kept PGP-o
 PGP/YubiKey recovery path first, then install the SSH key locally with:
 
 ```bash
-just init-local <host>
+just bootstrap <host>
 ```
