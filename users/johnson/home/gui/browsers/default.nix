@@ -46,12 +46,12 @@ in
             "chromium"
             "firefox"
           ]
-          ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [ "chrome" ]
+          ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [ "google-chrome" ]
         )
       );
       default = if osConfig.dot.gui.enable && osClass == "nixos" then "chromium" else null;
       description = ''
-        The browser to use for launch commands and BROWSER. On macOS, chrome opens the
+        The browser to use for launch commands and BROWSER. On macOS, google-chrome opens the
         separately installed Google Chrome app; system URL associations remain managed by macOS.
       '';
     };
@@ -65,7 +65,7 @@ in
       default =
         if browser.default == null then
           [ ]
-        else if browser.default == "chrome" then
+        else if browser.default == "google-chrome" then
           [ (toString chromeLauncher) ]
         else if osConfig.dot.gui.desktop.uwsm.enable then
           withUWSMArgs pkgs browser.default
@@ -95,7 +95,7 @@ in
 
   config = mkIf (browser.default != null) {
     home.sessionVariables = {
-      BROWSER = if browser.default == "chrome" then toString chromeLauncher else browser.default;
+      BROWSER = if browser.default == "google-chrome" then toString chromeLauncher else browser.default;
     };
   };
 }

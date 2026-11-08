@@ -11,7 +11,7 @@
         default = "rex";
         size = 14;
       };
-      browser.default = "chrome";
+      browser.default = "google-chrome";
     };
   };
 

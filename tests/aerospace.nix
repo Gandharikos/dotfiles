@@ -43,7 +43,7 @@ in
         ) settings.on-window-detected;
     in
     assert terminal.default == "rex";
-    assert browser.default == "chrome";
+    assert browser.default == "google-chrome";
     assert eirHome.programs.rex.enable;
     assert eirHome.home.sessionVariables.TERMINAL == builtins.head terminal.command;
     assert eirHome.home.sessionVariables.BROWSER == builtins.head browser.command;

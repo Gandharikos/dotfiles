@@ -120,6 +120,7 @@ in
       # "stats" # beautiful system monitor
       "eudic" # dictionary
       "ghostty" # terminal
+      "google-chrome"
       "herdr-app"
       "keycastr" # show keystrokes on screen
       "macfuse" # required by veracrypt
