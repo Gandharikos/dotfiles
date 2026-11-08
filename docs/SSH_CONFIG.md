@@ -334,11 +334,19 @@ EOF
 
 ## Files and Locations
 
+Home Manager SSH configuration is split by responsibility:
+
+- `users/johnson/home/cli/security/ssh.nix`: `my.ssh` options, base SSH settings, FIDO2 packages,
+  and GPG agent forwarding (including platform-specific socket paths).
+- `users/johnson/home/ssh-hosts.nix`: personal host aliases, identity selection, public keys, and
+  the YubiKey identification helper.
+
 ```
 ~/.dotfiles/
-├── modules/
-│   ├── common/dot/yubikey.nix             # YubiKey identifiers config
-│   └── home/cli/security/ssh.nix          # Main SSH module
+├── modules/common/dot/yubikey.nix         # YubiKey identifiers config
+├── users/johnson/home/
+│   ├── cli/security/ssh.nix               # SSH options and shared mechanisms
+│   └── ssh-hosts.nix                      # Personal hosts and keys
 ├── secrets/johnson/core/
 │   ├── id_ed25519.pub                     # Regular SSH public key
 │   └── keys/
@@ -405,5 +413,6 @@ ykman fido access change-pin
 
 - **Configuration Example:** `examples/ssh-config.nix`
 - **YubiKey Mapping:** `secrets/johnson/core/keys/YUBIKEYS.md`
-- **Module Source:** `modules/home/cli/security/ssh.nix`
+- **Shared SSH Module:** `users/johnson/home/cli/security/ssh.nix`
+- **Personal SSH Configuration:** `users/johnson/home/ssh-hosts.nix`
 - **Setup Script:** `scripts/yubikey-ssh-setup.sh`

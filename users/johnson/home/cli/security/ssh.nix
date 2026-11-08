@@ -6,9 +6,27 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf mkMerge;
+  inherit (lib.modules) mkDefault mkIf mkMerge;
   inherit (lib.options) mkEnableOption mkOption;
+  inherit (config.home) homeDirectory;
   cfg = config.my.ssh;
+  inherit (cfg.gpgAgentForwarding) socketDir;
+  localGpgAgentSocketDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "${homeDirectory}/.gnupg" else socketDir;
+  remoteGpgAgentSocket = "${socketDir}/S.gpg-agent";
+  gpgAgentForwardingSettings = {
+    IdentityAgent = mkDefault "${localGpgAgentSocketDir}/S.gpg-agent.ssh";
+    RemoteForward = mkDefault "${remoteGpgAgentSocket} ${localGpgAgentSocketDir}/S.gpg-agent.extra";
+    ExitOnForwardFailure = mkDefault true;
+    StreamLocalBindUnlink = mkDefault true;
+  };
+  gpgAgentForwardingHosts =
+    cfg.gpgAgentForwarding.hosts
+    |> map (host: {
+      name = host;
+      value = gpgAgentForwardingSettings;
+    })
+    |> builtins.listToAttrs;
 in
 {
   options.my.ssh = {
@@ -62,6 +80,10 @@ in
       ];
     }
 
+    (mkIf cfg.gpgAgentForwarding.enable {
+      programs.ssh.settings = gpgAgentForwardingHosts;
+    })
+
     # ===================================================================
     # FIDO2 configuration (when enabled)
     # ===================================================================
@@ -71,7 +93,6 @@ in
         libfido2 # FIDO2 library and tools
         yubikey-manager # YubiKey configuration tool
       ];
-
     })
   ]);
 }
