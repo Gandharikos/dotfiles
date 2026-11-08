@@ -59,7 +59,7 @@ Validate without closing real panes:
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover \
-  -s scripts/tests -p 'test_herdr_smart_quit.py' -v
+  -s tests -p 'test_herdr_smart_quit.py' -v
 ```
 
 After activating the Home Manager configuration, reload Herdr with `prefix+Ctrl+R`.

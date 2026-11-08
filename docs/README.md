@@ -39,6 +39,19 @@ just check
 just fmt
 ```
 
+## Tests
+
+Python tests, shell regression scripts and Nix fixtures live in `tests/`. The entry point is
+`tests/run-tests.sh`; `flake/tests.nix` provides the pinned test shell and sandboxed flake check.
+
+```bash
+just regression unit
+just regression integration
+```
+
+Integration mode currently requires x86_64-linux. It checks real proxy binaries, isolated routing
+and backup fixtures; it does not activate the host configuration.
+
 ## Chromium Extension Updates
 
 The **Update Chromium extensions** GitHub Action runs daily and supports manual dispatch. It opens a
@@ -51,7 +64,7 @@ To run locally:
 
 ```bash
 python3 scripts/update-chromium-extensions.py
-python3 -m unittest discover -s scripts/tests -v
+python3 -m unittest discover -s tests -v
 ```
 
 ## Docs

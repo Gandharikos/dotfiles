@@ -1,6 +1,6 @@
 # Evaluation only: no services, credentials, routes or sysctls are changed.
 let
-  flake = builtins.getFlake ("git+file://" + toString ../..);
+  flake = builtins.getFlake ("git+file://" + toString ../.);
   inherit (flake.inputs.nixpkgs) lib;
   inherit (lib) types;
   systems = flake.nixosConfigurations;
@@ -21,7 +21,7 @@ let
             };
           };
         }
-        ../../modules/nixos/networking/tuning.nix
+        ../modules/nixos/networking/tuning.nix
         extra
       ];
     }).config;
@@ -272,6 +272,34 @@ in
         !(systems.ymir.extendModules {
           modules = [ { dot.networking.fail2ban.enable = false; } ];
         }).config.services.fail2ban.enable;
+      true;
+    fail2banIgnoreRanges =
+      let
+        expected = [
+          "10.0.0.0/8"
+          "100.64.0.0/10"
+          "172.16.0.0/12"
+          "192.168.0.0/16"
+          "fd7a:115c:a1e0::/48"
+        ];
+      in
+      assert lib.all (
+        host:
+        let
+          c = host.config;
+          cfg = c.services.fail2ban;
+          effective = lib.filter (ip: ip != "") (lib.splitString " " cfg.jails.DEFAULT.settings.ignoreip);
+        in
+        !cfg.enable
+        || (
+          cfg.ignoreIP == expected
+          && effective == [ "127.0.0.1/8" ] ++ lib.optional c.networking.enableIPv6 "::1" ++ expected
+          && builtins.length effective == builtins.length (lib.unique effective)
+          && lib.all (jail: !(jail.settings ? ignoreip)) (
+            builtins.attrValues (lib.filterAttrs (name: _: name != "DEFAULT") cfg.jails)
+          )
+        )
+      ) (builtins.attrValues systems);
       true;
     wslHostFileOwnedByNixos =
       assert systems.nidhogg.config.wsl.wslConf.network.generateHosts == false;

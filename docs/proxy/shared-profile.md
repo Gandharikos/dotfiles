@@ -168,19 +168,19 @@ With PyYAML available:
 ```sh
 SUB2SINGBOX="$(nix build --no-link --print-out-paths .#sub2singbox)/bin/sub2singbox" \
   SING_BOX="$(command -v sing-box)" \
-  python3 -m unittest discover -s scripts/tests -p 'test_sing_box_subscription.py' -v
-python3 -m unittest discover -s scripts/tests -p 'test_mihomo_profile.py' -v
-bash scripts/tests/test-tailnet-routing.sh
+  python3 -m unittest discover -s tests -p 'test_sing_box_subscription.py' -v
+python3 -m unittest discover -s tests -p 'test_mihomo_profile.py' -v
+bash tests/test-tailnet-routing.sh
 nix --extra-experimental-features pipe-operators eval --impure --json \
-  --file scripts/tests/proxy-backends.nix
+  --file tests/proxy-backends.nix
 for backend in sing-box mihomo; do
   nix --extra-experimental-features pipe-operators eval --impure \
-    --file scripts/tests/proxy-profile.nix --argstr backend "$backend" checks
+    --file tests/proxy-profile.nix --argstr backend "$backend" checks
   nix --extra-experimental-features pipe-operators eval --impure \
-    --file scripts/tests/proxy-profile.nix --argstr backend "$backend" \
+    --file tests/proxy-profile.nix --argstr backend "$backend" \
     --argstr hostname custom-endpoint --arg webUI false checks
   nix --extra-experimental-features pipe-operators build --impure --no-link \
-    --file scripts/tests/proxy-profile.nix --argstr backend "$backend" unit webUIUnit
+    --file tests/proxy-profile.nix --argstr backend "$backend" unit webUIUnit
 done
 nix build --no-link .#nixosConfigurations.<host>.config.system.build.toplevel
 ```

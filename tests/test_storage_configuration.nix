@@ -1,5 +1,5 @@
 let
-  flake = builtins.getFlake (toString ../..);
+  flake = builtins.getFlake (toString ../.);
   host = flake.nixosConfigurations.athena;
   inherit (host) pkgs;
   inherit (flake.inputs.nixpkgs) lib;

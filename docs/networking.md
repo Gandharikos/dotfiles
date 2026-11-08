@@ -54,6 +54,24 @@ declares ownership of `/etc/hosts` on nidhogg. This does not change `generateRes
 routes or the WSL firewall exception. The corrected setting has not been activated by these edits;
 verify the resulting file after a separately approved WSL restart.
 
+### Approved follow-up: Fail2ban whitelist boundaries
+
+The shared Fail2ban whitelist preserves the existing RFC1918 private networks and exempts both
+Tailnet ranges: `100.64.0.0/10` and `fd7a:115c:a1e0::/48`. The former `100.64.0.0/8` was normalized
+by the running ymir service to `100.0.0.0/8`, unintentionally exempting additional public addresses.
+The unrelated `8.8.8.8` entry is removed. Explicit IPv4 loopback duplication is also removed: NixOS
+already adds `127.0.0.1/8`, plus `::1` when IPv6 is enabled.
+
+These defaults apply to all inheriting jails, including athena's Vaultwarden jails. Tailnet IPv6
+clients now receive the same exemption as Tailnet IPv4 clients. This is an explicit trust policy:
+matching clients are exempt from automatic Fail2ban bans, not from authentication, Tailnet ACLs or
+other firewall rules. Mimir remains disabled; filters, retry limits and ban durations are unchanged.
+
+Editing/building does not activate this policy or change existing ban state. After a separately
+approved activation, verify the effective list with `sudo fail2ban-client get sshd ignoreip` and, on
+athena, the corresponding Vaultwarden jails. Do not flush bans or firewall tables as part of this
+configuration cleanup.
+
 ### Approved follow-up: nftables declaration and ymir trial
 
 `firewall.nix` now sets `networking.nftables.enable = true`. The shared declaration applies to
@@ -127,7 +145,8 @@ Relevant modules:
   shared nftables declaration, with the WSL exception retained.
 - [fail2ban.nix](../modules/nixos/networking/fail2ban.nix): jail and ban policy, controlled by
   `dot.networking.fail2ban.enable` (formerly `dot.services.fail2ban.enable`). Mimir remains
-  disabled; the move does not change the existing whitelist, filters, retry limits or ban durations.
+  disabled. The namespace move preserved policy; the separately approved whitelist cleanup is
+  described above. Filters, retry limits and ban durations remain unchanged.
 - [wireless.nix](../modules/nixos/networking/wireless.nix): iwd Wi-Fi settings; built-in IP
   configuration is disabled by the approved follow-up.
 - [proxy/profile.nix](../modules/nixos/networking/proxy/profile.nix): selected TUN exclusion and
@@ -248,12 +267,12 @@ rather than dumping runtime configuration files.
 
 ```sh
 nix --extra-experimental-features pipe-operators eval --impure --json \
-  --file scripts/tests/networking.nix checks
+  --file tests/networking.nix checks
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover \
-  -s scripts/tests -p 'test_network_diagnostics.py'
-bash scripts/tests/test-tailnet-routing.sh
+  -s tests -p 'test_network_diagnostics.py'
+bash tests/test-tailnet-routing.sh
 nix --extra-experimental-features pipe-operators eval --impure --json \
-  --file scripts/tests/dae.nix
+  --file tests/dae.nix
 ```
 
 The network tests cover null defaults, independent/combined settings, invalid options, ordinary
@@ -268,7 +287,7 @@ For a private declaration comparison, capture this output before and after a cha
 ```sh
 umask 077
 nix --extra-experimental-features pipe-operators eval --impure --json \
-  --file scripts/tests/networking.nix hosts > /tmp/network-declarations.json
+  --file tests/networking.nix hosts > /tmp/network-declarations.json
 ```
 
 The declaration inventory includes interface matches, DNS, manager flags, iwd, nftables, network

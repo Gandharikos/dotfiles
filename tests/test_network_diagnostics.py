@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-PATH = Path(__file__).resolve().parents[1] / "network-diagnostics.py"
+PATH = Path(__file__).resolve().parents[1] / "scripts/network-diagnostics.py"
 spec = importlib.util.spec_from_file_location("network_diagnostics", PATH)
 diagnostics = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(diagnostics)

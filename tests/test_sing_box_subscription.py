@@ -15,7 +15,7 @@ try:
 except ImportError:
     raise unittest.SkipTest("sing-box subscription tests require PyYAML") from None
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location(
     "subscription", ROOT / "scripts/sing-box-subscription.py"
 )

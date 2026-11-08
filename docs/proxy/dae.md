@@ -58,7 +58,7 @@ coexistence with each shared profile, unchanged system DNS and runtime credentia
 
 ```sh
 nix --extra-experimental-features pipe-operators eval --impure --json \
-  --file scripts/tests/dae.nix
+  --file tests/dae.nix
 ```
 
 These checks do not start services or install kernel hooks. Runtime dae/core cooperation has not

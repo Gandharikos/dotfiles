@@ -22,23 +22,23 @@ if [[ $mode == integration ]]; then
   export SUB2SINGBOX SING_BOX
 fi
 
-python3 -m unittest discover -s scripts/tests -v
-nix --extra-experimental-features pipe-operators eval --impure --json --file scripts/tests/networking.nix checks
-nix --extra-experimental-features pipe-operators eval --impure --json --file scripts/tests/dae.nix
-nix --extra-experimental-features pipe-operators eval --impure --json --file scripts/tests/proxy-backends.nix
+python3 -m unittest discover -s tests -v
+nix --extra-experimental-features pipe-operators eval --impure --json --file tests/networking.nix checks
+nix --extra-experimental-features pipe-operators eval --impure --json --file tests/dae.nix
+nix --extra-experimental-features pipe-operators eval --impure --json --file tests/proxy-backends.nix
 for backend in sing-box mihomo; do
   nix --extra-experimental-features pipe-operators eval --impure --json \
-    --file scripts/tests/proxy-profile.nix --argstr backend "$backend" checks
+    --file tests/proxy-profile.nix --argstr backend "$backend" checks
   nix --extra-experimental-features pipe-operators eval --impure --json \
-    --file scripts/tests/proxy-profile.nix --argstr backend "$backend" \
+    --file tests/proxy-profile.nix --argstr backend "$backend" \
     --argstr hostname custom-endpoint --arg webUI false checks
 done
 nix --extra-experimental-features pipe-operators eval --impure --raw \
-  --file scripts/tests/test_storage_configuration.nix drvPath
+  --file tests/test_storage_configuration.nix drvPath
 printf '\n'
 
 if [[ $mode == integration ]]; then
-  bash scripts/tests/test-tailnet-routing.sh
+  bash tests/test-tailnet-routing.sh
   nix --extra-experimental-features pipe-operators build --impure --no-link \
-    --file scripts/tests/test_restic_prepare.nix
+    --file tests/test_restic_prepare.nix
 fi

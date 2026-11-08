@@ -127,11 +127,11 @@ Tailscale/Mihomo. See the
 ## Validation and activation
 
 ```sh
-python3 -m unittest discover -s scripts/tests -p 'test_mihomo_profile.py' -v
-bash scripts/tests/test-tailnet-routing.sh
+python3 -m unittest discover -s tests -p 'test_mihomo_profile.py' -v
+bash tests/test-tailnet-routing.sh
 nix build --no-link .#nixosConfigurations.ymir.config.system.build.toplevel
 seed_program=$(nix eval --raw --apply builtins.head .#nixosConfigurations.ymir.config.systemd.services.mihomo.serviceConfig.ExecStartPre)
-bash scripts/tests/test-mihomo-provider-seed.sh "$seed_program"
+bash tests/test-mihomo-provider-seed.sh "$seed_program"
 ```
 
 The routing test uses an unprivileged network namespace and dummy interfaces. It covers IPv4/IPv6

@@ -7,7 +7,7 @@ import unittest
 from unittest.mock import patch
 
 
-MODULE = Path(__file__).resolve().parents[2] / "modules/nixos/services/selfhosted/common/backup-health.py"
+MODULE = Path(__file__).resolve().parents[1] / "modules/nixos/services/selfhosted/common/backup-health.py"
 spec = importlib.util.spec_from_file_location("backup_health", MODULE)
 health = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(health)

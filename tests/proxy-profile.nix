@@ -6,7 +6,7 @@
   mihomoPolicy ? null,
 }:
 let
-  flake = builtins.getFlake ("git+file://" + toString ../..);
+  flake = builtins.getFlake ("git+file://" + toString ../.);
   lib = flake.inputs.nixpkgs.lib;
   fixture = flake.nixosConfigurations.ymir.extendModules {
     modules = [

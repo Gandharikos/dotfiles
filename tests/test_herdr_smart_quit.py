@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-SCRIPT = Path(__file__).resolve().parents[1] / "herdr-smart-quit.sh"
+SCRIPT = Path(__file__).resolve().parents[1] / "scripts/herdr-smart-quit.sh"
 PANE = "w1:p2"
 
 

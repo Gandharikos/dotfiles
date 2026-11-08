@@ -219,7 +219,7 @@ check *args:
 [group('dev')]
 [no-exit-message]
 regression mode="unit":
-    nix develop "{{ flake }}#tests" --command bash "{{ flake }}/scripts/run-tests.sh" "{{ mode }}"
+    nix develop "{{ flake }}#tests" --command bash "{{ flake }}/tests/run-tests.sh" "{{ mode }}"
 
 [group('dev')]
 [no-exit-message]

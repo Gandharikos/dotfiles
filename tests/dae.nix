@@ -1,6 +1,6 @@
 # Pure evaluation only: no dae process, kernel hooks or secret files are created.
 let
-  flake = builtins.getFlake ("git+file://" + toString ../..);
+  flake = builtins.getFlake ("git+file://" + toString ../.);
   lib = flake.inputs.nixpkgs.lib;
   host = flake.nixosConfigurations.ymir;
   fixture =

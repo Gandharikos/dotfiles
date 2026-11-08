@@ -1,6 +1,6 @@
 # Pure evaluation: no activation, GUI uninstallation or secret decryption.
 let
-  flake = builtins.getFlake ("git+file://" + toString ../..);
+  flake = builtins.getFlake ("git+file://" + toString ../.);
   lib = flake.inputs.nixpkgs.lib;
   linux = flake.nixosConfigurations.ymir;
   darwin = flake.darwinConfigurations.eir;

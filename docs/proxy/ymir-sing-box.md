@@ -254,13 +254,13 @@ service activity nor a successful build proves end-to-end connectivity.
 
 ```sh
 nix --extra-experimental-features pipe-operators eval --impure --json \
-  --file scripts/tests/networking.nix checks
+  --file tests/networking.nix checks
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover \
-  -s scripts/tests -p 'test_network_diagnostics.py'
+  -s tests -p 'test_network_diagnostics.py'
 SUB2SINGBOX="$(nix build --no-link --print-out-paths .#sub2singbox)/bin/sub2singbox" \
   SING_BOX="$(command -v sing-box)" \
-  python3 -m unittest discover -s scripts/tests -p 'test_sing_box_subscription.py' -v
-bash scripts/tests/test-tailnet-routing.sh
+  python3 -m unittest discover -s tests -p 'test_sing_box_subscription.py' -v
+bash tests/test-tailnet-routing.sh
 nix build --no-link .#nixosConfigurations.ymir.config.system.build.toplevel
 ```
 

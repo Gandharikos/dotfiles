@@ -1,10 +1,10 @@
 let
-  flake = builtins.getFlake (toString ../..);
+  flake = builtins.getFlake (toString ../.);
   host = flake.nixosConfigurations.athena;
   inherit (host) pkgs;
   lib = flake.inputs.nixpkgs.lib.extend (
     final: _: {
-      dot = import ../../lib { lib = final; };
+      dot = import ../lib { lib = final; };
     }
   );
   cfg = host.config.dot.selfhosted.backups;

@@ -18,7 +18,7 @@
           ''
             export PYTHONDONTWRITEBYTECODE=1
             unset SING_BOX SUB2SINGBOX
-            python3 -m unittest discover -s ${self}/scripts/tests -v
+            python3 -m unittest discover -s ${self}/tests -v
             touch "$out"
           '';
 

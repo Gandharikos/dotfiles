@@ -77,9 +77,9 @@ ssh athena 'systemctl show restic-backups-selfhosted -p Result -p ExecMainStatus
 ## Validation and deployment
 
 ```sh
-python3 -m unittest discover -s scripts/tests -p 'test_backup_health.py'
-nix build --no-link --impure --file scripts/tests/test_restic_prepare.nix
-nix build --no-link --impure --file scripts/tests/test_storage_configuration.nix
+python3 -m unittest discover -s tests -p 'test_backup_health.py'
+nix build --no-link --impure --file tests/test_restic_prepare.nix
+nix build --no-link --impure --file tests/test_storage_configuration.nix
 ```
 
 The regression tests cover capacity/inode failures, stale metadata, failed or corrupt dumps,

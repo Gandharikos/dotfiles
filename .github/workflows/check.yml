@@ -54,4 +54,4 @@ jobs:
         run: nix flake check --option allow-import-from-derivation false
 
       - name: Regression tests
-        run: nix develop .#tests --command bash scripts/run-tests.sh
+        run: nix develop .#tests --command bash tests/run-tests.sh

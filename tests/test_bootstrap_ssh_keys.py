@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-SCRIPT = Path(__file__).resolve().parents[1] / "bootstrap-ssh-keys.sh"
+SCRIPT = Path(__file__).resolve().parents[1] / "scripts/bootstrap-ssh-keys.sh"
 
 
 @unittest.skipUnless(shutil.which("bash") and shutil.which("ssh-keygen"), "requires bash and ssh-keygen")
