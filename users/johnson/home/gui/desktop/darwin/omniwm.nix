@@ -68,8 +68,8 @@ in
             };
 
             focus = {
-              followsMouse = true;
-              moveMouseToFocusedWindow = true;
+              followsMouse = false;
+              moveMouseToFocusedWindow = false;
               followsWindowToMonitor = true;
             };
 
@@ -102,7 +102,7 @@ in
             };
 
             workspaceBar = {
-              enabled = true;
+              enabled = false;
               showLabels = true;
               showFloatingWindows = false;
               hideEmptyWorkspaces = false;
