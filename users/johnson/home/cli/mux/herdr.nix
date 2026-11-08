@@ -12,6 +12,14 @@ let
   autoStart = config.my.mux.autoStart && config.my.mux.default == "herdr";
   herdr = lib.getExe pkgs.herdr;
   backend = pkgs.vimPlugins.smart-splits-backend-herdr.src;
+  smartQuit = pkgs.writeShellApplication {
+    name = "herdr-smart-quit";
+    runtimeInputs = [
+      pkgs.herdr
+      pkgs.jq
+    ];
+    text = builtins.readFile (lib.dot.relativeToRoot "scripts/herdr-smart-quit.sh");
+  };
 in
 {
   options.my.herdr = {
@@ -22,7 +30,10 @@ in
 
   config = mkIf cfg.enable {
     home = {
-      packages = [ pkgs.jq ];
+      packages = [
+        pkgs.jq
+        smartQuit
+      ];
       activation.herdrSmartSplits = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
         run ${herdr} plugin link ${backend} --enabled >/dev/null
       '';
@@ -138,6 +149,12 @@ in
             split_vertical = "prefix+${osConfig.dot.keyboard.keys.l}";
             split_horizontal = "prefix+${osConfig.dot.keyboard.keys.j}";
             command = with osConfig.dot.keyboard.keys; [
+              {
+                key = "ctrl+q";
+                type = "shell";
+                command = lib.getExe smartQuit;
+                description = "smart quit (vim/herdr)";
+              }
               {
                 key = "ctrl+${h}";
                 type = "plugin_action";
