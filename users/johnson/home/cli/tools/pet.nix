@@ -34,6 +34,15 @@ in
           ];
         }
         {
+          command = "ip -br a";
+          description = "Show network interfaces and IP addresses in brief format";
+          tag = [
+            "cmd"
+            "networking"
+            "system"
+          ];
+        }
+        {
           command = "journalctl -b -p err --no-pager";
           description = "Show boot errors from the current boot";
           tag = [
