@@ -21,7 +21,14 @@ let
   inherit (lib.strings) escapeShellArgs hasInfix;
   inherit (lib.dot) uwsmAppArgs;
   inherit (config.my.gui) terminal;
-  terminalProgram = getExe (builtins.getAttr terminal.default pkgs);
+  rexLauncher = pkgs.writeShellScript "rex-terminal" ''
+    exec /usr/bin/open -b com.superlogical.rex "$@"
+  '';
+  terminalProgram =
+    if terminal.default == "rex" then
+      toString rexLauncher
+    else
+      getExe (builtins.getAttr terminal.default pkgs);
   terminalArgs = if terminal.default == "ghostty" then [ "+new-window" ] else [ ];
   commandType = coercedTo str (
     value:
@@ -44,14 +51,19 @@ in
     };
 
     default = mkOption {
-      type = nullOr (enum [
-        "wzeterm"
-        "ghostty"
-        "kitty"
-        "warp"
-      ]);
+      type = nullOr (
+        enum (
+          [
+            "wzeterm"
+            "ghostty"
+            "kitty"
+            "warp"
+          ]
+          ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [ "rex" ]
+        )
+      );
       default = if osConfig.dot.gui.enable then "ghostty" else null;
-      description = "The terminal to use";
+      description = "The terminal to use. On macOS, rex opens the separately installed Rex app.";
     };
 
     command = mkOption {
@@ -121,7 +133,7 @@ in
   # Set TERMINAL environment variable when a terminal is configured
   config = mkIf (terminal.default != null) {
     home.sessionVariables = {
-      TERMINAL = "${terminal.default}";
+      TERMINAL = if terminal.default == "rex" then toString rexLauncher else terminal.default;
     };
   };
 }

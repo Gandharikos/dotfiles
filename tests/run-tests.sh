@@ -26,6 +26,7 @@ python3 -m unittest discover -s tests -v
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/networking.nix checks
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/dae.nix
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/proxy-backends.nix
+nix --extra-experimental-features pipe-operators eval --impure --json --file tests/aerospace.nix
 for backend in sing-box mihomo; do
   nix --extra-experimental-features pipe-operators eval --impure --json \
     --file tests/proxy-profile.nix --argstr backend "$backend" checks

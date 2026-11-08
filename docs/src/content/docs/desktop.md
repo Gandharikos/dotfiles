@@ -18,6 +18,30 @@ users/johnson/home/gui/desktop/wayland/wms/
 modules/nixos/gui/desktop/wayland/wms/
 ```
 
+## AeroSpace on macOS
+
+`eir` uses Rex as its terminal launcher and Google Chrome as its browser launcher. Both apps must
+already be installed on macOS; launchers resolve their bundle IDs rather than a version-specific
+application name. AeroSpace's terminal shortcut uses the configured terminal command, and newly
+detected Rex and Chrome windows go to workspace 1. Existing window placements are not changed by
+editing the configuration. `TERMINAL` and `BROWSER` point to launch scripts that forward arguments
+to `open -b`; Rex launch arguments are macOS open targets, not terminal `-e` commands. The Rex CLI
+remains available separately. macOS default-browser associations are not overwritten by this
+configuration; select Chrome in System Settings if needed.
+
+The Darwin AeroSpace module corrects a path bug in the pinned Home Manager module: stripping the
+home directory from `xdg.configHome` leaves a leading slash, which Putter interprets as a root path
+such as `/.config/aerospace/aerospace.toml`. The local target override keeps the configuration under
+the configured XDG directory without changing its generated contents or reload hook. Putter remains
+enabled; no root-directory permission changes are needed.
+
+Validate the default XDG path, a custom XDG directory under the user home, and XDG-disabled mode:
+
+```sh
+nix --extra-experimental-features pipe-operators eval --impure --json \
+  --file tests/aerospace.nix
+```
+
 ## Shells And Tools
 
 The Wayland desktop includes launchers, idle handling, screenshot tools, desktop shell integrations,

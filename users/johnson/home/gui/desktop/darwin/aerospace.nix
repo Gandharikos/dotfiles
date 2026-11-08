@@ -23,6 +23,15 @@ with osConfig.dot.keyboard.keys;
         && osConfig.dot.gui.desktop.default == "aerospace"
       )
       {
+        # BUG(upstream): stripping homeDirectory leaves /.config, which Putter treats as a root path.
+        # Still present at 2c0c1f01521469cf0271180c453c79782d53c2f6:
+        # https://github.com/nix-community/home-manager/blob/2c0c1f01521469cf0271180c453c79782d53c2f6/modules/programs/aerospace.nix#L13-L17
+        # Remove this workaround once the pinned upstream fixes the target and tests/aerospace.nix passes without it.
+        home.file = lib.mkIf config.xdg.enable {
+          "${lib.removePrefix config.home.homeDirectory config.xdg.configHome}/aerospace/aerospace.toml".target =
+            "${config.xdg.configHome}/aerospace/aerospace.toml";
+        };
+
         programs.aerospace = {
           enable = true;
           launchd.enable = true;
@@ -145,7 +154,7 @@ with osConfig.dot.keyboard.keys;
                   # "${modKey}-shift-0" = "move-node-to-workspace 0";
 
                   # Custom shortcuts
-                  "${modKey}-enter" = "exec-and-forget open -n /applications/ghostty.app";
+                  "${modKey}-enter" = "exec-and-forget ${config.my.gui.terminal.exec}";
 
                   # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
                   "${modKey}-tab" = "workspace-back-and-forth";
@@ -230,6 +239,18 @@ with osConfig.dot.keyboard.keys;
               };
             };
             on-window-detected = [
+              {
+                "if" = {
+                  app-id = "com.superlogical.rex";
+                };
+                run = "move-node-to-workspace 1";
+              }
+              {
+                "if" = {
+                  app-id = "com.google.Chrome";
+                };
+                run = "move-node-to-workspace 1";
+              }
               {
                 "if" = {
                   app-id = "com.mitchellh.ghostty";

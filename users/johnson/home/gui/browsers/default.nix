@@ -21,6 +21,9 @@ let
     ;
   inherit (lib.dot) scanPaths;
   inherit (config.my.gui) browser;
+  chromeLauncher = pkgs.writeShellScript "google-chrome" ''
+    exec /usr/bin/open -b com.google.Chrome "$@"
+  '';
   commandType = coercedTo str (
     value:
     if hasInfix " " value then
@@ -37,12 +40,20 @@ in
 
   options.my.gui.browser = {
     default = mkOption {
-      type = nullOr (enum [
-        "chromium"
-        "firefox"
-      ]);
+      type = nullOr (
+        enum (
+          [
+            "chromium"
+            "firefox"
+          ]
+          ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [ "chrome" ]
+        )
+      );
       default = if osConfig.dot.gui.enable && osClass == "nixos" then "chromium" else null;
-      description = "The browser to use";
+      description = ''
+        The browser to use for launch commands and BROWSER. On macOS, chrome opens the
+        separately installed Google Chrome app; system URL associations remain managed by macOS.
+      '';
     };
     desktopId = mkOption {
       type = str;
@@ -54,6 +65,8 @@ in
       default =
         if browser.default == null then
           [ ]
+        else if browser.default == "chrome" then
+          [ (toString chromeLauncher) ]
         else if osConfig.dot.gui.desktop.uwsm.enable then
           withUWSMArgs pkgs browser.default
         else
@@ -82,7 +95,7 @@ in
 
   config = mkIf (browser.default != null) {
     home.sessionVariables = {
-      BROWSER = "${browser.default}";
+      BROWSER = if browser.default == "chrome" then toString chromeLauncher else browser.default;
     };
   };
 }
