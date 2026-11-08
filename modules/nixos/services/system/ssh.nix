@@ -19,6 +19,17 @@ in
   };
 
   config = mkIf cfg.enable {
+    programs.ssh.knownHosts = {
+      "github.com" = {
+        # Published at https://api.github.com/meta.
+        publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl";
+      };
+      "git.huwenqiang.dev" = {
+        # Matches the host key in secrets/johnson/core/athena.pub.
+        publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIhVE2Ab0ikxrXeUMppzCt6pOPZ8pU/siygTSNamXbpK";
+      };
+    };
+
     # environment.systemPackages = [pkgs.ghossty.terminfo];
     services.openssh = {
       enable = true;
