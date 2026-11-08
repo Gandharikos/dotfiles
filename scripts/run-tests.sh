@@ -38,7 +38,7 @@ nix --extra-experimental-features pipe-operators eval --impure --raw \
 printf '\n'
 
 if [[ $mode == integration ]]; then
-  bash scripts/tests/test-mihomo-tailnet-routing.sh
+  bash scripts/tests/test-tailnet-routing.sh
   nix --extra-experimental-features pipe-operators build --impure --no-link \
     --file scripts/tests/test_restic_prepare.nix
 fi

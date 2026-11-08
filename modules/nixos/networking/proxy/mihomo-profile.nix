@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  self,
   ...
 }:
 let
@@ -25,11 +24,6 @@ let
         printf '%s\n' "$seedHash" > "$marker"
       fi
     '';
-  };
-  routing = pkgs.writeShellApplication {
-    name = "mihomo-tailnet-routing";
-    runtimeInputs = [ pkgs.iproute2 ];
-    text = builtins.readFile "${self}/scripts/mihomo-tailnet-routing.sh";
   };
 in
 {
@@ -90,7 +84,7 @@ in
       webui = pkgs.metacubexd;
     };
 
-    # Loose reverse-path validation permits the asymmetric TUN/Tailnet policy routes.
+    # Retain the existing reverse-path policy for TUN/Tailscale coexistence.
     networking.firewall.checkReversePath = "loose";
 
     systemd.services.mihomo.serviceConfig = {
@@ -99,20 +93,6 @@ in
         "wgetcloud.yaml:${config.sops.secrets.mihomo_subscription_nodes.path}"
       ];
       ExecStartPre = [ (lib.getExe seedProvider) ];
-    };
-
-    systemd.services.mihomo-tailnet-routing = {
-      description = "Separate system Tailscale replies from Mihomo Tailnet outbounds";
-      before = [ "mihomo.service" ];
-      requiredBy = [ "mihomo.service" ];
-      partOf = [ "mihomo.service" ];
-      unitConfig.StopWhenUnneeded = true;
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStart = "${lib.getExe routing} start";
-        ExecStop = "${lib.getExe routing} stop";
-      };
     };
 
     assertions = [

@@ -70,6 +70,8 @@
       "iproute2_rule_index": 9000,
       "exclude_interface": ["__SYSTEM_TAILSCALE_INTERFACE__"],
       "route_exclude_address": [
+        "100.64.0.0/10",
+        "fd7a:115c:a1e0::/48",
         "10.0.0.0/8",
         "172.16.0.0/12",
         "192.168.0.0/16",

@@ -129,6 +129,9 @@ Relevant modules:
   configuration is disabled by the approved follow-up.
 - [proxy/profile.nix](../modules/nixos/networking/proxy/profile.nix): selected TUN exclusion and
   resolved-to-core DNS path.
+- [proxy/tailnet-profile.nix](../modules/nixos/networking/proxy/tailnet-profile.nix): shared Tailnet
+  options, identity validation and node-local Serve. See the
+  [identity and routing boundaries](proxy/shared-profile.md#system-proxy-and-rex-identities).
 
 ### ymir boundaries
 
@@ -145,7 +148,8 @@ This is the declared division, not proof of the currently running configuration.
 - resolved forwarding to `127.0.0.1:1053`, no fallback DNS, and DNSSEC disabled;
 - loopback mixed/controller listeners and authenticated private Tailnet Serve;
 - the distinct system, embedded-core and Rex identities;
-- Tailscale transport bypasses and inbound replies, including priorities 5260/5261 and table 2022;
+- system Tailscale's transport bypasses and table 52 for native Tailnet connections; proxy table
+  2022 handles other intercepted traffic. The former 5260/5261 overrides are retired;
 - dae disabled, with no automatic interception changes.
 
 ### Open ownership questions, not changes in this phase
@@ -244,7 +248,7 @@ nix --extra-experimental-features pipe-operators eval --impure --json \
   --file scripts/tests/networking.nix checks
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover \
   -s scripts/tests -p 'test_network_diagnostics.py'
-bash scripts/tests/test-mihomo-tailnet-routing.sh
+bash scripts/tests/test-tailnet-routing.sh
 nix --extra-experimental-features pipe-operators eval --impure --json \
   --file scripts/tests/dae.nix
 ```

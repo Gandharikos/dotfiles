@@ -111,6 +111,19 @@ class SubscriptionTests(unittest.TestCase):
             self.assertNotIn("ymir", (ROOT / path).read_text())
             self.assertNotIn("tail2cfd9e.ts.net", (ROOT / path).read_text())
 
+    def test_native_tailnet_bypasses_tun_but_explicit_proxy_keeps_endpoint(self):
+        tun = next(inbound for inbound in self.base["inbounds"] if inbound["type"] == "tun")
+        networks = {"100.64.0.0/10", "fd7a:115c:a1e0::/48"}
+        self.assertTrue(networks.issubset(tun["route_exclude_address"]))
+        self.assertEqual(tun["iproute2_rule_index"], 9000)
+        routes = self.base["route"]["rules"]
+        self.assertTrue(any(
+            networks.issubset(rule.get("ip_cidr", [])) and rule.get("outbound") == "Tailnet"
+            for rule in routes
+        ))
+        endpoint = next(endpoint for endpoint in self.base["endpoints"] if endpoint["tag"] == "Tailnet")
+        self.assertEqual(endpoint["hostname"], "fixture-singbox")
+
     def test_cn_rule_set_paths(self):
         rules = {rule["tag"]: rule for rule in self.base["route"]["rule_set"]}
         root = "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo"

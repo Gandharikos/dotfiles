@@ -73,8 +73,11 @@ Git.
   `127.0.0.1:${profile.ports.controller}` without enabling Funnel. The service is named
   `<backend>-tailnet-webui`; controller authentication remains required. Serve follows
   `proxy.autoStart`; disabling it leaves the unit manual, as with the sing-box refresh timer.
-- The shared presets reserve route table 2022 and priorities 5260/5261. Existing conflicting rules
-  cause startup to fail rather than being overwritten. Keep system Tailscale outside the proxy TUN.
+- Tailnet options, validation and Serve live in
+  `modules/nixos/networking/proxy/tailnet-profile.nix`.
+- The proxy uses route table 2022 with policy priorities starting at 9000. System Tailscale owns
+  table 52 and its earlier transport/peer rules. Neither profile installs the former 5260/5261
+  overrides. Both TUN templates exclude `100.64.0.0/10` and `fd7a:115c:a1e0::/48`.
 
 ## Files and responsibilities
 
@@ -84,9 +87,10 @@ Git.
 | `config/sing-box/policy.yml`                          | Public service selectors and rule snapshots                                 |
 | `config/mihomo/config.yaml`                           | Mihomo base: listeners, DNS, TUN, subscription and Tailnet                  |
 | `config/mihomo/policy.yaml`                           | Mihomo proxy groups, rule providers and ordered routing rules               |
-| `modules/nixos/networking/proxy/profile.nix`          | Opt-in host parameters, system DNS and shared Tailnet Serve                 |
-| `modules/nixos/networking/proxy/sing-box-profile.nix` | Conversion, refresh, private credentials and routing                        |
-| `modules/nixos/networking/proxy/mihomo-profile.nix`   | Alternative provider cache, SOPS rendering and routing                      |
+| `modules/nixos/networking/proxy/profile.nix`          | Opt-in host parameters and system DNS                                       |
+| `modules/nixos/networking/proxy/tailnet-profile.nix`  | Tailnet options, identity validation and node-local Serve                   |
+| `modules/nixos/networking/proxy/sing-box-profile.nix` | Conversion, refresh and private credentials                                 |
+| `modules/nixos/networking/proxy/mihomo-profile.nix`   | Alternative provider cache and SOPS rendering                               |
 | `scripts/sing-box-subscription.py`                    | Input/output validation, policy assembly, last-good cache and atomic writes |
 | `packages/sub2singbox.nix`                            | Pinned upstream node converter and Trojan URI password fix                  |
 
@@ -128,6 +132,35 @@ Mihomo preset retains its existing policy, not the sing-box-only policy YAML. It
 `providers/wgetcloud.yaml` cache basename is retained so changing the provider's display name to
 `Subscription` does not discard a newer online snapshot.
 
+## System, proxy and Rex identities
+
+```text
+Native Tailnet connections / tailscale ssh / Taildrop -> system tailscaled
+Explicit SOCKS/HTTP requests -> core routing rules -> embedded Tailnet endpoint
+Rex sessions -> Rex's independent Tailscale identity and transport
+```
+
+Keep the system client's native route and transport bypasses. Do not force its private destinations
+through the proxy TUN: Linux Tailscale's anti-spoof filter rejects CGNAT-sourced replies on another
+interface. No firewall exception, blanket trusted TUN, or disabled Tailscale filter is needed for
+this architecture. The experimental SSH-only reply helper was withdrawn, not deployed permanently.
+
+The existing application-level Tailnet rules and embedded state remain available through the mixed
+listener. For example, `ssh -o 'ProxyCommand=nc -x 127.0.0.1:7890 -X 5 %h %p' user@TAILNET_IP` uses
+the proxy endpoint; plain `tailscale ssh` and `tailscale file` use the system client. This does not
+make the system client's outer transport use a subscription proxy. No proxy environment is added to
+system tailscaled. Ordinary system DNS still uses the proxy resolver; preserving native Tailnet
+routes is not a promise that all hostname resolution survives a proxy outage.
+
+Rex is a separate client, not an alias for the proxy's embedded identity. A remote Rex client may
+need proxy assistance for its outer transport even when system Tailscale works directly. This change
+does not alter Rex's current process rule or state; that transport path needs separate validation
+before any routing changes.
+
+On activation, the old `<backend>-tailnet-routing.service` must stop and run its existing `ExecStop`
+to remove the owned 5260/5261 rules. Check both address families afterward. A build alone does not
+clean live routes. Do not flush policy rules or Tailscale's firewall chains.
+
 ## Validation
 
 With PyYAML available:
@@ -137,7 +170,7 @@ SUB2SINGBOX="$(nix build --no-link --print-out-paths .#sub2singbox)/bin/sub2sing
   SING_BOX="$(command -v sing-box)" \
   python3 -m unittest discover -s scripts/tests -p 'test_sing_box_subscription.py' -v
 python3 -m unittest discover -s scripts/tests -p 'test_mihomo_profile.py' -v
-bash scripts/tests/test-mihomo-tailnet-routing.sh
+bash scripts/tests/test-tailnet-routing.sh
 nix --extra-experimental-features pipe-operators eval --impure --json \
   --file scripts/tests/proxy-backends.nix
 for backend in sing-box mihomo; do

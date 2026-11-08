@@ -43,6 +43,13 @@ class MihomoProfileTests(unittest.TestCase):
             self.assertEqual(group["use"], ["Subscription"])
         self.assertEqual(self.base["proxies"][0]["dialer-proxy"], "Proxy")
 
+    def test_native_tailnet_bypasses_tun(self):
+        tun = self.base["tun"]
+        self.assertTrue(
+            {"100.64.0.0/10", "fd7a:115c:a1e0::/48"}.issubset(tun["route-exclude-address"])
+        )
+        self.assertEqual(tun["iproute2-rule-index"], 9000)
+
     def test_routing_precedence_and_dns_references(self):
         self.assertEqual(
             self.policy["rules"][:4],

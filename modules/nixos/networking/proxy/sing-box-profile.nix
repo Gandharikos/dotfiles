@@ -63,12 +63,6 @@ let
     "controller-secret:${config.sops.secrets.singbox_controller_secret.path}"
     "subscription-url:${config.sops.secrets.singbox_subscription_url.path}"
   ];
-  routing = pkgs.writeShellApplication {
-    name = "sing-box-tailnet-routing";
-    runtimeInputs = [ pkgs.iproute2 ];
-    # Both alternative cores use table 2022; only the selected backend owns the rules.
-    text = builtins.readFile "${self}/scripts/mihomo-tailnet-routing.sh";
-  };
 in
 {
   config = lib.mkIf enabled {
@@ -136,19 +130,6 @@ in
         OnBootSec = "15m";
         OnUnitActiveSec = "1d";
         RandomizedDelaySec = "5m";
-      };
-    };
-    systemd.services.sing-box-tailnet-routing = {
-      description = "Preserve system Tailscale replies alongside sing-box Tailnet outbounds";
-      before = [ "sing-box.service" ];
-      requiredBy = [ "sing-box.service" ];
-      partOf = [ "sing-box.service" ];
-      unitConfig.StopWhenUnneeded = true;
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStart = "${lib.getExe routing} start";
-        ExecStop = "${lib.getExe routing} stop";
       };
     };
 

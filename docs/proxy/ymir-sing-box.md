@@ -27,9 +27,10 @@ switching clears a previously selected exit node without restarting the system T
 ## Identities and routing
 
 ```text
-Applications -> sing-box TUN -> domestic/LAN: direct
-                            -> Internet: Proxy -> Auto or a selected subscription node
-                            -> Tailnet: ymir-singbox endpoint
+Native Tailnet / tailscale ssh / Taildrop -> system ymir identity
+Other applications -> sing-box TUN -> domestic/LAN: direct
+                                  -> Internet: Proxy -> Auto or a selected subscription node
+Explicit SOCKS/HTTP -> sing-box rules -> Tailnet: ymir-singbox endpoint
 Remote peers -> system ymir identity -> SSH/Taildrop
 Remote peers -> ymir-rex identity -> Rex
 ```
@@ -39,8 +40,15 @@ endpoint. The shared NixOS profile reuses `packages/sub2singbox.nix` in node-onl
 import the legacy generic DNS/routing template. Host parameters now live in `hosts/ymir/config.nix`.
 See [shared profile configuration](shared-profile.md) for reuse on another host.
 
-The shared-module/converter refactor is prepared but has not been switched into the running system.
-The live-validation results above describe the preceding deployment.
+The user subsequently switched to the native-Tailnet routing cleanup and reported connectivity
+restored. Read-only verification confirmed that both IPv4 and IPv6 routes to eir use `tailscale0`
+and table 52 with system ymir's source addresses. Priorities 5260/5261 are absent in both families;
+sing-box and tailscaled are active, and the running/default system generation matches. The earlier
+live-validation section describes the preceding deployment, not a rerun of every check.
+
+The cleanup passed 72 regression tests (including real-core checks), isolated routing tests, flake
+evaluation and a full ymir build. An actual Taildrop file transfer, cold boot and Rex's proxy
+dependence have not been validated as part of this activation.
 
 - System `ymir` stays enabled, with its Mullvad exit node explicitly cleared and accepted DNS/subnet
   routes disabled. Existing SSH/Taildrop access keeps this identity.
@@ -51,17 +59,56 @@ The live-validation results above describe the preceding deployment.
 - Tailscale endpoint `detour: Proxy` controls its control-plane dialing. Do not assume every peer
   transport connection is proxied. Peer/DERP behavior and ACLs require live testing.
 
-The profile reuses the tested routing helper `scripts/mihomo-tailnet-routing.sh`. Its name is
-historical: table 2022 is shared by the two mutually exclusive backend profiles. Priorities 5260 and
-5261 preserve system-Tailscale replies and send ordinary Tailnet outbounds to the selected TUN.
-Tailscaled's marked transport rules remain before these rules. The sing-box interface is `sb-tun`,
-with automatic redirect disabled and incoming `tailscale0` traffic excluded.
+The former routing helper and its 5260/5261 overrides are removed. Native Tailnet destinations use
+system Tailscale's earlier table-52 lookup. The `sb-tun` template excludes both Tailnet IP ranges,
+with automatic redirect still disabled and incoming `tailscale0` traffic excluded. The embedded
+endpoint and application-level Tailnet rules remain available for explicit SOCKS/HTTP traffic.
+Activation must stop the old routing service and confirm that its `ExecStop` removed both families
+of owned rules. No system-tailscaled proxy environment or firewall exception is added.
 
 `systemd-resolved` forwards to the local DNS inbound at `127.0.0.1:1053`. Tailnet names use the
 embedded Tailscale DNS server; bootstrap/control-plane names use direct resolvers. The profile uses
 fake-IP for other address queries, and remote CN domain/IP rule sets for direct routing. CN rule-set
 downloads still need working direct access or a populated cache. LAN IP access is direct; local DNS
 names that depend on router-specific records may need an additional resolver rule.
+
+## Tailnet SSH reply filtering
+
+A later local investigation on 2026-11-08 found that system Tailscale's IPv4 anti-spoof rule drops
+packets sourced from `100.64.0.0/10` when they arrive on an interface other than `tailscale0`.
+Embedded-endpoint replies arrive through `sb-tun`, so ordinary IPv4 SSH and `tailscale ssh` timed
+out even though the embedded identity was online. The corresponding IPv6 chain had no such drop.
+
+SOCKS-to-SSH connections reached both eir and athena, while a direct TUN probe increased the
+anti-spoof drop counter from 173 to 179. A temporary TUN sniff/stream-path experiment did not fix
+IPv4 and was reverted. This was not evidence of a sing-box packet-forwarding bug.
+
+A bounded input-rule exception for established Tailnet TCP/22 replies restored IPv4 SSH banners from
+both peers. Ordinary SSH and `tailscale ssh eir` then both completed a `true` command with exit
+status 0. Public/domestic HTTPS, DNS, IPv6, Nix cache, mixed proxy and controller checks remained
+healthy. No route, ACL, endpoint identity, listening port or system generation was changed. The
+trial exception and runtime service overrides were removed and their rollback timers cancelled.
+
+A hardened helper with the extra conntrack `REPLY` restriction also passed a runtime-only service
+trial: both SSH commands completed, and remote `SSH_CONNECTION` confirmed the embedded source
+`100.98.149.116`. Reload/restart retained one rule and did not restart either VPN process. All
+runtime links and rules were subsequently removed. That SSH-only implementation was withdrawn before
+permanent deployment: it does not solve the broader identity boundary for native Taildrop. The
+selected fix instead preserves system routing, without an extra firewall service.
+
+### Surge comparison
+
+Read-only inspection of eir (macOS 27.2, Tailscale 1.104.4, Surge 6.10.0) found the athena route on
+`utun4`, whose address was system eir's `100.83.178.43`. An eir-to-athena `tailscale ssh` command
+reported that same source in `SSH_CONNECTION`, not `eir-surge`'s `100.82.229.3`. Surge being active
+did not mean this native SSH session used its embedded endpoint. The user also reported that system
+Tailscale continued working with Surge off, while Rex connectivity depended on Surge. That is
+evidence of separate client/transport requirements, not proof that Rex traverses the Surge endpoint.
+This change preserves Rex's identity and existing rules for separate investigation.
+
+Upstream Tailscale's Linux router installs the external-CGNAT DROP; the Darwin router uses its BSD
+routing implementation, not that Linux netfilter chain. The current shared profile consequently
+keeps native connections out of the proxy TUN instead of weakening the system anti-spoof policy.
 
 ## Subscription and secrets
 
@@ -213,7 +260,7 @@ PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover \
 SUB2SINGBOX="$(nix build --no-link --print-out-paths .#sub2singbox)/bin/sub2singbox" \
   SING_BOX="$(command -v sing-box)" \
   python3 -m unittest discover -s scripts/tests -p 'test_sing_box_subscription.py' -v
-bash scripts/tests/test-mihomo-tailnet-routing.sh
+bash scripts/tests/test-tailnet-routing.sh
 nix build --no-link .#nixosConfigurations.ymir.config.system.build.toplevel
 ```
 

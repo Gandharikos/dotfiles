@@ -65,6 +65,9 @@ in
     assert cfg.services.sing-box.enable == native;
     assert cfg.services.mihomo.enable == !native;
     assert !native || cfg.systemd.timers.sing-box-subscription.wantedBy == [ ];
+    assert !(cfg.systemd.services ? sing-box-tailnet-ssh-replies);
+    assert !(cfg.systemd.services ? sing-box-tailnet-routing);
+    assert !(cfg.systemd.services ? mihomo-tailnet-routing);
     assert
       if webUI then
         cfg.systemd.services.${webUIService}.wantedBy == [ ]

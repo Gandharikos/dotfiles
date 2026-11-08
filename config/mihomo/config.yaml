@@ -11,8 +11,8 @@ profile:
   store-selected: true
   store-fake-ip: true
 
-# Keep system tailscaled's marked transport outside this TUN. The additional
-# policy rules in the shared NixOS profile handle Tailnet destinations and replies.
+# Native Tailnet traffic stays on system Tailscale. Explicit proxy requests can
+# still select the embedded Tailnet outbound through the application-level rules.
 tun:
   enable: true
   device: mihomo
@@ -33,6 +33,8 @@ tun:
   exclude-interface:
     - __SYSTEM_TAILSCALE_INTERFACE__
   route-exclude-address:
+    - 100.64.0.0/10
+    - fd7a:115c:a1e0::/48
     - 10.0.0.0/8
     - 172.16.0.0/12
     - 192.168.0.0/16
