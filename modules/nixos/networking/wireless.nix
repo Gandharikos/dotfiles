@@ -15,7 +15,8 @@ in
     iwd.settings = {
       Settings.AutoConnect = true;
       General = {
-        EnableNetworkConfiguration = true;
+        # NetworkManager owns IP addresses, routes and DNS.
+        EnableNetworkConfiguration = false;
         RoamRetryInterval = 15;
       };
       Network.EnableIpv6 = cfg.enableIPv6;

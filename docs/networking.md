@@ -1,8 +1,8 @@
 # Network ownership, diagnostics and staged changes
 
 This guide covers NixOS network ownership, the behavior-preserving refactor and the separately
-approved LLMNR hardening below. It does not claim that a build has been activated or that
-coexistence of network managers is always correct. See the
+approved LLMNR hardening and iwd ownership changes below. It does not claim that a build has been
+activated or that coexistence of network managers is always correct. See the
 [shared proxy profile](proxy/shared-profile.md) and [ymir deployment guide](proxy/ymir-sing-box.md)
 for proxy-specific rules and identities.
 
@@ -33,6 +33,19 @@ scripted `network-addresses-*` units or reference-host interface names are added
 This follow-up changes the declaration baseline only for LLMNR. Verify required LAN names before a
 separately authorized activation. Building the configuration does not change the running resolver.
 
+### Approved follow-up: reserve Wi-Fi IP configuration for NetworkManager
+
+The shared wireless module now sets `iwd.settings.General.EnableNetworkConfiguration = false`.
+NetworkManager keeps its `iwd` backend: iwd handles Wi-Fi association and authentication, while
+NetworkManager configures IP addresses, routes and DNS. All currently declared hosts with iwd
+enabled also enable NetworkManager. The installer does not import this shared module; iwd remains
+disabled on mimir and nidhogg.
+
+This change is not activated by editing or evaluating the configuration. First activation may
+restart iwd and interrupt Wi-Fi; use a local console or an independent recovery connection.
+Disabling NetworkManager does not automatically enable standalone iwd IP configuration. A future
+standalone iwd host must explicitly define network ownership and update the ownership tests.
+
 ## Declared ownership inventory
 
 The baseline was evaluated at `ac8360b`. This table records declarations, not live ownership or
@@ -57,7 +70,8 @@ Relevant modules:
   definitions from `dot.device.ethernetDevices`.
 - [networkmanager.nix](../modules/nixos/networking/networkmanager.nix): NM, resolver integration,
   Wi-Fi backend and interface exclusions.
-- [wireless.nix](../modules/nixos/networking/wireless.nix): iwd settings; unchanged in this phase.
+- [wireless.nix](../modules/nixos/networking/wireless.nix): iwd Wi-Fi settings; built-in IP
+  configuration is disabled by the approved follow-up.
 - [proxy/profile.nix](../modules/nixos/networking/proxy/profile.nix): selected TUN exclusion and
   resolved-to-core DNS path.
 
@@ -71,7 +85,7 @@ System Tailnet interface/rules -> tailscaled
 networkd declaration           -> do not manage tailscale0
 ```
 
-This is the intended division, not evidence that iwd cannot also configure addresses. Preserve:
+This is the declared division, not proof of the currently running configuration. Preserve:
 
 - resolved forwarding to `127.0.0.1:1053`, no fallback DNS, and DNSSEC disabled;
 - loopback mixed/controller listeners and authenticated private Tailnet Serve;
@@ -83,9 +97,6 @@ This is the intended division, not evidence that iwd cannot also configure addre
 
 - athena declares networkd DHCP on `eth0`, while NM is enabled without an explicit `eth0` exclusion.
   Inspect live ownership before changing either manager.
-- ymir uses NM's iwd backend while `General.EnableNetworkConfiguration = true` is declared for iwd.
-  Determine who configures addresses, DHCP and DNS. A future change may reserve those duties for NM;
-  standalone iwd needs a different policy. No iwd setting is changed here.
 - Review libvirt/container interfaces individually. NM's `connected (externally)` is not proof it
   acquired the address. Do not blindly exclude all bridges: some may intentionally belong to NM.
 - `ManageForeignRoutingPolicyRules`, `ManageForeignRoutes`, and `ManageForeignNextHops` remain
@@ -183,10 +194,11 @@ nix --extra-experimental-features pipe-operators eval --impure --json \
 ```
 
 The network tests cover null defaults, independent/combined settings, invalid options, ordinary
-manager overrides, current host defaults, shared-module LLMNR hardening, and ymir DNS/Tailnet/dae
-invariants. Diagnostic tests use fake command responses and restrict calls to fixed read queries.
-They verify field selection, unavailable tools, malformed responses, timeouts and suppression of
-error output. The routing test operates in a disposable network namespace, never the host namespace.
+manager overrides, current host defaults, shared-module LLMNR hardening, iwd/NetworkManager
+ownership, and ymir DNS/Tailnet/dae invariants. Diagnostic tests use fake command responses and
+restrict calls to fixed read queries. They verify field selection, unavailable tools, malformed
+responses, timeouts and suppression of error output. The routing test operates in a disposable
+network namespace, never the host namespace.
 
 For a private declaration comparison, capture this output before and after a change:
 
@@ -200,7 +212,8 @@ The declaration inventory includes interface matches, DNS, manager flags, iwd, n
 sysctls and kernel modules. It does not prove that every host has deployed those settings. Ordinary
 manager override checks do not replace a complete build and runtime validation of a new manager
 layout. The baseline refactor preserved all seven host snapshots. The approved LLMNR follow-up
-changes only that setting within the inventory; it does not migrate network ownership.
+changes only that setting within the inventory. The later iwd follow-up changes only its
+`EnableNetworkConfiguration` setting; manager enablement and DNS/proxy paths stay unchanged.
 
 Build without activation:
 

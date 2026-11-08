@@ -214,6 +214,23 @@ in
         || (host.config.services.resolved.settings.Resolve.LLMNR or null) == false
       ) (builtins.attrValues systems);
       true;
+    iwdLeavesIpConfigurationToNetworkManager =
+      assert lib.all (
+        host:
+        let
+          c = host.config;
+        in
+        !c.networking.wireless.iwd.enable
+        || (
+          c.networking.networkmanager.enable
+          && c.networking.networkmanager.wifi.backend == "iwd"
+          && (c.networking.wireless.iwd.settings.General.EnableNetworkConfiguration or null) == false
+        )
+      ) (builtins.attrValues systems);
+      assert
+        (managerOverride.networking.wireless.iwd.settings.General.EnableNetworkConfiguration or null)
+        == false;
+      true;
     ymirDnsAndBypassesPreserved =
       assert ymir.services.resolved.settings.Resolve.DNS == [ "127.0.0.1:1053" ];
       assert ymir.services.resolved.settings.Resolve.DNSSEC == false;
