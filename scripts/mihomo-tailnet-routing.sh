@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Shared by ymir's mutually exclusive proxy profiles. Priorities sit after tailscaled's
+# Shared by the mutually exclusive NixOS proxy profiles. Priorities sit after tailscaled's
 # transport-mark bypass (5210..5250), but before its Tailnet table rule (5270).
 apply_rules() {
   local action=$1 family network priority table selector

@@ -7,8 +7,9 @@
 }:
 let
   cfg = config.dot.networking.proxy;
-  enabled = cfg.enable && cfg.backend == "mihomo";
-  secretsFile = "${self}/secrets/hosts/ymir/mihomo.yaml";
+  inherit (cfg) profile;
+  enabled = cfg.enable && profile.enable && cfg.backend == "mihomo";
+  inherit (profile) secretsFile;
   seedProvider = pkgs.writeShellApplication {
     name = "mihomo-seed-provider";
     runtimeInputs = [ pkgs.coreutils ];
@@ -33,7 +34,7 @@ let
 in
 {
   config = lib.mkIf enabled {
-    dot.networking.proxy.mihomo.configFile = config.sops.templates."ymir-mihomo.yaml".path;
+    dot.networking.proxy.mihomo.configFile = config.sops.templates."proxy-mihomo.yaml".path;
 
     sops.secrets = {
       mihomo_subscription_url = {
@@ -50,34 +51,40 @@ in
         key = "controller_secret";
       };
     };
-    sops.templates."ymir-mihomo.yaml" = {
+    sops.templates."proxy-mihomo.yaml" = {
       mode = "0400";
+      # Nix substitutes public parameters and SOPS markers; sops-nix fills secrets at activation.
       content =
         builtins.replaceStrings
           [
             "__SUBSCRIPTION_URL__"
             "__CONTROLLER_SECRET__"
+            "__TAILNET_DOMAIN__"
+            "__TAILNET_HOSTNAME__"
+            "__SYSTEM_TAILSCALE_INTERFACE__"
+            "__MIXED_PORT__"
+            "__DNS_PORT__"
+            "__CONTROLLER_PORT__"
           ]
           [
             config.sops.placeholder.mihomo_subscription_url
             config.sops.placeholder.mihomo_controller_secret
+            profile.tailnet.domain
+            profile.tailnet.hostname
+            config.services.tailscale.interfaceName
+            (toString profile.ports.mixed)
+            (toString profile.ports.dns)
+            (toString profile.ports.controller)
           ]
-          (builtins.readFile "${self}/config/mihomo/ymir.yaml");
+          (
+            lib.concatStringsSep "\n" [
+              (builtins.readFile profile.mihomo.template)
+              (builtins.readFile profile.mihomo.policy)
+            ]
+          );
       restartUnits = [ "mihomo.service" ];
     };
 
-    # resolved owns the system stub; only Mihomo decides how upstream DNS is routed.
-    # Its bootstrap/node resolvers do not use resolved, avoiding a recursive lookup.
-    services.resolved.settings.Resolve = {
-      DNS = lib.mkForce [ "127.0.0.1:1053" ];
-      Domains = lib.mkForce [
-        "~."
-        "tail2cfd9e.ts.net"
-      ];
-      FallbackDNS = lib.mkForce [ ];
-      DNSOverTLS = lib.mkForce false;
-    };
-    networking.networkmanager.unmanaged = [ "interface-name:mihomo" ];
     services.mihomo = {
       processesInfo = true;
       webui = pkgs.metacubexd;
@@ -110,17 +117,8 @@ in
 
     assertions = [
       {
-        assertion = config.dot.networking.tailscale.enable;
-        message = "ymir's Mihomo routing requires the system Tailscale identity for inbound access.";
-      }
-      {
-        assertion = config.dot.networking.tailscale.exitNode == "";
-        message = "Disable the system Tailscale exit node before using ymir's Mihomo profile.";
-      }
-      {
-        assertion =
-          !config.dot.networking.tailscale.acceptRoutes && !config.dot.networking.tailscale.acceptDns;
-        message = "ymir's system Tailscale must not accept subnet routes or override Mihomo DNS.";
+        assertion = !config.services.sing-box.enable;
+        message = "Do not run sing-box and Mihomo TUN/controller simultaneously.";
       }
     ];
   };

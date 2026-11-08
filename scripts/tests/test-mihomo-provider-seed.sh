@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Pass the built ExecStartPre program from ymir's mihomo.service configuration.
+# Pass the built ExecStartPre program from the shared profile's mihomo.service.
 seed_program=${1:?Usage: test-mihomo-provider-seed.sh /nix/store/.../bin/mihomo-seed-provider}
 workdir=$(mktemp -d)
 trap 'rm -rf -- "$workdir"' EXIT

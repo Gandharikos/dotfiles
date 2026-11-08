@@ -13,7 +13,7 @@ keys:
   - &johnson E23E274D412D4C761A871B1E776C7FC245E58F55
 
 creation_rules:
-  - path_regex: ^(\./)?secrets/hosts/ymir/mihomo\.yaml$
+  - path_regex: ^(\./)?secrets/services/proxy\.yml$
     key_groups:
       - age:
           - *johnson_age

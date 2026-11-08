@@ -36,14 +36,20 @@ stdenv.mkDerivation {
     makeWrapper
   ];
 
+  # Clash passwords are data, not URI syntax; preserve reserved characters on both sides.
+  postPatch = ''
+    substituteInPlace parsers/clash2base64.py \
+      --replace-fail $'trojan_info = {\n            "password": share_link[\'password\'],' \
+        $'trojan_info = {\n            "password": quote(share_link[\'password\'], safe=""),'
+    substituteInPlace parsers/trojan.py \
+      --replace-fail "'password': _netloc[0]," "'password': unquote(_netloc[0]),"
+  '';
+
   installPhase = ''
     runHook preInstall
 
     mkdir -p $out/{bin,opt}
     cp -r * $out/opt/
-
-    # substituteInPlace $out/opt/main.py \
-    #   --replace-fail "template_dir = 'config_template'" "template_dir = '$out/opt/config_template'"
 
     makeWrapper ${lib.getExe' pythonEnv "python"} $out/bin/sub2singbox \
       --run "cd $out/opt" \

@@ -1,20 +1,22 @@
 # ymir: retained Mihomo profile
 
-The declared backend is now sing-box; see [SING-BOX.md](SING-BOX.md). This page describes the
-retained Mihomo alternative, enabled by setting `dot.networking.proxy.backend = "mihomo"`.
+The declared backend is now sing-box; see [the sing-box deployment](ymir-sing-box.md). This page
+describes the retained Mihomo alternative, enabled by setting
+`dot.networking.proxy.backend = "mihomo"`.
 
 ## Status before activation
 
 The replacement subscription returned HTTP 200 through the existing Mullvad exit, with 32 Trojan
 nodes. A request bound directly to `wlan0` still returned HTTP 403 (Cloudflare). Both the URL and a
-nodes-only bootstrap snapshot are encrypted in `secrets/hosts/ymir/mihomo.yaml`. The service seeds
-its cache before startup, so it does not require a successful first subscription download. Online
+nodes-only bootstrap snapshot are encrypted in `secrets/services/proxy.yml`. The service seeds its
+cache before startup, so it does not require a successful first subscription download. Online
 subscription updates use **DIRECT**. The local 403 is not treated as a universal restriction: other
 devices on the same Wi-Fi can download directly. Successful parsing does not prove node health. With
 an empty provider, `Proxy` defaults to `Auto`, which selects `REJECT`, not a direct fallback.
 
 The retained Mihomo profile was built but not activated. Sing-box is now active, with the system
-Mullvad exit node cleared; see [SING-BOX.md](SING-BOX.md) for current validation and pending items.
+Mullvad exit node cleared; see [the sing-box deployment](ymir-sing-box.md) for current validation
+and pending items.
 
 ## Responsibilities
 
@@ -32,9 +34,9 @@ Remote peers -> system tailscaled -> local SSH/Taildrop
 Remote peers -> Rex's embedded Tailscale -> Rex
 ```
 
-Mihomo runs as a background system service, without Clash Verge. MetaCubeXD is served locally by
-Mihomo, not fetched from an external dashboard site. The mixed proxy (`127.0.0.1:7890`) and
-controller/WebUI (`127.0.0.1:9090`) are loopback-only; API access requires the controller secret.
+Mihomo runs as a headless system service. MetaCubeXD is served locally by Mihomo, not fetched from
+an external dashboard site. The mixed proxy (`127.0.0.1:7890`) and controller/WebUI
+(`127.0.0.1:9090`) are loopback-only; API access requires the controller secret.
 
 ## WebUI and node selection
 
@@ -54,8 +56,15 @@ every 300 seconds with a 50 ms tolerance. It uses `REJECT` when no subscription 
 Internet traffic and the embedded Tailscale transport both follow the selected **Proxy** entry;
 changing it can interrupt existing connections. System `ymir` and Rex retain their separate paths.
 
-No firewall port is opened for the dashboard. For access from another computer, use SSH forwarding
-instead of changing the controller to `0.0.0.0`, for example:
+No firewall port is opened for the dashboard. With `profile.tailnet.webUI.enable = true`, the shared
+profile also supports Tailnet HTTPS for Mihomo. After selecting and activating this backend,
+`mihomo-tailnet-webui.service` forwards the system identity's HTTPS handler to the loopback
+controller. On ymir, use `https://ymir.tail2cfd9e.ts.net/ui/` with backend
+`https://ymir.tail2cfd9e.ts.net` and the Mihomo controller token. Funnel remains disabled. The
+handler is shared with the alternative sing-box service, not a second simultaneous mapping. This
+support is prepared; the running backend on ymir is still sing-box.
+
+SSH forwarding remains an alternative to Tailnet Serve; do not expose the controller on `0.0.0.0`:
 
 ```sh
 ssh -N -L 19090:127.0.0.1:9090 johnson@ymir
@@ -66,11 +75,16 @@ same token.
 
 ## Configuration and secrets
 
-- `config/mihomo/ymir.yaml`: public configuration, with credential placeholders.
-- `hosts/ymir/mihomo.nix`: SOPS rendering, DNS ownership and policy-routing service.
-- `secrets/hosts/ymir/mihomo.yaml`: encrypted subscription URL, nodes-only bootstrap snapshot and
+- `config/mihomo/config.yaml`: shared base, with listeners, DNS, TUN, subscription/Tailnet settings
+  and host/credential placeholders; selected by `profile.mihomo.template`.
+- `config/mihomo/policy.yaml`: proxy groups, rule providers and ordered routing rules; selected by
+  `profile.mihomo.policy`. It is appended as part of the same YAML mapping, without overriding base
+  keys.
+- `modules/nixos/networking/proxy/mihomo-profile.nix`: reusable SOPS rendering, provider cache and
+  policy-routing service; host parameters live in `hosts/ymir/config.nix`.
+- `secrets/services/proxy.yml`: encrypted subscription URL, nodes-only bootstrap snapshot and
   controller token. Edit with SOPS.
-- `/run/secrets/rendered/ymir-mihomo.yaml`: root-only runtime configuration, passed to the dynamic
+- `/run/secrets/rendered/proxy-mihomo.yaml`: root-only runtime configuration, passed to the dynamic
   service user via systemd `LoadCredential`.
 - `/var/lib/private/mihomo`: persistent provider/rule caches and the embedded Tailscale state. The
   host already preserves `/var/lib`. Do not copy the system tailscaled or Rex state here.
@@ -80,7 +94,9 @@ do not replace the local configuration. Providers refresh daily. The bootstrap s
 a separate systemd credential and copied to the private provider cache on first startup. A hash
 marker preserves newer online updates across restarts; changing the encrypted snapshot replaces the
 cache on the next start. Neither node passwords nor the subscription URL enter the Nix store in
-plaintext. Keep the encrypted snapshot current when rotating subscription credentials.
+plaintext. Nix substitutes `sops.placeholder` markers into the public template; sops-nix fills in
+the secrets at activation/boot. The base/policy split preserves the original policy and cache paths.
+Keep the encrypted snapshot current when rotating subscription credentials.
 
 Subscription refreshes use **DIRECT**. A cached provider loads before its online refresh, so a
 failed initial download does not remove the bootstrap nodes. If a direct refresh fails, the cache
@@ -115,6 +131,7 @@ that connection on the system identity. The embedded identity is not used for th
 ## Validation and activation
 
 ```sh
+python3 -m unittest discover -s scripts/tests -p 'test_mihomo_profile.py' -v
 bash scripts/tests/test-mihomo-tailnet-routing.sh
 nix build --no-link .#nixosConfigurations.ymir.config.system.build.toplevel
 seed_program=$(nix eval --raw --apply builtins.head .#nixosConfigurations.ymir.config.systemd.services.mihomo.serviceConfig.ExecStartPre)

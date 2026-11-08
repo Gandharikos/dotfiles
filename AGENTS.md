@@ -8,6 +8,19 @@ in `users/`, shared Lua/Nix/application config in `config/`, overlays in `overla
 in `packages/`, scripts in `scripts/`, and encrypted SOPS data in `secrets/`. Flake outputs and
 development integration are organized under `flake/`.
 
+## Documentation & Change Context
+
+Before modifying a module, read the relevant guides linked from [docs/README.md](docs/README.md).
+For proxy changes, read the [shared profile](docs/proxy/shared-profile.md) and
+[dae options](docs/proxy/dae.md); for ymir, also check the
+[sing-box deployment notes](docs/proxy/ymir-sing-box.md) or
+[Mihomo alternative](docs/proxy/ymir-mihomo.md), as applicable.
+
+Keep detailed guides, design decisions, and validation notes under `docs/`; keep this file limited
+to agent rules and links. Use `git log -- <path>` for committed changes and `git status` /
+`git diff` (including `git diff --cached`) for pending changes. Documentation is context, not proof
+of the currently running configuration; verify runtime state before claiming a change is deployed.
+
 ## Build, Test, and Development Commands
 
 Use the `justfile` for common workflows:

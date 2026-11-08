@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".assets/nixos_logo.png" alt="NixOS logo" width="120" />
+  <img src="../.assets/nixos_logo.png" alt="NixOS logo" width="120" />
 </p>
 
 <h1 align="center">dotfiles</h1>
@@ -9,7 +9,7 @@
   Modular, reproducible, and built around flakes.
 </p>
 
-![Desktop screenshot](.assets/Screenshot_2026-07-04_10-16-06.png-region.png)
+![Desktop screenshot](../.assets/Screenshot_2026-07-04_10-16-06.png-region.png)
 
 ## Foreword
 
@@ -28,6 +28,8 @@ Encrypted secrets are required for most real deployments. Read the docs before r
 - Wayland desktops with Hyprland, Niri, shells, themes, and tools
 
 ## Common Commands
+
+Run commands from the repository root.
 
 ```bash
 just switch <host>
@@ -54,8 +56,19 @@ python3 -m unittest discover -s scripts/tests -v
 
 ## Docs
 
-Please read the [documentation](https://gandharikos.github.io/dotfiles/).
+Please read the [documentation](https://gandharikos.github.io/dotfiles/). This directory contains
+repository guides, including:
+
+- [Shared proxy profile](proxy/shared-profile.md)
+- [Optional independent dae service](proxy/dae.md)
+- [ymir sing-box deployment](proxy/ymir-sing-box.md)
+- [ymir Mihomo alternative](proxy/ymir-mihomo.md)
+
+Keep new and updated human-facing documentation under `docs/`, including this README. Do not add
+separate guides to the repository root, `hosts/`, `modules/`, or `config/`. Existing agent
+instruction files, template READMEs, and Markdown consumed as runtime configuration retain their
+required locations.
 
 ## License
 
-See [`LICENSE`](LICENSE).
+See [`LICENSE`](../LICENSE).

@@ -1,0 +1,302 @@
+{
+  "log": { "level": "info", "timestamp": true },
+  "experimental": {
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "external_ui": "__WEBUI_PATH__",
+      "secret": "__CONTROLLER_SECRET__",
+      "default_mode": "rule"
+    },
+    "cache_file": { "enabled": true, "path": "cache.db", "store_fakeip": true }
+  },
+  "dns": {
+    "servers": [
+      { "type": "udp", "tag": "bootstrap", "server": "223.5.5.5" },
+      {
+        "type": "https",
+        "tag": "localdns",
+        "server": "dns.alidns.com",
+        "domain_resolver": "bootstrap"
+      },
+      {
+        "type": "https",
+        "tag": "proxydns",
+        "server": "dns.google",
+        "detour": "Proxy"
+      },
+      {
+        "type": "tailscale",
+        "tag": "tailnet-dns",
+        "endpoint": "Tailnet",
+        "accept_default_resolvers": false,
+        "accept_search_domain": true
+      },
+      {
+        "type": "fakeip",
+        "tag": "fakeip",
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "2001:2::/48"
+      }
+    ],
+    "rules": [
+      { "domain_suffix": ["__TAILNET_DOMAIN__"], "server": "tailnet-dns" },
+      { "domain_suffix": ["tailscale.com", "tailscale.io", "lan", "local"], "server": "localdns" },
+      { "clash_mode": "Direct", "server": "localdns" },
+      {
+        "rule_set": ["ai-chatgpt", "ai-claude", "ai-gemini", "ai-copilot", "ai-gemini-platform"],
+        "query_type": ["A", "AAAA"],
+        "server": "fakeip"
+      },
+      { "rule_set": ["cn-domain"], "server": "localdns" },
+      { "query_type": ["A", "AAAA"], "server": "fakeip" }
+    ],
+    "final": "proxydns"
+  },
+  "inbounds": [
+    { "type": "mixed", "tag": "mixed-in", "listen": "127.0.0.1", "listen_port": 7890 },
+    { "type": "direct", "tag": "dns-in", "listen": "127.0.0.1", "listen_port": 1053 },
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "interface_name": "sb-tun",
+      "address": ["172.19.0.1/30", "fdfe:dcba:9876::1/126"],
+      "mtu": 1500,
+      "stack": "gvisor",
+      "dns_mode": "disabled",
+      "auto_route": true,
+      "auto_redirect": false,
+      "strict_route": false,
+      "iproute2_table_index": 2022,
+      "iproute2_rule_index": 9000,
+      "exclude_interface": ["__SYSTEM_TAILSCALE_INTERFACE__"],
+      "route_exclude_address": [
+        "10.0.0.0/8",
+        "172.16.0.0/12",
+        "192.168.0.0/16",
+        "169.254.0.0/16",
+        "fe80::/10",
+        "ff00::/8"
+      ]
+    }
+  ],
+  "endpoints": [
+    {
+      "type": "tailscale",
+      "tag": "Tailnet",
+      "hostname": "__TAILNET_HOSTNAME__",
+      "state_directory": "tailscale",
+      "ephemeral": false,
+      "accept_routes": false,
+      "advertise_exit_node": false,
+      "system_interface": false,
+      "ssh_server": false,
+      "detour": "Proxy"
+    }
+  ],
+  "outbounds": [
+    { "type": "selector", "tag": "Proxy", "outbounds": ["Auto"], "default": "Auto" },
+    {
+      "type": "urltest",
+      "tag": "Auto",
+      "outbounds": [],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "5m",
+      "tolerance": 50
+    },
+    { "type": "selector", "tag": "🤖 ChatGPT", "outbounds": ["Proxy", "Auto"], "default": "Proxy" },
+    { "type": "selector", "tag": "🤖 Claude", "outbounds": ["Proxy", "Auto"], "default": "Proxy" },
+    { "type": "selector", "tag": "🤖 Gemini", "outbounds": ["Proxy", "Auto"], "default": "Proxy" },
+    { "type": "selector", "tag": "🤖 Copilot", "outbounds": ["Proxy", "Auto"], "default": "Proxy" },
+    { "type": "direct", "tag": "direct", "domain_resolver": "localdns" }
+  ],
+  "route": {
+    "auto_detect_interface": true,
+    "default_domain_resolver": "bootstrap",
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "cn-domain",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/cn.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "cn-ip",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geoip/cn.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "inline",
+        "tag": "ai-chatgpt",
+        "rules": [
+          { "domain_keyword": ["chatgpt", "openai"] },
+          {
+            "domain_suffix": [
+              "ai.com",
+              "openai.com",
+              "algolia.net",
+              "api.statsig.com",
+              "auth0.com",
+              "chatgpt.com",
+              "chatgpt.livekit.cloud",
+              "client-api.arkoselabs.com",
+              "events.statsigapi.net",
+              "featuregates.org",
+              "host.livekit.cloud",
+              "identrust.com",
+              "intercom.io",
+              "intercomcdn.com",
+              "launchdarkly.com",
+              "oaistatic.com",
+              "oaiusercontent.com",
+              "observeit.net",
+              "segment.io",
+              "sentry.io",
+              "stripe.com",
+              "turn.livekit.cloud"
+            ]
+          },
+          {
+            "domain": [
+              "chat.openai.com.cdn.cloudflare.net",
+              "openaiapi-site.azureedge.net",
+              "openaicom-api-bdcpf8c6d2e9atf6.z01.azurefd.net",
+              "openaicomproductionae4b.blob.core.windows.net",
+              "production-openaicom-storage.azureedge.net",
+              "browser-intake-datadoghq.com"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "inline",
+        "tag": "ai-claude",
+        "rules": [
+          { "domain": ["claude.com", "cdn.usefathom.com"] },
+          { "domain_suffix": ["anthropic.com", "claude.ai"] }
+        ]
+      },
+      {
+        "type": "inline",
+        "tag": "ai-gemini",
+        "rules": [
+          {
+            "domain": [
+              "ai.google.dev",
+              "alkalimakersuite-pa.clients6.google.com",
+              "makersuite.google.com",
+              "proactivebackend-pa.googleapis.com"
+            ]
+          },
+          {
+            "domain_suffix": [
+              "bard.google.com",
+              "deepmind.com",
+              "deepmind.google",
+              "gemini.google.com",
+              "generativeai.google",
+              "proactivebackend-pa.googleapis.com",
+              "apis.google.com"
+            ]
+          },
+          { "domain_keyword": ["colab", "developerprofiles", "generativelanguage"] }
+        ]
+      },
+      {
+        "type": "inline",
+        "tag": "ai-gemini-platform",
+        "rules": [{ "domain_suffix": ["google.com", "googleapis.com"] }]
+      },
+      {
+        "type": "inline",
+        "tag": "ai-copilot",
+        "rules": [
+          {
+            "domain": [
+              "browser.pipe.aria.microsoft.com",
+              "access-point.cloudmessaging.edge.microsoft.com",
+              "www.bingapis.com",
+              "functional.events.data.microsoft.com",
+              "designer.microsoft.com",
+              "edge.microsoft.com",
+              "api.msn.com",
+              "api.statsig.com",
+              "assets.msn.com",
+              "browser-intake-datadoghq.com",
+              "chat.openai.com.cdn.cloudflare.net",
+              "copilot.microsoft.com",
+              "gateway.bingviz.microsoft.net",
+              "gateway.bingviz.microsoftapp.net",
+              "in.appcenter.ms",
+              "location.microsoft.com",
+              "odc.officeapps.live.com",
+              "openai-api.arkoselabs.com",
+              "openaicomproductionae4b.blob.core.windows.net",
+              "production-openaicom-storage.azureedge.net",
+              "r.bing.com",
+              "self.events.data.microsoft.com",
+              "services.bingapis.com",
+              "sydney.bing.com",
+              "www.bing.com"
+            ]
+          },
+          {
+            "domain_suffix": [
+              "prod.do.dsp.mp.microsoft.com",
+              "events.data.microsoft.com",
+              "algolia.net",
+              "api.microsoftapp.net",
+              "auth0.com",
+              "bing-shopping.microsoft-falcon.io",
+              "chatgpt.com",
+              "chatgpt.livekit.cloud",
+              "client-api.arkoselabs.com",
+              "edgeservices.bing.com",
+              "events.statsigapi.net",
+              "featuregates.org",
+              "host.livekit.cloud",
+              "identrust.com",
+              "intercom.io",
+              "intercomcdn.com",
+              "launchdarkly.com",
+              "oaistatic.com",
+              "oaiusercontent.com",
+              "observeit.net",
+              "openai.com",
+              "openaiapi-site.azureedge.net",
+              "openaicom.imgix.net",
+              "segment.io",
+              "sentry.io",
+              "stripe.com",
+              "turn.livekit.cloud"
+            ]
+          },
+          { "domain_keyword": ["openaicom-api"] }
+        ]
+      }
+    ],
+    "rules": [
+      { "inbound": ["dns-in"], "action": "hijack-dns" },
+      { "port": 53, "action": "hijack-dns" },
+      { "inbound": ["Tailnet"], "action": "reject" },
+      { "process_name": ["rex"], "outbound": "direct" },
+      { "domain_suffix": ["__TAILNET_DOMAIN__"], "outbound": "Tailnet" },
+      { "ip_cidr": ["100.64.0.0/10", "fd7a:115c:a1e0::/48"], "outbound": "Tailnet" },
+      { "ip_is_private": true, "outbound": "direct" },
+      { "domain_suffix": ["lan", "local"], "outbound": "direct" },
+      { "clash_mode": "Direct", "outbound": "direct" },
+      { "clash_mode": "Global", "outbound": "Proxy" },
+      { "rule_set": ["ai-chatgpt"], "outbound": "🤖 ChatGPT" },
+      { "ip_cidr": ["24.199.123.28/32", "64.23.132.171/32"], "outbound": "🤖 ChatGPT" },
+      { "rule_set": ["ai-claude"], "outbound": "🤖 Claude" },
+      { "rule_set": ["ai-gemini"], "outbound": "🤖 Gemini" },
+      { "rule_set": ["ai-copilot"], "outbound": "🤖 Copilot" },
+      { "ip_cidr": ["24.199.123.28/32", "64.23.132.171/32"], "outbound": "🤖 Copilot" },
+      { "rule_set": ["ai-gemini-platform"], "outbound": "🤖 Gemini" },
+      { "rule_set": ["cn-domain", "cn-ip"], "outbound": "direct" }
+    ],
+    "final": "Proxy"
+  }
+}

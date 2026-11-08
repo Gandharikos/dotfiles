@@ -1,18 +1,18 @@
-mixed-port: 7890
+mixed-port: __MIXED_PORT__
 allow-lan: false
 bind-address: 127.0.0.1
 mode: rule
 log-level: info
 find-process-mode: strict
 ipv6: true
-external-controller: 127.0.0.1:9090
+external-controller: 127.0.0.1:__CONTROLLER_PORT__
 secret: "__CONTROLLER_SECRET__"
 profile:
   store-selected: true
   store-fake-ip: true
 
 # Keep system tailscaled's marked transport outside this TUN. The additional
-# policy rules in hosts/ymir/mihomo.nix handle Tailnet destinations and replies.
+# policy rules in the shared NixOS profile handle Tailnet destinations and replies.
 tun:
   enable: true
   device: mihomo
@@ -31,7 +31,7 @@ tun:
   inet6-address:
     - fdfe:dcba:9876::1/126
   exclude-interface:
-    - tailscale0
+    - __SYSTEM_TAILSCALE_INTERFACE__
   route-exclude-address:
     - 10.0.0.0/8
     - 172.16.0.0/12
@@ -42,14 +42,14 @@ tun:
 
 dns:
   enable: true
-  listen: 127.0.0.1:1053
+  listen: 127.0.0.1:__DNS_PORT__
   ipv6: true
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter:
     - "*.lan"
     - "*.local"
-    - "+.tail2cfd9e.ts.net"
+    - "+.__TAILNET_DOMAIN__"
   default-nameserver:
     - 223.5.5.5
     - 119.29.29.29
@@ -63,7 +63,7 @@ dns:
     - "https://dns.google/dns-query#Proxy"
     - "https://cloudflare-dns.com/dns-query#Proxy"
   nameserver-policy:
-    "+.tail2cfd9e.ts.net": "tailscale://Tailnet"
+    "+.__TAILNET_DOMAIN__": "tailscale://Tailnet"
     # System tailscaled and Rex must be able to bootstrap without the subscription.
     "+.tailscale.com,+.tailscale.io":
       - https://dns.alidns.com/dns-query
@@ -73,9 +73,10 @@ dns:
       - https://doh.pub/dns-query
 
 proxy-providers:
-  WgetCloud:
+  Subscription:
     type: http
     url: "__SUBSCRIPTION_URL__"
+    # Keep the legacy cache basename so existing online updates survive the refactor.
     path: ./providers/wgetcloud.yaml
     interval: 86400
     # The encrypted bootstrap cache keeps startup independent of download availability.
@@ -91,7 +92,7 @@ proxy-providers:
 proxies:
   - name: Tailnet
     type: tailscale
-    hostname: ymir-mihomo
+    hostname: __TAILNET_HOSTNAME__
     state-dir: ./tailscale
     ephemeral: false
     udp: true
@@ -99,60 +100,3 @@ proxies:
     # No shared auth key/state: first access prints an interactive login URL.
     # Only the embedded identity uses the subscription for control/DERP traffic.
     dialer-proxy: Proxy
-
-proxy-groups:
-  - name: Proxy
-    type: select
-    proxies:
-      - Auto
-    use:
-      - WgetCloud
-  - name: Auto
-    type: url-test
-    use:
-      - WgetCloud
-    # An unavailable/empty subscription must not silently become DIRECT.
-    proxies:
-      - REJECT
-    url: https://www.gstatic.com/generate_204
-    interval: 300
-    tolerance: 50
-    lazy: false
-
-rule-providers:
-  cn-domain:
-    type: http
-    behavior: domain
-    format: mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs
-    path: ./rules/cn-domain.mrs
-    interval: 86400
-    proxy: DIRECT
-  cn-ip:
-    type: http
-    behavior: ipcidr
-    format: mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs
-    path: ./rules/cn-ip.mrs
-    interval: 86400
-    proxy: DIRECT
-
-rules:
-  # Rex owns a separate tsnet stack; do not tunnel its transport through the subscription.
-  - PROCESS-NAME,rex,DIRECT
-  - DOMAIN-SUFFIX,tail2cfd9e.ts.net,Tailnet
-  - IP-CIDR,100.64.0.0/10,Tailnet,no-resolve
-  - IP-CIDR6,fd7a:115c:a1e0::/48,Tailnet,no-resolve
-  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
-  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
-  - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
-  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
-  - IP-CIDR,169.254.0.0/16,DIRECT,no-resolve
-  - IP-CIDR6,::1/128,DIRECT,no-resolve
-  - IP-CIDR6,fc00::/7,DIRECT,no-resolve
-  - IP-CIDR6,fe80::/10,DIRECT,no-resolve
-  - DOMAIN-SUFFIX,lan,DIRECT
-  - DOMAIN-SUFFIX,local,DIRECT
-  - RULE-SET,cn-domain,DIRECT
-  - RULE-SET,cn-ip,DIRECT,no-resolve
-  - MATCH,Proxy

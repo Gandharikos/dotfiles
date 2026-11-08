@@ -1,10 +1,13 @@
-{ config, inputs, ... }:
+{
+  config,
+  inputs,
+  self,
+  ...
+}:
 {
   imports = [
     ./hardware-configuration.nix
     ./asus-dialpad.nix
-    ./mihomo.nix
-    ./sing-box.nix
     inputs.vicinae.nixosModules.default
     (import ../common/disko/luks-btrfs-tmpfs.nix { })
   ];
@@ -29,6 +32,14 @@
         enable = true;
         backend = "sing-box";
         autoStart = true;
+        profile = {
+          enable = true;
+          secretsFile = "${self}/secrets/services/proxy.yml";
+          tailnet = {
+            domain = "tail2cfd9e.ts.net";
+            webUI.enable = true;
+          };
+        };
       };
       vpn.enable = false;
       tailscale = {

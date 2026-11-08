@@ -1,0 +1,56 @@
+proxy-groups:
+  - name: Proxy
+    type: select
+    proxies:
+      - Auto
+    use:
+      - Subscription
+  - name: Auto
+    type: url-test
+    use:
+      - Subscription
+    # An unavailable/empty subscription must not silently become DIRECT.
+    proxies:
+      - REJECT
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    lazy: false
+
+rule-providers:
+  cn-domain:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs
+    path: ./rules/cn-domain.mrs
+    interval: 86400
+    proxy: DIRECT
+  cn-ip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs
+    path: ./rules/cn-ip.mrs
+    interval: 86400
+    proxy: DIRECT
+
+rules:
+  # Rex owns a separate tsnet stack; do not tunnel its transport through the subscription.
+  - PROCESS-NAME,rex,DIRECT
+  - DOMAIN-SUFFIX,__TAILNET_DOMAIN__,Tailnet
+  - IP-CIDR,100.64.0.0/10,Tailnet,no-resolve
+  - IP-CIDR6,fd7a:115c:a1e0::/48,Tailnet,no-resolve
+  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+  - IP-CIDR,169.254.0.0/16,DIRECT,no-resolve
+  - IP-CIDR6,::1/128,DIRECT,no-resolve
+  - IP-CIDR6,fc00::/7,DIRECT,no-resolve
+  - IP-CIDR6,fe80::/10,DIRECT,no-resolve
+  - DOMAIN-SUFFIX,lan,DIRECT
+  - DOMAIN-SUFFIX,local,DIRECT
+  - RULE-SET,cn-domain,DIRECT
+  - RULE-SET,cn-ip,DIRECT,no-resolve
+  - MATCH,Proxy

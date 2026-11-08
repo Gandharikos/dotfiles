@@ -7,16 +7,42 @@
 }:
 let
   cfg = config.dot.networking.proxy;
-  enabled = cfg.enable && cfg.backend == "sing-box";
-  secretsFile = "${self}/secrets/hosts/ymir/mihomo.yaml";
+  inherit (cfg) profile;
+  enabled = cfg.enable && profile.enable && cfg.backend == "sing-box";
+  inherit (profile) secretsFile;
   python = pkgs.python3.withPackages (p: [ p.pyyaml ]);
-  base = pkgs.writeText "ymir-sing-box-base.json" (
-    builtins.replaceStrings [ "__WEBUI_PATH__" ] [ "${pkgs.metacubexd}" ] (
-      builtins.readFile "${self}/config/sing-box/ymir.json"
+  template = builtins.fromJSON (
+    builtins.replaceStrings
+      (map builtins.toJSON [
+        "__TAILNET_DOMAIN__"
+        "__TAILNET_HOSTNAME__"
+        "__SYSTEM_TAILSCALE_INTERFACE__"
+      ])
+      (map builtins.toJSON [
+        profile.tailnet.domain
+        profile.tailnet.hostname
+        config.services.tailscale.interfaceName
+      ])
+      (builtins.readFile profile.singBox.template)
+  );
+  base = pkgs.writeText "sing-box-base.json" (
+    builtins.toJSON (
+      lib.recursiveUpdate template {
+        experimental.clash_api = {
+          external_ui = "${pkgs.metacubexd}";
+          external_controller = "127.0.0.1:${toString profile.ports.controller}";
+        };
+        inbounds = map (
+          inbound:
+          inbound
+          // lib.optionalAttrs (inbound.tag == "mixed-in") { listen_port = profile.ports.mixed; }
+          // lib.optionalAttrs (inbound.tag == "dns-in") { listen_port = profile.ports.dns; }
+        ) template.inbounds;
+      }
     )
   );
   subscription = pkgs.writeShellApplication {
-    name = "ymir-sing-box-subscription";
+    name = "sing-box-subscription";
     runtimeInputs = [
       pkgs.curl
       pkgs.iproute2
@@ -24,6 +50,8 @@ let
     text = ''
       exec ${lib.getExe python} ${self}/scripts/sing-box-subscription.py "$@" \
         --base ${base} \
+        --policy ${profile.singBox.policy} \
+        --converter ${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.sub2singbox} \
         --state "$STATE_DIRECTORY" \
         --credentials "$CREDENTIALS_DIRECTORY" \
         --output /run/sing-box/config.json \
@@ -62,17 +90,6 @@ in
       };
     };
 
-    services.resolved.settings.Resolve = {
-      DNS = lib.mkForce [ "127.0.0.1:1053" ];
-      Domains = lib.mkForce [
-        "~."
-        "tail2cfd9e.ts.net"
-      ];
-      FallbackDNS = lib.mkForce [ ];
-      DNSOverTLS = lib.mkForce false;
-    };
-    networking.networkmanager.unmanaged = [ "interface-name:sb-tun" ];
-
     systemd.services.sing-box = {
       # The upstream oneshot is not otherwise rerun when only its flags change on switch.
       after = [ "tailscaled-set.service" ];
@@ -88,7 +105,7 @@ in
       };
     };
     systemd.services.sing-box-subscription = {
-      description = "Refresh ymir's sing-box nodes directly, keeping the last valid subscription on failure";
+      description = "Refresh sing-box nodes directly, keeping the last valid subscription on failure";
       after = [
         "network-online.target"
         "sops-install-secrets.service"
@@ -114,7 +131,7 @@ in
       };
     };
     systemd.timers.sing-box-subscription = {
-      wantedBy = [ "timers.target" ];
+      wantedBy = lib.optionals cfg.autoStart [ "timers.target" ];
       timerConfig = {
         OnBootSec = "15m";
         OnUnitActiveSec = "1d";
@@ -137,18 +154,8 @@ in
 
     assertions = [
       {
-        assertion =
-          config.dot.networking.tailscale.enable && config.dot.networking.tailscale.exitNode == "";
-        message = "ymir's sing-box profile requires system Tailscale without an exit node.";
-      }
-      {
-        assertion =
-          !config.dot.networking.tailscale.acceptRoutes && !config.dot.networking.tailscale.acceptDns;
-        message = "System Tailscale must not override the sing-box DNS/subnet routing policy.";
-      }
-      {
         assertion = !config.services.mihomo.enable;
-        message = "Do not run ymir's sing-box and Mihomo TUN/controller simultaneously.";
+        message = "Do not run sing-box and Mihomo TUN/controller simultaneously.";
       }
     ];
   };
