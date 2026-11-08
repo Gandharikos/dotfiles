@@ -2,11 +2,11 @@
 
 ## Overview
 
-Unified SSH configuration module supporting:
+Home Manager SSH configuration supporting:
 
 - Traditional SSH keys (id_ed25519)
 - YubiKey FIDO2 hardware authentication
-- Automatic fallback mechanism
+- Opt-in, per-host GPG agent forwarding
 - Pre-configured host aliases
 
 ## Quick Start
@@ -28,31 +28,34 @@ dot.yubikey = {
 
 ### Step 2: Enable SSH Configuration
 
-Edit `hosts/tyr/default.nix` (or your host config):
+In a host configuration, set the Home Manager options for the user:
 
 ```nix
 {
-  dot.ssh = {
-    enable = true;
-    enableFido2 = true;  # true=FIDO2 only, false=traditional
-  };
-
-  # Disable GPG SSH support (important!)
-  dot.security.gpg = {
-    enable = true;
-    enableSshSupport = false;
+  home-manager.users.johnson = {
+    my.ssh = {
+      enable = true;
+      enableFido2 = true;
+    };
+    my.security.gpg = {
+      enable = true;
+      enableSshSupport = false;
+    };
   };
 }
 ```
 
-### Step 2: Rebuild System
+Inside a Home Manager module under `users/johnson/home/`, use `my.ssh` and `my.security.gpg`
+directly. The `dot.yubikey` label configuration above remains a system option.
+
+### Step 3: Rebuild System
 
 ```bash
 cd ~/.dotfiles
 just switch
 ```
 
-### Step 3: Verify Configuration
+### Step 4: Verify Configuration
 
 ```bash
 # Check key order
@@ -69,7 +72,7 @@ ssh -T git@github.com
 ### Option 1: FIDO2 Only (Maximum Security)
 
 ```nix
-dot.ssh.enableFido2 = true;
+my.ssh.enableFido2 = true;
 ```
 
 **Characteristics:**
@@ -92,7 +95,7 @@ Keys from dot.yubikey.names (in order):
 ### Option 2: Traditional SSH Keys
 
 ```nix
-dot.ssh.enableFido2 = false;
+my.ssh.enableFido2 = false;
 ```
 
 **Characteristics:**
@@ -273,7 +276,7 @@ sudo systemctl restart pcscd
 
 ```bash
 # Ensure GPG config has
-dot.security.gpg.enableSshSupport = false;
+my.security.gpg.enableSshSupport = false;
 
 # Restart GPG agent
 gpgconf --kill gpg-agent

@@ -7,14 +7,20 @@ The SSH module supports traditional `id_ed25519` keys and YubiKey-backed FIDO2 k
 
 ## Enable SSH
 
+In a host configuration:
+
 ```nix
 {
-  dot.ssh = {
+  home-manager.users.johnson.my.ssh = {
     enable = true;
     enableFido2 = true;
   };
 }
 ```
+
+Inside a Home Manager module, use `my.ssh` directly. The shared options live in
+`users/johnson/home/cli/security/ssh.nix`; personal hosts and keys live in
+`users/johnson/home/ssh-hosts.nix`.
 
 When FIDO2 is enabled, keys are generated per YubiKey label and tried in the configured order.
 
