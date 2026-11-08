@@ -33,6 +33,11 @@ in
           ForwardAgent = mkDefault true;
         };
 
+        "eir" = {
+          HostName = mkDefault "eir.local";
+          ForwardAgent = mkDefault true;
+        };
+
         "loki" = {
           HostName = mkDefault "loki.local";
           ForwardAgent = mkDefault true;
