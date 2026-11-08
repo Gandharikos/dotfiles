@@ -6,9 +6,6 @@
 let
   inherit (lib) mkIf mkDefault mkForce;
   isWSL = config.dot.device.type == "wsl";
-  # Keep fallback DNS available before the desktop-managed proxy starts.
-  hasStandaloneProxy =
-    config.dot.networking.proxy.enable && config.dot.networking.proxy.backend != "clash-verge";
   inherit (lib.options) mkEnableOption;
   cfg = config.dot.networking;
 in
@@ -38,7 +35,7 @@ in
       usePredictableInterfaceNames = mkDefault true;
 
       # dns
-      nameservers = mkIf (!isWSL && !hasStandaloneProxy) [
+      nameservers = mkIf (!isWSL && !cfg.proxy.enable) [
         "1.1.1.1"
         "1.0.0.1"
         "9.9.9.9"

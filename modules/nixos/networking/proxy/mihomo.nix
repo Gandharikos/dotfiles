@@ -13,7 +13,6 @@ let
       config.sops.secrets.proxy_config.path;
 in
 {
-  # This backend is headless; Clash Verge is a separate backend.
   config = mkIf (cfg.enable && cfg.backend == "mihomo") {
     services.mihomo = {
       enable = true;

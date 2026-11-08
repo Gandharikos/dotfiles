@@ -1,5 +1,9 @@
 # Clash/Mihomo Proxy Quick Start
 
+> **Historical guide — not current setup instructions.** NixOS Clash Verge integration has been
+> removed. Select the native `mihomo` or `sing-box` backend explicitly; the Darwin Homebrew GUI
+> remains independent. See the [current proxy reference](src/content/docs/reference/mihomo.md).
+
 ## Design
 
 Automatic proxy implementation based on environment:
