@@ -157,8 +157,6 @@ in
 
     pi.enable = !isMinimal;
 
-    polymarket.enable = !isMinimal;
-
     rex.enable = !isMinimal;
 
     ripgrep.enable = true;
