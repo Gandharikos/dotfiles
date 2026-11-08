@@ -263,6 +263,16 @@ in
         (managerOverride.networking.wireless.iwd.settings.General.EnableNetworkConfiguration or null)
         == false;
       true;
+    fail2banNamespaceAndDisableOverride =
+      assert !systems.mimir.config.dot.networking.fail2ban.enable;
+      assert !systems.mimir.config.services.fail2ban.enable;
+      assert ymir.dot.networking.fail2ban.enable && ymir.services.fail2ban.enable;
+      assert !(systems.ymir.options.dot.services ? fail2ban);
+      assert
+        !(systems.ymir.extendModules {
+          modules = [ { dot.networking.fail2ban.enable = false; } ];
+        }).config.services.fail2ban.enable;
+      true;
     wslHostFileOwnedByNixos =
       assert systems.nidhogg.config.wsl.wslConf.network.generateHosts == false;
       assert !(systems.nidhogg.config.wsl.wslConf.network ? gnerateHosts);

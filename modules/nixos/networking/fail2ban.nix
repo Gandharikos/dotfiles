@@ -6,13 +6,13 @@
 let
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkEnableOption;
-  cfg = config.dot.services.fail2ban;
+  cfg = config.dot.networking.fail2ban;
   vaultwarden = config.dot.selfhosted.services.vaultwarden;
   # Follow journal rotation instead of caching filenames that can disappear.
   systemdBackend = "systemd[rotated=1]";
 in
 {
-  options.dot.services.fail2ban = {
+  options.dot.networking.fail2ban = {
     enable = mkEnableOption "fail2ban" // {
       default = true;
     };

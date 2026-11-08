@@ -125,6 +125,9 @@ Relevant modules:
   Wi-Fi backend and interface exclusions.
 - [firewall.nix](../modules/nixos/networking/firewall.nix): explicit firewall enablement and the
   shared nftables declaration, with the WSL exception retained.
+- [fail2ban.nix](../modules/nixos/networking/fail2ban.nix): jail and ban policy, controlled by
+  `dot.networking.fail2ban.enable` (formerly `dot.services.fail2ban.enable`). Mimir remains
+  disabled; the move does not change the existing whitelist, filters, retry limits or ban durations.
 - [wireless.nix](../modules/nixos/networking/wireless.nix): iwd Wi-Fi settings; built-in IP
   configuration is disabled by the approved follow-up.
 - [proxy/profile.nix](../modules/nixos/networking/proxy/profile.nix): selected TUN exclusion and

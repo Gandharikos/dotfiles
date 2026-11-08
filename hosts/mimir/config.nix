@@ -14,10 +14,8 @@
 
     yubikey.enable = false;
 
-    services = {
-      fail2ban.enable = false;
-      zfs.enable = false;
-    };
+    networking.fail2ban.enable = false;
+    services.zfs.enable = false;
   };
 
   home-manager.users = lib.mkForce { };
