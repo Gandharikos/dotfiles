@@ -1,16 +1,25 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
   shellAliases = {
     "fetch" = "fastfetch";
   };
-  inherit (config.programs) kitty;
+  inherit (config.programs) kitty ghostty;
   cfg = config.my.fastfetch;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
+  logos = pkgs.runCommand "fastfetch-logos" { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
+    mkdir -p "$out"
+    for image in "${lib.dot.relativeToConfig "fastfetch/pngs"}"/*.png; do
+      magick "$image" -auto-orient -resize 512x512 \
+        -background none -gravity center -extent 512x512 -strip \
+        "PNG32:$out/$(basename "$image")"
+    done
+  '';
   fetchGreeting = ''
     if [ -n "$DISPLAY" ] \
       && { [ "$XDG_VTNR" = 1 ] \
@@ -68,8 +77,7 @@ in
             detectVersion = false;
           };
           logo = {
-            type = if kitty.enable then "kitty-direct" else "chafa";
-            # width = 60;
+            type = if kitty.enable || ghostty.enable then "kitty-direct" else "chafa";
             height = 18;
             printRemaining = false;
             source = "$(find $HOME/.config/fastfetch/pngs/ -name '*.png' | sort -R | head -n 1)";
@@ -175,6 +183,6 @@ in
       inherit shellAliases;
     };
 
-    xdg.configFile."fastfetch/pngs".source = lib.dot.relativeToConfig "fastfetch/pngs";
+    xdg.configFile."fastfetch/pngs".source = logos;
   };
 }

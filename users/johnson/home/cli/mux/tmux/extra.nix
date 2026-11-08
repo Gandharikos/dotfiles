@@ -23,6 +23,9 @@ in
     set -gs exit-empty on
     set -g renumber-windows on
 
+    # Let visible panes pass image protocols through to the outer terminal.
+    set -g allow-passthrough on
+
     # undercurl support
     set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'
     # underscore colours - needs tmux-3.0
