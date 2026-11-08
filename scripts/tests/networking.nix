@@ -197,6 +197,38 @@ in
         c.networking.networkmanager.enable == expected.nm && c.systemd.network.enable == expected.networkd
       ) (builtins.attrNames ownership);
       true;
+    nftablesMigrationPreservesFirewallPolicy =
+      assert lib.all (
+        name:
+        let
+          host = systems.${name};
+          c = host.config;
+          legacy =
+            (host.extendModules {
+              modules = [ { networking.nftables.enable = lib.mkForce false; } ];
+            }).config;
+          policy = lib.getAttrs [
+            "enable"
+            "allowPing"
+            "checkReversePath"
+            "logReversePathDrops"
+            "logRefusedConnections"
+            "filterForward"
+            "allowedTCPPorts"
+            "allowedUDPPorts"
+            "allowedTCPPortRanges"
+            "allowedUDPPortRanges"
+            "trustedInterfaces"
+          ];
+        in
+        c.networking.nftables.enable == !(builtins.elem name [
+          "installer"
+          "nidhogg"
+        ])
+        && !c.networking.nftables.flushRuleset
+        && policy c.networking.firewall == policy legacy.networking.firewall
+      ) (builtins.attrNames ownership);
+      true;
     hostsRemainUntuned =
       assert lib.all (
         host:

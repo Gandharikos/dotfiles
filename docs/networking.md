@@ -1,8 +1,8 @@
 # Network ownership, diagnostics and staged changes
 
 This guide covers NixOS network ownership, the behavior-preserving refactor and the separately
-approved LLMNR hardening and iwd ownership changes below. It does not claim that a build has been
-activated or that coexistence of network managers is always correct. See the
+approved LLMNR hardening, iwd ownership changes and nftables trial below. It does not claim that a
+build has been activated or that coexistence of network managers is always correct. See the
 [shared proxy profile](proxy/shared-profile.md) and [ymir deployment guide](proxy/ymir-sing-box.md)
 for proxy-specific rules and identities.
 
@@ -46,6 +46,51 @@ restart iwd and interrupt Wi-Fi; use a local console or an independent recovery 
 Disabling NetworkManager does not automatically enable standalone iwd IP configuration. A future
 standalone iwd host must explicitly define network ownership and update the ownership tests.
 
+### Approved follow-up: nftables declaration and ymir trial
+
+`firewall.nix` now sets `networking.nftables.enable = true`. The shared declaration applies to
+athena, loki, mimir, sigurd and ymir on their next activation. Nidhogg retains its forced-off WSL
+exception; the installer does not import this module. Firewall enablement, allowed ports, Ping,
+loose reverse-path checking and logging policy are unchanged. `flushRuleset` remains false so NixOS
+does not flush other components' tables, and forwarding filtering remains disabled.
+
+The shared module explicitly uses `mkDefault` for firewall enablement, allowing Ping, loose
+reverse-path checking, and disabling reverse-path/refused-connection logging. Hosts can override
+these defaults normally, subject to other modules' requirements: Tailscale client routing also sets
+`checkReversePath = "loose"`, so changing that value requires coordinating its configuration.
+Service modules still own their port openings; no empty lists or forced reverse-path overrides are
+added.
+
+Upstream also changes libvirt's default `firewallBackend` to nftables. Existing libvirt network
+rules are not proof that a newly started virtual network will use the same backend. Docker and
+Tailscale can retain their own iptables-compatible tables; do not flush or rewrite them manually.
+
+#### Local trial on 2026-11-08 — restored, not permanently switched
+
+- Built the ymir toplevel and generated nftables rules successfully. The tested closure was
+  `/nix/store/6dwlcm9cak5gq9fz4gmv9ngwsmswy50n-nixos-system-ymir-26.11.20261103.1d06008`.
+- Retained the previous closure with a GC root, verified a dry rollback invocation through systemd,
+  and armed a ten-minute rollback timer before `test` activation. No boot default was changed.
+- Confirmed `nftables.service` active and the `inet nixos-fw` table installed. The old NixOS
+  iptables input/rpfilter hooks were removed; Docker, libvirt and Tailscale tables remained.
+- Domestic/public HTTPS, IPv6 HTTPS, Nix cache access, DNS, the LAN gateway, explicit mixed-proxy
+  access and local WebUI matched the pre-test baseline. Authenticated controller access returned
+  200; unauthenticated access returned 401. Credentials were not printed or passed in arguments.
+- From athena, new TCP connections received SSH banners on ports 22 and 2222, Tailnet HTTPS WebUI
+  returned 200, and the unauthenticated API returned 401. This checks inbound reachability, not a
+  new SSH user-authentication flow. HTTPS used an explicit address mapping because athena did not
+  resolve ymir's Tailnet hostname; certificate verification remained enabled.
+- Reloaded nftables and repeated connectivity/inbound checks successfully. NetworkManager, iwd,
+  networkd, resolved, tailscaled and user Rex PIDs were unchanged. Sing-box and Fail2Ban restarted
+  during activation. The recreated TUN changed its interface index, not DNS or routing policy.
+- Restored `/nix/store/d16r1fr1c3c6wgzf376mp4lb19bv1dc2-nixos-system-ymir-26.11.20261103.1d06008`,
+  verified restored firewall hooks and connectivity, then cancelled the rollback timer. No failed
+  system units remained. The running system and default boot generation still use the old backend.
+
+No containers or virtual machines were running during the trial. Their traffic, libvirt network
+recreation, cold boot, other hosts, and inbound Rex application sessions remain unverified. Do not
+interpret this bounded trial as approval to activate the shared change everywhere.
+
 ## Declared ownership inventory
 
 The baseline was evaluated at `ac8360b`. This table records declarations, not live ownership or
@@ -70,6 +115,8 @@ Relevant modules:
   definitions from `dot.device.ethernetDevices`.
 - [networkmanager.nix](../modules/nixos/networking/networkmanager.nix): NM, resolver integration,
   Wi-Fi backend and interface exclusions.
+- [firewall.nix](../modules/nixos/networking/firewall.nix): explicit firewall enablement and the
+  shared nftables declaration, with the WSL exception retained.
 - [wireless.nix](../modules/nixos/networking/wireless.nix): iwd Wi-Fi settings; built-in IP
   configuration is disabled by the approved follow-up.
 - [proxy/profile.nix](../modules/nixos/networking/proxy/profile.nix): selected TUN exclusion and
@@ -101,7 +148,8 @@ This is the declared division, not proof of the currently running configuration.
   acquired the address. Do not blindly exclude all bridges: some may intentionally belong to NM.
 - `ManageForeignRoutingPolicyRules`, `ManageForeignRoutes`, and `ManageForeignNextHops` remain
   unset. Evaluate their lifecycle effects before explicitly disabling networkd cleanup globally.
-- No nftables migration, Fail2Ban change or SSH hardening is included in this networking work.
+- The original refactor did not migrate nftables. The separately approved trial above changes the
+  backend, including upstream backend-dependent Fail2Ban defaults, without changing SSH policy.
 
 ## Independent tuning options
 
@@ -195,10 +243,10 @@ nix --extra-experimental-features pipe-operators eval --impure --json \
 
 The network tests cover null defaults, independent/combined settings, invalid options, ordinary
 manager overrides, current host defaults, shared-module LLMNR hardening, iwd/NetworkManager
-ownership, and ymir DNS/Tailnet/dae invariants. Diagnostic tests use fake command responses and
-restrict calls to fixed read queries. They verify field selection, unavailable tools, malformed
-responses, timeouts and suppression of error output. The routing test operates in a disposable
-network namespace, never the host namespace.
+ownership, nftables scope and firewall-policy preservation, and ymir DNS/Tailnet/dae invariants.
+Diagnostic tests use fake command responses and restrict calls to fixed read queries. They verify
+field selection, unavailable tools, malformed responses, timeouts and suppression of error output.
+The routing test operates in a disposable network namespace, never the host namespace.
 
 For a private declaration comparison, capture this output before and after a change:
 
