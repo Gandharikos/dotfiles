@@ -29,14 +29,13 @@ in
         maxtime = "168h";
         overalljails = true;
       };
-      #ignore local ips
+      # NixOS adds loopback exemptions; keep private networks and both Tailnet ranges here.
       ignoreIP = [
-        "127.0.0.0/8"
         "10.0.0.0/8"
-        "100.64.0.0/8"
+        "100.64.0.0/10"
         "172.16.0.0/12"
         "192.168.0.0/16"
-        "8.8.8.8"
+        "fd7a:115c:a1e0::/48"
       ];
       jails = mkMerge [
         {
