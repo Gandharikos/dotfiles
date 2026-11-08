@@ -29,7 +29,9 @@ Use the `justfile` for common workflows:
 - `just switch <host>`: rebuild and switch the target host.
 - `just test <host>`: build and activate a test generation.
 - `just deploy <host>`: remote rebuild with closure diff output.
-- `just check`: run `nix flake check` and `statix` when available.
+- `just check`: run `nix flake check`, `statix` when available, and default regressions.
+- `just regression`: run mocked script tests and Nix configuration assertions; use
+  `just regression integration` for the separately documented Linux integration fixtures.
 - `just fmt`: run the flake formatter.
 - `just dev`: enter the default development shell.
 

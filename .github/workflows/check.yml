@@ -7,10 +7,25 @@ on:
     paths:
       - "**.nix"
       - "**.lock"
+      - "**.py"
+      - "**.sh"
+      - "config/**"
+      - "justfile"
+      - ".github/workflows/check.yml"
+      - ".github/actions/**/*"
+  pull_request:
+    paths:
+      - "**.nix"
+      - "**.lock"
+      - "**.py"
+      - "**.sh"
+      - "config/**"
+      - "justfile"
       - ".github/workflows/check.yml"
       - ".github/actions/**/*"
 
-permissions: {}
+permissions:
+  contents: read
 
 jobs:
   check-commit:
@@ -22,22 +37,7 @@ jobs:
       - name: Run commit message check
         uses: ./.github/actions/commit-message-check
 
-  should-run:
-    runs-on: ubuntu-latest
-    outputs:
-      run-check: ${{ steps.check.outputs.run-check }}
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Should Run Check
-        id: check
-        uses: ./.github/actions/should-run-check
-        with:
-          prefixes: "chore docs"
-
   check-flake:
-    needs: should-run
-    if: needs.should-run.outputs.run-check == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -51,4 +51,7 @@ jobs:
             experimental-features = nix-command flakes pipe-operators
 
       - name: Check Flake
-        run: nix flake check
+        run: nix flake check --option allow-import-from-derivation false
+
+      - name: Regression tests
+        run: nix develop .#tests --command bash scripts/run-tests.sh
