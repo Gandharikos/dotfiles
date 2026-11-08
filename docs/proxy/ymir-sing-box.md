@@ -199,7 +199,17 @@ endpoint.
 
 ## Validation and activation
 
+Read the [network ownership and rollback gates](../networking.md) before changing managers, DNS,
+route ownership or tuning. The phase-one refactor preserves ymir's network behavior; the separately
+approved follow-up disables LLMNR without changing the unicast DNS path. Neither change has been
+activated by these edits. `scripts/network-diagnostics.py` provides a read-only inventory; neither
+service activity nor a successful build proves end-to-end connectivity.
+
 ```sh
+nix --extra-experimental-features pipe-operators eval --impure --json \
+  --file scripts/tests/networking.nix checks
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover \
+  -s scripts/tests -p 'test_network_diagnostics.py'
 SUB2SINGBOX="$(nix build --no-link --print-out-paths .#sub2singbox)/bin/sub2singbox" \
   SING_BOX="$(command -v sing-box)" \
   python3 -m unittest discover -s scripts/tests -p 'test_sing_box_subscription.py' -v

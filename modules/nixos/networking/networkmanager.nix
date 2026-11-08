@@ -11,7 +11,7 @@ let
 in
 {
   networking.networkmanager = {
-    enable = true;
+    enable = lib.mkDefault true;
     plugins = with pkgs; optionals isGui [ networkmanager-openvpn ];
     dns = "systemd-resolved";
     unmanaged = [

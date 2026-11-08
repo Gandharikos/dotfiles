@@ -19,7 +19,12 @@ in
 
   config = {
     # systemd DNS resolver daemon
-    services.resolved.enable = true;
+    services.resolved = {
+      enable = true;
+
+      # Avoid unauthenticated link-local name resolution; mDNS is configured separately.
+      settings.Resolve.LLMNR = false;
+    };
 
     systemd = {
       # allow for the system to boot without waiting for the network interfaces are online
@@ -35,8 +40,8 @@ in
         # https://github.com/systemd/systemd/blob/e1b45a756f71deac8c1aa9a008bd0dab47f64777/NEWS#L13
         NetworkManager-wait-online.enable = false;
 
-        # disable networkd and resolved from being restarted on configuration changes
-        # also prevents failures from services that are restarted instead of stopped
+        # Prefer restart under the new configuration over stop-old/start-new.
+        # This does not prevent restarts during activation.
         systemd-networkd.stopIfChanged = false;
         systemd-resolved.stopIfChanged = false;
       };

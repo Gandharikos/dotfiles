@@ -11,7 +11,8 @@ development integration are organized under `flake/`.
 ## Documentation & Change Context
 
 Before modifying a module, read the relevant guides linked from [docs/README.md](docs/README.md).
-For proxy changes, read the [shared profile](docs/proxy/shared-profile.md) and
+For network changes, read [ownership, diagnostics and rollback gates](docs/networking.md). For proxy
+changes, read the [shared profile](docs/proxy/shared-profile.md) and
 [dae options](docs/proxy/dae.md); for ymir, also check the
 [sing-box deployment notes](docs/proxy/ymir-sing-box.md) or
 [Mihomo alternative](docs/proxy/ymir-mihomo.md), as applicable.

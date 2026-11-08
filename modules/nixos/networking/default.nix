@@ -25,10 +25,10 @@ in
       # as a note for readers to know this is how it works, and why hostName is never set
       # hostName = "nixos";
 
-      # global dhcp has been deprecated upstream, so we use networkd instead
-      # however individual interfaces are still managed through dhcp in hardware configurations
+      # Preserve existing defaults without preventing explicit per-host ownership.
+      # Enabling networkd does not assign physical interfaces; see networking/systemd.nix.
       useDHCP = mkForce isWSL;
-      useNetworkd = mkForce (!isWSL);
+      useNetworkd = mkDefault (!isWSL);
 
       # interfaces are assigned names that contain topology information (e.g. wlp3s0) and thus should be consistent across reboots
       # this already defaults to true, we set it in case it changes upstream
