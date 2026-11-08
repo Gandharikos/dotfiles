@@ -227,7 +227,6 @@ just deploy <host> switch
 
    ```bash
    sops updatekeys -y secrets/services/default.yaml
-   sops updatekeys -y secrets/services/clash.yaml
    ```
 
 5. Store the host private key under `secrets/johnson/core/<host>.yaml` if this repository should

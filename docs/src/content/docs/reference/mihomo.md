@@ -20,9 +20,16 @@ description: Native proxy backends and the independent Darwin GUI.
   dot.networking.proxy = {
     enable = true;
     backend = "mihomo";
+    mihomo.configFile = "/run/secrets/my-mihomo.yaml";
   };
 }
 ```
+
+Supply that private runtime file separately; the old bundled encrypted Clash configuration is no
+longer loaded. On Darwin, use the user's `~/.config/mihomo/config.yaml` as an absolute path, or pass
+another explicit path to the CLI. Do not place plaintext credentials in the Nix store. For managed
+NixOS subscription configuration, use the shared profile documented in
+`docs/proxy/shared-profile.md`, which supplies the runtime config automatically.
 
 ## Auto-Start On NixOS
 
@@ -31,6 +38,7 @@ description: Native proxy backends and the independent Darwin GUI.
   dot.networking.proxy = {
     enable = true;
     backend = "mihomo";
+    mihomo.configFile = "/run/secrets/my-mihomo.yaml";
     autoStart = true;
   };
 }

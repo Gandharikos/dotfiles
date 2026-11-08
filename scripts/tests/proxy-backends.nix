@@ -10,10 +10,34 @@ let
         dot.networking.proxy = {
           enable = lib.mkForce true;
           backend = lib.mkForce "mihomo";
+          mihomo.configFile = "${darwin.config.dot.admin.homeDirectory}/.config/mihomo/config.yaml";
         };
       })
     ];
   };
+  darwinSingBox = darwin.extendModules {
+    modules = [
+      {
+        dot.networking.proxy = {
+          enable = true;
+          backend = "sing-box";
+          singBox.configFile = "${darwin.config.dot.admin.homeDirectory}/.config/sing-box/config.json";
+        };
+      }
+    ];
+  };
+  missingConfig =
+    backend:
+    darwin.extendModules {
+      modules = [
+        {
+          dot.networking.proxy = {
+            enable = true;
+            inherit backend;
+          };
+        }
+      ];
+    };
   checkBackends =
     host:
     let
@@ -46,11 +70,31 @@ in
     true;
   darwinNativeMihomo =
     assert
-      darwinMihomo.config.sops.secrets.proxy_config.path
+      darwinMihomo.config.dot.networking.proxy.mihomo.configFile
       == "${darwinMihomo.config.dot.admin.homeDirectory}/.config/mihomo/config.yaml";
+    assert !(darwinMihomo.config.sops.secrets ? proxy_config);
     assert builtins.any (
       package: lib.getName package == "mihomo"
     ) darwinMihomo.config.environment.systemPackages;
     assert builtins.all (entry: entry.assertion) darwinMihomo.config.assertions;
+    true;
+  darwinNativeSingBox =
+    assert !(darwinSingBox.config.sops.secrets ? proxy_source_config);
+    assert
+      !(lib.hasInfix "generate-sing-box-config" darwinSingBox.config.system.activationScripts.postActivation.text);
+    assert builtins.all (entry: entry.assertion) darwinSingBox.config.assertions;
+    true;
+  missingConfigRejected =
+    assert lib.all
+      (
+        backend:
+        lib.any (
+          entry: !entry.assertion && lib.hasInfix "no legacy secret" entry.message
+        ) (missingConfig backend).config.assertions
+      )
+      [
+        "mihomo"
+        "sing-box"
+      ];
     true;
 }

@@ -1,7 +1,11 @@
 # Shared subscription/Tailnet profile
 
 These are reusable, opinionated **NixOS** presets. They are not automatically enabled on other
-hosts, and do not replace the existing Darwin or legacy proxy integrations.
+hosts, and do not replace the existing Darwin or explicitly configured legacy proxy integrations.
+The old bundled Clash secret has been removed. Enabling a backend without this profile now requires
+an explicit runtime `mihomo.configFile` / `singBox.configFile`, or an explicitly managed SOPS secret
+(`proxy_config` / `proxy_source_config` respectively). There is no implicit shared secret fallback.
+The NixOS profile continues to use `secrets/services/proxy.yml` unchanged.
 
 `dot.networking.proxy.backend` accepts only `mihomo` or `sing-box`. On NixOS, [optional dae](dae.md)
 has an independent `dot.networking.proxy.dae.enable` switch, off by default. It may coexist with

@@ -24,9 +24,11 @@ in
 
     system.activationScripts.postActivation.text = lib.mkAfter ''
       install -d -m 0700 -o ${config.dot.primaryUser} -g staff ${configDir}
-      ${lib.getExe generateConfig}
-      chown ${config.dot.primaryUser}:staff ${configDir}/config.json
-      chmod 0600 ${configDir}/config.json
+      ${lib.optionalString (cfg.singBox.configFile == null) ''
+        ${lib.getExe generateConfig}
+        chown ${config.dot.primaryUser}:staff ${configDir}/config.json
+        chmod 0600 ${configDir}/config.json
+      ''}
     '';
   };
 }

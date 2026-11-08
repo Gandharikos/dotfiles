@@ -367,7 +367,7 @@ in
     configFile = mkOption {
       type = lib.types.nullOr lib.types.path;
       default = null;
-      description = "Runtime native sing-box configuration; null uses the legacy subscription generator.";
+      description = "Runtime native sing-box configuration; null uses the legacy generator with an explicitly declared sops.secrets.proxy_source_config.";
     };
 
     extraOutbounds = mkOption {

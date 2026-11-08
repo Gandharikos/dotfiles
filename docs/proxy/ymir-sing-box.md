@@ -122,9 +122,9 @@ subscription with no eligible Auto nodes is rejected, preserving the previous va
 
 The **🤖 ChatGPT**, **🤖 Claude**, **🤖 Gemini**, and **🤖 Copilot** selectors default to **Proxy**.
 Each can instead use **Auto** or any individual node, including Hong Kong. Their public domain/IP
-rules were copied from the existing shared Clash profile in `secrets/services/clash.yaml`, without
-copying credentials, subscription URLs, DNS settings, or unrelated rules. They are inline rule sets,
-so they do not introduce another rule download dependency.
+rules were copied from the now-retired shared Clash profile, without copying credentials,
+subscription URLs, DNS settings, or unrelated rules. They are inline rule sets, so they do not
+introduce another rule download dependency.
 
 `config/sing-box/policy.yml` adds 20 service selectors from the public rule portion of that same
 Clash profile: Telegram, YouTube, Netflix, Disney+, Bahamut, Bilibili, Google FCM, OneDrive,
