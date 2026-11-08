@@ -1,16 +1,14 @@
 {
   dot = {
     primaryUser = "johnson";
-    device.type = "server";
-    profiles.minimal.enable = true;
-    gui.enable = false;
+    device.type = "desktop";
     networking.tailscale = {
       role = "router-exit-node";
       advertiseRoutes = [ "192.168.1.0/24" ];
     };
     keyboard = {
       layout = "qwerty";
-      backend = null;
+      backend = "kanata";
     };
   };
 }
