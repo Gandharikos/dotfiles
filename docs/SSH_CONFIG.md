@@ -181,7 +181,7 @@ ykman info | grep "Serial number"
 The following host aliases are pre-configured:
 
 ```bash
-ssh loki      # → loki.local
+ssh loki      # → localhost:10022 (MicroVM, run on ymir)
 ssh sigurd    # → sigurd.local
 ssh ymir      # → ymir.local
 ssh nidhogg   # → nidhogg.local
@@ -190,6 +190,11 @@ git clone git@github.com:user/repo.git  # GitHub
 ```
 
 ---
+
+The `loki` alias now refers to the MicroVM formerly named `mimir`, not the retired laptop. Its
+loopback endpoint is on ymir, so connect to ymir first before using this alias. The stateless VM's
+existing host-key checking behavior is unchanged. The YubiKey named `mimir` is unrelated and keeps
+its existing key names.
 
 ## Usage Examples
 

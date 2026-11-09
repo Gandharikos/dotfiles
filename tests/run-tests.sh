@@ -24,6 +24,7 @@ fi
 
 python3 -m unittest discover -s tests -v
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/networking.nix checks
+nix --extra-experimental-features pipe-operators eval --impure --json --file tests/hosts.nix
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/proxy-backends.nix
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/aerospace.nix
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/scheduler.nix

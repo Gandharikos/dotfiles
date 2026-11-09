@@ -98,10 +98,6 @@ let
       networkd = false;
     };
     loki = {
-      nm = true;
-      networkd = true;
-    };
-    mimir = {
       nm = false;
       networkd = true;
     };
@@ -264,8 +260,8 @@ in
         == false;
       true;
     fail2banNamespaceAndDisableOverride =
-      assert !systems.mimir.config.dot.networking.fail2ban.enable;
-      assert !systems.mimir.config.services.fail2ban.enable;
+      assert !systems.loki.config.dot.networking.fail2ban.enable;
+      assert !systems.loki.config.services.fail2ban.enable;
       assert ymir.dot.networking.fail2ban.enable && ymir.services.fail2ban.enable;
       assert !(systems.ymir.options.dot.services ? fail2ban);
       assert

@@ -43,11 +43,6 @@ in
           ForwardAgent = mkDefault true;
         };
 
-        "loki" = {
-          HostName = mkDefault "loki.local";
-          ForwardAgent = mkDefault true;
-        };
-
         "sigurd" = {
           HostName = mkDefault "sigurd.local";
           ForwardAgent = mkDefault true;
@@ -59,7 +54,7 @@ in
           ForwardAgent = mkDefault true;
         };
 
-        "mimir" = {
+        "loki" = {
           HostName = mkDefault "localhost";
           Port = mkDefault 10022;
           User = mkDefault "johnson";

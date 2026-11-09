@@ -39,7 +39,7 @@ test host=`hostname -s` *args: (builder "test" host args)
 
 [group('virtualization')]
 [no-exit-message]
-vm host="mimir":
+vm host="loki":
     sudo systemctl start "install-microvm-{{ host }}.service"
     sudo systemctl start "microvm@{{ host }}.service"
 

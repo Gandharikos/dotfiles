@@ -39,7 +39,7 @@ The shared wireless module now sets `iwd.settings.General.EnableNetworkConfigura
 NetworkManager keeps its `iwd` backend: iwd handles Wi-Fi association and authentication, while
 NetworkManager configures IP addresses, routes and DNS. All currently declared hosts with iwd
 enabled also enable NetworkManager. The installer does not import this shared module; iwd remains
-disabled on mimir and nidhogg.
+disabled on loki (the former mimir MicroVM) and nidhogg.
 
 This change is not activated by editing or evaluating the configuration. First activation may
 restart iwd and interrupt Wi-Fi; use a local console or an independent recovery connection.
@@ -65,7 +65,8 @@ already adds `127.0.0.1/8`, plus `::1` when IPv6 is enabled.
 These defaults apply to all inheriting jails, including athena's Vaultwarden jails. Tailnet IPv6
 clients now receive the same exemption as Tailnet IPv4 clients. This is an explicit trust policy:
 matching clients are exempt from automatic Fail2ban bans, not from authentication, Tailnet ACLs or
-other firewall rules. Mimir remains disabled; filters, retry limits and ban durations are unchanged.
+other firewall rules. The loki MicroVM remains disabled; filters, retry limits and ban durations are
+unchanged.
 
 Editing/building does not activate this policy or change existing ban state. After a separately
 approved activation, verify the effective list with `sudo fail2ban-client get sshd ignoreip` and, on
@@ -75,7 +76,7 @@ configuration cleanup.
 ### Approved follow-up: nftables declaration and ymir trial
 
 `firewall.nix` now sets `networking.nftables.enable = true`. The shared declaration applies to
-athena, loki, mimir, sigurd and ymir on their next activation. Nidhogg retains its forced-off WSL
+athena, loki, sigurd and ymir on their next activation. Nidhogg retains its forced-off WSL
 exception; the installer does not import this module. Firewall enablement, allowed ports, Ping,
 loose reverse-path checking and logging policy are unchanged. `flushRuleset` remains false so NixOS
 does not flush other components' tables, and forwarding filtering remains disabled.
@@ -119,16 +120,16 @@ interpret this bounded trial as approval to activate the shared change everywher
 
 ## Declared ownership inventory
 
-The baseline was evaluated at `ac8360b`. This table records declarations, not live ownership or
-reachability on every machine. The installer uses its own configuration rather than the shared
-`dot.networking` modules.
+The original baseline was evaluated at `ac8360b`. The table below also reflects the later removal of
+the loki laptop and the rename of the mimir MicroVM to loki. It records declarations, not live
+ownership or reachability on every machine. The installer uses its own configuration rather than the
+shared `dot.networking` modules.
 
 | Host          | NetworkManager | networkd | Declared networkd interfaces         |
 | ------------- | -------------- | -------- | ------------------------------------ |
 | athena        | on             | on       | `eth0`, unmanaged `tailscale0`       |
 | installer     | on             | off      | none                                 |
-| loki          | on             | on       | unmanaged `tailscale0`               |
-| mimir         | off            | on       | Ethernet match in `10-microvm`       |
+| loki          | off            | on       | Ethernet match in `10-microvm`       |
 | nidhogg (WSL) | off            | off      | none; preserve Windows/WSL ownership |
 | sigurd        | on             | on       | unmanaged `tailscale0`               |
 | ymir          | on             | on       | unmanaged `tailscale0`               |
@@ -144,9 +145,9 @@ Relevant modules:
 - [firewall.nix](../modules/nixos/networking/firewall.nix): explicit firewall enablement and the
   shared nftables declaration, with the WSL exception retained.
 - [fail2ban.nix](../modules/nixos/networking/fail2ban.nix): jail and ban policy, controlled by
-  `dot.networking.fail2ban.enable` (formerly `dot.services.fail2ban.enable`). Mimir remains
-  disabled. The namespace move preserved policy; the separately approved whitelist cleanup is
-  described above. Filters, retry limits and ban durations remain unchanged.
+  `dot.networking.fail2ban.enable` (formerly `dot.services.fail2ban.enable`). The loki MicroVM
+  remains disabled. The namespace move preserved policy; the separately approved whitelist cleanup
+  is described above. Filters, retry limits and ban durations remain unchanged.
 - [wireless.nix](../modules/nixos/networking/wireless.nix): iwd Wi-Fi settings; built-in IP
   configuration is disabled by the approved follow-up.
 - [proxy/profile.nix](../modules/nixos/networking/proxy/profile.nix): selected TUN exclusion and

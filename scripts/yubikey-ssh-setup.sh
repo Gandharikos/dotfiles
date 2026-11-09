@@ -163,7 +163,6 @@ batch_add() {
   local hosts=(
     "johnson@sigurd.local"
     "johnson@ymir.local"
-    "johnson@loki.local"
     "johnson@nidhogg.local"
   )
 

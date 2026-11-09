@@ -53,6 +53,24 @@ Restoring the desktop profile does not change `tyr`'s Tailscale role or advertis
 not proof of deployment or successful remote forwarding. Review the generated activation and
 preserve a recovery path before switching a headless host.
 
+## Loki MicroVM on ymir
+
+`loki` is the stateless eBPF-learning MicroVM formerly named `mimir`. The old loki laptop
+configuration has been removed. The VM retains its QEMU settings, machine ID, MAC, read-only store
+share, and `127.0.0.1:10022` SSH forwarding. It is not a direct CI deployment target.
+
+After a separately approved ymir activation, `just vm` defaults to loki and starts
+`install-microvm-loki.service` followed by `microvm@loki.service`. Auto-start remains disabled. Run
+`ssh loki` on ymir to reach the guest. There is no `mimir` host or SSH alias compatibility entry.
+Before starting the renamed guest, ensure the old `microvm@mimir.service` is stopped: the two names
+must not run together because they share the same identity and forwarded port. Repository edits do
+not stop the old VM, rename runtime state directories, or delete VM data.
+
+The retired laptop's `secrets/johnson/core/loki.yaml`, `loki.pub`, and SOPS recipient remain for
+recovery only; they are not assigned to the MicroVM. Do not use them to bootstrap the new guest's
+SSH host identity. The YubiKey named `mimir` and the Grafana Loki service are unrelated and
+unchanged.
+
 ## Remote Deployment
 
 ```bash
