@@ -6,6 +6,14 @@ description: Direct SMTP delivery, SMTP2GO fallback, DKIM and TLS checks on Athe
 Athena hosts mail for `huwenqiang.dev` at `mx.huwenqiang.dev`. Postfix handles SMTP, Dovecot stores
 mail and serves IMAP, and Rspamd signs outbound mail with DKIM.
 
+## Account secrets
+
+Mailbox credentials, including `jobs` and `signup`, are stored in `secrets/services/mailserver.yaml`
+under their account-name keys. The separate `mailserver-accounts.yaml` file has been merged into it
+without changing passwords or encryption recipients. Runtime secret names and paths remain
+unchanged. Keep all credentials SOPS-encrypted; do not include decrypted values in logs, command
+arguments, documentation, or commits.
+
 ## Delivery mode
 
 Set `dot.selfhosted.services.mailserver.delivery.mode` to `"direct"` or `"relay"`. Athena selects

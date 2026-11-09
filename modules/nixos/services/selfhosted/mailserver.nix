@@ -11,7 +11,6 @@ let
   selfhosted = config.dot.selfhosted;
   inherit (selfhosted) domain;
   secretsFile = "${self}/secrets/services/mailserver.yaml";
-  accountSecretsFile = "${self}/secrets/services/mailserver-accounts.yaml";
   acmeWebroot = "/var/lib/acme/acme-challenge";
   relayEnabled = cfg.delivery.mode == "relay";
   relayHost = "[${cfg.delivery.relay.host}]:${toString cfg.delivery.relay.port}";
@@ -105,11 +104,11 @@ in
           key = "johnson";
         };
         mailserver-jobs = {
-          sopsFile = accountSecretsFile;
+          sopsFile = secretsFile;
           key = "jobs";
         };
         mailserver-signup = {
-          sopsFile = accountSecretsFile;
+          sopsFile = secretsFile;
           key = "signup";
         };
         mailserver-ai = {

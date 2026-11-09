@@ -12,6 +12,23 @@ let
     }).config;
 in
 {
+  consolidatedAccountSecrets =
+    assert builtins.all
+      (
+        name:
+        let
+          secret = direct.sops.secrets."mailserver-${name}";
+        in
+        toString secret.sopsFile == "${flake}/secrets/services/mailserver.yaml"
+        && secret.key == name
+        && direct.mailserver.accounts."${name}@${direct.dot.selfhosted.domain}".passwordFile == secret.path
+      )
+      [
+        "jobs"
+        "signup"
+      ];
+    assert !(builtins.pathExists "${flake}/secrets/services/mailserver-accounts.yaml");
+    true;
   directDelivery =
     assert direct.dot.selfhosted.services.mailserver.delivery.mode == "direct";
     assert direct.services.postfix.settings.main.relayhost == [ ];
