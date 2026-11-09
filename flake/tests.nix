@@ -23,7 +23,7 @@
           '';
 
       devshells.tests = {
-        devshell.name = "dots-tests";
+        devshell.name = "tests";
         packages =
           testTools
           ++ [
