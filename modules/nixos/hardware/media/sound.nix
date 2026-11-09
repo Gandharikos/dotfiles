@@ -16,13 +16,15 @@ in
     # Allows PipeWire to request realtime scheduling for low-latency audio.
     security.rtkit.enable = lib.mkForce config.services.pipewire.enable;
 
+    # JACK applications opt in via pw-jack instead of a global LD_LIBRARY_PATH.
+    environment.systemPackages = [ config.services.pipewire.package.jack ];
+
     # pipewire is newer and just better
     services.pipewire = {
       enable = true;
 
       audio.enable = true;
       pulse.enable = true;
-      jack.enable = true;
 
       alsa = {
         enable = true;

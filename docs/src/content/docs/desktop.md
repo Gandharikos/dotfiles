@@ -61,6 +61,13 @@ Important areas:
 - `users/johnson/home/gui/terminals/`
 - `users/johnson/home/theme/`
 
+## JACK Audio on Linux
+
+GUI-enabled NixOS hosts use PipeWire with PulseAudio and ALSA compatibility. JACK applications must
+be launched with `pw-jack <program>`, provided by the configured PipeWire package's `jack` output.
+This scopes JACK library overrides to that process instead of setting a global `LD_LIBRARY_PATH`
+through the deprecated `services.pipewire.jack.enable` option.
+
 ## Fastfetch images
 
 Home Manager builds the images in `config/fastfetch/pngs/` into 512×512 RGBA PNGs, matching the
