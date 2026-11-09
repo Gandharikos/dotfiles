@@ -22,7 +22,8 @@
             touch "$out"
           '';
 
-      devShells.tests = pkgs.mkShellNoCC {
+      devshells.tests = {
+        devshell.name = "dots-tests";
         packages =
           testTools
           ++ [
