@@ -58,8 +58,8 @@ self-hosted export and Taildrop copy include the same state. Restoring only the 
 without its database and cryptographic keys is not a complete recovery.
 
 Transactional mail is submitted without authentication to Postfix on `127.0.0.1:25`. Postfix then
-uses the existing SMTP2Go relay and SOPS-managed relay credential; Outline does not receive or
-duplicate that credential.
+uses the mailserver's selected delivery mode (`direct` or `relay`). Outline does not receive or
+duplicate any relay credential; SMTP2GO credentials remain SOPS-managed by the mailserver.
 
 ## Deployment and DNS
 

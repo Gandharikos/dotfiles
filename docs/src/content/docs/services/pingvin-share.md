@@ -122,7 +122,7 @@ configured 30 seconds and then stops it with `SIGKILL`; systemd subsequently sta
 container. Persistent files and SQLite remain on the host, but plan maintenance restarts outside an
 active upload window and keep the daily SQLite snapshot healthy.
 
-SMTP is intentionally disabled for the first deployment. It can later use the existing SMTP2Go
-service, but its password must be supplied through SOPS and a runtime-generated configuration file;
-never place it directly in Nix. ClamAV, S3, MinIO, WebDAV, and other storage protocols are not part
-of this deployment.
+SMTP is intentionally disabled for the first deployment. It can later use the existing mailserver,
+but any password must be supplied through SOPS and a runtime-generated configuration file; never
+place it directly in Nix. ClamAV, S3, MinIO, WebDAV, and other storage protocols are not part of
+this deployment.

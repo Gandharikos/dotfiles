@@ -40,6 +40,12 @@ in
 
   networking.domain = "huwenqiang.dev";
 
+  # Postfix DANE requires authenticated DNS answers from the local resolver.
+  services.resolved.settings.Resolve.DNSSEC = true;
+
+  # Keep the public key pinned by inbound SMTP TLSA records across renewals.
+  security.acme.certs."mx.huwenqiang.dev".extraLegoRenewFlags = [ "--reuse-key" ];
+
   # Keep old backup paths usable for rollback and operator scripts after migration.
   systemd.tmpfiles.rules = [
     "L /var/backup - - - - /var/lib/selfhosted-backup/storage"
@@ -158,7 +164,7 @@ in
       services.mailserver = {
         enable = true;
         delivery = {
-          mode = "relay";
+          mode = "direct";
           relay = {
             host = "mail.smtp2go.com";
             port = 587;

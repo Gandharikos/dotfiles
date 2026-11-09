@@ -58,7 +58,7 @@ in
             "relay"
           ];
           default = "direct";
-          description = "Outbound delivery mode. Use relay when the VPS provider blocks outbound SMTP port 25.";
+          description = "Deliver directly to recipient MX servers or through the configured SMTP relay.";
         };
 
         relay = {
