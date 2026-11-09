@@ -86,7 +86,7 @@ Home Manager selects `config/fastfetch/apple_pngs/` on Darwin and `config/fastfe
 then builds the images into 512×512 RGBA PNGs, matching the original `Makima_nixos.png` canvas.
 Images are scaled proportionally and centered with transparent padding; the source files are not
 changed. ImageMagick is only a build dependency. Fastfetch randomly selects a generated image and
-displays it 18 rows high. Kitty graphics uses an explicit width of 36 columns: specifying both
+displays it 18 rows high with an explicit width of 40 columns. For Kitty graphics, specifying both
 dimensions avoids cursor-position queries that can fail during shell startup and leave the image
 overlapping the text. It uses Kitty graphics when Kitty, Ghostty, or Rex is enabled and Chafa
 otherwise. Chafa options are emitted only for the Chafa mode, so image mode also works with macOS

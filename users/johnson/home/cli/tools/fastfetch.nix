@@ -82,7 +82,7 @@ in
           logo = {
             type = if supportsKittyGraphics then "kitty-direct" else "chafa";
             # Both dimensions avoid cursor-position queries during shell startup.
-            width = 36;
+            width = 40;
             height = 18;
             printRemaining = false;
             source = "$(find $HOME/.config/fastfetch/pngs/ -name '*.png' | sort -R | head -n 1)";
