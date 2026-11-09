@@ -8,13 +8,17 @@ let
   shellAliases = {
     "fetch" = "fastfetch";
   };
-  inherit (config.programs) kitty ghostty;
+  inherit (config.programs) kitty ghostty rex;
+  supportsKittyGraphics = kitty.enable || ghostty.enable || rex.enable;
   cfg = config.my.fastfetch;
   inherit (lib.options) mkEnableOption;
   inherit (lib.modules) mkIf;
+  logoDirectory = lib.dot.relativeToConfig (
+    if pkgs.stdenv.hostPlatform.isDarwin then "fastfetch/apple_pngs" else "fastfetch/pngs"
+  );
   logos = pkgs.runCommand "fastfetch-logos" { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
     mkdir -p "$out"
-    for image in "${lib.dot.relativeToConfig "fastfetch/pngs"}"/*.png; do
+    for image in "${logoDirectory}"/*.png; do
       magick "$image" -auto-orient -resize 512x512 \
         -background none -gravity center -extent 512x512 -strip \
         "PNG32:$out/$(basename "$image")"
@@ -77,11 +81,11 @@ in
             detectVersion = false;
           };
           logo = {
-            type = if kitty.enable || ghostty.enable then "kitty-direct" else "chafa";
+            type = if supportsKittyGraphics then "kitty-direct" else "chafa";
             height = 18;
             printRemaining = false;
             source = "$(find $HOME/.config/fastfetch/pngs/ -name '*.png' | sort -R | head -n 1)";
-            chafa = {
+            chafa = mkIf (!supportsKittyGraphics) {
               symbols = "vhalf";
             };
             padding = {

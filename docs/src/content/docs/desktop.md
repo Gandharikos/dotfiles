@@ -70,12 +70,14 @@ through the deprecated `services.pipewire.jack.enable` option.
 
 ## Fastfetch images
 
-Home Manager builds the images in `config/fastfetch/pngs/` into 512×512 RGBA PNGs, matching the
-original `Makima_nixos.png` canvas. Images are scaled proportionally and centered with transparent
-padding; the source files are not changed. ImageMagick is only a build dependency. Fastfetch
-randomly selects a generated image and uses the original Makima display settings: 18 rows high, with
-width calculated automatically rather than forced to 36 columns. It uses Kitty graphics when Kitty
-or Ghostty is enabled and Chafa otherwise.
+Home Manager selects `config/fastfetch/apple_pngs/` on Darwin and `config/fastfetch/pngs/` on Linux,
+then builds the images into 512×512 RGBA PNGs, matching the original `Makima_nixos.png` canvas.
+Images are scaled proportionally and centered with transparent padding; the source files are not
+changed. ImageMagick is only a build dependency. Fastfetch randomly selects a generated image and
+uses the original Makima display settings: 18 rows high, with width calculated automatically rather
+than forced to 36 columns. It uses Kitty graphics when Kitty, Ghostty, or Rex is enabled and Chafa
+otherwise. Chafa options are emitted only for the Chafa mode, so image mode also works with macOS
+Fastfetch builds that lack Chafa support.
 
 Existing padding inside an image is retained, so the visible subject may still vary in size.
 
