@@ -80,6 +80,10 @@ The startup hooks select a built-in ASCII logo inside tmux or Zellij to avoid im
 Other environments, including Rex and Herdr, retain the configured PNG logo. This changes only
 automatic startup; manually running `fastfetch` or `fetch` still uses the configured logo.
 
+Fastfetch also lists local IPv4 addresses with their interface names, excluding loopback. It does
+not query a public-IP service or restrict results to the default route, which may belong to a VPN or
+proxy TUN. Multiple interfaces can produce multiple lines.
+
 ## Fastfetch images
 
 Home Manager selects `config/fastfetch/apple_pngs/` on Darwin and `config/fastfetch/pngs/` on Linux,

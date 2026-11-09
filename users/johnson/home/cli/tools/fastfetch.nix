@@ -135,6 +135,16 @@ in
               keyColor = "yellow";
             }
             {
+              type = "localip";
+              key = "  󰩟 Local IP ({ifname})";
+              keyColor = "green";
+              showIpv4 = true;
+              showIpv6 = false;
+              showMac = false;
+              showLoop = false;
+              defaultRouteOnly = false;
+            }
+            {
               type = "custom";
               format = "└──────────────────────────────────────────┘";
             }

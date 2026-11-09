@@ -22,6 +22,9 @@ let
         ];
       };
       home = host.config.home-manager.users.johnson;
+      localIpModules = builtins.filter (
+        module: builtins.isAttrs module && (module.type or "") == "localip"
+      ) (home.programs.fastfetch.settings.modules or [ ]);
       shouldRun = enabled && (if startup == null then enabled else startup);
       greetings = {
         bash = lib.hasInfix "fastfetch --logo-type builtin --logo macos" home.programs.bash.initExtra;
@@ -33,6 +36,15 @@ let
       };
     in
     assert home.programs.fastfetch.enable == enabled;
+    assert builtins.length localIpModules == (if enabled then 1 else 0);
+    assert
+      enabled
+      -> (
+        let
+          localIp = builtins.head localIpModules;
+        in
+        localIp.showIpv4 && !localIp.showIpv6 && !localIp.showLoop && !localIp.defaultRouteOnly
+      );
     assert enabled -> home.programs.fastfetch.settings.logo.width == 40;
     assert enabled -> home.programs.fastfetch.settings.logo.height == 18;
     assert home.my.fastfetch.startOnLogin == (if startup == null then enabled else startup);
