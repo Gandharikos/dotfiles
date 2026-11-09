@@ -48,6 +48,49 @@ nix --extra-experimental-features pipe-operators eval --impure --json \
   --file tests/aerospace.nix
 ```
 
+## tyr Desktop Inside Rex
+
+`tyr` installs `pkgs.dot.krd`, pinned to the upstream `0.3.0` universal macOS release with a fixed
+SHA-256. This is a Nix-packaged binary, not a Homebrew package or an activation-time download. `krd`
+requires macOS 14+ on the captured host; Linux can be a viewer through SSH and a terminal supporting
+Kitty graphics, but cannot be the captured host. Neither eir nor the Linux hosts install it by
+default.
+
+After a separately approved tyr activation, run this from a local Rex pane on eir:
+
+```bash
+ssh -t tyr '/run/current-system/sw/bin/krd --mirror --fps 20'
+```
+
+The desktop is drawn inside the terminal pane, with keyboard and mouse input sent back over the same
+SSH connection. Exit with `Ctrl-\`. No daemon, VNC server, new port, or automatic clipboard sharing
+is configured. Test in a plain Rex pane before adding tmux or Zellij. tyr must have an available,
+unlocked graphical session; this does not bypass FileVault's preboot unlock.
+
+Screen Recording and Accessibility approvals remain manual and separate from installation. The
+[upstream deployment guide](https://github.com/zzjcool/krd/blob/v0.3.0/docs/DEPLOY.md) reports that
+on macOS 26+, screen capture launched through SSH needs Screen Recording permission for
+`/usr/libexec/sshd-keygen-wrapper`, not just the krd binary. This grants capture access to processes
+in that SSH context, so review the scope before enabling it. Reconnect after approval. When launched
+from a local GUI terminal, the terminal app needs that permission. Follow the actual permission
+prompts for Accessibility; viewing successfully does not prove input control works.
+
+The package ad-hoc signs the binary with upstream's `com.kkrt.macdesk` identifier, without accessing
+personal signing certificates or the Keychain. It is not a Developer ID signature or notarization.
+Per-binary permissions may need renewed approval after a package upgrade or path change. Do not
+modify binaries in the Nix store or automate TCC database edits.
+
+Build and validate without activation or desktop capture:
+
+```bash
+nix --extra-experimental-features pipe-operators build --no-link .#krd .#krd.tests.version
+nix --extra-experimental-features pipe-operators eval --impure --json --file tests/krd.nix
+nix --extra-experimental-features pipe-operators build --no-link .#darwinConfigurations.tyr.system
+```
+
+A successful build or version check does not verify remote capture, input permissions, or
+performance.
+
 ## Shells And Tools
 
 The Wayland desktop includes launchers, idle handling, screenshot tools, desktop shell integrations,

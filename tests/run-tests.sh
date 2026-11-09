@@ -28,6 +28,7 @@ nix --extra-experimental-features pipe-operators eval --impure --json --file tes
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/mailserver.nix
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/proxy-backends.nix
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/aerospace.nix
+nix --extra-experimental-features pipe-operators eval --impure --json --file tests/krd.nix
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/scheduler.nix
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/fastfetch.nix
 for backend in sing-box mihomo; do

@@ -1,4 +1,7 @@
+{ pkgs, ... }:
 {
+  environment.systemPackages = [ pkgs.dot.krd ];
+
   dot = {
     primaryUser = "johnson";
     device.type = "desktop";
