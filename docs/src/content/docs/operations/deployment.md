@@ -79,9 +79,9 @@ just regression
 
 The pinned `tests` development shell supplies Python with PyYAML, Bash, jq, OpenSSH and Nix. The
 default suite runs mocked Python tests and Nix configuration assertions for networking, WSL, proxy
-backends/profiles, dae and storage. It does not decrypt real secrets, activate configurations or
-restart services. The three real sing-box/converter tests are explicitly skipped in this mode. Nix
-may still fetch locked inputs or tools.
+backends/profiles and storage. It does not decrypt real secrets, activate configurations or restart
+services. The three real sing-box/converter tests are explicitly skipped in this mode. Nix may still
+fetch locked inputs or tools.
 
 For the real-core/converter tests, isolated routing checks and backup preparation fixtures:
 

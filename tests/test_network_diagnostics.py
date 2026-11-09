@@ -165,7 +165,8 @@ class DiagnosticsTests(unittest.TestCase):
         self.assertEqual(
             report["qdiscs"], [{"dev": "wlan0", "kind": "fq", "root": True}]
         )
-        self.assertEqual(len(self.commands), 21)
+        self.assertNotIn("dae", report["services"])
+        self.assertEqual(len(self.commands), 20)
 
     def test_missing_tools_are_reported_without_exception_details(self):
         def missing(*args, **kwargs):

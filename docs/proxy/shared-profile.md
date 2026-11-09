@@ -7,10 +7,10 @@ an explicit runtime `mihomo.configFile` / `singBox.configFile`, or an explicitly
 (`proxy_config` / `proxy_source_config` respectively). There is no implicit shared secret fallback.
 The NixOS profile continues to use `secrets/services/proxy.yml` unchanged.
 
-`dot.networking.proxy.backend` accepts only `mihomo` or `sing-box`. On NixOS, [optional dae](dae.md)
-has an independent `dot.networking.proxy.dae.enable` switch, off by default. It may coexist with
-either core and does not disable this profile. Interception, forwarding and bypasses still require
-an explicit design to avoid TUN/eBPF or DNS loops. The Darwin backends provide native CLIs and
+`dot.networking.proxy.backend` accepts only `mihomo` or `sing-box`. The optional dae wrapper and its
+`dot.networking.proxy.dae` options have been removed; remove any old assignments, including
+explicitly disabled ones. No current host enabled the wrapper, and this removal does not change the
+shared profile's DNS, routing or backend selection. The Darwin backends provide native CLIs and
 private configuration directories, without automatically starting a TUN. Clash-format subscriptions
 and the Clash-compatible controller API do not require a desktop client. Darwin retains the
 `clash-verge-rev` Homebrew cask as an independent GUI; it is not a `dot.networking.proxy.backend`
@@ -66,7 +66,7 @@ Git.
   Override `profile.tailnet.hostname` if needed. Each host keeps its own private embedded Tailscale
   state and needs separate authorization; do not copy another host's state directory.
 - `profile.ports.mixed`, `profile.ports.dns`, and `profile.ports.controller` default to 7890, 1053,
-  and 9090, on loopback. They apply only to this shared profile, not dae or externally supplied core
+  and 9090, on loopback. They apply only to this shared profile, not externally supplied core
   configurations.
 - `profile.tailnet.webUI.enable` defaults to false and supports both sing-box and Mihomo. It manages
   only the root HTTPS handler on `profile.tailnet.webUI.httpsPort` (443 by default), forwarding to

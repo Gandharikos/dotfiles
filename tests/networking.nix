@@ -314,7 +314,9 @@ in
       assert ymir.systemd.network.networks."50-tailscale".linkConfig.Unmanaged;
       assert ymir.dot.networking.tailscale.exitNode == "";
       assert !ymir.dot.networking.tailscale.acceptDns && !ymir.dot.networking.tailscale.acceptRoutes;
-      assert !ymir.dot.networking.proxy.dae.enable;
+      assert !ymir.services.dae.enable;
+      assert !(ymir.systemd.services ? dae);
+      assert !(builtins.any (package: lib.getName package == "dae") ymir.environment.systemPackages);
       assert lib.all (name: !(builtins.hasAttr name ymir.systemd.network.config.networkConfig)) [
         "ManageForeignRoutingPolicyRules"
         "ManageForeignRoutes"

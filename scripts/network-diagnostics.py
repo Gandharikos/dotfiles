@@ -14,7 +14,6 @@ SERVICES = (
     "tailscaled",
     "sing-box",
     "mihomo",
-    "dae",
 )
 SERVICE_PROPERTIES = ("LoadState", "ActiveState", "SubState", "MainPID", "NRestarts")
 SYSCTLS = (

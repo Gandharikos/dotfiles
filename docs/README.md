@@ -74,7 +74,6 @@ repository guides, including:
 
 - [Network ownership, diagnostics and rollback gates](networking.md)
 - [Shared proxy profile](proxy/shared-profile.md)
-- [Optional independent dae service](proxy/dae.md)
 - [ymir sing-box deployment](proxy/ymir-sing-box.md)
 - [ymir Mihomo alternative](proxy/ymir-mihomo.md)
 

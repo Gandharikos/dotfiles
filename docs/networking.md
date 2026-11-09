@@ -271,16 +271,16 @@ nix --extra-experimental-features pipe-operators eval --impure --json \
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover \
   -s tests -p 'test_network_diagnostics.py'
 bash tests/test-tailnet-routing.sh
-nix --extra-experimental-features pipe-operators eval --impure --json \
-  --file tests/dae.nix
 ```
 
 The network tests cover null defaults, independent/combined settings, invalid options, ordinary
 manager overrides, current host defaults, shared-module LLMNR hardening, iwd/NetworkManager
-ownership, nftables scope and firewall-policy preservation, and ymir DNS/Tailnet/dae invariants.
-Diagnostic tests use fake command responses and restrict calls to fixed read queries. They verify
-field selection, unavailable tools, malformed responses, timeouts and suppression of error output.
-The routing test operates in a disposable network namespace, never the host namespace.
+ownership, nftables scope and firewall-policy preservation, and ymir DNS/Tailnet invariants. They
+also check that removing the repository's dae wrapper leaves dae disabled and absent from ymir's
+systemd units and system packages. Diagnostic tests use fake command responses and restrict calls to
+fixed read queries. They verify field selection, unavailable tools, malformed responses, timeouts
+and suppression of error output. The routing test operates in a disposable network namespace, never
+the host namespace.
 
 For a private declaration comparison, capture this output before and after a change:
 

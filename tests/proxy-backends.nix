@@ -45,7 +45,7 @@ let
     in
     assert type.check "mihomo" && type.check "sing-box" && !type.check "clash-verge";
     assert !type.check "dae";
-    assert (host.options.dot.networking.proxy ? dae) == host.pkgs.stdenv.hostPlatform.isLinux;
+    assert !(host.options.dot.networking.proxy ? dae);
     assert !(host.options.dot.networking.proxy ? clashVerge);
     true;
   home = linux.config.home-manager.users.johnson;
