@@ -33,6 +33,8 @@ let
       };
     in
     assert home.programs.fastfetch.enable == enabled;
+    assert enabled -> home.programs.fastfetch.settings.logo.width == 36;
+    assert enabled -> home.programs.fastfetch.settings.logo.height == 18;
     assert home.my.fastfetch.startOnLogin == (if startup == null then enabled else startup);
     assert builtins.all (present: present == shouldRun) (builtins.attrValues greetings);
     true;
