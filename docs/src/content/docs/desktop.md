@@ -68,6 +68,18 @@ be launched with `pw-jack <program>`, provided by the configured PipeWire packag
 This scopes JACK library overrides to that process instead of setting a global `LD_LIBRARY_PATH`
 through the deprecated `services.pipewire.jack.enable` option.
 
+## Fastfetch Startup
+
+Enabling `my.fastfetch.enable` defaults `my.fastfetch.startOnLogin` to true. Bash, Zsh, Fish, and
+Nushell run Fastfetch when starting interactively, including macOS and SSH sessions without
+`DISPLAY` or a terminal multiplexer. Non-interactive scripts do not run it. Despite the option's
+legacy name, this is not limited to login shells. Set `my.fastfetch.startOnLogin = false` to opt
+out; the WSL profile keeps that explicit opt-out.
+
+The startup hooks select a built-in ASCII logo inside tmux or Zellij to avoid image-protocol issues.
+Other environments, including Rex and Herdr, retain the configured PNG logo. This changes only
+automatic startup; manually running `fastfetch` or `fetch` still uses the configured logo.
+
 ## Fastfetch images
 
 Home Manager selects `config/fastfetch/apple_pngs/` on Darwin and `config/fastfetch/pngs/` on Linux,

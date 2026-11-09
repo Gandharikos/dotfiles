@@ -58,10 +58,7 @@ in
 
     eza.enable = true;
 
-    fastfetch = {
-      enable = true;
-      startOnLogin = !isMinimal;
-    };
+    fastfetch.enable = true;
 
     fd.enable = true;
 

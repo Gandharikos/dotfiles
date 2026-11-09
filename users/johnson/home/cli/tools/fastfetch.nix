@@ -16,6 +16,7 @@ let
   logoDirectory = lib.dot.relativeToConfig (
     if pkgs.stdenv.hostPlatform.isDarwin then "fastfetch/apple_pngs" else "fastfetch/pngs"
   );
+  fallbackLogo = if pkgs.stdenv.hostPlatform.isDarwin then "macos" else "nixos";
   logos = pkgs.runCommand "fastfetch-logos" { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
     mkdir -p "$out"
     for image in "${logoDirectory}"/*.png; do
@@ -25,44 +26,42 @@ let
     done
   '';
   fetchGreeting = ''
-    if [ -n "$DISPLAY" ] \
-      && { [ "$XDG_VTNR" = 1 ] \
-        || [ -n "$TMUX" ] \
-        || [ -n "$ZELLIJ" ] \
-        || [ -n "$ZELLIJ_SESSION_NAME" ]; }; then
-      fastfetch
-    fi
+    case $- in
+      *i*)
+        if [ -n "$TMUX" ] || [ -n "$ZELLIJ" ] || [ -n "$ZELLIJ_SESSION_NAME" ]; then
+          fastfetch --logo-type builtin --logo ${fallbackLogo}
+        else
+          fastfetch
+        fi
+        ;;
+    esac
   '';
   fishGreeting = ''
-    if set -q DISPLAY
-       and begin
-         test "$XDG_VTNR" = 1
-         or set -q TMUX
-         or set -q ZELLIJ
-         or set -q ZELLIJ_SESSION_NAME
-       end
-      fastfetch
+    if status is-interactive
+      if test -n "$TMUX"; or test -n "$ZELLIJ"; or test -n "$ZELLIJ_SESSION_NAME"
+        fastfetch --logo-type builtin --logo ${fallbackLogo}
+      else
+        fastfetch
+      end
     end
   '';
   nushellGreeting = ''
-    if (
-      $nu.is-interactive
-      and (not (($env.DISPLAY? | default "") | is-empty))
-      and (
-        ($env.XDG_VTNR? | default "") == "1"
-        or (not (($env.TMUX? | default "") | is-empty))
-        or (not (($env.ZELLIJ? | default "") | is-empty))
-        or (not (($env.ZELLIJ_SESSION_NAME? | default "") | is-empty))
-      )
-    ) {
-      fastfetch
+    if $nu.is-interactive {
+      if (not (($env.TMUX? | default "") | is-empty)) or (not (($env.ZELLIJ? | default "") | is-empty)) or (not (($env.ZELLIJ_SESSION_NAME? | default "") | is-empty)) {
+        fastfetch --logo-type builtin --logo ${fallbackLogo}
+      } else {
+        fastfetch
+      }
     }
   '';
 in
 {
   options.my.fastfetch = {
     enable = mkEnableOption "fastfetch";
-    startOnLogin = mkEnableOption "fastfetch on login";
+    startOnLogin = mkEnableOption "Fastfetch at interactive shell startup" // {
+      default = cfg.enable;
+      defaultText = lib.literalExpression "config.my.fastfetch.enable";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -151,6 +150,18 @@ in
               format = "{1}";
               key = "  󰍛 CPU";
               keyColor = "blue";
+            }
+            {
+              type = "gpu";
+              format = "{2}";
+              key = "   GPU";
+              keyColor = "blue";
+            }
+            {
+              type = "gpu";
+              format = "{3}";
+              key = "   GPU Driver";
+              keyColor = "magenta";
             }
             {
               type = "memory";
