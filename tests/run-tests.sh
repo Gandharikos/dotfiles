@@ -27,6 +27,7 @@ nix --extra-experimental-features pipe-operators eval --impure --json --file tes
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/dae.nix
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/proxy-backends.nix
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/aerospace.nix
+nix --extra-experimental-features pipe-operators eval --impure --json --file tests/scheduler.nix
 for backend in sing-box mihomo; do
   nix --extra-experimental-features pipe-operators eval --impure --json \
     --file tests/proxy-profile.nix --argstr backend "$backend" checks

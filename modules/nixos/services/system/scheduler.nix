@@ -7,9 +7,9 @@ let
   enable = config.dot.device.type == "workstation";
 in
 {
-  services.scx = {
+  services.scx-loader = {
     inherit enable;
-    scheduler = "scx_bpfland";
-    package = pkgs.scx.rustscheds;
+    config.default_sched = "scx_bpfland";
+    schedsPackages = [ pkgs.scx.rustscheds ];
   };
 }
