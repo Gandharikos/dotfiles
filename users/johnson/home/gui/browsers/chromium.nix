@@ -117,8 +117,8 @@ in
         # Vicinae Integration
         {
           id = "kcmipingpfbohfjckomimmahknoddnke";
-          version = "1.1.0";
-          hash = "sha256-jxc0S5dAd1+sOtwmoff3/spwuRJ3tHxX+JE2tdtkvo4=";
+          version = "1.2.0";
+          hash = "sha256-l72iwdFpbAOFkN/fLc5eyLClJwzO8mlBeULvZ++YOgc=";
         }
 
         # Unhook
@@ -152,8 +152,8 @@ in
         # Linkwarden
         {
           id = "pnidmkljnhbjfffciajlcpeldoljnidn";
-          version = "1.5.6";
-          hash = "sha256-H4ZeN0dOUuGXRdNQm6oWYMVzo40TpW9gSZbqzGC3FLk=";
+          version = "1.5.7";
+          hash = "sha256-N42c7VmxVW9qxkgB3MXR8PL6kJoTxPOwFv+hueHDkTw=";
         }
 
         # uBlock Origin
@@ -201,8 +201,8 @@ in
         # scriptcat
         {
           id = "ndcooeababalnlpkfedmmbbbgkljhpjf";
-          version = "1.5.0";
-          hash = "sha256-wVa9vp4cHePENd+otDaP+RQ3A4QFh/XxGOUc+ZcWJ2g=";
+          version = "1.5.1";
+          hash = "sha256-Bh2GFcBDzH1O3BfW3MJG7hLbZMFzVRRAaAq+BS3BLYo=";
         }
 
         # ff2mpv
