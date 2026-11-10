@@ -1,6 +1,5 @@
 {
   config,
-  aiCommon,
   inputs,
   lib,
   pkgs,
@@ -202,8 +201,6 @@ in
           hard_stop_enabled = true;
         };
       } cfg.settings;
-
-      documents = lib.mapAttrs (_: lib.mkDefault) aiCommon.hermesAgent.documents;
 
       mcpServers = lib.optionalAttrs cfg.enableDefaultMcpServers {
         filesystem = {

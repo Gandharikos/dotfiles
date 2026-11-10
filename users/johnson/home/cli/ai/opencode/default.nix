@@ -1,91 +1,32 @@
 {
   config,
-  pkgs,
   lib,
-  aiCommon,
+  pkgs,
   ...
 }:
 let
-  inherit (lib)
-    getExe
-    mkDefault
-    mkEnableOption
-    mkIf
-    ;
-  inherit (lib.meta) getExe';
-
-  cat' = getExe' pkgs.coreutils "cat";
-
-  sharedAiTools = aiCommon;
   cfg = config.my.opencode;
-  mcpModuleEnabled = config.my.mcp.enable or false;
-
-  defaultAgent = "dotfiles-expert";
-  mainModel = "openrouter/openai/gpt-5.5";
-  nanoModel = "openrouter/openai/gpt-5.4-nano";
-  quickModel = "openrouter/openai/gpt-5.3-codex-spark";
 in
 {
-  imports = lib.dot.scanPaths ./.;
+  options.my.opencode.enable = lib.mkEnableOption "OpenCode";
 
-  options.my.opencode = {
-    enable = mkEnableOption "OpenCode configuration";
-  };
-
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     sops.secrets.openrouter_api_key = { };
 
     programs.opencode = {
       enable = true;
-      package = pkgs.writeShellScriptBin "opencode" ''
-        export OPENROUTER_API_KEY="$(${cat'} ${config.sops.secrets.openrouter_api_key.path})"
-        exec ${getExe pkgs.opencode} "$@"
-      '';
-      enableMcpIntegration = mcpModuleEnabled;
-
-      tui.theme = mkDefault "opencode";
-
-      settings = {
-        model = mainModel;
-        share = "manual";
-        autoupdate = false;
-        small_model = quickModel;
-        default_agent = defaultAgent;
-        compaction = {
-          auto = true;
-          prune = true;
-          reserved = 20000;
-        };
-        command = {
-          quick = {
-            template = "Make fast, minimal edits and keep responses concise.";
-            model = quickModel;
-            agent = defaultAgent;
-            subtask = true;
-          };
-          research = {
-            template = "Do deliberate analysis before edits, include caveats and verification steps.";
-            model = mainModel;
-            agent = defaultAgent;
-          };
-          nano = {
-            template = "Keep each action minimal and targeted for small-surface modifications.";
-            model = nanoModel;
-            agent = defaultAgent;
-            subtask = true;
-          };
-        };
-        plugin = [
-          "opencode-gemini-auth@latest"
-          "opencode-pty@latest"
-          "oh-my-openagent@latest"
-          "opencode-wakatime@latest"
-        ];
+      mutableSettings = true;
+      enableMcpIntegration = config.my.mcp.enable or false;
+      package = pkgs.writeShellApplication {
+        name = "opencode";
+        meta = pkgs.opencode.meta;
+        derivationArgs = { inherit (pkgs.opencode) version; };
+        text = ''
+          OPENROUTER_API_KEY="$(${lib.getExe' pkgs.coreutils "cat"} ${lib.escapeShellArg config.sops.secrets.openrouter_api_key.path})"
+          export OPENROUTER_API_KEY
+          exec ${lib.getExe pkgs.opencode} "$@"
+        '';
       };
-
-      inherit (sharedAiTools.opencode) commands;
-      agents = sharedAiTools.opencode.renderAgents;
-      context = "${sharedAiTools.base}";
     };
   };
 }

@@ -25,6 +25,7 @@ in
       nixporn = {
         enable = true;
         gemini-cli.enable = false;
+        opencode.enable = false;
       };
     }
     (mkIf hasSystemTheme {

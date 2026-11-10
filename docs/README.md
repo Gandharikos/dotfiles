@@ -72,6 +72,7 @@ python3 -m unittest discover -s tests -v
 Please read the [documentation](https://gandharikos.github.io/dotfiles/). This directory contains
 repository guides, including:
 
+- [AI CLI configuration ownership and migration](ai-cli.md)
 - [Network ownership, diagnostics and rollback gates](networking.md)
 - [Shared proxy profile](proxy/shared-profile.md)
 - [ymir sing-box deployment](proxy/ymir-sing-box.md)
