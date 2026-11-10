@@ -12,7 +12,7 @@
     {
       devshells.default = {
         devshell = {
-          name = "dots";
+          name = "dotfiles";
           startup.pre-commit.text = config.pre-commit.installationScript;
         };
         packages = with pkgs; [
@@ -25,6 +25,10 @@
           nurl
           nix-init
           nix-prefetch-git
+          # other tools
+          just
+          gitMinimal
+          sops
         ];
         commands = [
           {
@@ -40,11 +44,6 @@
           {
             package = pkgs.nix-diff;
             help = "Explain why two Nix derivations differ";
-            category = "nix";
-          }
-          {
-            package = pkgs.nix-output-monitor;
-            help = "Nix Output Monitor (a drop-in alternative for `nix` which shows a build graph)";
             category = "nix";
           }
           {

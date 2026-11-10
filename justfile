@@ -20,10 +20,14 @@ default:
 [no-exit-message]
 [private]
 builder goal host=`hostname -s` *args:
+    #!/usr/bin/env bash
+    set -euo pipefail
     {{ rebuild }} {{ goal }} \
       --flake {{ flake }}#{{ host }} \
+      --log-format internal-json \
       {{ system-args }} \
-      {{ args }}
+      {{ args }} \
+      |& rom --format dashboard
 
 [group('rebuild')]
 [no-exit-message]

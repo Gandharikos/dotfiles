@@ -39,7 +39,7 @@ in
       nixfmt # RFC style formatter
       nvd # Nix differ
       nix-diff # Another differ
-      nix-output-monitor # Better nix build output
+      rom # Better nix build output
       nh # Nix helper
       omnix # Interactive Nix flake template initialization
       nurl # Generate nix fetcher calls
