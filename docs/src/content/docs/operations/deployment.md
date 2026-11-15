@@ -53,6 +53,43 @@ Restoring the desktop profile does not change `tyr`'s Tailscale role or advertis
 not proof of deployment or successful remote forwarding. Review the generated activation and
 preserve a recovery path before switching a headless host.
 
+## Karabiner Keyboard Scope
+
+Karabiner's shared configuration is defined in `modules/darwin/karabiner/config.nix`; the module in
+`modules/darwin/karabiner/default.nix` serializes it to JSON for Home Manager.
+`dot.services.karabiner.configFile` now expects a Nix function accepting `devices`, not a JSON file.
+
+Every complex-modification manipulator is restricted to the built-in keyboard or an explicitly
+listed external keyboard. Existing Tab-layer conditions remain in effect. Other external keyboards
+do not receive these mappings. This is a remapping filter, not a promise that Karabiner never opens
+other devices.
+
+`hosts/eir/config.nix` registers the currently detected HHKB Hybrid Bluetooth identity:
+
+```nix
+dot.services.karabiner.devices = [
+  { vendorId = 1278; productId = 33; }
+];
+```
+
+The default list is empty (built-in keyboards only). Obtain IDs from Karabiner-EventViewer or
+`karabiner_cli --list-connected-devices`; add another entry if USB reports different IDs. Matching
+uses vendor/product IDs, so another keyboard with the same IDs also matches.
+
+Caps Lock and left Control share one helper: Ctrl immediately on press, Esc on solitary release
+within 150 ms. Command/Option swaps, chords, punctuation and Tab-layer mappings are unchanged.
+
+Validate without activation:
+
+```bash
+nix eval --impure --json --file tests/karabiner.nix
+nix --extra-experimental-features pipe-operators build --no-link .#darwinConfigurations.eir.system
+```
+
+After switching, verify both keyboards with EventViewer and check that an unlisted external keyboard
+remains unmapped. Repository evaluation does not prove that the running configuration has been
+updated.
+
 ## Loki MicroVM on ymir
 
 `loki` is the stateless eBPF-learning MicroVM formerly named `mimir`. The old loki laptop

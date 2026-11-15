@@ -30,6 +30,7 @@ nix --extra-experimental-features pipe-operators eval --impure --json --file tes
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/aerospace.nix
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/krd.nix
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/scheduler.nix
+nix --extra-experimental-features pipe-operators eval --impure --json --file tests/karabiner.nix
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/fastfetch.nix
 nix --extra-experimental-features pipe-operators eval --impure --json --file tests/ai-cli.nix
 for backend in sing-box mihomo; do
