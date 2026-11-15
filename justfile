@@ -24,10 +24,8 @@ builder goal host=`hostname -s` *args:
     set -euo pipefail
     {{ rebuild }} {{ goal }} \
       --flake {{ flake }}#{{ host }} \
-      --log-format internal-json \
       {{ system-args }} \
-      {{ args }} \
-      |& rom --format dashboard
+      {{ args }}
 
 [group('rebuild')]
 [no-exit-message]
