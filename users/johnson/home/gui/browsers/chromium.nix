@@ -103,8 +103,8 @@ in
         # Vimium C
         {
           id = "hfjbmagddngcpeloejdejnfgbamkjaeg";
-          version = "2.12.2";
-          hash = "sha256-1kiLH+QIjOIheJXFNE/BKJ7tWZLvwHpr6ec1cLIlBCM=";
+          version = "2.13.1";
+          hash = "sha256-WtS5sWf7kr6e2uPfsnFTkLzhpHvLNMJwuer5/0SJQWE=";
         }
 
         # Undo Closed Tabs Button
@@ -138,8 +138,8 @@ in
         # Video Speed Controller
         {
           id = "nffaoalbilbmmfgbnbgppjihopabppdk";
-          version = "0.11.1";
-          hash = "sha256-ABYK5oYRfoLVErUwlIUdSp1BYcUp3Sm5BO8wSWARqbo=";
+          version = "0.11.2";
+          hash = "sha256-0APkGm69DsnHXrwnuBDspQO5+7JPCWpnu/QfBpGOZW0=";
         }
 
         # ChatGPT Equation Renderer
@@ -201,8 +201,8 @@ in
         # scriptcat
         {
           id = "ndcooeababalnlpkfedmmbbbgkljhpjf";
-          version = "1.5.1";
-          hash = "sha256-Bh2GFcBDzH1O3BfW3MJG7hLbZMFzVRRAaAq+BS3BLYo=";
+          version = "1.5.2";
+          hash = "sha256-9O1t5Abc5dglgI8OKvDOs1d65mqBHYUIA9eXkAx6Av8=";
         }
 
         # ff2mpv
@@ -215,8 +215,8 @@ in
         # Control Panel for Twitter
         {
           id = "kpmjjdhbcfebfjgdnpjagcndoelnidfj";
-          version = "4.25.1";
-          hash = "sha256-nl9D/MVPbCth0nNlFSrmqPeqFuDzRUpC3YFeHx+F1W0=";
+          version = "4.99.2";
+          hash = "sha256-NwK+9s7CZ/VVCAWX11yDnAGbnWkNQvri2Co5JCJ7bYw=";
         }
 
         # refined github
