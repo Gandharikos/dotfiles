@@ -132,7 +132,6 @@ in
       # "iina" # video player
       "raycast" # search
       # "visual-studio-code" # editor
-      # "telegram" # IM
       "rustdesk" # remote desktop client
       # sing-box
       "sfm"
@@ -142,6 +141,7 @@ in
       # "miniforge" # Miniconda's community-driven distribution
       # "tencent-lemon" # clean tool
       "surge" # proxy tool
+      "telegram-desktop" # IM
       "veracrypt" # disk encryption
       "vlc" # video player
       # "karabiner-elements" # keyboard remap

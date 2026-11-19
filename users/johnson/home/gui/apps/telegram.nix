@@ -17,9 +17,7 @@ in
   };
 
   config = mkIf enable {
-    home.packages = with pkgs; [
-      # instant messaging
-      telegram-desktop
-    ];
+    # macOS uses the Homebrew cask to avoid building Telegram and Qt locally.
+    home.packages = lib.optionals pkgs.stdenv.hostPlatform.isLinux [ pkgs.telegram-desktop ];
   };
 }
