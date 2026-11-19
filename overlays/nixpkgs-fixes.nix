@@ -3,6 +3,17 @@
   nixpkgs-fixes = final: prev: {
     pythonPackagesExtensions = (prev.pythonPackagesExtensions or [ ]) ++ [
       (_pythonFinal: pythonPrev: {
+        marimo = pythonPrev.marimo.overridePythonAttrs (
+          old:
+          prev.lib.optionalAttrs (old.version == "0.25.1") {
+            # nixpkgs provides uv-build 0.13.4, but this release caps it at <0.13.0.
+            postPatch = (old.postPatch or "") + ''
+              substituteInPlace pyproject.toml \
+                --replace-fail 'uv_build>=0.8.3,<0.13.0' 'uv_build>=0.8.3,<0.14.0'
+            '';
+          }
+        );
+
         mpv = pythonPrev.mpv.overridePythonAttrs (_old: {
           # python-mpv 1.0.8 has an environment-sensitive concurrency test that
           # fails under Python 3.14 in the Nix build sandbox.
