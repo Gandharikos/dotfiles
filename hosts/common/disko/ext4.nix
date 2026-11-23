@@ -10,6 +10,7 @@
 
     content = {
       type = "gpt";
+      # Null disables disk swap for zram-only hosts; existing callers keep their sizes.
       partitions = {
         ESP = {
           priority = 1;
@@ -24,16 +25,6 @@
           };
         };
 
-        swap = {
-          priority = 2;
-          label = "swap";
-          size = swapSize;
-          content = {
-            type = "swap";
-            randomEncryption = true;
-          };
-        };
-
         root = {
           priority = 3;
           label = "nixos";
@@ -44,7 +35,23 @@
             mountpoint = "/";
           };
         };
-      };
+      }
+      // (
+        if swapSize == null then
+          { }
+        else
+          {
+            swap = {
+              priority = 2;
+              label = "swap";
+              size = swapSize;
+              content = {
+                type = "swap";
+                randomEncryption = true;
+              };
+            };
+          }
+      );
     };
   };
 }

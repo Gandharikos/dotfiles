@@ -9,6 +9,7 @@ keys:
   - &sigurd age1m8f0m489vql2p7l4a80ehjh0ae4zgwcnjzv8ngjrsg957yjlcyrq35nvv8
   - &loki age1tgkc0ntq7407avss38tsewdur0rc339r5wesatmgp5wn2ya4e9kq4pslme
   - &athena age14pews2ralyfymcfa7gw7egvmr5nrqsdzhrrrdhnpaxxm3ujwgpxq8nhn20
+  - &heimdall age14wxne5fglt8x7rhxey4jx3uvjvawwrlckjwaal8tmf474gtv4vks7nm0ws
   # PGP key (requires Yubikey)
   - &johnson E23E274D412D4C761A871B1E776C7FC245E58F55
 
@@ -20,7 +21,21 @@ creation_rules:
           - *ymir
         pgp:
           - *johnson
-  # Service-level secrets: use all host keys for system-wide access
+  # Heimdall only needs the shared Tailscale enrollment key.
+  - path_regex: ^(\./)?secrets/services/tailscale\.yaml$
+    key_groups:
+      - age:
+          - *eir
+          - *nidhogg
+          - *tyr
+          - *ymir
+          - *sigurd
+          - *loki
+          - *athena
+          - *heimdall
+        pgp:
+          - *johnson
+  # Other service-level secrets retain their existing recipients
   - path_regex: ^(\./)?secrets/services/[^/]+\.(ya?ml|json|env|ini)$
     key_groups:
       - age:
