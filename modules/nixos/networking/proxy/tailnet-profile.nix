@@ -29,7 +29,8 @@ in
     };
   };
 
-  config = lib.mkIf (cfg.enable && profile.enable) {
+  # dae uses the system Tailnet identity and has no embedded endpoint/controller.
+  config = lib.mkIf (cfg.enable && profile.enable && cfg.backend != "dae") {
     assertions = [
       {
         assertion =

@@ -1,0 +1,47 @@
+# Public template. Nodes and selected policy targets are rendered only at runtime.
+global {
+  tproxy_port: __TPROXY_PORT__
+  tproxy_port_protect: true
+  log_level: info
+  __WAN__
+  __LAN__
+  # Host networking owns forwarding and interface sysctls.
+  auto_config_kernel_parameter: false
+  dial_mode: domain
+  tcp_check_url: 'https://www.gstatic.com/generate_204'
+  udp_check_dns: '1.1.1.1:53'
+  check_interval: 30s
+}
+
+node {
+__NODES__
+}
+
+group {
+__GROUPS__
+}
+
+dns {
+  bind: 'tcp+udp://127.0.0.1:__DNS_PORT__'
+  upstream {
+    trusted: 'https://1.1.1.1/dns-query'
+    tailnet: 'udp://100.100.100.100:53'
+  }
+  routing {
+    request {
+      __TAILNET_DNS_RULE__
+      fallback: trusted
+    }
+    response {
+      fallback: accept
+    }
+  }
+}
+
+routing {
+  # dae has no embedded Tailnet client: preserve native system/Rex identities.
+  pname(tailscaled, rex) -> direct
+  dip('100.64.0.0/10', 'fd7a:115c:a1e0::/48') -> direct
+  __TAILNET_ROUTE_RULE__
+__RULES__
+}

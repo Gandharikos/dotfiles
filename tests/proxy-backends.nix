@@ -26,6 +26,25 @@ let
       }
     ];
   };
+  linuxDae = linux.extendModules {
+    modules = [
+      {
+        dot.networking.proxy = {
+          enable = lib.mkForce true;
+          backend = lib.mkForce "dae";
+          profile.enable = lib.mkForce false;
+          autoStart = lib.mkForce false;
+          dae.configFile = "/run/dae/config.dae";
+        };
+      }
+    ];
+  };
+  linuxDaeAuto = linuxDae.extendModules {
+    modules = [ { dot.networking.proxy.autoStart = lib.mkOverride 40 true; } ];
+  };
+  linuxDaeMissing = linuxDae.extendModules {
+    modules = [ { dot.networking.proxy.dae.configFile = lib.mkForce null; } ];
+  };
   missingConfig =
     backend:
     darwin.extendModules {
@@ -44,8 +63,8 @@ let
       type = host.options.dot.networking.proxy.backend.type;
     in
     assert type.check "mihomo" && type.check "sing-box" && !type.check "clash-verge";
-    assert !type.check "dae";
-    assert !(host.options.dot.networking.proxy ? dae);
+    assert type.check "dae" == host.pkgs.stdenv.hostPlatform.isLinux;
+    assert (host.options.dot.networking.proxy ? dae) == host.pkgs.stdenv.hostPlatform.isLinux;
     assert !(host.options.dot.networking.proxy ? clashVerge);
     true;
   home = linux.config.home-manager.users.johnson;
@@ -56,6 +75,21 @@ in
     nixos = checkBackends linux;
     darwin = checkBackends darwin;
   };
+  nixosDae =
+    let
+      c = linuxDae.config;
+    in
+    assert c.services.dae.enable;
+    assert c.services.dae.configFile == "/run/dae/config.dae";
+    assert !c.services.dae.openFirewall.enable;
+    assert !c.services.mihomo.enable && !c.services.sing-box.enable;
+    assert c.systemd.services.dae.wantedBy == [ ];
+    assert builtins.elem "multi-user.target" linuxDaeAuto.config.systemd.services.dae.wantedBy;
+    assert builtins.all (entry: entry.assertion) c.assertions;
+    assert builtins.any (
+      entry: !entry.assertion && lib.hasInfix "dae.configFile" entry.message
+    ) linuxDaeMissing.config.assertions;
+    true;
   noNixosDesktopIntegration =
     assert !linux.config.programs.clash-verge.enable;
     assert !(linux.config.users.groups ? clash-verge);

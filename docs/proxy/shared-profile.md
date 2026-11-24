@@ -4,17 +4,35 @@ These are reusable, opinionated **NixOS** presets. They are not automatically en
 hosts, and do not replace the existing Darwin or explicitly configured legacy proxy integrations.
 The old bundled Clash secret has been removed. Enabling a backend without this profile now requires
 an explicit runtime `mihomo.configFile` / `singBox.configFile`, or an explicitly managed SOPS secret
-(`proxy_config` / `proxy_source_config` respectively). There is no implicit shared secret fallback.
-The NixOS profile continues to use `secrets/services/proxy.yml` unchanged.
+(`proxy_config` / `proxy_source_config` respectively); dae requires `dae.configFile` without the
+profile. There is no implicit shared secret fallback. The NixOS profile continues to use
+`secrets/services/proxy.yml` unchanged.
 
-`dot.networking.proxy.backend` accepts only `mihomo` or `sing-box`. The optional dae wrapper and its
-`dot.networking.proxy.dae` options have been removed; remove any old assignments, including
-explicitly disabled ones. No current host enabled the wrapper, and this removal does not change the
-shared profile's DNS, routing or backend selection. The Darwin backends provide native CLIs and
-private configuration directories, without automatically starting a TUN. Clash-format subscriptions
-and the Clash-compatible controller API do not require a desktop client. Darwin retains the
-`clash-verge-rev` Homebrew cask as an independent GUI; it is not a `dot.networking.proxy.backend`
-choice.
+`dot.networking.proxy.backend` accepts `mihomo` or `sing-box` on both platforms, plus `dae` on
+NixOS. The dae backend wraps upstream `services.dae`. It supports the shared profile described in
+[the dae profile guide](dae.md), or an explicit runtime file without the profile:
+
+```nix
+dot.networking.proxy = {
+  enable = true;
+  backend = "dae";
+  autoStart = false; # Start manually; true enables startup at boot.
+  dae.configFile = "/run/secrets/dae_config";
+};
+```
+
+Provision that file separately (for example with SOPS); do not embed credentials in a Nix path
+literal or inline configuration. Upstream validates the config and passes it through systemd
+`LoadCredential`. Firewall ports are not opened by default; configure `services.dae.openFirewall`
+explicitly if needed. Interface attachment, DNS, routing and forwarding remain host/config-file
+responsibilities. No DHCP, subscription conversion, gateway panel or archived Heimdall machinery is
+restored. No current host selects dae. Keep `proxy.profile.enable = false` when supplying your own
+runtime file; enable it to use the managed dae template and full Clash/Surge policy snapshot.
+
+The Darwin backends provide native CLIs and private configuration directories, without automatically
+starting a TUN. Clash-format subscriptions and the Clash-compatible controller API do not require a
+desktop client. Darwin retains the `clash-verge-rev` Homebrew cask as an independent GUI; it is not
+a `dot.networking.proxy.backend` choice.
 
 ```text
 host parameters + SOPS credentials

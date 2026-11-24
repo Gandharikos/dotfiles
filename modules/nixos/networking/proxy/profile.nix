@@ -15,7 +15,7 @@ in
     secretsFile = mkOption {
       type = types.nullOr types.path;
       default = null;
-      description = "SOPS file with subscription_nodes, subscription_url and controller_secret keys.";
+      description = "SOPS file with subscription_nodes; sing-box and Mihomo also use subscription_url and controller_secret.";
     };
     ports = {
       mixed = mkOption {
@@ -62,18 +62,21 @@ in
         assertion = builtins.elem cfg.backend [
           "sing-box"
           "mihomo"
+          "dae"
         ];
-        message = "The shared proxy profile requires the sing-box or mihomo backend.";
+        message = "The shared proxy profile requires the sing-box, mihomo or dae backend.";
       }
       {
         assertion =
-          builtins.length (
-            lib.unique [
-              profile.ports.mixed
-              profile.ports.dns
-              profile.ports.controller
-            ]
-          ) == 3;
+          cfg.backend == "dae"
+          ||
+            builtins.length (
+              lib.unique [
+                profile.ports.mixed
+                profile.ports.dns
+                profile.ports.controller
+              ]
+            ) == 3;
         message = "The shared proxy profile requires distinct mixed, DNS and controller ports.";
       }
       {
@@ -83,14 +86,13 @@ in
     ];
     services.resolved.settings.Resolve = {
       DNS = lib.mkForce [ "127.0.0.1:${toString profile.ports.dns}" ];
-      Domains = lib.mkForce [
-        "~."
-        profile.tailnet.domain
-      ];
+      Domains = lib.mkForce (
+        [ "~." ] ++ lib.optional (profile.tailnet.domain != "") profile.tailnet.domain
+      );
       FallbackDNS = lib.mkForce [ ];
       DNSOverTLS = lib.mkForce false;
     };
-    networking.networkmanager.unmanaged = [
+    networking.networkmanager.unmanaged = lib.mkIf (cfg.backend != "dae") [
       "interface-name:${if cfg.backend == "sing-box" then "sb-tun" else "mihomo"}"
     ];
   };

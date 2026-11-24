@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 let
@@ -19,14 +20,17 @@ in
   imports = lib.dot.scanPaths ./.;
 
   options.dot.networking.proxy = {
-    enable = mkEnableOption "proxy backend (mihomo or sing-box)";
+    enable = mkEnableOption "proxy backend (mihomo, sing-box, or dae on NixOS)";
     autoStart = mkEnableOption "proxy auto start on boot (NixOS only)";
 
     backend = mkOption {
-      type = enum [
-        "mihomo"
-        "sing-box"
-      ];
+      type = enum (
+        [
+          "mihomo"
+          "sing-box"
+        ]
+        ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [ "dae" ]
+      );
       default = "mihomo";
       description = "Proxy backend to activate for this host.";
     };
