@@ -42,6 +42,17 @@ let
       })
     ];
   };
+  # Evaluation-only paths: runtime syntax validation is a separate core check.
+  localRules = fixture.extendModules {
+    modules = [
+      { dot.networking.proxy.profile.singBox.ruleSetFiles.cn-domain = ../config/sing-box/config.json; }
+    ];
+  };
+  unknownRules = fixture.extendModules {
+    modules = [
+      { dot.networking.proxy.profile.singBox.ruleSetFiles.unknown-tag = ../config/sing-box/config.json; }
+    ];
+  };
   cfg = fixture.config;
   native = backend == "sing-box";
   webUIService = "${backend}-tailnet-webui";
@@ -52,6 +63,8 @@ in
   program = builtins.head cfg.systemd.services.${backend}.serviceConfig.ExecStartPre;
   mihomoTemplate = if native then null else cfg.sops.templates."proxy-mihomo.yaml".content;
   checks =
+    assert !native || lib.all (a: a.assertion) localRules.config.assertions;
+    assert !native || lib.any (a: !a.assertion) unknownRules.config.assertions;
     assert
       cfg.dot.networking.proxy.profile.tailnet.hostname == (
         if hostname != null then hostname else "proxy-fixture-${if native then "singbox" else "mihomo"}"

@@ -39,6 +39,11 @@ in
       default = "${self}/config/sing-box/config.json";
       description = "Shared native profile; preserves the selector and rule insertion anchors.";
     };
+    singBox.ruleSetFiles = mkOption {
+      type = types.attrsOf types.path;
+      default = { };
+      description = "Local replacements for remote template rule sets, keyed by tag. Useful for network-independent startup.";
+    };
     singBox.policy = mkOption {
       type = types.path;
       default = "${self}/config/sing-box/policy.yml";

@@ -36,8 +36,8 @@
       firewall = {
         enable = lib.mkDefault true;
         filterForward = lib.mkDefault true;
-        # Do not inherit blanket trust from VPN or container modules.
-        trustedInterfaces = lib.mkForce [ ];
+        # Preserve local DNS/proxy access without trusting VPN, LAN or container interfaces.
+        trustedInterfaces = lib.mkForce [ "lo" ];
       };
     };
     systemd.network.enable = lib.mkDefault true;

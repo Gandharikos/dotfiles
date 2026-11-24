@@ -297,6 +297,13 @@ in
         )
       ) (builtins.attrValues systems);
       true;
+    routerKeepsLoopbackTrusted =
+      assert lib.all (
+        host:
+        !(host.config.dot.profiles.router.enable or false)
+        || host.config.networking.firewall.trustedInterfaces == [ "lo" ]
+      ) (builtins.attrValues systems);
+      true;
     wslHostFileOwnedByNixos =
       assert systems.nidhogg.config.wsl.wslConf.network.generateHosts == false;
       assert !(systems.nidhogg.config.wsl.wslConf.network ? gnerateHosts);

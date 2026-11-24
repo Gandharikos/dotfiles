@@ -32,6 +32,17 @@ let
           external_ui = "${pkgs.metacubexd}";
           external_controller = "127.0.0.1:${toString profile.ports.controller}";
         };
+        route.rule_set = map (
+          rule:
+          if builtins.hasAttr rule.tag profile.singBox.ruleSetFiles then
+            {
+              inherit (rule) tag format;
+              type = "local";
+              path = profile.singBox.ruleSetFiles.${rule.tag};
+            }
+          else
+            rule
+        ) (template.route.rule_set or [ ]);
         inbounds = map (
           inbound:
           inbound
@@ -134,6 +145,15 @@ in
     };
 
     assertions = [
+      {
+        assertion = lib.all (
+          tag:
+          lib.any (rule: rule.tag == tag && rule.type == "remote" && rule ? format) (
+            template.route.rule_set or [ ]
+          )
+        ) (builtins.attrNames profile.singBox.ruleSetFiles);
+        message = "singBox.ruleSetFiles must reference remote template rule sets with an explicit format.";
+      }
       {
         assertion = !config.services.mihomo.enable;
         message = "Do not run sing-box and Mihomo TUN/controller simultaneously.";

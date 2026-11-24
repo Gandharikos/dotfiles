@@ -19,9 +19,10 @@ creation_rules:
       - age:
           - *johnson_age
           - *ymir
+          - *heimdall
         pgp:
           - *johnson
-  # Heimdall only needs the shared Tailscale enrollment key.
+  # Heimdall also uses the shared Tailscale enrollment key.
   - path_regex: ^(\./)?secrets/services/tailscale\.yaml$
     key_groups:
       - age:

@@ -7,11 +7,12 @@ let
       {
         dot.networking.proxy = {
           enable = true;
-          backend = "dae";
+          backend = lib.mkForce "dae";
+          autoStart = lib.mkForce false;
           profile = {
             enable = true;
             secretsFile = "${flake}/secrets/services/proxy.yml";
-            tailnet.domain = "fixture.ts.net";
+            tailnet.domain = lib.mkForce "fixture.ts.net";
             ports.dns = 21053;
           };
         };

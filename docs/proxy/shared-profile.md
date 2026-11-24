@@ -112,6 +112,12 @@ Git.
 | `scripts/sing-box-subscription.py`                    | Input/output validation, policy assembly, last-good cache and atomic writes |
 | `packages/sub2singbox.nix`                            | Pinned upstream node converter and Trojan URI password fix                  |
 
+`profile.singBox.ruleSetFiles` optionally maps remote template rule-set tags to local files (for
+example, hash-pinned `pkgs.fetchurl` outputs). This preserves rule references while removing runtime
+download dependencies for those sets. Unknown tags are rejected. The default is empty, preserving
+existing remote updates; local snapshots must be updated deliberately. Heimdall uses this for
+`cn-domain` and `cn-ip` so cold startup does not wait for GitHub before opening DNS listeners.
+
 Use `profile.singBox.template`, `profile.singBox.policy`, `profile.mihomo.template`, and
 `profile.mihomo.policy` to select other public files. Custom sing-box templates must retain the
 bootstrap DNS resolver, selector names and rule insertion anchors used by the generator; these are

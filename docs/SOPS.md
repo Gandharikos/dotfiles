@@ -96,8 +96,9 @@ System and service secrets. These are encrypted to:
 - all host age recipients
 - the PGP recipient
 
-Heimdall is an exception: a dedicated rule grants its host recipient access only to
-`secrets/services/tailscale.yaml`. Other service files retain their existing recipients.
+Heimdall is an exception: dedicated rules grant its host recipient access only to
+`secrets/services/tailscale.yaml` and `secrets/services/proxy.yml`. Other service files retain their
+existing recipients.
 
 NixOS decrypts these using the host SSH private key:
 
