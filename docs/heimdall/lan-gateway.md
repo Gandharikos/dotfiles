@@ -27,6 +27,36 @@ The original pre-cutover screenshots showed DHCP enabled, pool `192.168.8.100`â€
 lease 720 minutes, empty optional gateway/DNS fields, and Native IPv6 enabled. The later screenshot
 shows IPv6 disabled; client runtime evidence above, rather than screenshots alone, gates activation.
 
+## Client inventory â€” 2026-11-25
+
+Read-only follow-up after generation 24 and eir's user-applied Darwin switch completed around
+`2026-11-25T19:18:19Z`. No lease renewal, interface change, proxy toggle or reboot was performed.
+
+| Client | Observed active IPv4 path                                                  | Gateway / DNS                                                   | Physical IPv6 evidence                                          |
+| ------ | -------------------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- |
+| eir    | Wi-Fi `en0`, manual `.116/24`                                              | `.2` / `.2`                                                     | Wi-Fi IPv6 off; no route to public IPv6 probe address           |
+| ymir   | Wi-Fi `wlan0`, DHCP `.106/24`                                              | `.2` / `.2`                                                     | No physical default route or IPv6 DNS                           |
+| tyr    | Ethernet `en0`, DHCP `.164/24`; Wi-Fi `en1`, manual `.161/24`, also active | Selected Ethernet route `.2`; DHCP router/DNS `.2`, server `.1` | Ethernet link-local only; no route to public IPv6 probe address |
+
+Both Macs show scoped `utun` IPv6 defaults; those entries alone are not evidence of usable public
+IPv6 or physical bypass. A route lookup for `2606:4700:4700::1111` failed on both. Eir's general
+resolvers use `.2`; its separate `ts.net` resolver uses `100.100.100.100`, not a general public-DNS
+override. Eir's HTTP/HTTPS/SOCKS/PAC flags are off. Ymir has no loaded sing-box/Mihomo/dae system
+service or `sb-tun` interface. This does not rule out per-application DNS/proxies or every VPN path.
+
+All three clients passed direct `.2:53` UDP/TCP checks for ads/porn/fakenews/gambling A/AAAA
+blocking, Google/Facebook Fake-IP, Baidu real-IP and native Tailnet answers. Tyr additionally passed
+the same checks addressed to external `1.1.1.1:53`, exercising routed DNS interception from its DHCP
+Ethernet path. Tyr and ymir returned Google 204 and Baidu 200 with curl proxy use disabled; eir
+passed those HTTPS probes immediately before this inventory during its startup-configuration
+verification.
+
+Tyr's simultaneous interfaces are recorded, not diagnosed as a fault or automatically disabled. Eir
+`.116` and tyr Wi-Fi `.161` fall inside the last documented DHCP pool: verify matching Flint
+reservations/exclusions before claiming address-conflict prevention. This snapshot does not prove
+all-client migration, absence of stale leases elsewhere, gameplay/login/payment compatibility,
+filter false-positive acceptance, off-home laptop operation or eir's fresh-boot execution.
+
 ## Ownership
 
 - Flint (`192.168.8.1`) remains the sole DHCP server and upstream router. Heimdall remains static at
@@ -70,8 +100,9 @@ shows IPv6 disabled; client runtime evidence above, rather than screenshots alon
    default route is no longer usable before claiming complete gateway ownership. Static addresses,
    VPN clients, application proxies and encrypted/custom DNS are separate exceptions.
 6. Verify at least one formerly non-admitted client using fresh DNS and new connections. Do not
-   describe DHCP clients as migrated until that has been observed. Eir/tyr already use manual `.2`
-   settings and do not prove the DHCP rollout by themselves.
+   describe DHCP clients as migrated until that has been observed. At initial cutover eir/tyr used
+   manual `.2` settings and did not prove DHCP rollout by themselves; ymir and the later tyr
+   Ethernet observation above provide separately observed DHCP paths.
 
 ## Server deployment evidence
 
