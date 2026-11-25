@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import socket
+import shutil
 import struct
 import subprocess
 import tempfile
@@ -74,6 +75,29 @@ class AdGuardShortNameTests(unittest.TestCase):
                     response = sock.recv(4096)
             return response
 
+        def answers(packet):
+            def skip(pos):
+                while packet[pos]:
+                    if packet[pos] & 0xC0 == 0xC0:
+                        return pos + 2
+                    pos += 1 + packet[pos]
+                return pos + 1
+
+            _, flags, questions, count, _, _ = struct.unpack("!6H", packet[:12])
+            self.assertEqual(flags & 15, 0)
+            pos = 12
+            for _ in range(questions):
+                pos = skip(pos) + 4
+            result = []
+            for _ in range(count):
+                pos = skip(pos)
+                kind, _, _, size = struct.unpack("!HHIH", packet[pos : pos + 10])
+                pos += 10
+                if kind in (1, 28):
+                    result.append((kind, str(ipaddress.ip_address(packet[pos : pos + size]))))
+                pos += size
+            return result
+
         try:
             with tempfile.TemporaryDirectory(prefix="adguard-shortname-") as directory:
                 config = {
@@ -91,6 +115,14 @@ class AdGuardShortNameTests(unittest.TestCase):
                     },
                     "filters": [],
                 }
+                seeds = json.loads(os.environ.get("ADGUARDHOME_TEST_FILTER_SEEDS", "{}"))
+                if seeds:
+                    cache = Path(directory) / "data/filters"
+                    cache.mkdir(parents=True)
+                    for identifier, source in seeds.items():
+                        shutil.copyfile(source, cache / f"{int(identifier)}.txt")
+                    config["filters"] = [{"id": int(identifier), "enabled": True, "name": f"fixture-{identifier}", "url": f"https://example.invalid/{identifier}.txt"} for identifier in seeds]
+                    config["filtering"].update({"filtering_enabled": True, "blocking_mode": "null_ip"})
                 path = Path(directory) / "config.yaml"
                 path.write_text(json.dumps(config))  # JSON is valid YAML.
                 with open(Path(directory) / "core.log", "wb") as log:
@@ -123,6 +155,14 @@ class AdGuardShortNameTests(unittest.TestCase):
                                 ("notheimdall", "198.18.0.99"),
                             ):
                                 self.assertIn(ipaddress.ip_address(expected).packed, query(name, 1, tcp))
+                        if seeds:
+                            for tcp in (False, True):
+                                for name in ("doubleclick.net", "pornhub.com", "infowars.com", "bet365.com", "adash.m.taobao.com", "applog.uc.cn"):
+                                    for qtype, expected in ((1, "0.0.0.0"), (28, "::")):
+                                        response = query(name, qtype, tcp)
+                                        self.assertEqual(answers(response), [(qtype, expected)], name)
+                                for name in ("www.baidu.com", "www.bilibili.com", "www.taobao.com", "www.jd.com", "weixin.qq.com", "www.alipay.com", "store.steampowered.com"):
+                                    self.assertEqual(answers(query(name, 1, tcp)), [(1, "198.18.0.99")], name)
                     finally:
                         process.terminate()
                         process.wait(timeout=10)

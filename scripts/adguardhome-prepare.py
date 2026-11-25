@@ -11,7 +11,7 @@ import tempfile
 import yaml
 
 
-def prepare(config_path, credential_path, seed_path):
+def prepare(config_path, credential_path, seed_path=None, *, seeds=None):
     users = json.loads(credential_path.read_text())
     if not isinstance(users, list) or not users:
         raise ValueError("Admin credentials required")
@@ -30,18 +30,44 @@ def prepare(config_path, credential_path, seed_path):
         raise ValueError("Invalid configuration")
     filters = config.get("filters", [])
     if (
-        len(filters) != 1
-        or type(filters[0].get("id")) is not int
-        or filters[0]["id"] <= 0
+        not isinstance(filters, list)
+        or not filters
+        or any(not isinstance(f, dict) or type(f.get("id")) is not int or f["id"] <= 0 for f in filters)
+        or len({f["id"] for f in filters}) != len(filters)
     ):
-        raise ValueError("Expected one pinned filter with a positive ID")
+        raise ValueError("Expected unique positive filter IDs")
+    if seed_path is not None:
+        if seeds is not None or len(filters) != 1:
+            raise ValueError("Legacy seed requires exactly one filter")
+        seeds = {str(filters[0]["id"]): str(seed_path)}
+    if not isinstance(seeds, dict) or set(seeds) != {str(f["id"]) for f in filters}:
+        raise ValueError("Expected exactly one pinned seed per filter")
+    paths = {}
+    for identifier, value in seeds.items():
+        if not isinstance(value, str) or not Path(value).is_absolute():
+            raise ValueError("Expected absolute seed path")
+        path = Path(value)
+        if not path.is_file() or path.stat().st_size == 0:
+            raise ValueError("Missing or empty pinned seed")
+        paths[identifier] = path
     config["users"] = users
-    cache = config_path.parent / "data" / "filters" / f"{filters[0]['id']}.txt"
-    cache.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-    if not cache.exists() or cache.stat().st_size == 0:
-        # copyfile gives the seed a fresh mtime; AGH uses it for refresh scheduling.
-        shutil.copyfile(seed_path, cache)
-        cache.chmod(0o600)
+    for identifier, source in paths.items():
+        cache = config_path.parent / "data" / "filters" / f"{identifier}.txt"
+        cache.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if not cache.exists() or cache.stat().st_size == 0:
+            # Atomic publication and fresh mtime; AGH uses mtime for refresh scheduling.
+            temporary_seed = None
+            try:
+                with tempfile.NamedTemporaryFile(dir=cache.parent, delete=False) as out:
+                    temporary_seed = Path(out.name)
+                    with source.open("rb") as incoming:
+                        shutil.copyfileobj(incoming, out)
+                    out.flush()
+                    os.fsync(out.fileno())
+                temporary_seed.replace(cache)
+            finally:
+                if temporary_seed is not None:
+                    temporary_seed.unlink(missing_ok=True)
     temporary = None
     try:
         with tempfile.NamedTemporaryFile(mode="w", dir=config_path.parent, delete=False) as out:
@@ -57,9 +83,12 @@ def prepare(config_path, credential_path, seed_path):
 
 if __name__ == "__main__":
     try:
-        if len(sys.argv) != 4:
-            raise ValueError("Expected config, credential and seed paths")
-        prepare(*(Path(arg) for arg in sys.argv[1:]))
+        if len(sys.argv) == 4:
+            prepare(*(Path(arg) for arg in sys.argv[1:]))
+        elif len(sys.argv) == 5 and sys.argv[3] == "--seeds-json":
+            prepare(Path(sys.argv[1]), Path(sys.argv[2]), seeds=json.loads(Path(sys.argv[4]).read_text()))
+        else:
+            raise ValueError("Expected config, credential and seed paths or --seeds-json manifest")
     except Exception:
         # Do not put YAML contents, password hashes or credential values in journals.
         print("AdGuard preparation failed; refusing to start without validated credentials/cache.", file=sys.stderr)

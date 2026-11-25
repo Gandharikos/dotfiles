@@ -10,7 +10,8 @@ services**. At that acceptance, booted, running and profile paths all matched ge
 establishes the bounded normal-restart result, not AC-loss power-on or arbitrary outage recovery.
 Generation 25 subsequently retained the
 [short-name DNS repair](lan-gateway.md#generation-25--scoped-short-name-dns-repair) without a
-reboot; generation 24 remains the last booted system.
+reboot; generation 26 then added the anti-AD Chinese DNS list, also without a reboot. Generation 24
+remains the last booted system.
 
 Subscription work and the new-node deployment remain paused. Do not rebuild from the current
 checkout as part of this test: its encrypted node seed is newer than the retained configuration.

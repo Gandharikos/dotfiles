@@ -95,7 +95,20 @@ in
     assert
       (builtins.head c.services.adguardhome.settings.filters).url
       == "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn/hosts";
-    assert (builtins.head c.services.adguardhome.settings.filters).id == 2;
+    assert
+      map (f: f.id) c.services.adguardhome.settings.filters == [
+        2
+        3
+      ];
+    assert
+      (builtins.elemAt c.services.adguardhome.settings.filters 1).url
+      == "https://anti-ad.net/easylist.txt";
+    assert c.dot.networking.adguardhome.seedFile == null;
+    assert
+      builtins.attrNames c.dot.networking.adguardhome.seedFiles == [
+        "2"
+        "3"
+      ];
     assert !c.networking.stevenblack.enable;
     assert c.services.adguardhome.settings.filtering.filters_update_interval == 24;
     assert c.sops.secrets.adguardhome_users.mode == "0400";

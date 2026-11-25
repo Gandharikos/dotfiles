@@ -14,6 +14,11 @@ let
     url = "https://raw.githubusercontent.com/StevenBlack/hosts/81f6c19b6ae322732879d119e5cbdd8f8bf6c52c/alternates/fakenews-gambling-porn/hosts";
     hash = "sha256-KBRgcS+FEUIMj32gGOoWw7VI+FUxY2PUnLik6gN28uU=";
   };
+  chineseSeed = pkgs.fetchurl {
+    name = "anti-ad-easylist.txt";
+    url = "https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/25025b31a086b7d1c6226795966aaf2f9251430c/anti-ad-easylist.txt";
+    hash = "sha256-qE8F4QSt2mFw2+77QJX5JlcSCAoDHEtXz2v41IpWRSY=";
+  };
   tailscale = lib.getExe config.services.tailscale.package;
 in
 {
@@ -21,7 +26,10 @@ in
     dot.networking.adguardhome = {
       enable = true;
       usersFile = config.sops.secrets.adguardhome_users.path;
-      seedFile = seed;
+      seedFiles = {
+        "2" = seed;
+        "3" = chineseSeed;
+      };
     };
     # Override the shared profile's forced direct-to-core DNS, only on this host.
     services.resolved.settings.Resolve = {
@@ -79,6 +87,12 @@ in
             enabled = true;
             name = "StevenBlack ads, tracking, fakenews, gambling and porn";
             url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn/hosts";
+          }
+          {
+            id = 3;
+            enabled = true;
+            name = "anti-AD Chinese ads and tracking (DNS)";
+            url = "https://anti-ad.net/easylist.txt";
           }
         ];
       };

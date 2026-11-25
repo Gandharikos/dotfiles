@@ -10,6 +10,17 @@ let
   cfg = config.dot.networking.adguardhome;
   settings = config.services.adguardhome.settings;
   filters = settings.filters or [ ];
+  validFilters =
+    builtins.isList filters
+    && filters != [ ]
+    && lib.all (f: builtins.isAttrs f && builtins.isInt (f.id or null) && f.id > 0) filters;
+  ids = if validFilters then map (f: toString f.id) filters else [ ];
+  seeds =
+    if cfg.seedFile != null && builtins.length ids == 1 then
+      { ${builtins.head ids} = cfg.seedFile; }
+    else
+      cfg.seedFiles;
+  seedManifest = pkgs.writeText "adguard-filter-seeds.json" (builtins.toJSON seeds);
   python = pkgs.python3.withPackages (p: [ p.pyyaml ]);
 in
 {
@@ -23,7 +34,12 @@ in
     seedFile = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
       default = null;
-      description = "Public pinned seed for the single filter declared in services.adguardhome.settings.filters.";
+      description = "Legacy public pinned seed for a single declared filter; use seedFiles for multiple filters.";
+    };
+    seedFiles = lib.mkOption {
+      type = lib.types.attrsOf lib.types.path;
+      default = { };
+      description = "Public pinned seeds keyed by filter ID; must cover exactly the declared filters. Mutually exclusive with seedFile.";
     };
   };
 
@@ -68,12 +84,10 @@ in
     };
     systemd.services.adguardhome = {
       serviceConfig.LoadCredential = lib.optional (cfg.usersFile != null) "users.json:${cfg.usersFile}";
-      preStart = lib.mkAfter (
-        lib.optionalString (cfg.seedFile != null) ''
-          ${lib.getExe python} ${self}/scripts/adguardhome-prepare.py \
-            "$STATE_DIRECTORY/AdGuardHome.yaml" "$CREDENTIALS_DIRECTORY/users.json" ${cfg.seedFile}
-        ''
-      );
+      preStart = lib.mkAfter ''
+        ${lib.getExe python} ${self}/scripts/adguardhome-prepare.py \
+          "$STATE_DIRECTORY/AdGuardHome.yaml" "$CREDENTIALS_DIRECTORY/users.json" --seeds-json ${seedManifest}
+      '';
     };
     assertions = [
       {
@@ -84,17 +98,15 @@ in
         message = "dot.networking.adguardhome.usersFile must name a runtime credential file outside the Nix store.";
       }
       {
-        assertion = cfg.seedFile != null;
-        message = "dot.networking.adguardhome.seedFile is required for offline filter initialization.";
+        assertion = (cfg.seedFile != null) != (cfg.seedFiles != { });
+        message = "dot.networking.adguardhome requires exactly one of seedFile or seedFiles for offline initialization.";
       }
       {
         assertion =
-          builtins.isList filters
-          && builtins.length filters == 1
-          && builtins.isAttrs (builtins.head filters)
-          && builtins.isInt ((builtins.head filters).id or null)
-          && (builtins.head filters).id > 0;
-        message = "The AdGuard preset requires one declared filter with a positive integer ID matching its seed.";
+          validFilters
+          && builtins.length (lib.unique ids) == builtins.length ids
+          && lib.sort builtins.lessThan ids == builtins.attrNames seeds;
+        message = "The AdGuard preset requires unique positive filter IDs and exactly one pinned seed per filter.";
       }
       {
         assertion =

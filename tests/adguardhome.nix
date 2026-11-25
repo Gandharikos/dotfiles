@@ -36,6 +36,23 @@ let
       }
     ];
   };
+  multi = enabled.extendModules {
+    modules = [
+      {
+        dot.networking.adguardhome = {
+          seedFile = lib.mkForce null;
+          seedFiles = {
+            "7" = enabled.config.dot.networking.adguardhome.seedFile;
+            "9" = enabled.config.dot.networking.adguardhome.seedFile;
+          };
+        };
+        services.adguardhome.settings.filters = lib.mkForce [
+          { id = 7; }
+          { id = 9; }
+        ];
+      }
+    ];
+  };
   valid =
     c:
     lib.all (
@@ -78,6 +95,34 @@ in
       assert !(c.systemd.services ? adguardhome-tailnet-webui);
       assert c.networking.nftables.tables == base.config.networking.nftables.tables;
       assert c.services.resolved.enable == base.config.services.resolved.enable;
+      true;
+    multiplePinnedFilters =
+      assert valid multi.config;
+      assert lib.hasInfix "--seeds-json" multi.config.systemd.services.adguardhome.preStart;
+      assert
+        !valid
+          (multi.extendModules {
+            modules = [
+              {
+                dot.networking.adguardhome.seedFiles = lib.mkForce { "7" = c.dot.networking.adguardhome.seedFile; };
+              }
+            ];
+          }).config;
+      assert
+        !valid
+          (multi.extendModules {
+            modules = [
+              {
+                services.adguardhome.settings.filters = lib.mkForce [
+                  { id = 7; }
+                  { id = 7; }
+                ];
+              }
+            ];
+          }).config;
+      assert rejected {
+        dot.networking.adguardhome.seedFiles."7" = c.dot.networking.adguardhome.seedFile;
+      };
       true;
     invalidInputsRejected =
       assert rejected { dot.networking.adguardhome.usersFile = lib.mkForce null; };

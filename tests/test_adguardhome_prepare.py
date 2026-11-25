@@ -38,6 +38,57 @@ class AdGuardPrepareTests(unittest.TestCase):
             module.prepare(config, credential, seed)
             self.assertEqual(cache.read_text(), "0.0.0.0 newer.example\n")
 
+    def test_multiple_seeds_preserve_updates_and_fill_empty_cache(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config, credential = root / "config.yaml", root / "users.json"
+            config.write_text(yaml.safe_dump({"filters": [{"id": 2}, {"id": 3}], "user_rules": ["@@||allowed.example^"]}))
+            credential.write_text(json.dumps([{"name": "admin", "password": "$2b$12$" + "a" * 53}]))
+            seeds = {}
+            for identifier in (2, 3):
+                seed = root / f"seed-{identifier}"
+                seed.write_text(f"||blocked-{identifier}.example^\n")
+                seeds[str(identifier)] = str(seed)
+            cache = root / "data/filters"
+            cache.mkdir(parents=True)
+            (cache / "2.txt").write_text("||updated.example^\n")
+            (cache / "3.txt").touch()
+            manifest = root / "seeds.json"
+            manifest.write_text(json.dumps(seeds))
+            result = subprocess.run([sys.executable, str(SCRIPT), str(config), str(credential), "--seeds-json", str(manifest)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0)
+            self.assertEqual((cache / "2.txt").read_text(), "||updated.example^\n")
+            self.assertEqual((cache / "3.txt").read_text(), Path(seeds["3"]).read_text())
+            self.assertEqual((cache / "3.txt").stat().st_mode & 0o777, 0o600)
+            self.assertEqual(yaml.safe_load(config.read_text())["user_rules"], ["@@||allowed.example^"])
+
+    def test_invalid_seed_sets_rejected_before_publication(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config, credential, seed = root / "config.yaml", root / "users.json", root / "seed"
+            credential.write_text(json.dumps([{"name": "admin", "password": "$2b$12$" + "a" * 53}]))
+            seed.write_text("||blocked.example^\n")
+            cases = [
+                ([{"id": 2}, {"id": 3}], {"2": str(seed)}),
+                ([{"id": 2}], {"2": str(seed), "3": str(seed)}),
+                ([{"id": 2}, {"id": 2}], {"2": str(seed)}),
+                ([{"id": True}], {"True": str(seed)}),
+                ([{"id": 0}], {"0": str(seed)}),
+                ([{"id": 2}], {"2": "relative"}),
+                ([{"id": 2}, {"id": 3}], {"2": str(seed), "3": str(root / "missing")}),
+            ]
+            empty = root / "empty"
+            empty.touch()
+            cases.append(([{"id": 2}], {"2": str(empty)}))
+            for filters, seeds in cases:
+                with self.subTest(filters=filters, seeds=seeds):
+                    original = yaml.safe_dump({"filters": filters})
+                    config.write_text(original)
+                    with self.assertRaises(ValueError):
+                        module.prepare(config, credential, seeds=seeds)
+                    self.assertEqual(config.read_text(), original)
+                    self.assertFalse((root / "data").exists())
+
     def test_repository_credentials_are_encrypted_and_host_scoped(self):
         root = SCRIPT.parent.parent
         document = yaml.safe_load((root / "secrets/services/adguardhome.yaml").read_text())

@@ -3,19 +3,21 @@
 ## Scope and ownership
 
 Deployed with ads/tracking plus the requested **fakenews, gambling and porn** extensions; social is
-not selected. **Generation 25** was retained at `2026-11-25T20:12:12Z`, adding a scoped short-name
-DNS repair to generation 24. Runtime and the default profile match:
-`/nix/store/6nad0pw7fk9skrcfa7qyiqdgc50va480-nixos-system-heimdall-26.11.20261111.d4f25a3`. It
-disables system-hosts import and explicitly maps the exact short name `heimdall` to `.2`, avoiding
-export of the gateway's `127.0.0.2` hosts entry. LAN A/AAAA, filtering, HTTPS, preservation and
-native ExitDNS checks passed; see the
-[scoped deployment record](lan-gateway.md#generation-25--scoped-short-name-dns-repair). Generation
-25 has not been reboot-tested. Generation 24 booted at `2026-11-25T18:42:11Z`; its LAN gate waited
-about three seconds, then AdGuard and both panels started without manual intervention or automatic
-retries. DNS, filtering, HTTPS, selectors and identity checks passed. This follows generation 23's
-earlier `.2:53` bind failure and one automatic retry. No newer nodes or subscription URL were
-deployed. See the [restart and scoped deployment record](reboot-validation.md). Deployment evidence
-is recorded below; declarations alone are not proof of activation.
+not selected. **Generation 26** was retained at `2026-11-25T22:02:52Z`, adding the requested
+**anti-AD Chinese advertising/tracking DNS list** alongside the existing StevenBlack list.
+Runtime/profile/boot default match:
+`/nix/store/d409zd9f6rq3kh658xac78kjp5i9sjdx-nixos-system-heimdall-26.11.20261111.d4f25a3`. The
+generation-25 short-name repair is retained: it disables system-hosts import and explicitly maps the
+exact short name `heimdall` to `.2`, avoiding export of the gateway's `127.0.0.2` hosts entry. LAN
+A/AAAA, filtering, HTTPS, preservation and native ExitDNS checks passed; see the
+[short-name deployment record](lan-gateway.md#generation-25--scoped-short-name-dns-repair).
+Generations 25/26 have not been reboot-tested. Generation 24 booted at `2026-11-25T18:42:11Z`; its
+LAN gate waited about three seconds, then AdGuard and both panels started without manual
+intervention or automatic retries. DNS, filtering, HTTPS, selectors and identity checks passed. This
+follows generation 23's earlier `.2:53` bind failure and one automatic retry. No newer proxy nodes
+or proxy subscription URL were deployed. See the
+[restart and scoped deployment record](reboot-validation.md). Deployment evidence is recorded below;
+declarations alone are not proof of activation.
 
 ```text
 LAN DHCP DNS 192.168.8.2:53 -> AdGuard Home -> sing-box 127.0.0.1:1053
@@ -38,11 +40,12 @@ Flint. No IPv6 gateway, public resolver or new trusted interface is introduced.
 ## Module ownership
 
 The reusable preset lives in `modules/nixos/networking/adguardhome.nix`, discovered by the existing
-network-module scanner. `dot.networking.adguardhome.enable` defaults to false. The only additional
-options are `usersFile` (an absolute runtime JSON credential path outside the Nix store) and
-`seedFile` (a public pinned file). It reuses upstream `services.adguardhome`; configure listeners,
-upstreams and the single filter through that existing settings namespace rather than duplicate
-wrapper options.
+network-module scanner. `dot.networking.adguardhome.enable` defaults to false. `usersFile` is an
+absolute runtime JSON credential path outside the Nix store. Public pinned seeds use either the
+backward-compatible `seedFile` for a single filter or `seedFiles`, an attribute set mapping positive
+filter IDs to seed paths. The two options are mutually exclusive; IDs must be unique and the map
+must cover exactly the declared filters. It reuses upstream `services.adguardhome`; configure
+listeners, upstreams and filter subscriptions through that namespace, not duplicate wrapper options.
 
 The shared module owns authentication injection, initial cache preparation, service safety defaults,
 filtering defaults and local retention. It does not assume sing-box, SOPS, a LAN subnet, interface,
@@ -52,7 +55,8 @@ HTTP address. Hosts own credential provisioning and its service ordering.
 `hosts/heimdall/adguardhome.nix` retains the exact subscription/seed selection, SOPS bindings, cache
 policy for Fake-IP, LAN/upstream addresses, resolved override, DNS NAT chain, dependencies and
 Tailnet Serve unit. `scripts/adguardhome-prepare.py` remains the common runtime helper. Existing
-addresses, credentials, filter ID, rule variant and exposure are unchanged.
+addresses, credentials and exposure remain unchanged. The original extraction preserved filter ID
+and variant; generation 26 adds ID 3 without replacing ID 2.
 
 Validation froze the repository source path for both evaluations, avoiding irrelevant whole-source
 store-path churn. Before/after AdGuard settings, generated units (AdGuard, its UI, sing-box,
@@ -66,20 +70,33 @@ activation.
 
 ## Filtering and persistence
 
-- Subscription:
+- Base subscription (ID 2):
   <https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn/hosts>.
   This includes base ads/tracking plus fakenews, gambling and porn; no redundant base list or social
   extension. `networking.stevenblack` stays disabled: that option manages `/etc/hosts`, not AGH's
   subscription. Filtering remains owned by AdGuard, before Fake-IP resolution.
+- Chinese supplement (ID 3): <https://anti-ad.net/easylist.txt>, the upstream's **AdGuard Home DNS**
+  format, not its browser AdGuard URL-filtering variant. Its offline seed is pinned to anti-AD
+  commit `25025b31a086b7d1c6226795966aaf2f9251430c`, hash
+  `sha256-qE8F4QSt2mFw2+77QJX5JlcSCAoDHEtXz2v41IpWRSY=`. No additional Chinese lists are stacked.
+  Anti-AD itself aggregates sources and includes allow rules; those can override blocking rules
+  under AdGuard's normal precedence. Rule counts overlap and are not unique-domain totals.
 - AdGuard refreshes every 24 hours. The initial file is pinned to commit
   `81f6c19b6ae322732879d119e5cbdd8f8bf6c52c` with a fixed hash in Nix, so cold startup does not need
   to download its protection list. A fresh-mtime seed is installed only if cache `2.txt` is absent
   or empty; existing downloaded updates are preserved. The helper derives the filename from the
   configured filter ID. ID 2 deliberately replaces ID 1's porn-only subscription, preventing reuse
   of its older, narrower cache. Change IDs deliberately when changing subscription variants.
-- The public subscription is a moving upstream list, not an immutable policy guarantee. Failed
+- Each declared filter has an independently seeded `<ID>.txt` cache. The helper validates every seed
+  mapping before publication, atomically initializes absent/empty caches with fresh mtimes, and
+  preserves nonempty caches, including downloaded updates. Both lists can start offline; credentials
+  remain runtime-only and UI-managed user rules/exceptions are preserved.
+- The public subscriptions are moving upstream lists, not immutable policy guarantees. Failed
   refreshes and false positives need monitoring. Use narrow domain exceptions, not broad provider
-  IP/port bypasses. Browser, game login and actual gameplay still need user acceptance.
+  IP/port bypasses. Before this addition, the operator reported completing the requested game, login
+  and payment checks with generally satisfactory results and considered development basically
+  complete. This is user-reported acceptance of the preceding configuration, not proof that every
+  application or future filter update is free of false positives.
 - Query logs and statistics stay local, retained for 24 hours. Cloud parental/safe-browsing checks
   are disabled. Administrators can see LAN query metadata in the authenticated UI.
 - Mutable settings preserve UI-managed user rules/exceptions. Nix-owned upstreams/list/protection
@@ -87,6 +104,40 @@ activation.
   rewrite list rather than expecting UI-only additions to that list to survive a restart.
   Authentication is injected after the Nix merge from a systemd credential; hashes and plaintext
   passwords never enter the Nix store.
+
+## Chinese filter deployment — generation 26
+
+The scoped build exactly reproduced generation 25 before adding the second list and the compatible
+multi-seed preset/helper. Only the AdGuard unit changed; all secret declarations, other units,
+resolved and firewall settings matched. It did not activate HEAD's paused proxy node/URL changes.
+
+Default regressions passed (91 Python tests, 5 skips, plus Nix checks). Unit tests cover legacy and
+multi-seed initialization, preserved updated caches/user rules, empty-cache repair and invalid ID,
+seed coverage/path/file rejection before publication. The real AdGuard 0.107.79 binary passed config
+validation and the extended isolated-network test with both actual pinned lists. The latter uses
+`ADGUARDHOME_TEST_FILTER_SEEDS` as a JSON ID-to-public-seed-path map alongside
+`ADGUARDHOME_TEST_BINARY` when running `tests/test_adguardhome_shortname.py` under `unshare --net`.
+
+A ten-minute independent rollback protected activation, including a root-only mutable-config backup
+and removal of newly seeded cache 3 on rollback. Only AdGuard was planned to stop/start, with its
+normal dependent Serve recovery. Eir/ymir/tyr UDP/TCP tests passed for Chinese tracking samples
+`adash.m.taobao.com` and `applog.uc.cn` (A/AAAA blocked), existing category blocks, Fake-IP/domestic
+DNS and representative shopping/payment/login/game domains. Eir also verified routed external-53
+interception and the short-name repair. Google/Baidu returned 204/200 from all three clients; both
+panels and authenticated/unauthenticated API gates passed. Native ExitDNS remained real-IP. These
+probes did not perform transactions or replay the user's application tests.
+
+Authenticated runtime status reported **166,905 rules for ID 2** and **97,166 for ID 3**. Existing
+cache 2's contents and mtime were unchanged, as were all other AdGuard settings, proxy JSON,
+selectors/mode, both identities and sing-box/native tailscaled PIDs. Retention caused no further
+restarts; the timer was cancelled and private backups/snapshots were removed. The boot default was
+verified against generation 26's init; no units were failed. A host-side GET of the public anti-AD
+distribution returned HTTP 200, which checks present reachability, not future scheduled refreshes.
+
+Records remain under `/private/tmp/heimdall-adguard-chinese/` and remote
+`/var/tmp/heimdall-adguard-chinese-upload/`. Generation 25 is the pre-Chinese-list fallback. No
+whole host reboot, router change, proxy subscription repair, node deployment or IPv6 change
+occurred.
 
 ## Management and credentials
 

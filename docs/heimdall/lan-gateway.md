@@ -8,9 +8,10 @@ full-LAN admission was first installed as **generation 20**, at 23:21:18 UTC on 
 
 `/nix/store/wjhgy3r5xslxh9jska41gf8vlfvdf0i8-nixos-system-heimdall-26.11.20261111.d4f25a3`.
 
-**The current retained system is generation 25**, with expanded
+**The current retained system is generation 26**, with expanded
 [AdGuard Home filtering](adguardhome.md), its reusable module extraction and the proxy panel
-readiness fix, the scoped AdGuard LAN-readiness gate and the short-name DNS repair below, without
+readiness fix, the scoped AdGuard LAN-readiness gate, the short-name DNS repair below and the
+[anti-AD Chinese DNS supplement](adguardhome.md#chinese-filter-deployment--generation-26), without
 changing DHCP or gateway admission. Eir/ymir DNS and web checks passed. Generation 20 remains the
 full-LAN rollback baseline without filtering.
 
@@ -128,8 +129,9 @@ paused subscription/node changes remain undeployed.
 ### Generation 25 — scoped short-name DNS repair
 
 Retained at `2026-11-25T20:12:12Z`:
-`/nix/store/6nad0pw7fk9skrcfa7qyiqdgc50va480-nixos-system-heimdall-26.11.20261111.d4f25a3`.
-Runtime/profile/default now select generation 25; the last actual boot remains generation 24.
+`/nix/store/6nad0pw7fk9skrcfa7qyiqdgc50va480-nixos-system-heimdall-26.11.20261111.d4f25a3`. At
+retention runtime/profile/default selected generation 25; generation 26 subsequently added the
+Chinese filter, while the last actual boot remains generation 24.
 
 - `hosts/heimdall/adguardhome.nix` disables `dns.hostsfile_enabled` and declares one enabled exact
   `heimdall` rewrite to `.2`. Rewrites are enabled explicitly. The shared default-off preset is
