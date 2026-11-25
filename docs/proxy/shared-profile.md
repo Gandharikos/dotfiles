@@ -105,7 +105,9 @@ decrypted values into Nix options, templates, command arguments or Git.
   120-second startup timeout and retries failures after 30 seconds. The helper never logs status
   payloads, invokes login/up, resets Serve or changes identities. This fix is deployed on Heimdall
   in generation 23; the AdGuard guide records the generation-22 failure and guarded deployment. A
-  subsequent cold-boot test of the fix remains outstanding.
+  subsequent [host restart](../heimdall/reboot-validation.md) recovered the proxy panel without
+  manual intervention or automatic retries. A separate AdGuard LAN-address startup race remains;
+  this bounded restart test does not prove arbitrary delayed-network recovery.
 - Tailnet options, validation and Serve live in
   `modules/nixos/networking/proxy/tailnet-profile.nix`.
 - The proxy uses route table 2022 with policy priorities starting at 9000. System Tailscale owns
