@@ -57,6 +57,42 @@ reservations/exclusions before claiming address-conflict prevention. This snapsh
 all-client migration, absence of stale leases elsewhere, gameplay/login/payment compatibility,
 filter false-positive acceptance, off-home laptop operation or eir's fresh-boot execution.
 
+### Reservation and management-name follow-up
+
+During reservation preflight, both Macs' `ifconfig` output reported the placeholder MAC
+`02:00:00:00:00:00`; do not use it for Flint reservations. Heimdall's LAN neighbor table instead
+showed distinct reachable MACs for `.116` and `.161`. Check those against Flint's current client
+records and the Macs' per-network private-address settings rather than assuming a hardware address
+is the active Wi-Fi address. Router-side reservations have not yet been inspected or changed.
+
+A separate management lookup issue was observed: eir's effective SSH hostname for `heimdall` is the
+bare name, and both its system resolver and direct `.2:53` A query returned `127.0.0.2`. Bare-name
+SSH timed out; strict-host-key SSH with `-o HostName=192.168.8.2` succeeded. The full native Tailnet
+name returned `100.76.84.51`, but that does not establish native Tailnet SSH as an unattended
+fallback. This initial inspection changed no configuration. The finding is distinct from the
+previous startup-period Tailnet NXDOMAIN observation; the origin/timing of the loopback DNS answer
+has not been established.
+
+The approved SSH repair adds `heimdall.HostName = "192.168.8.2"` to
+`users/johnson/home/ssh-hosts.nix`. Only eir's generated `.ssh/config` file was built and applied,
+not a Darwin/Home Manager activation or host rebuild. Its complete diff contained only that host
+block. Effective SSH settings for nine other targets were identical, and Heimdall's effective
+settings changed only the hostname: authentication, agent forwarding and host-key policy were
+preserved. Both candidate-file and ordinary alias connections succeeded with strict host-key
+verification, returning the remote hostname `heimdall`.
+
+Eir's config symlink now points directly to the generated store file. The candidate GC root and
+original symlink target are retained under `~/.local/state/heimdall-ssh-alias/`; the original system
+and Home Manager profiles were not advanced. The next normal activation from the updated source will
+manage the alias declaratively; other clients have not received this alias change yet. Do not remove
+the candidate root while that standalone file remains installed. No DNS, subscription, routing or
+service configuration was activated. This fixes `ssh heimdall` on eir, not general short-name DNS.
+Earlier successful connections alone do not identify when or why resolution changed.
+
+The operator also confirmed Flint's address reservations are correct. This is an operator report,
+not an independent router inspection; the reservations and client interface settings were not
+changed as part of the SSH repair.
+
 ## Ownership
 
 - Flint (`192.168.8.1`) remains the sole DHCP server and upstream router. Heimdall remains static at

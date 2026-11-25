@@ -181,6 +181,7 @@ ykman info | grep "Serial number"
 The following host aliases are pre-configured:
 
 ```bash
+ssh heimdall  # → 192.168.8.2:22 (home LAN management)
 ssh loki      # → localhost:10022 (MicroVM, run on ymir)
 ssh sigurd    # → sigurd.local
 ssh ymir      # → ymir.local
@@ -195,6 +196,11 @@ The `loki` alias now refers to the MicroVM formerly named `mimir`, not the retir
 loopback endpoint is on ymir, so connect to ymir first before using this alias. The stateless VM's
 existing host-key checking behavior is unchanged. The YubiKey named `mimir` is unrelated and keeps
 its existing key names.
+
+The `heimdall` alias pins the home-LAN management address rather than relying on bare-name DNS. It
+does not select a Tailnet exit or establish remote Tailnet SSH access. Outside the home LAN, use a
+separately verified management path; do not bypass host-key verification if another network also
+uses `192.168.8.2`. See the [LAN gateway record](heimdall/lan-gateway.md) for activation scope.
 
 ## Usage Examples
 

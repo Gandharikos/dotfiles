@@ -38,6 +38,11 @@ in
           ForwardAgent = mkDefault true;
         };
 
+        # LAN management must not depend on short-name DNS or Tailnet SSH checks.
+        "heimdall" = {
+          HostName = mkDefault "192.168.8.2";
+        };
+
         "tyr" = {
           HostName = mkDefault "tyr.local";
           ForwardAgent = mkDefault true;
