@@ -3,13 +3,15 @@
 ## Scope and ownership
 
 Deployed with ads/tracking plus the requested **fakenews, gambling and porn** extensions; social is
-not selected. **Generation 23** was retained at `2026-11-25T02:27:05Z`, adding the
-behavior-preserving module extraction and proxy panel readiness fix. Runtime and the default profile
-match: `/nix/store/lixx25fa1l703zi057sgrx3f4aqgarab-nixos-system-heimdall-26.11.20261111.d4f25a3`. A
-separately approved restart booted generation 23 at `2026-11-25T17:45:43Z`. Both panels and DNS
-recovered without manual starts, but AdGuard needed one automatic restart because `.2:53` was not
-yet bindable. See the [restart record and remaining LAN-address race](reboot-validation.md).
-Deployment evidence is recorded below; declarations alone are not proof of activation.
+not selected. **Generation 24** was retained at `2026-11-25T18:32:58Z`, adding a scoped AdGuard
+LAN-IPv4 readiness gate to generation 23. Runtime and the default profile match:
+`/nix/store/k1h90jygqskrf9nwska8ym5d061vr53j-nixos-system-heimdall-26.11.20261111.d4f25a3`. The last
+actual boot remains generation 23 at `2026-11-25T17:45:43Z`: both panels and DNS recovered
+automatically, but AdGuard initially could not bind `.2:53` and retried once. Generation 24's fix
+passed an isolated VM test and guarded activation, not yet a host reboot. No newer nodes or
+subscription URL were deployed. See the
+[restart and scoped deployment record](reboot-validation.md). Deployment evidence is recorded below;
+declarations alone are not proof of activation.
 
 ```text
 LAN DHCP DNS 192.168.8.2:53 -> AdGuard Home -> sing-box 127.0.0.1:1053

@@ -78,7 +78,7 @@ repository guides, including:
 - [Heimdall gateway deployment record](heimdall/minimal.md)
 - [Heimdall full-LAN gateway cutover](heimdall/lan-gateway.md)
 - [Heimdall AdGuard Home filtering](heimdall/adguardhome.md)
-- [Heimdall generation-23 restart acceptance](heimdall/reboot-validation.md)
+- [Heimdall restart acceptance and LAN readiness](heimdall/reboot-validation.md)
 - [Heimdall Tailnet exit-node operation](heimdall/exit-node.md)
 - [dae profile and backend boundaries](proxy/dae.md)
 - [ymir sing-box deployment](proxy/ymir-sing-box.md)

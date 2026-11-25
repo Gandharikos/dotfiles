@@ -8,10 +8,11 @@ full-LAN admission was first installed as **generation 20**, at 23:21:18 UTC on 
 
 `/nix/store/wjhgy3r5xslxh9jska41gf8vlfvdf0i8-nixos-system-heimdall-26.11.20261111.d4f25a3`.
 
-**The current retained system is generation 23**, with expanded
+**The current retained system is generation 24**, with expanded
 [AdGuard Home filtering](adguardhome.md), its reusable module extraction and the proxy panel
-readiness fix, without changing DHCP or gateway admission. Eir/ymir DNS and web checks passed.
-Generation 20 remains the full-LAN rollback baseline without filtering.
+readiness fix and the scoped AdGuard LAN-readiness gate, without changing DHCP or gateway admission.
+Eir/ymir DNS and web checks passed. Generation 20 remains the full-LAN rollback baseline without
+filtering.
 
 Flint settings have not been changed by the agent. The user subsequently confirmed that the iPhone
 worked after reconnecting. Read-only checks on ymir independently found DHCP gateway and IPv4 DNS

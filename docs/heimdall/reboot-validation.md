@@ -1,4 +1,4 @@
-# Heimdall: generation 23 restart acceptance
+# Heimdall: restart acceptance and LAN readiness
 
 ## Scope and current evidence
 
@@ -6,7 +6,8 @@ The user authorized one normal OS reboot after the preparation below. Generation
 `2026-11-25T17:45:43Z`; gateway/DNS and both panels recovered without manual service starts. The
 proxy panel readiness fix passed this startup check. **AdGuard required one automatic restart due to
 its LAN address not being ready**, so this is not a clean, error-free startup result. See the
-execution record below.
+execution record below. Generation 24 subsequently deployed the scoped LAN-readiness fix; it has not
+yet been tested through a host reboot.
 
 Subscription work and the new-node deployment remain paused. Do not rebuild from the current
 checkout as part of this test: its encrypted node seed is newer than the retained configuration.
@@ -71,15 +72,103 @@ performed. Private snapshots were removed after comparison; the sanitized record
 scripts remain under `/var/lib/heimdall-reboot-validation/`, with local helpers under
 `/private/tmp/heimdall-reboot-check/`.
 
+## LAN-address readiness fix — generation 24
+
+The host's AdGuard unit now declares a service-local `ExecStartPre` gate using the existing systemd
+binary:
+
+```text
+systemd-networkd-wait-online --interface=enp2s0:routable --ipv4 --dns=no --timeout=60
+```
+
+It wants/orders after networkd and runs this gate before the upstream configuration merge and
+credential/seed preparation. Networkd must finish configuring this interface with routable IPv4,
+including its IPv4 duplicate-address detection. The management network declares only the static
+`192.168.8.2/24` address, with DHCP disabled; evaluation tests pin that assumption. If addresses or
+interface ownership change, revisit this gate rather than assuming any routable IPv4 is sufficient.
+
+Global wait-online remains disabled. No DNS query or Internet reachability is required, avoiding a
+resolver startup dependency loop. No wildcard listener, firewall relaxation, route change, new
+helper script or global network-manager adjustment is introduced. The wait is limited to 60 seconds;
+AdGuard retains its existing 90-second startup budget and `Restart=always`/10-second retry policy.
+This is a startup gate, not a guarantee against later address removal or cable failure.
+
+Pre-deployment validation:
+
+- Default regressions and host assertions passed, including first-`ExecStartPre` ordering, retained
+  restart policy and disabled/DAE isolation.
+- A same-source before/after evaluation found unchanged DNS/filter settings, credentials
+  preparation, LAN network configuration, firewall/NAT, sing-box/tailscaled/resolved units and
+  AdGuard's Serve unit. Only the AdGuard unit's gate and networkd dependencies changed. This
+  compares the code edit, not the current checkout against the older deployed generation.
+- `tests/test-adguard-lan-ready.nix` passed in an isolated Linux KVM VM. It uses the actual declared
+  gate and inherits AdGuard's DynamicUser, address-family, syscall and filesystem restrictions.
+  Cases cover a missing interface timing out, routable IPv6 alone not satisfying the IPv4 gate,
+  delayed LAN configuration allowing a real bind to `.2`, and timeout/retry recovery when the
+  interface arrives later. Timeout cases use a shortened two-second budget; the delayed-success case
+  uses the production 60-second command. No production interface or secret is imported.
+
+Run the VM test on a Linux builder with KVM:
+
+```sh
+nix --extra-experimental-features 'nix-command flakes pipe-operators' build \
+  --impure --no-link --file tests/test-adguard-lan-ready.nix
+```
+
+The VM build did not restart production services. The existing subscription timer independently ran
+and failed at 18:04 UTC; no manual refresh or failure-state reset was performed during testing.
+
+### Scoped deployment and retention
+
+After approval, the retained source `/nix/store/ang0gc4gh66scllxwyhx7pzbzfz2fn0r-source` reproduced
+the generation-23 toplevel exactly. An `extendModules` override added only the networkd dependencies
+and first `ExecStartPre` gate. Evaluation proved that **only `adguardhome.service` changed**, with
+all secret declarations, DNS/filter settings, firewall tables and other systemd units preserved.
+This deliberately excludes the current checkout's newer encrypted nodes/URL and unrelated changes.
+
+The remote build and dry activation passed. An independent systemd dry-activation check verified the
+recovery execution path, then a ten-minute generation-23 rollback was armed. Test activation at
+18:31:36 UTC stopped/started only AdGuard; its dependent Serve handler recovered. The native
+wait-online command exited successfully before the existing preparation script. AdGuard reported
+success with zero automatic retries. LAN IPv4 was already present, so this activation is not a
+cold-start acceptance test.
+
+Host stub and eir/ymir LAN UDP/TCP DNS checks passed: ads/porn/fakenews/gambling A/AAAA blocking,
+Google/Facebook Fake-IP, Baidu real addresses and Tailnet names. Eir's external port-53 requests
+were intercepted. Eir HTTPS returned Google 204 and Baidu 200, both panels returned 200, and
+unauthenticated APIs returned 401. Private authenticated AdGuard checks passed with 166,905 rules.
+Native ExitDNS returned public non-Fake-IP A answers for Google/Baidu.
+
+Private comparisons confirmed identical proxy JSON, all manual selectors, mode, both identities,
+Serve mappings and sing-box/native tailscaled PIDs. Neither proxy core nor native Tailscale was
+restarted. Permanent retention created **generation 24** at `2026-11-25T18:32:58Z`, without another
+daemon restart:
+
+`/nix/store/k1h90jygqskrf9nwska8ym5d061vr53j-nixos-system-heimdall-26.11.20261111.d4f25a3`.
+
+Runtime, profile and boot default match generation 24; the last actual boot remains generation 23.
+After verification, rollback was cancelled and private snapshots/temporary candidate GC root were
+removed. No failed units remained, but the subscription job still had its old 18:04 timestamp and
+`ExecMainStatus=1` despite `Result=success` after activation. This is **not** evidence that refresh
+was repaired. No new nodes/URL, routing change, full reboot or subscription refresh was deployed.
+
+Records: `/private/tmp/heimdall-adguard-lan-ready/`, its scoped expression also copied to
+`/var/tmp/heimdall-adguard-lan-ready-upload/scoped.nix`, `/run/heimdall-adguard-lan-ready-deploy/`,
+and `/var/tmp/heimdall-adguard-lan-ready-{activate,retain}.log`.
+
+Do **not** blindly switch the current checkout while the node update remains paused. Production
+restart acceptance of generation 24's new gate is still outstanding.
+
 ## Checklist for a separately approved restart
 
 1. Confirm the user is present, accepts several minutes of LAN Internet/DNS interruption and can
    reach the machine with a display/keyboard if SSH fails. Keep a cellular channel for coordination.
 2. Verify the exact running/profile/default paths again. Do not run `just switch`, deploy the node
    candidate, change DHCP/IPv6 or refresh subscriptions as part of this test.
-3. Verify a generation-22 boot entry and its closure remain available. Generation 22 preserves
-   full-LAN admission and filtering, but its proxy panel can require manual recovery. Do not select
-   generation 19 or an earlier two-client policy as a casual fallback.
+3. For the next generation-24 test, verify generation 23's fallback entry and closure. It preserves
+   full-LAN filtering and the proxy panel fix, but AdGuard may need its existing automatic retry.
+   Generation 22 was the fallback for the earlier generation-23 test. Do not select generation 19 or
+   an earlier two-client policy as a casual fallback.
 4. Capture a private pre-restart snapshot outside `/run`, root-owned with directory mode 0700 and
    file mode 0600: canonical proxy-config hash, current manual selectors/mode and native/embedded
    identity identifiers. Do not save plaintext configuration or credentials, or print snapshot
@@ -100,11 +189,14 @@ local recovery is unavailable, postpone the restart or design and test persisten
 Observe for up to five minutes without manually starting units, so the readiness fix is actually
 tested. Record any DNS readiness gap rather than treating a successful retry as zero interruption.
 
-- A new boot ID, with booted/runtime/profile paths all matching generation 23.
+- A new boot ID, with booted/runtime/profile paths all matching the approved target (generation 24
+  for the next test; generation 23 for the recorded test above).
 - The original LAN address, Flint default route and physical link; no new physical IPv6 default.
 - All required services active, no failed units, and both Serve handlers recovered automatically.
   Inspect the proxy panel's current-boot journal and retry count. Bounded automatic recovery is
-  acceptable; an operator start/restart means unattended startup acceptance failed.
+  acceptable for the proxy panel; an operator start/restart means unattended startup acceptance
+  failed. For the new AdGuard gate, normal LAN startup should complete without an AdGuard automatic
+  restart; record any timeout/retry separately rather than claiming error-free recovery.
 - Host DNS via `127.0.0.53` and LAN DNS via `.2`, using both UDP and TCP. Check ad/porn/fakenews/
   gambling A/AAAA blocking, domestic real addresses, foreign Fake-IP and native Tailnet names.
 - Routed external port-53 interception, domestic/foreign HTTPS and both Tailnet panels from another
@@ -124,10 +216,10 @@ owned panel unit as needed. Do not reset all Tailscale Serve mappings, re-enroll
 off filtering as an improvised workaround. A manual recovery must be recorded as such.
 
 If the host cannot boot or LAN management remains unavailable, use the local console and choose the
-verified generation-22 entry. Selecting an older entry does not by itself change the persistent
-system profile/default: verify the booted path and coordinate a deliberate retention/rollback once
-access is restored. Preserve state directories and all encrypted credentials. Network-client DHCP
-settings should remain unchanged.
+verified fallback entry (generation 23 for a generation-24 test). Selecting an older entry does not
+by itself change the persistent system profile/default: verify the booted path and coordinate a
+deliberate retention/rollback once access is restored. Preserve state directories and all encrypted
+credentials. Network-client DHCP settings should remain unchanged.
 
 After checks, document actual results, exceptions and any recovery actions. Remove the private
 snapshot only after successful comparison or deliberate recovery. The original preparation phase

@@ -55,6 +55,17 @@ in
     assert c.dot.networking.adguardhome.enable;
     assert c.dot.networking.adguardhome.usersFile == c.sops.secrets.adguardhome_users.path;
     assert c.services.adguardhome.enable;
+    assert !c.systemd.network.wait-online.enable;
+    assert builtins.elem "systemd-networkd.service" c.systemd.services.adguardhome.after;
+    assert builtins.elem "systemd-networkd.service" c.systemd.services.adguardhome.wants;
+    assert
+      builtins.head c.systemd.services.adguardhome.serviceConfig.ExecStartPre
+      == "${c.systemd.package}/lib/systemd/systemd-networkd-wait-online --interface=enp2s0:routable --ipv4 --dns=no --timeout=60";
+    assert c.systemd.services.adguardhome.serviceConfig.Restart == "always";
+    assert c.systemd.services.adguardhome.serviceConfig.RestartSec == 10;
+    assert c.systemd.network.networks."10-management".networkConfig.DHCP == "no";
+    assert
+      map (a: a.Address) c.systemd.network.networks."10-management".addresses == [ "192.168.8.2/24" ];
     assert !c.services.adguardhome.allowDHCP && !c.services.adguardhome.openFirewall;
     assert !c.services.adguardhome.settings.dhcp.enabled;
     assert c.services.adguardhome.settings.http.address == "127.0.0.1:3000";

@@ -73,12 +73,22 @@ in
     };
     systemd.services.adguardhome = {
       after = [
+        "systemd-networkd.service"
         "systemd-resolved.service"
         "sing-box.service"
         "sops-install-secrets.service"
       ];
-      wants = [ "sing-box.service" ];
+      wants = [
+        "systemd-networkd.service"
+        "sing-box.service"
+      ];
       requires = [ "sops-install-secrets.service" ];
+      # Global wait-online is disabled. Wait only for this host's static LAN IPv4
+      # (including networkd's address configuration/DAD), not DNS or Internet access.
+      # Run before the upstream settings merge and runtime credential injection.
+      serviceConfig.ExecStartPre = lib.mkBefore [
+        "${config.systemd.package}/lib/systemd/systemd-networkd-wait-online --interface=enp2s0:routable --ipv4 --dns=no --timeout=60"
+      ];
     };
     # Catch LAN TCP/UDP port-53 requests routed through this gateway before TUN
     # hijacking. Same-L2 DNS servers, encrypted DNS and VPNs are not intercepted.
