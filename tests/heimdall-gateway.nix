@@ -76,6 +76,16 @@ in
       ];
     assert c.services.adguardhome.settings.dns.upstream_dns == [ "127.0.0.1:1053" ];
     assert c.services.adguardhome.settings.dns.fallback_dns == [ ];
+    assert !c.services.adguardhome.settings.dns.hostsfile_enabled;
+    assert c.services.adguardhome.settings.filtering.rewrites_enabled;
+    assert
+      c.services.adguardhome.settings.filtering.rewrites == [
+        {
+          domain = "heimdall";
+          answer = "192.168.8.2";
+          enabled = true;
+        }
+      ];
     assert !c.services.adguardhome.settings.dns.cache_enabled;
     assert c.services.adguardhome.settings.dns.cache_size == 0;
     assert !c.services.adguardhome.settings.dns.use_private_ptr_resolvers;

@@ -9,7 +9,7 @@ deployment approval:
 
 `/nix/store/187dx07s94xx3l9i082nkn9zcwhdl047-nixos-system-heimdall-26.11.20261111.d4f25a3`.
 
-**The current system is generation 24**, retaining this ordinary exit, generation 20's full-LAN
+**The current system is generation 25**, retaining this ordinary exit, generation 20's full-LAN
 admission and [AdGuard Home filtering](adguardhome.md) for host/LAN DNS. Native ExitDNS is unchanged
 and does not use the Fake-IP/filtering path; see [full-LAN cutover](lan-gateway.md). Once DHCP
 clients migrate, do not restore a two-client generation without coordinating client/lease recovery.

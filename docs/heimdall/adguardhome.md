@@ -3,15 +3,19 @@
 ## Scope and ownership
 
 Deployed with ads/tracking plus the requested **fakenews, gambling and porn** extensions; social is
-not selected. **Generation 24** was retained at `2026-11-25T18:32:58Z`, adding a scoped AdGuard
-LAN-IPv4 readiness gate to generation 23. Runtime and the default profile match:
-`/nix/store/k1h90jygqskrf9nwska8ym5d061vr53j-nixos-system-heimdall-26.11.20261111.d4f25a3`.
-Generation 24 booted at `2026-11-25T18:42:11Z`; its LAN gate waited about three seconds, then
-AdGuard and both panels started without manual intervention or automatic retries. DNS, filtering,
-HTTPS, selectors and identity checks passed. This follows generation 23's earlier `.2:53` bind
-failure and one automatic retry. No newer nodes or subscription URL were deployed. See the
-[restart and scoped deployment record](reboot-validation.md). Deployment evidence is recorded below;
-declarations alone are not proof of activation.
+not selected. **Generation 25** was retained at `2026-11-25T20:12:12Z`, adding a scoped short-name
+DNS repair to generation 24. Runtime and the default profile match:
+`/nix/store/6nad0pw7fk9skrcfa7qyiqdgc50va480-nixos-system-heimdall-26.11.20261111.d4f25a3`. It
+disables system-hosts import and explicitly maps the exact short name `heimdall` to `.2`, avoiding
+export of the gateway's `127.0.0.2` hosts entry. LAN A/AAAA, filtering, HTTPS, preservation and
+native ExitDNS checks passed; see the
+[scoped deployment record](lan-gateway.md#generation-25--scoped-short-name-dns-repair). Generation
+25 has not been reboot-tested. Generation 24 booted at `2026-11-25T18:42:11Z`; its LAN gate waited
+about three seconds, then AdGuard and both panels started without manual intervention or automatic
+retries. DNS, filtering, HTTPS, selectors and identity checks passed. This follows generation 23's
+earlier `.2:53` bind failure and one automatic retry. No newer nodes or subscription URL were
+deployed. See the [restart and scoped deployment record](reboot-validation.md). Deployment evidence
+is recorded below; declarations alone are not proof of activation.
 
 ```text
 LAN DHCP DNS 192.168.8.2:53 -> AdGuard Home -> sing-box 127.0.0.1:1053
@@ -79,8 +83,10 @@ activation.
 - Query logs and statistics stay local, retained for 24 hours. Cloud parental/safe-browsing checks
   are disabled. Administrators can see LAN query metadata in the authenticated UI.
 - Mutable settings preserve UI-managed user rules/exceptions. Nix-owned upstreams/list/protection
-  defaults are reapplied at service start. Authentication is injected after the Nix merge from a
-  systemd credential; hashes and plaintext passwords never enter the Nix store.
+  defaults and Heimdall's exact-name rewrite list are reapplied at service start. Edit the declared
+  rewrite list rather than expecting UI-only additions to that list to survive a restart.
+  Authentication is injected after the Nix merge from a systemd credential; hashes and plaintext
+  passwords never enter the Nix store.
 
 ## Management and credentials
 

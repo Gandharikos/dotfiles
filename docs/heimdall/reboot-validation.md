@@ -6,8 +6,11 @@ Two separately approved normal OS reboots are recorded here. Generation 23 boote
 `2026-11-25T17:45:43Z`: the proxy panel recovered automatically, but AdGuard needed one retry
 because its LAN address was not ready. After the scoped fix, **generation 24 booted at
 `2026-11-25T18:42:11Z` and recovered without manual starts or automatic restarts of the five checked
-services**. Its booted, running and profile paths all match the retained generation-24 closure. This
+services**. At that acceptance, booted, running and profile paths all matched generation 24. This
 establishes the bounded normal-restart result, not AC-loss power-on or arbitrary outage recovery.
+Generation 25 subsequently retained the
+[short-name DNS repair](lan-gateway.md#generation-25--scoped-short-name-dns-repair) without a
+reboot; generation 24 remains the last booted system.
 
 Subscription work and the new-node deployment remain paused. Do not rebuild from the current
 checkout as part of this test: its encrypted node seed is newer than the retained configuration.

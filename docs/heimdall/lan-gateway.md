@@ -8,11 +8,11 @@ full-LAN admission was first installed as **generation 20**, at 23:21:18 UTC on 
 
 `/nix/store/wjhgy3r5xslxh9jska41gf8vlfvdf0i8-nixos-system-heimdall-26.11.20261111.d4f25a3`.
 
-**The current retained system is generation 24**, with expanded
+**The current retained system is generation 25**, with expanded
 [AdGuard Home filtering](adguardhome.md), its reusable module extraction and the proxy panel
-readiness fix and the scoped AdGuard LAN-readiness gate, without changing DHCP or gateway admission.
-Eir/ymir DNS and web checks passed. Generation 20 remains the full-LAN rollback baseline without
-filtering.
+readiness fix, the scoped AdGuard LAN-readiness gate and the short-name DNS repair below, without
+changing DHCP or gateway admission. Eir/ymir DNS and web checks passed. Generation 20 remains the
+full-LAN rollback baseline without filtering.
 
 Flint settings have not been changed by the agent. The user subsequently confirmed that the iPhone
 worked after reconnecting. Read-only checks on ymir independently found DHCP gateway and IPv4 DNS
@@ -70,8 +70,8 @@ bare name, and both its system resolver and direct `.2:53` A query returned `127
 SSH timed out; strict-host-key SSH with `-o HostName=192.168.8.2` succeeded. The full native Tailnet
 name returned `100.76.84.51`, but that does not establish native Tailnet SSH as an unattended
 fallback. This initial inspection changed no configuration. The finding is distinct from the
-previous startup-period Tailnet NXDOMAIN observation; the origin/timing of the loopback DNS answer
-has not been established.
+previous startup-period Tailnet NXDOMAIN observation. The origin was subsequently identified below;
+the exact onset and the earlier successful short-name resolution path remain unproven.
 
 The approved SSH repair adds `heimdall.HostName = "192.168.8.2"` to
 `users/johnson/home/ssh-hosts.nix`. Only eir's generated `.ssh/config` file was built and applied,
@@ -92,6 +92,79 @@ Earlier successful connections alone do not identify when or why resolution chan
 The operator also confirmed Flint's address reservations are correct. This is an operator report,
 not an independent router inspection; the reservations and client interface settings were not
 changed as part of the SSH repair.
+
+### Short-name DNS source — read-only diagnosis
+
+Separate queries from Heimdall established the current path for `heimdall.` A:
+
+| Endpoint                         | Answer                     |
+| -------------------------------- | -------------------------- |
+| AdGuard `127.0.0.1:53`           | `127.0.0.2`, TTL 60        |
+| sing-box `127.0.0.1:1053`        | Fake-IP in `198.18.0.0/15` |
+| systemd-resolved `127.0.0.53:53` | `127.0.0.2`, TTL 0         |
+| Flint `192.168.8.1:53`           | NXDOMAIN                   |
+
+The host's `/etc/hosts` contains `127.0.0.2 heimdall`, and NSS returns that same address. AdGuard's
+runtime YAML has `dns.hostsfile_enabled=true`, `cache_enabled=false` and sole upstream
+`127.0.0.1:1053`. Its authenticated `filtering/check_host?name=heimdall` response reports
+**`RewriteEtcHosts`**. Together these establish that AdGuard imports the gateway's local hosts
+mapping and answers the LAN short name itself, rather than obtaining this loopback answer from
+sing-box or Flint. The resolved answer is consistent with the same local hosts mapping; it does not
+establish that AdGuard forwarded this query to resolved.
+
+The full native Tailnet name returned `100.76.84.51` through AdGuard, sing-box and resolved; Flint
+returned NXDOMAIN. No DNS cache was cleared, credential logged, setting modified or service
+restarted during this diagnosis. The SSH alias fix remains effective independently of DNS.
+
+The subsequently approved DNS repair is host-scoped disabling of system-hosts import plus an
+explicit exact-name LAN record for `heimdall` pointing to `.2`. Disabling import alone does not
+establish the desired LAN record: direct sing-box queries currently yield Fake-IP. Preserve the
+host's own NSS mapping, native Tailnet full-name behavior, ordinary exit DNS and filtering; validate
+A/AAAA behavior before retaining any change. Do not switch the current checkout wholesale: the
+paused subscription/node changes remain undeployed.
+
+### Generation 25 — scoped short-name DNS repair
+
+Retained at `2026-11-25T20:12:12Z`:
+`/nix/store/6nad0pw7fk9skrcfa7qyiqdgc50va480-nixos-system-heimdall-26.11.20261111.d4f25a3`.
+Runtime/profile/default now select generation 25; the last actual boot remains generation 24.
+
+- `hosts/heimdall/adguardhome.nix` disables `dns.hostsfile_enabled` and declares one enabled exact
+  `heimdall` rewrite to `.2`. Rewrites are enabled explicitly. The shared default-off preset is
+  unchanged; this host's rewrite list is now Nix-owned. Preflight confirmed there were no existing
+  custom rewrites to overwrite.
+- The scoped expression reconstructed generation 24 exactly from its retained source plus the
+  readiness gate, then added only these DNS settings. Assertions found only `adguardhome.service`
+  changed, with all SOPS declarations, other systemd units, resolved, firewall and `/etc/hosts`
+  unchanged. No paused subscription URL or node update was included.
+- The real AdGuard 0.107.79 binary passed `--check-config` against a private copy of the existing
+  runtime config plus the patch. The default regression suite and host assertions passed. The opt-in
+  `tests/test_adguardhome_shortname.py` passed in an isolated Linux network namespace with that same
+  binary and a mock upstream: UDP/TCP, case-insensitive short-name A, AAAA NODATA, unchanged full
+  Tailnet-name A and nonmatching names forwarded normally. It refuses to bind in the initial network
+  namespace and is skipped by ordinary unit runs without its explicit binary environment variable.
+- Dry activation planned only AdGuard's stop/start. A ten-minute systemd rollback timer protected
+  test activation; its root-only backup also covered mutable AdGuard YAML, since switching to
+  generation 24 alone would not remove newly introduced settings. Standard activation jobs and
+  dependent Serve recovery ran; sing-box/native tailscaled PIDs remained unchanged. Retention caused
+  no additional AdGuard, sing-box or tailscaled restart.
+- Eir, ymir and tyr passed UDP/TCP short-name A=`192.168.8.2`, AAAA NODATA, native Tailnet
+  full-name, category A/AAAA blocking, Fake-IP and domestic DNS checks. All three returned Google
+  204 and Baidu 200. Eir also passed routed external-53 interception for the new record, both UI
+  pages returned 200, authenticated AdGuard checks passed and unauthenticated access remained
+  rejected. Native ExitDNS still returned public, non-Fake-IP Google/Baidu A answers.
+- Proxy JSON, every manual selector, mode, both identities and all other AdGuard runtime settings
+  matched the private baseline. Eir's system short-name lookup now returns `.2` without a cache
+  flush. Heimdall's own NSS lookup intentionally still returns `127.0.0.2`. No failed units or
+  automatic restarts of the three checked daemons remained at final inspection.
+
+The rollback timer was cancelled after successful retention. Private snapshots, the mutable-config
+backup and the now-inactive rollback helper were removed; the candidate is rooted by the system
+profile. Preparation records remain under `/private/tmp/heimdall-adguard-shortname/` and remote
+`/var/tmp/heimdall-adguard-shortname-upload/`. For a later semantic rollback to generation 24,
+explicitly restore `hostsfile_enabled=true` and the approved prior rewrite state as well as the
+system generation; old Nix declarations do not delete these mutable settings automatically. No
+reboot, subscription repair, new-node deployment or actual gameplay acceptance was performed.
 
 ## Ownership
 

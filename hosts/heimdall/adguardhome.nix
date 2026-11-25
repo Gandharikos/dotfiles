@@ -55,10 +55,22 @@ in
           ];
           upstream_dns = [ "127.0.0.1:${toString proxy.profile.ports.dns}" ];
           bootstrap_dns = [ "192.168.8.1" ];
+          # Do not export this gateway's loopback /etc/hosts entries to LAN clients.
+          hostsfile_enabled = false;
           # sing-box owns the mapping/cache lifetime of its Fake-IP responses.
           cache_enabled = false;
           cache_size = 0;
           ratelimit = 0;
+        };
+        filtering = {
+          rewrites_enabled = true;
+          rewrites = [
+            {
+              domain = "heimdall";
+              answer = "192.168.8.2";
+              enabled = true;
+            }
+          ];
         };
         filters = [
           {
