@@ -55,7 +55,9 @@ Tyr's simultaneous interfaces are recorded, not diagnosed as a fault or automati
 `.116` and tyr Wi-Fi `.161` fall inside the last documented DHCP pool: verify matching Flint
 reservations/exclusions before claiming address-conflict prevention. This snapshot does not prove
 all-client migration, absence of stale leases elsewhere, gameplay/login/payment compatibility,
-filter false-positive acceptance, off-home laptop operation or eir's fresh-boot execution.
+filter false-positive acceptance, off-home laptop operation or eir's fresh-boot execution. Eir's
+subsequent user-initiated restart and bounded post-boot checks are recorded in
+[the client operation log](minimal.md#eir-user-initiated-restart--2026-11-25).
 
 ### Reservation and management-name follow-up
 

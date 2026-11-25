@@ -598,8 +598,40 @@ confirmed. The public IPv4 route still uses `.2` through `en0`, Wi-Fi DNS is `.2
 probes returned Google 204 and Baidu 200. No standalone rollback job is loaded. The agent removed
 only its unused candidate GC-root symlink, preserving preparation records; no further activation or
 network change was performed. This closes the installed/loaded startup-configuration mismatch, not a
-fresh-boot test, full-system switch audit or identity comparison. A separately approved eir restart
-and off-home network checks remain outstanding.
+fresh-boot test, full-system switch audit or identity comparison. The subsequent restart is recorded
+below; off-home network checks remain outstanding.
+
+#### Eir user-initiated restart — 2026-11-25
+
+After the user reported a restart, kernel boot time confirmed eir booted at `2026-11-25T21:35:07Z`
+(05:35:07 on November 26, UTC+8). Inspection started at about 21:43Z; this was not continuous
+observation of the early startup window.
+
+- The installed startup helper still declares `accept-dns=false` behind the wait4path wrapper. The
+  loaded `org.nixos.tailscale-up` job references that helper, has run count 1 and last exit code 0;
+  its idle state is normal for a completed one-shot. Native tailscaled is running with PID 444 and
+  backend state `Running`.
+- Live `CorpDNS=false`, `RouteAll=true`, `WantRunning=true` and `RunSSH=true` were confirmed. The
+  IPv4 route uses `.2` on `en0`, and Wi-Fi DNS remains `.2`.
+- The standalone SSH config symlink survived, still referencing
+  `/nix/store/p1g7a3rr9jv8cy5cmrrls38nfjvkb8gm-hm_.sshconfig`. Effective `ssh heimdall` selects
+  `.2`, and a strict-host-key authenticated command succeeded. This does not advance the Darwin
+  profile, which remains `/nix/store/6qkklpb85nipnp6jcjlf6w202nhhqs12-darwin-system-26.11.ff0e21a`.
+- UDP/TCP short-name A returned `.2`, AAAA returned NODATA, and the native full Tailnet-name answer
+  remained correct. Category A/AAAA blocking, Fake-IP and domestic DNS checks passed. System
+  short-name lookup also returned `.2`; direct curl probes returned Google 204, Baidu 200 and both
+  Tailnet panel pages 200.
+
+No configuration, service or cache was changed by the agent during acceptance. The user performed
+this reboot; no pre-reboot identity snapshot was captured for this run, so it is not an identity
+comparison or a claim about all operator actions before inspection. The observed startup job and
+post-boot DNS/SSH/HTTPS behavior pass this bounded eir restart check. Gameplay, payments and
+operation away from the home LAN remain untested.
+
+Heimdall did not restart: its last boot remains generation 24 at 18:42:11Z, while runtime/profile
+remain generation 25. Its five inspected proxy/DNS/Tailnet/panel units were active with successful
+results and zero automatic restarts; no system units were failed. This eir test therefore does not
+constitute a generation-25 reboot or startup-period Tailnet DNS acceptance.
 
 #### Shared encrypted service policy — generation 12
 
