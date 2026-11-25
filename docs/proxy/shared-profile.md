@@ -106,8 +106,9 @@ decrypted values into Nix options, templates, command arguments or Git.
   payloads, invokes login/up, resets Serve or changes identities. This fix is deployed on Heimdall
   in generation 23; the AdGuard guide records the generation-22 failure and guarded deployment. A
   subsequent [host restart](../heimdall/reboot-validation.md) recovered the proxy panel without
-  manual intervention or automatic retries. A separate AdGuard LAN-address startup race remains;
-  this bounded restart test does not prove arbitrary delayed-network recovery.
+  manual intervention or automatic retries. Generation 24 separately gated AdGuard on LAN IPv4
+  readiness and passed another normal restart without retries. These bounded tests do not prove
+  arbitrary delayed-network or power-loss recovery.
 - Tailnet options, validation and Serve live in
   `modules/nixos/networking/proxy/tailnet-profile.nix`.
 - The proxy uses route table 2022 with policy priorities starting at 9000. System Tailscale owns

@@ -2,15 +2,56 @@
 
 ## Scope and current evidence
 
-The user authorized one normal OS reboot after the preparation below. Generation 23 booted at
-`2026-11-25T17:45:43Z`; gateway/DNS and both panels recovered without manual service starts. The
-proxy panel readiness fix passed this startup check. **AdGuard required one automatic restart due to
-its LAN address not being ready**, so this is not a clean, error-free startup result. See the
-execution record below. Generation 24 subsequently deployed the scoped LAN-readiness fix; it has not
-yet been tested through a host reboot.
+Two separately approved normal OS reboots are recorded here. Generation 23 booted at
+`2026-11-25T17:45:43Z`: the proxy panel recovered automatically, but AdGuard needed one retry
+because its LAN address was not ready. After the scoped fix, **generation 24 booted at
+`2026-11-25T18:42:11Z` and recovered without manual starts or automatic restarts of the five checked
+services**. Its booted, running and profile paths all match the retained generation-24 closure. This
+establishes the bounded normal-restart result, not AC-loss power-on or arbitrary outage recovery.
 
 Subscription work and the new-node deployment remain paused. Do not rebuild from the current
 checkout as part of this test: its encrypted node seed is newer than the retained configuration.
+
+## Generation 24 restart — first-attempt service recovery
+
+The operator approved the maintenance window. A new root-only persistent baseline captured proxy
+configuration hash, manual selectors/mode and identity metadata; no plaintext configuration or
+credentials were saved. Generation 24's default and generation 23's fallback files were verified
+before one normal `systemctl reboot`. No rebuild, subscription refresh, node import or manual
+service start/restart was performed.
+
+- Boot ID changed. Booted/runtime/profile paths match
+  `/nix/store/k1h90jygqskrf9nwska8ym5d061vr53j-nixos-system-heimdall-26.11.20261111.d4f25a3`. SSH
+  initially timed out while the machine restarted; on its first successful poll all seven queried
+  network/DNS/proxy/panel services were active, with no failed units.
+- Native tailscaled became active at 18:42:19 and sing-box at 18:42:20. AdGuard's native IPv4 gate
+  ran from 18:42:20 to 18:42:23, exited successfully, then allowed credential/settings preparation
+  and AdGuard startup. AdGuard and both panel units were active at 18:42:23.
+- AdGuard, sing-box, native tailscaled and both panel units all had `NRestarts=0`, still zero at
+  final inspection. The current-boot journals contained no recurrence of AdGuard's
+  `cannot assign requested address` or the proxy panel's `NoState` error. No operator recovery was
+  needed. This tests the ordinary startup case; delayed-address and timeout paths are covered by the
+  separate isolated VM fixture.
+- Host resolved stub and eir/ymir LAN UDP/TCP tests passed for ads/porn/fakenews/gambling A/AAAA
+  blocking, Google/Facebook Fake-IP, Baidu real-IP and native Tailnet-name answers. Eir's routed
+  external `1.1.1.1:53` queries were filtered over both protocols. Eir and ymir returned Google 204
+  and Baidu 200; ymir retained its DHCP gateway `.2`.
+- Both external panel pages returned 200 and unauthenticated APIs returned 401. Private
+  authenticated AdGuard checks passed locally and over Tailnet HTTPS, with 166,905 rules, the same
+  upstream/cache settings and preserved 443/8443 Serve mappings without Funnel.
+- Proxy JSON, every manual selector, mode and native/embedded identities matched the pre-restart
+  snapshot. PIDs were deliberately not compared across reboot. Native ExitDNS returned public
+  non-Fake-IP A answers for Google/Baidu. Flint remained the main IPv4 gateway; native table 52 and
+  LAN priority 5100/table 2023 remained, with no IPv6 default route.
+
+Private snapshots were removed after successful comparison. Records/helpers remain under
+`/private/tmp/heimdall-reboot24/` and `/var/lib/heimdall-reboot24-validation/`. The earliest DNS
+readiness interval was not continuously sampled, so this does not close the separate transient
+embedded-Tailnet NXDOMAIN finding. No proxy-stop fault injection, AC-loss power-on, actual gameplay,
+cellular exit or comprehensive filtering acceptance was performed. Subscription 403 and the newer
+node deployment remain paused, not repaired by this restart.
+
+## Earlier generation-23 preparation
 
 The earlier read-only preparation confirmed:
 
@@ -33,7 +74,7 @@ The earlier read-only preparation confirmed:
 These observations do not prove unattended recovery or identify the switch's internal configuration.
 See [the deployed change and generation-22 startup failure](adguardhome.md) for prior evidence.
 
-## Execution record — 2026-11-25
+## Generation 23 restart — 2026-11-25
 
 - A root-only persistent snapshot was captured before reboot (directory 0700, files 0600),
   containing configuration hashes, selector/mode and identity metadata, not plaintext configuration
@@ -146,18 +187,20 @@ daemon restart:
 
 `/nix/store/k1h90jygqskrf9nwska8ym5d061vr53j-nixos-system-heimdall-26.11.20261111.d4f25a3`.
 
-Runtime, profile and boot default match generation 24; the last actual boot remains generation 23.
-After verification, rollback was cancelled and private snapshots/temporary candidate GC root were
-removed. No failed units remained, but the subscription job still had its old 18:04 timestamp and
-`ExecMainStatus=1` despite `Result=success` after activation. This is **not** evidence that refresh
-was repaired. No new nodes/URL, routing change, full reboot or subscription refresh was deployed.
+At retention, runtime/profile/boot default matched generation 24 while the last actual boot was
+still generation 23; the subsequent generation-24 restart is recorded above. After verification,
+rollback was cancelled and private snapshots/temporary candidate GC root were removed. No failed
+units remained, but the subscription job still had its old 18:04 timestamp and `ExecMainStatus=1`
+despite `Result=success` after activation. This is **not** evidence that refresh was repaired. No
+new nodes/URL, routing change, full reboot or subscription refresh was deployed.
 
 Records: `/private/tmp/heimdall-adguard-lan-ready/`, its scoped expression also copied to
 `/var/tmp/heimdall-adguard-lan-ready-upload/scoped.nix`, `/run/heimdall-adguard-lan-ready-deploy/`,
 and `/var/tmp/heimdall-adguard-lan-ready-{activate,retain}.log`.
 
 Do **not** blindly switch the current checkout while the node update remains paused. Production
-restart acceptance of generation 24's new gate is still outstanding.
+restart acceptance of generation 24's new gate subsequently passed as recorded above; wider outage
+and power-loss scenarios remain unverified.
 
 ## Checklist for a separately approved restart
 
@@ -165,7 +208,7 @@ restart acceptance of generation 24's new gate is still outstanding.
    reach the machine with a display/keyboard if SSH fails. Keep a cellular channel for coordination.
 2. Verify the exact running/profile/default paths again. Do not run `just switch`, deploy the node
    candidate, change DHCP/IPv6 or refresh subscriptions as part of this test.
-3. For the next generation-24 test, verify generation 23's fallback entry and closure. It preserves
+3. For a generation-24 test, verify generation 23's fallback entry and closure. It preserves
    full-LAN filtering and the proxy panel fix, but AdGuard may need its existing automatic retry.
    Generation 22 was the fallback for the earlier generation-23 test. Do not select generation 19 or
    an earlier two-client policy as a casual fallback.
@@ -190,7 +233,7 @@ Observe for up to five minutes without manually starting units, so the readiness
 tested. Record any DNS readiness gap rather than treating a successful retry as zero interruption.
 
 - A new boot ID, with booted/runtime/profile paths all matching the approved target (generation 24
-  for the next test; generation 23 for the recorded test above).
+  and generation 23 for the respective tests recorded above).
 - The original LAN address, Flint default route and physical link; no new physical IPv6 default.
 - All required services active, no failed units, and both Serve handlers recovered automatically.
   Inspect the proxy panel's current-boot journal and retry count. Bounded automatic recovery is

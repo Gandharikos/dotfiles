@@ -75,7 +75,7 @@ removing proxy forwarding.
 
 Records: `/private/tmp/heimdall-exit-stash.f6Ey63Js/{build,activate,dry-activate}.log` on eir and
 `/run/heimdall-native-exit-deploy/` on Heimdall. Remote exit TCP/UDP and cellular performance remain
-outstanding. The later [generation-23 restart](reboot-validation.md) verified native ExitDNS A
+outstanding. The later [generation-23/24 restarts](reboot-validation.md) verified native ExitDNS A
 answers and identity preservation, not full exit forwarding after reboot. Clients that cached old
 Fake-IP answers may need DNS-cache refresh before using the ordinary exit.
 
