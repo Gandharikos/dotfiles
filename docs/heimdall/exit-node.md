@@ -9,7 +9,7 @@ deployment approval:
 
 `/nix/store/187dx07s94xx3l9i082nkn9zcwhdl047-nixos-system-heimdall-26.11.20261111.d4f25a3`.
 
-**The current system is generation 22**, retaining this ordinary exit, generation 20's full-LAN
+**The current system is generation 23**, retaining this ordinary exit, generation 20's full-LAN
 admission and [AdGuard Home filtering](adguardhome.md) for host/LAN DNS. Native ExitDNS is unchanged
 and does not use the Fake-IP/filtering path; see [full-LAN cutover](lan-gateway.md). Once DHCP
 clients migrate, do not restore a two-client generation without coordinating client/lease recovery.
@@ -52,7 +52,9 @@ removing proxy forwarding.
 - Initial activation returned a failure because the WebUI oneshot raced native daemon readiness:
   `tailscale serve` reported `unexpected state: NoState`. Once tailscaled reported Running, only
   `sing-box-tailnet-webui.service` was restarted. It succeeded; no failed units remained. This
-  readiness race is not a cold-boot acceptance result and has not been fixed in the shared unit.
+  readiness race is not a cold-boot acceptance result. It recurred on the generation-22 restart;
+  generation 23 deployed the shared-unit readiness/retry fix without another reboot. See the
+  [deployment record](adguardhome.md#readiness-fix-and-module-extraction--generation-23).
 - Priorities 5102/5103, table-2024 routes and the `heimdall-exit` nftables table were removed. The
   table-2023 pilot and both LAN admissions remained. An actual kernel route lookup for a public
   destination from eir's Tailnet source, incoming on `tailscale0`, selected Flint via `enp2s0`.

@@ -3,10 +3,11 @@
 ## Scope and ownership
 
 Deployed with ads/tracking plus the requested **fakenews, gambling and porn** extensions; social is
-not selected. **Generation 22** was retained at `2026-11-25T01:17:12Z`. Runtime and the default
-profile match:
-`/nix/store/n9vjpkwpj4a136xv2rsc2l0vbz0y33bn-nixos-system-heimdall-26.11.20261111.d4f25a3`.
-Deployment evidence is recorded below; declarations alone are not proof of activation.
+not selected. **Generation 23** was retained at `2026-11-25T02:27:05Z`, adding the
+behavior-preserving module extraction and proxy panel readiness fix. Runtime and the default profile
+match: `/nix/store/lixx25fa1l703zi057sgrx3f4aqgarab-nixos-system-heimdall-26.11.20261111.d4f25a3`.
+The last boot still used generation 22; no reboot accompanied generation 23. Deployment evidence is
+recorded below; declarations alone are not proof of activation.
 
 ```text
 LAN DHCP DNS 192.168.8.2:53 -> AdGuard Home -> sing-box 127.0.0.1:1053
@@ -26,7 +27,7 @@ Flint/other LAN DNS servers, DoH/DoT, VPNs or Private Relay. This is domain filt
 classifier or tamper-proof parental control; same-domain ads/video ads can remain. DHCP stays on
 Flint. No IPv6 gateway, public resolver or new trusted interface is introduced.
 
-## Module ownership (refactor prepared, not deployed)
+## Module ownership
 
 The reusable preset lives in `modules/nixos/networking/adguardhome.nix`, discovered by the existing
 network-module scanner. `dot.networking.adguardhome.enable` defaults to false. The only additional
@@ -50,9 +51,10 @@ store-path churn. Before/after AdGuard settings, generated units (AdGuard, its U
 tailscaled and resolved), DNS settings, firewall/NAT tables and SOPS declarations were identical.
 Standalone tests exercise non-Heimdall ports/upstreams without sing-box/SOPS, disabled-module
 inertness and rejection of missing/unsafe credentials, seeds, filter IDs and listeners. These checks
-run in the default regression suite. No production activation or service restart was performed for
-this extraction. A later normal rebuild may still change store paths and require a restart plan;
-semantic equivalence is not a promise of restart-free activation.
+run in the default regression suite. The extraction was initially prepared without activation, then
+deployed with the readiness fix in generation 23 below. Whole-source store-path changes did restart
+sing-box and AdGuard during that deployment; semantic equivalence is not a promise of restart-free
+activation.
 
 ## Filtering and persistence
 
@@ -111,6 +113,82 @@ extra listeners**: during this migration, reload alone left its UDP stub bound i
 the independent rollback script, not only the forward deployment. Do not merely stop AdGuard: that
 would leave host/LAN DNS pointing at a dead listener. Preserve `/var/lib/AdGuardHome` for diagnosis.
 Flint/client DHCP settings are unchanged, so this rollback does not require a lease migration.
+
+## Readiness fix and module extraction — generation 23
+
+The user approved the maintenance window. Default regressions and the remote toplevel build passed;
+the candidate was protected by `/run/heimdall-readiness-candidate` until permanent retention. Dry
+activation limited the stop/start set to sing-box, its Serve unit, AdGuard and SOPS installation.
+Native tailscaled did not restart. An independent systemd dry-activation check passed, and a
+ten-minute rollback to generation 22 was armed before test activation. The rollback restores the
+profile/configuration and explicitly restarts resolved. LAN SSH remained available independently of
+the proxy. Native Tailnet SSH requested interactive reauthentication and was not used as a verified
+recovery path; no trust/authentication checks were bypassed.
+
+- The proxy Serve unit now runs the bounded readiness helper, uses a 120-second startup timeout, and
+  retries failures after 30 seconds. Its deployed state was active/success with zero automatic
+  retries. Native tailscaled was already Running during activation: this does not exercise the next
+  cold-boot race or prove arbitrary delayed-network recovery.
+- One initial embedded-Tailnet DNS lookup returned NXDOMAIN; the bounded probe retried and passed.
+  This separate embedded-endpoint readiness issue remains unresolved. Host loopback and resolved
+  stub UDP/TCP checks then passed without needing to restart resolved manually.
+- Eir and ymir passed LAN UDP/TCP filtering (ads/porn/fakenews/gambling A and AAAA), Google/Facebook
+  Fake-IP, Baidu real-IP and native Tailnet-name checks. Eir's routed external `1.1.1.1:53` probes
+  were filtered. Both clients returned Google 204 and Baidu 200 over their `.2` gateway. Ymir's
+  generic resolved lookup presented the blocked name as no address records; direct wire probes
+  confirmed the configured null-IP answers over both protocols.
+- Both panels passed external HTTPS checks, with unauthenticated APIs rejected as 401. Private
+  authenticated AdGuard checks passed locally and through Tailnet HTTPS, with 166,905 rules under
+  filter ID 2 and unchanged upstream/cache/fallback settings.
+- Private comparisons confirmed identical proxy JSON, all manual selectors, mode, native/embedded
+  identities and native daemon PID. Serve 443 and 8443 mappings were preserved, with no Funnel.
+  Native ExitDNS returned public non-Fake-IP A answers for Google/Baidu. Google AAAA returned
+  NOERROR with no answers; no IPv6 exit-connectivity claim is made. Table 52 and priority 5100/table
+  2023 remained, with no physical IPv6 default route.
+- Permanent retention at `2026-11-25T02:27:05Z` created generation 23 without restarting the three
+  daemons again. Verification passed, the rollback timer was cancelled, and no failed units
+  remained. The system profile protects the closure; private snapshots and the temporary candidate
+  GC root were removed afterward.
+
+No second reboot, proxy-failure injection, actual gameplay, cellular exit acceptance or subscription
+refresh repair was performed. Generation 22 remains the filtered rollback baseline:
+`/nix/store/n9vjpkwpj4a136xv2rsc2l0vbz0y33bn-nixos-system-heimdall-26.11.20261111.d4f25a3`. Records:
+`/private/tmp/heimdall-readiness/`, `/run/heimdall-readiness-deploy/` and
+`/var/tmp/heimdall-readiness-{activate,retain}.log`.
+
+## Post-restart check — generation 22
+
+Heimdall booted at `2026-11-25T01:59:06Z`. The booted and running closures both match generation 22;
+this did not activate the later module extraction. LAN address `.2/24`, default gateway `.1` and
+`enp2s0` returned, with a 2500 Mb/s full-duplex physical link. This observes the host link, not the
+switch's internal configuration. Networkd, resolved, native Tailscale, sing-box, AdGuard and the
+AdGuard Serve unit recovered without manual starts.
+
+The sing-box Serve unit failed at 01:59:15 with `unexpected state: NoState`; only HTTPS 8443 was
+published. After confirming native tailscaled was Running, starting just
+`sing-box-tailnet-webui.service` restored 443 without changing 8443. Sing-box, tailscaled and
+AdGuard PIDs stayed unchanged during this recovery; no failed units remained. The shared-unit
+readiness/retry fix and mocked tests were prepared but not yet deployed at this checkpoint (see
+subsequent generation 23 above). This is a successful gateway/DNS restart with a manually recovered
+management panel, not complete unattended startup acceptance.
+
+Post-recovery checks:
+
+- Host resolved returned domestic real addresses, Google Fake-IP and null-IP ad blocking.
+- Eir's public route used `.2` through `en0`. LAN UDP/TCP queries retained Google Fake-IP, Baidu
+  real-IP and Heimdall's native Tailnet address. Ads/porn/fakenews/gambling samples were blocked for
+  A and AAAA. Routed queries addressed to `1.1.1.1:53` were also filtered over UDP/TCP.
+- Host HTTPS returned Google 204 and Baidu 200; eir's direct LAN Google probe returned 204. Tailnet
+  sing-box UI returned 200, and AdGuard's login page returned 200 after following its redirect. Both
+  unauthenticated API probes returned 401; authenticated API access was not retested.
+- Native table 52 and LAN priority 5100/table 2023 remained, and no IPv6 default route was present.
+- The subscription timer was scheduled, but its service had not run in this boot. Its empty start
+  timestamp means `Result=success` is not evidence of an actual refresh. No refresh/core restart was
+  forced during this check.
+
+Default regressions passed for the prepared readiness fix. No fault injection, second reboot, actual
+gameplay, native ExitDNS/exit forwarding or full filter false-positive acceptance was performed. A
+separate guarded deployment and subsequent startup test remain necessary.
 
 ## Expanded subscription — generation 22
 

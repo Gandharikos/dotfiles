@@ -104,6 +104,10 @@ in
         && builtins.elem "${backend}.service" cfg.systemd.services.${webUIService}.after
         && cfg.systemd.services.${webUIService}.requires == [ "tailscaled.service" ]
         && cfg.systemd.services.${webUIService}.partOf == [ "tailscaled.service" ]
+        && lib.hasInfix "scripts/tailscale-wait-running.py" cfg.systemd.services.${webUIService}.preStart
+        && cfg.systemd.services.${webUIService}.serviceConfig.TimeoutStartSec == "120s"
+        && cfg.systemd.services.${webUIService}.serviceConfig.Restart == "on-failure"
+        && cfg.systemd.services.${webUIService}.serviceConfig.RestartSec == "30s"
         && lib.hasInfix "--https=2443" cfg.systemd.services.${webUIService}.serviceConfig.ExecStart
         &&
           lib.hasInfix "http://127.0.0.1:29090"

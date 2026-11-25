@@ -99,7 +99,13 @@ decrypted values into Nix options, templates, command arguments or Git.
   only the root HTTPS handler on `profile.tailnet.webUI.httpsPort` (443 by default), forwarding to
   `127.0.0.1:${profile.ports.controller}` without enabling Funnel. The service is named
   `<backend>-tailnet-webui`; controller authentication remains required. Serve follows
-  `proxy.autoStart`; disabling it leaves the unit manual, as with the sing-box refresh timer.
+  `proxy.autoStart`; disabling it leaves the unit manual, as with the sing-box refresh timer. The
+  readiness fix waits for native `BackendState=Running` before publishing Serve: at most 30
+  read-only status calls, each limited to two seconds, with one-second gaps. The unit has a
+  120-second startup timeout and retries failures after 30 seconds. The helper never logs status
+  payloads, invokes login/up, resets Serve or changes identities. This fix is deployed on Heimdall
+  in generation 23; the AdGuard guide records the generation-22 failure and guarded deployment. A
+  subsequent cold-boot test of the fix remains outstanding.
 - Tailnet options, validation and Serve live in
   `modules/nixos/networking/proxy/tailnet-profile.nix`.
 - The proxy uses route table 2022 with policy priorities starting at 9000. System Tailscale owns

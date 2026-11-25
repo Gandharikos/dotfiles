@@ -1,4 +1,10 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  self,
+  ...
+}:
 let
   cfg = config.dot.networking.proxy;
   inherit (cfg) profile;
@@ -58,10 +64,16 @@ in
       requires = [ "tailscaled.service" ];
       partOf = [ "tailscaled.service" ];
       wantedBy = lib.optionals cfg.autoStart [ "multi-user.target" ];
+      # Ordering after tailscaled does not imply its LocalAPI has reached Running.
+      preStart = ''
+        ${lib.getExe pkgs.python3} ${self}/scripts/tailscale-wait-running.py ${tailscale}
+      '';
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        TimeoutStartSec = "60s";
+        TimeoutStartSec = "120s";
+        Restart = "on-failure";
+        RestartSec = "30s";
         ExecStart = "${tailscale} serve --bg --https=${toString profile.tailnet.webUI.httpsPort} --set-path=/ --yes http://127.0.0.1:${toString profile.ports.controller}";
         ExecStop = "${tailscale} serve --https=${toString profile.tailnet.webUI.httpsPort} --set-path=/ off";
         NoNewPrivileges = true;
