@@ -542,12 +542,64 @@ separate command on tyr verified authenticated inbound access to `eir-rex`, repo
 independently checked before KEEP. The guard was removed and the administrator shell exited. Record:
 `/private/tmp/heimdall-eir-persistent.Pb9IEaWP`. No special peer routes were added.
 
-`hosts/eir/config.nix` now declares `acceptDns=false`, but **the Darwin declaration has not yet been
-deployed on eir**: inspection of its installed boot helper still found `--accept-dns=true`. Do not
-claim reboot persistence until the DNS declaration/startup wrapper is reviewed and deployed,
-followed by a separate reboot check. Eir is a laptop; these manual Wi-Fi service settings can affect
-other networks. Restore DHCP/DNS before leaving this LAN or ending the trial, and revert eir's pilot
-DNS declaration when returning permanently to its prior configuration.
+At the original cutover, `hosts/eir/config.nix` declared `acceptDns=false`, but the declaration had
+not yet been deployed: the installed boot helper still contained `--accept-dns=true`. The subsequent
+user-applied switch below closes that declaration drift; next-boot execution still needs a separate
+check. Eir is a laptop; these manual Wi-Fi service settings can affect other networks. Restore
+DHCP/DNS before leaving this LAN or ending the trial, and revert eir's pilot DNS declaration when
+returning permanently to its prior configuration.
+
+An initial read-only eir recheck after Heimdall's generation-24 restart confirmed the drift
+remained. Eir's runtime/profile both point to
+`/nix/store/nvl3pn6pbh9igh5rlzf5kng63ygqv36g-darwin-system-26.11.ff0e21a`. Live preferences have
+`CorpDNS=false`, `RouteAll=true`, `WantRunning=true`, `RunSSH=true` and no selected exit. The public
+IPv4 route uses `.2` on `en0`, Wi-Fi DNS is `.2`, and HTTP/HTTPS/SOCKS/PAC proxy-enable flags are
+off. The installed `tailscale-up` script still contains `--accept-dns=true`, `--accept-routes=true`,
+`--reset` and a file-based auth key. Its RunAtLoad plist lacks the `/bin/wait4path` wrapper already
+present in the repository module. The job is loaded but idle with last exit code 0, which is normal
+for this one-shot job and not proof of next-boot correctness. Native `com.tailscale.tailscaled` is
+running and its own plist already uses wait4path.
+
+The proposed scoped repair would synchronize only the up-helper DNS flag and its mount-order
+wrapper, preserving route acceptance, SSH, identity, auth-key delivery and the existing
+daemon/package. Loading a RunAtLoad job can execute `tailscale up --reset`; do not treat a plist
+reload as a passive file update. Review and guard that activation separately, without a full
+Darwin/Homebrew switch or native daemon restart. No runtime or launchd configuration was changed by
+this inspection.
+
+A startup-only candidate was subsequently built under `~/.local/state/eir-tailscale-startup/`,
+preserving the installed Tailscale 1.104.5 binary and every helper byte except `--accept-dns=true`
+to `false`. The proposed on-disk plist wraps the new helper in `/bin/sh` plus `/bin/wait4path`; all
+other plist fields are unchanged. Syntax, plist and Nix-store reference checks passed. The intended
+transaction backs up the file, arms an independent five-minute file-only rollback and verifies
+unchanged runtime preferences, identity, daemon PID, DNS and route. It deliberately does not reload
+the up-job or execute `tailscale up --reset`: the loaded job stays unchanged until a future
+boot/reload, and boot execution requires separate acceptance.
+
+The macOS administrator authorization attempt timed out before application. A subsequent read-only
+check confirmed the installed plist still exactly matches the original, no rollback job is loaded,
+no root staging directory was created, and runtime `CorpDNS=false` remained. That candidate was
+prepared but never installed; it is now superseded by the user's switch below and must not be
+applied. The agent did not perform a full Darwin/Homebrew activation, profile switch or daemon
+restart.
+
+#### Eir startup declaration — user-applied switch
+
+The user subsequently reported completing a switch. Read-only verification found both runtime and
+system profile at `/nix/store/6qkklpb85nipnp6jcjlf6w202nhhqs12-darwin-system-26.11.ff0e21a`. The
+installed RunAtLoad plist now has the `/bin/sh`/`wait4path` wrapper, and both the on-disk plist and
+loaded launchd job reference
+`/nix/store/81g4gx4cmmpzcabj2hk0s6k5jiiqd4g3-tailscale-up/bin/tailscale-up`. That helper declares
+`--accept-dns=false` and retains `--accept-routes=true`. The one-shot job is idle with last exit
+code 0; the native daemon remains running with the same observed PID, 41507.
+
+Live `CorpDNS=false`, `RouteAll=true`, `WantRunning=true`, `RunSSH=true` and no selected exit were
+confirmed. The public IPv4 route still uses `.2` through `en0`, Wi-Fi DNS is `.2`, and direct curl
+probes returned Google 204 and Baidu 200. No standalone rollback job is loaded. The agent removed
+only its unused candidate GC-root symlink, preserving preparation records; no further activation or
+network change was performed. This closes the installed/loaded startup-configuration mismatch, not a
+fresh-boot test, full-system switch audit or identity comparison. A separately approved eir restart
+and off-home network checks remain outstanding.
 
 #### Shared encrypted service policy — generation 12
 
