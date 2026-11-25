@@ -50,7 +50,45 @@ in
     assert !c.networking.nat.enable && !c.services.dnsmasq.enable;
     assert c.networking.firewall.filterForward;
     assert c.networking.firewall.trustedInterfaces == [ "lo" ];
-    assert c.services.resolved.settings.Resolve.DNSStubListenerExtra == [ "192.168.8.2" ];
+    assert c.services.resolved.settings.Resolve.DNSStubListenerExtra == [ ];
+    assert c.services.resolved.settings.Resolve.DNS == [ "127.0.0.1" ];
+    assert c.services.adguardhome.enable;
+    assert !c.services.adguardhome.allowDHCP && !c.services.adguardhome.openFirewall;
+    assert !c.services.adguardhome.settings.dhcp.enabled;
+    assert c.services.adguardhome.settings.http.address == "127.0.0.1:3000";
+    assert
+      c.services.adguardhome.settings.dns.bind_hosts == [
+        "127.0.0.1"
+        "192.168.8.2"
+      ];
+    assert c.services.adguardhome.settings.dns.upstream_dns == [ "127.0.0.1:1053" ];
+    assert c.services.adguardhome.settings.dns.fallback_dns == [ ];
+    assert !c.services.adguardhome.settings.dns.cache_enabled;
+    assert c.services.adguardhome.settings.dns.cache_size == 0;
+    assert !c.services.adguardhome.settings.dns.use_private_ptr_resolvers;
+    assert !(c.services.adguardhome.settings ? users);
+    assert c.services.adguardhome.settings.filtering.protection_enabled;
+    assert c.services.adguardhome.settings.filtering.filtering_enabled;
+    assert
+      (builtins.head c.services.adguardhome.settings.filters).url
+      == "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn/hosts";
+    assert (builtins.head c.services.adguardhome.settings.filters).id == 2;
+    assert !c.networking.stevenblack.enable;
+    assert c.services.adguardhome.settings.filtering.filters_update_interval == 24;
+    assert c.sops.secrets.adguardhome_users.mode == "0400";
+    assert c.sops.secrets.adguardhome_admin_password.mode == "0400";
+    assert builtins.elem "users.json:${c.sops.secrets.adguardhome_users.path}"
+      c.systemd.services.adguardhome.serviceConfig.LoadCredential;
+    assert lib.hasInfix ''iifname "enp2s0" ip saddr 192.168.8.0/24''
+      c.networking.nftables.tables.heimdall-dns.content;
+    assert lib.hasInfix "dnat to 192.168.8.2:53" c.networking.nftables.tables.heimdall-dns.content;
+    assert lib.all (port: !(builtins.elem port c.networking.firewall.allowedTCPPorts)) [
+      3000
+      8443
+    ];
+    assert lib.hasInfix "--https=8443" c.systemd.services.adguardhome-tailnet-webui.script;
+    assert lib.hasInfix "--https=8443"
+      c.systemd.services.adguardhome-tailnet-webui.serviceConfig.ExecStop;
     assert lib.hasInfix ''iifname "enp2s0" ip saddr 192.168.8.0/24 oifname "sb-tun" counter accept''
       c.networking.firewall.extraForwardRules;
     assert lib.hasInfix ''iifname "enp2s0" ip saddr 192.168.8.0/24 ip daddr 192.168.8.2''
@@ -90,6 +128,9 @@ in
     assert dae.boot.kernel.sysctl."net.ipv6.conf.all.forwarding";
     assert !(dae.systemd.services ? heimdall-exit-route);
     assert !(dae.networking.nftables.tables ? heimdall-exit);
+    assert !dae.services.adguardhome.enable;
+    assert !(dae.networking.nftables.tables ? heimdall-dns);
+    assert !(dae.systemd.services ? adguardhome-tailnet-webui);
     assert !(dae.systemd.services ? heimdall-pilot-tailnet);
     assert !(dae.networking.nftables.tables ? heimdall-pilot);
     assert builtins.length tyrStartup == 3;

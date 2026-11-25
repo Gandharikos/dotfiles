@@ -3,10 +3,15 @@
 ## Rollout status
 
 The user approved promoting the gateway beyond the two-client pilot on 2026-11-24. The prepared
-scope is the existing `192.168.8.0/24` LAN on `enp2s0`, not guest networks or other VLANs.
-**Generation 20 is installed and retained**, at 23:21:18 UTC on 2026-11-24:
+scope is the existing `192.168.8.0/24` LAN on `enp2s0`, not guest networks or other VLANs. The
+full-LAN admission was first installed as **generation 20**, at 23:21:18 UTC on 2026-11-24:
 
 `/nix/store/wjhgy3r5xslxh9jska41gf8vlfvdf0i8-nixos-system-heimdall-26.11.20261111.d4f25a3`.
+
+**The current retained system is generation 22**, with expanded
+[AdGuard Home filtering](adguardhome.md) before sing-box DNS without changing DHCP or gateway
+admission. Eir/ymir DNS and web checks passed. Generation 20 remains the full-LAN rollback baseline
+without filtering.
 
 Flint settings have not been changed by the agent. The user subsequently confirmed that the iPhone
 worked after reconnecting. Read-only checks on ymir independently found DHCP gateway and IPv4 DNS
@@ -27,7 +32,12 @@ shows IPv6 disabled; client runtime evidence above, rather than screenshots alon
   `192.168.8.2/24`, outside the DHCP pool, with its own default route through Flint.
 - Heimdall admits UDP/TCP DNS to `.2:53` and IPv4 proxy forwarding from the entire LAN prefix on
   `enp2s0`. Admission is no longer restricted to eir/tyr MAC/IP pairs. Only loopback is trusted; no
-  public controller, guest-subnet admission, second DHCP server or NixOS NAT is added.
+  public controller, guest-subnet admission, second DHCP server or general LAN masquerading is
+  added.
+- Since generation 21, AdGuard owns `.2:53` and forwards allowed queries to sing-box
+  `127.0.0.1:1053`. The scoped `ip heimdall-dns` NAT chain redirects LAN port-53 traffic passing
+  through Heimdall to this listener. It does not capture same-L2 DNS, encrypted DNS, host bootstrap
+  or native exit DNS.
 - The early forwarding guard drops LAN-source packets whose output is not `sb-tun`, even for
   established connections. Physical-interface IPv6 forwarding is rejected. IPv4 ICMP redirects are
   disabled globally, by default, and on `enp2s0`: clients must not learn a shortcut to Flint when

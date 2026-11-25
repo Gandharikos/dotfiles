@@ -77,6 +77,7 @@ repository guides, including:
 - [Shared proxy profile](proxy/shared-profile.md)
 - [Heimdall gateway deployment record](heimdall/minimal.md)
 - [Heimdall full-LAN gateway cutover](heimdall/lan-gateway.md)
+- [Heimdall AdGuard Home filtering](heimdall/adguardhome.md)
 - [Heimdall Tailnet exit-node operation](heimdall/exit-node.md)
 - [dae profile and backend boundaries](proxy/dae.md)
 - [ymir sing-box deployment](proxy/ymir-sing-box.md)

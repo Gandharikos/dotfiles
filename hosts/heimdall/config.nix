@@ -5,6 +5,7 @@
     ./maintenance.nix
     ./sing-box.nix
     ./gateway.nix
+    ./adguardhome.nix
     (import ../common/disko/ext4.nix {
       device = "/dev/disk/by-id/nvme-CWDISK_128GB_SSD_LST95128B23QL00639";
       swapSize = null;

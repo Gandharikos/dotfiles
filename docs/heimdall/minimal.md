@@ -2,12 +2,13 @@
 
 The host retains the verified N150 hardware, Disko ext4/EFI layout (no disk swap), systemd-boot,
 zram, the johnson user, shared SSH settings, and networkd management at `192.168.8.2/24`. Its
-default route points to Flint `192.168.8.1`. The sing-box host proxy is now enabled, with system DNS
-using its loopback listener. **Generation 20 is installed and retained:** IPv4 gateway admission now
-covers `192.168.8.0/24`, with early fail-closed forwarding and ICMP redirects disabled. The user
-confirmed iPhone access after reconnecting; ymir obtained DHCP gateway/DNS `.2`. After the user
-confirmed IPv6 disabled, ymir had no physical IPv6 default/DNS and passed HTTPS checks with its
-local proxy disabled. Other clients' stale-state checks remain outstanding; see
+default route points to Flint `192.168.8.1`. The sing-box host proxy is enabled; since **generation
+21 (now generation 22, with expanded filtering)**, host/LAN DNS passes through
+[AdGuard Home](adguardhome.md) before its loopback resolver. IPv4 gateway admission still covers
+`192.168.8.0/24`, with early fail-closed forwarding and ICMP redirects disabled. The user confirmed
+iPhone access after reconnecting; ymir obtained DHCP gateway/DNS `.2`. After the user confirmed IPv6
+disabled, ymir had no physical IPv6 default/DNS and passed HTTPS checks with its local proxy
+disabled. Other clients' stale-state checks remain outstanding; see
 [full-LAN cutover](lan-gateway.md). Generation 19's ordinary native Tailnet exit through Flint and
 service-local real-IP DNS remain unchanged. The forced sing-box exit experiment is shelved in stash
 `a360cfe9`. Game policy, selectors and WebUI are preserved; see [exit-node operation](exit-node.md).

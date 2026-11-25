@@ -9,9 +9,10 @@ deployment approval:
 
 `/nix/store/187dx07s94xx3l9i082nkn9zcwhdl047-nixos-system-heimdall-26.11.20261111.d4f25a3`.
 
-**The current system is generation 20**, retaining this ordinary exit while broadening LAN gateway
-admission; see [full-LAN cutover](lan-gateway.md). Once DHCP clients migrate, do not restore a
-two-client generation without coordinating client/lease recovery.
+**The current system is generation 22**, retaining this ordinary exit, generation 20's full-LAN
+admission and [AdGuard Home filtering](adguardhome.md) for host/LAN DNS. Native ExitDNS is unchanged
+and does not use the Fake-IP/filtering path; see [full-LAN cutover](lan-gateway.md). Once DHCP
+clients migrate, do not restore a two-client generation without coordinating client/lease recovery.
 
 Generation 18 (generation 16's closure) was the rollback baseline for the initial exit switch:
 `/nix/store/jsmk7lr6pgd6hm3my703x7j1chip8xvx-nixos-system-heimdall-26.11.20261111.d4f25a3`.
@@ -32,8 +33,8 @@ conflicts and lifecycle cleanup before reintroducing the experiment.
 - The NixOS forwarding filter admits Tailnet IPv4 sources to public destinations through `enp2s0`.
   It does not trust the entire Tailnet interface or open private LAN/subnet/peer transit.
 - `tailscaled` alone gets a read-only service-local `/etc/resolv.conf` pointing to Flint. Its
-  ExitDNS responder must return real addresses, not sing-box Fake-IP answers. Host and LAN DNS
-  retain their existing systemd-resolved/sing-box configuration.
+  ExitDNS responder must return real addresses, not sing-box Fake-IP answers. Since generation 21,
+  host/LAN DNS uses AdGuard before sing-box; the native exit resolver remains outside that path.
 - Generation 20's LAN admission covers `192.168.8.0/24`; see the separate LAN gateway guide. The
   early guard, table 2023, encrypted game policy, selectors, WebUI and separate identities remain
   independently managed. This exit configuration does not change DHCP or client configuration.

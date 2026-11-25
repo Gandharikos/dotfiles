@@ -35,8 +35,6 @@ in
         }
       ];
     };
-    services.resolved.settings.Resolve.DNSStubListenerExtra = [ "192.168.8.2" ];
-
     networking.firewall = {
       extraInputRules = ''
         ${clientMatch} ip daddr 192.168.8.2 meta l4proto { tcp, udp } th dport 53 counter accept
