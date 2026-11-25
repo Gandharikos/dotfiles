@@ -9,7 +9,6 @@
 let
   proxy = config.dot.networking.proxy;
   enabled = proxy.enable && proxy.backend == "sing-box";
-  python = pkgs.python3.withPackages (p: [ p.pyyaml ]);
   seed = pkgs.fetchurl {
     name = "stevenblack-fakenews-gambling-porn-hosts";
     url = "https://raw.githubusercontent.com/StevenBlack/hosts/81f6c19b6ae322732879d119e5cbdd8f8bf6c52c/alternates/fakenews-gambling-porn/hosts";
@@ -19,6 +18,11 @@ let
 in
 {
   config = lib.mkIf enabled {
+    dot.networking.adguardhome = {
+      enable = true;
+      usersFile = config.sops.secrets.adguardhome_users.path;
+      seedFile = seed;
+    };
     # Override the shared profile's forced direct-to-core DNS, only on this host.
     services.resolved.settings.Resolve = {
       DNS = lib.mkOverride 40 [ "127.0.0.1" ];
@@ -37,18 +41,8 @@ in
       };
     };
     services.adguardhome = {
-      enable = true;
-      openFirewall = false;
-      allowDHCP = false;
-      mutableSettings = true;
       settings = {
-        http = {
-          address = "127.0.0.1:3000";
-          doh.insecure_enabled = false;
-          pprof.enabled = false;
-        };
-        tls.enabled = false;
-        dhcp.enabled = false;
+        http.address = "127.0.0.1:3000";
         dns = {
           bind_hosts = [
             "127.0.0.1"
@@ -61,23 +55,10 @@ in
           ];
           upstream_dns = [ "127.0.0.1:${toString proxy.profile.ports.dns}" ];
           bootstrap_dns = [ "192.168.8.1" ];
-          fallback_dns = [ ];
           # sing-box owns the mapping/cache lifetime of its Fake-IP responses.
           cache_enabled = false;
           cache_size = 0;
           ratelimit = 0;
-          use_private_ptr_resolvers = false;
-          local_ptr_upstreams = [ ];
-        };
-        clients.runtime_sources.rdns = false;
-        filtering = {
-          protection_enabled = true;
-          filtering_enabled = true;
-          blocking_mode = "null_ip";
-          blocked_response_ttl = 60;
-          filters_update_interval = 24;
-          parental_enabled = false;
-          safebrowsing_enabled = false;
         };
         filters = [
           {
@@ -88,15 +69,6 @@ in
             url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn/hosts";
           }
         ];
-        # Limit local browsing-history retention; nothing is exported to a third party.
-        querylog = {
-          enabled = true;
-          interval = "24h";
-        };
-        statistics = {
-          enabled = true;
-          interval = "24h";
-        };
       };
     };
     systemd.services.adguardhome = {
@@ -107,11 +79,6 @@ in
       ];
       wants = [ "sing-box.service" ];
       requires = [ "sops-install-secrets.service" ];
-      serviceConfig.LoadCredential = [ "users.json:${config.sops.secrets.adguardhome_users.path}" ];
-      preStart = lib.mkAfter ''
-        ${lib.getExe python} ${self}/scripts/adguardhome-prepare.py \
-          "$STATE_DIRECTORY/AdGuardHome.yaml" "$CREDENTIALS_DIRECTORY/users.json" ${seed}
-      '';
     };
     # Catch LAN TCP/UDP port-53 requests routed through this gateway before TUN
     # hijacking. Same-L2 DNS servers, encrypted DNS and VPNs are not intercepted.

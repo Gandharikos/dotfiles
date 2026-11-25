@@ -52,6 +52,8 @@ in
     assert c.networking.firewall.trustedInterfaces == [ "lo" ];
     assert c.services.resolved.settings.Resolve.DNSStubListenerExtra == [ ];
     assert c.services.resolved.settings.Resolve.DNS == [ "127.0.0.1" ];
+    assert c.dot.networking.adguardhome.enable;
+    assert c.dot.networking.adguardhome.usersFile == c.sops.secrets.adguardhome_users.path;
     assert c.services.adguardhome.enable;
     assert !c.services.adguardhome.allowDHCP && !c.services.adguardhome.openFirewall;
     assert !c.services.adguardhome.settings.dhcp.enabled;
@@ -128,6 +130,7 @@ in
     assert dae.boot.kernel.sysctl."net.ipv6.conf.all.forwarding";
     assert !(dae.systemd.services ? heimdall-exit-route);
     assert !(dae.networking.nftables.tables ? heimdall-exit);
+    assert !dae.dot.networking.adguardhome.enable;
     assert !dae.services.adguardhome.enable;
     assert !(dae.networking.nftables.tables ? heimdall-dns);
     assert !(dae.systemd.services ? adguardhome-tailnet-webui);

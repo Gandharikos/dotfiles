@@ -26,6 +26,34 @@ Flint/other LAN DNS servers, DoH/DoT, VPNs or Private Relay. This is domain filt
 classifier or tamper-proof parental control; same-domain ads/video ads can remain. DHCP stays on
 Flint. No IPv6 gateway, public resolver or new trusted interface is introduced.
 
+## Module ownership (refactor prepared, not deployed)
+
+The reusable preset lives in `modules/nixos/networking/adguardhome.nix`, discovered by the existing
+network-module scanner. `dot.networking.adguardhome.enable` defaults to false. The only additional
+options are `usersFile` (an absolute runtime JSON credential path outside the Nix store) and
+`seedFile` (a public pinned file). It reuses upstream `services.adguardhome`; configure listeners,
+upstreams and the single filter through that existing settings namespace rather than duplicate
+wrapper options.
+
+The shared module owns authentication injection, initial cache preparation, service safety defaults,
+filtering defaults and local retention. It does not assume sing-box, SOPS, a LAN subnet, interface,
+DNS port, HTTP port or Tailnet exposure. It requires explicit DNS binds/upstreams and a loopback
+HTTP address. Hosts own credential provisioning and its service ordering.
+
+`hosts/heimdall/adguardhome.nix` retains the exact subscription/seed selection, SOPS bindings, cache
+policy for Fake-IP, LAN/upstream addresses, resolved override, DNS NAT chain, dependencies and
+Tailnet Serve unit. `scripts/adguardhome-prepare.py` remains the common runtime helper. Existing
+addresses, credentials, filter ID, rule variant and exposure are unchanged.
+
+Validation froze the repository source path for both evaluations, avoiding irrelevant whole-source
+store-path churn. Before/after AdGuard settings, generated units (AdGuard, its UI, sing-box,
+tailscaled and resolved), DNS settings, firewall/NAT tables and SOPS declarations were identical.
+Standalone tests exercise non-Heimdall ports/upstreams without sing-box/SOPS, disabled-module
+inertness and rejection of missing/unsafe credentials, seeds, filter IDs and listeners. These checks
+run in the default regression suite. No production activation or service restart was performed for
+this extraction. A later normal rebuild may still change store paths and require a restart plan;
+semantic equivalence is not a promise of restart-free activation.
+
 ## Filtering and persistence
 
 - Subscription:
