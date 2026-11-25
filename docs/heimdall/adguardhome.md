@@ -114,6 +114,30 @@ the independent rollback script, not only the forward deployment. Do not merely 
 would leave host/LAN DNS pointing at a dead listener. Preserve `/var/lib/AdGuardHome` for diagnosis.
 Flint/client DHCP settings are unchanged, so this rollback does not require a lease migration.
 
+## Read-only subscription diagnosis after generation 23
+
+The boot-time sing-box subscription job ran at `2026-11-25T02:18:14Z` and logged the redacted
+"Direct subscription refresh failed; retained the previous nodes and config" error at 02:18:16. The
+later inspection exposed `ExecMainStatus=1` alongside `Result=success` after activation; do not
+interpret the latter alone as evidence of a successful refresh. Likewise, `generate` rewrites the
+validated cache/seed marker on core startup, so their new modification times do not prove an online
+subscription update.
+
+A bounded download-only diagnosis used the deployed curl, physical `enp2s0` binding, AliDNS DoH,
+user agent, sing-box user/capabilities and runtime credential delivery. The public Baidu control
+returned HTTP 200. The existing private subscription request reproduced **curl exit 22 / HTTP 403
+after one redirect**, in about 1.34 seconds. Only numeric diagnostics were emitted: neither the URL,
+raw error text nor response content was logged. The response was discarded without publishing or
+converting nodes. Runtime configuration and subscription-cache hashes, plus sing-box/tailscaled/
+AdGuard PIDs, stayed unchanged.
+
+This narrows the current failure to an HTTP denial on the subscription redirect chain, not a generic
+curl/physical-interface/DoH outage. It does not establish whether credentials, provider policy,
+source IP, user agent or an intermediary caused the denial, nor prove every historical failure had
+the same cause. No URL replacement, proxy-download fallback, timer change or service restart was
+performed. The operator should verify subscription validity privately before changing SOPS; never
+paste the URL/token into chat. Subscription repair remains outstanding.
+
 ## Readiness fix and module extraction — generation 23
 
 The user approved the maintenance window. Default regressions and the remote toplevel build passed;
