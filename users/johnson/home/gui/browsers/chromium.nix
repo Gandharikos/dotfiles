@@ -82,8 +82,8 @@ in
         # Obsidian Web Clipper
         {
           id = "cnjifjpddelmedmihgijeibhnjfabmlf";
-          version = "1.7.1";
-          hash = "sha256-H32I06Rx3LArg1/ysJfcsapIpwWlUufkwu9Xamx1NGc=";
+          version = "1.8.5";
+          hash = "sha256-B85u34Mb8m4Q+hM3hotCaAswI6TRVJICyhSqttv3Dnk=";
         }
 
         # LuLu Translate
@@ -166,15 +166,15 @@ in
         # stylus
         {
           id = "clngdbkpkpeebahjckkjfobafhncgmne";
-          version = "2.4.17";
-          hash = "sha256-1yfPvbpfVGHr5/Be5XViWEvWxfongTL3ve9Ag+mn94o=";
+          version = "2.4.18";
+          hash = "sha256-pBaQtsVl4Buy+gQMYNVMtXYxP+nkWcTTjkHnRwnOjeo=";
         }
 
         # Bitwarden
         {
           id = "nngceckbapebfimnlniiiahkandclblb";
-          version = "2026.10.2";
-          hash = "sha256-HJlRefdYYxBMim44nhBQVoqCwNLAfWrPa2JwPSSUMMk=";
+          version = "2026.11.0";
+          hash = "sha256-W7/EQcarOCqGd7EzrqP8P/K67XzP5usbFhcbQpiTc/I=";
         }
 
         # at://wormhole
@@ -215,8 +215,8 @@ in
         # Control Panel for Twitter
         {
           id = "kpmjjdhbcfebfjgdnpjagcndoelnidfj";
-          version = "4.99.2";
-          hash = "sha256-NwK+9s7CZ/VVCAWX11yDnAGbnWkNQvri2Co5JCJ7bYw=";
+          version = "4.99.4";
+          hash = "sha256-f6GAwVnzpT+kfUcy5o+Xb4Rujon6FpAHC3e1Ps3ev5Y=";
         }
 
         # refined github
