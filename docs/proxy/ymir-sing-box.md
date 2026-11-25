@@ -1,8 +1,71 @@
 # ymir: sing-box + embedded Tailscale
 
-The active backend is now `sing-box`. The Mihomo profile remains available by changing
-`dot.networking.proxy.backend` back to `"mihomo"`. Never start both TUN/controller services
-together. No dae or Clash desktop client is used.
+## Gateway migration retained — 2026-11-25
+
+The user requested disabling ymir's local proxy after promoting Heimdall to the LAN gateway.
+`hosts/ymir/config.nix` now sets `proxy.enable=false` and `autoStart=false`, retaining the inactive
+preset. It clears the shared public `networking.nameservers` defaults and resolved fallback DNS, so
+DNS follows the active connection's DHCP settings instead of the removed local listener. Native
+Tailscale and Rex remain enabled, with their identities/state untouched.
+
+**Generation 661 is installed and retained**, at `2026-11-25T00:01:13Z`; the running system and
+default profile match the scoped closure below. Sing-box, its timer, loopback proxy/DNS/controller
+listeners and `sb-tun` are absent. System DNS follows DHCP `192.168.8.2` with no global local-proxy
+resolver. Native SSH on `100.102.153.25:2222` was verified using the existing known-host key. The
+unqualified `ymir` alias did not resolve from eir; host verification was not bypassed.
+
+Pre-deployment observations and IPv6 gate:
+
+- Ymir's `wlan0` DHCP default gateway and IPv4 DNS are already `192.168.8.2`, address `.106`.
+- Its active Wi-Fi profile uses automatic IPv4/IPv6 and automatic DNS. Initially it still had a
+  physical IPv6 default route/DNS, and a fresh solicitation received a Flint RA with lifetime 1800
+  seconds. This was not merely an old cached route, so activation was deferred.
+- The user then confirmed disabling IPv6 and supplied the saved-setting screenshot. Before
+  activation, ymir's physical IPv6 default route and IPv6 DNS were absent; three solicitations over
+  12 seconds received no RA. They remained absent after NetworkManager restarted. This establishes
+  the tested client's state, not withdrawal of every other client's stale leases/routes. The agent
+  did not change Flint or edit the existing Wi-Fi profile.
+
+Repository regressions passed. To avoid unrelated kernel/desktop upgrades, the retained source
+`/nix/store/d8w5d03smznhbfm3a39fyk9b9g3qrgz8-source` was evaluated on ymir and reproduced its exact
+running closure:
+`/nix/store/10nnbk66m9z0sx13rxyaq64wmqsw2v4p-nixos-system-ymir-26.11.20261105.f9a75f4`. A narrow
+`extendModules` candidate applies only the proxy/automatic-DNS declarations above:
+`/nix/store/rw5rgsrqci08mnnrgbyp7i9m6zq2plkx-nixos-system-ymir-26.11.20261105.f9a75f4`. Its build
+passed, with assertions for unchanged kernel, Home Manager activation package and native tailscaled
+service configuration. No full current-flake system switch was attempted.
+
+An independent eight-minute rollback to generation 660 was armed before test activation. Activation
+stopped sing-box and its refresh timer, reloaded resolved/DBus, and stopped/started NetworkManager,
+polkit, userborn and SOPS secret installation. The Wi-Fi connection UUID was preserved. Checks
+passed:
+
+- Fresh proxy-free IPv4 HTTPS: Google 204, Baidu 200 and Heimdall WebUI 200.
+- Native SSH and authenticated `rex --autostart=false -S ymir whoami` succeeded. Native tailscaled
+  PID 1980 and Rex PID 3313 did not change through either test activation or permanent switch; the
+  native node ID/public key/IPs matched the private pre-deployment snapshot.
+- No sing-box units, listeners on 1053/7890/9090, `sb-tun` or table-2022 policy rules remained.
+  Native table-52 rules remained. The old controller unit was already failed with no Serve Web
+  handlers; its obsolete failed state was cleared after removal. No unrelated Serve handlers were
+  changed.
+- `/var/lib/sing-box` was retained; the embedded node was not deleted or re-enrolled. No failed
+  system units remained. The rollback timer was cancelled only after permanent switch and final
+  checks.
+
+Off-home networks will not acquire Heimdall proxy access automatically. No reboot or arbitrary
+UDP/MTU acceptance was performed in this migration.
+
+Records: `/private/tmp/ymir-disable-proxy/` on eir and `/var/tmp/ymir-disable-proxy-scoped.nix` on
+ymir. Initial local legacy-flake evaluations hit cache/network timeouts; remote evaluation and build
+completed successfully. Remote deployment records are under `/run/ymir-disable-proxy-deploy/`, with
+activation/retention logs under `/var/tmp/ymir-disable-proxy-*.log`. No rollback timer remains
+active.
+
+## Previous deployment history
+
+At the previous deployment, the active backend was `sing-box`. The Mihomo profile remained available
+by changing `dot.networking.proxy.backend` back to `"mihomo"`. Never start both TUN/controller
+services together. No dae or Clash desktop client is used.
 
 ## Live validation (2026-11-08)
 

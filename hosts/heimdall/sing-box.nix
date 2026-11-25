@@ -1,6 +1,7 @@
 # First stage: reuse ymir's host proxy before testing LAN forwarding.
 # No DHCP server or second transparent-proxy core.
 {
+  config,
   lib,
   pkgs,
   self,
@@ -26,7 +27,10 @@ in
       profile = {
         enable = true;
         secretsFile = "${self}/secrets/services/proxy.yml";
-        tailnet.domain = "tail2cfd9e.ts.net";
+        tailnet = {
+          domain = "tail2cfd9e.ts.net";
+          webUI.enable = lib.mkDefault (config.dot.networking.proxy.backend == "sing-box");
+        };
         # Do not block DNS/proxy startup on downloading public rule sets.
         # Refresh these pinned snapshots deliberately alongside host updates.
         singBox.ruleSetFiles = {

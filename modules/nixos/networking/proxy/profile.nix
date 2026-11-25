@@ -39,6 +39,11 @@ in
       default = "${self}/config/sing-box/config.json";
       description = "Shared native profile; preserves the selector and rule insertion anchors.";
     };
+    singBox.ipv4OnlyUplink = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Resolve direct outbound domains to IPv4 and proxy otherwise-unmatched public IPv6 literals before the domestic direct fallback. Explicit service rules retain priority.";
+    };
     singBox.ruleSetFiles = mkOption {
       type = types.attrsOf types.path;
       default = { };

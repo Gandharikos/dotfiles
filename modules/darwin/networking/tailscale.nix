@@ -87,7 +87,15 @@ in
 
     launchd.daemons.tailscale-up = mkIf cfg.autoConnect {
       serviceConfig = {
-        ProgramArguments = [ (getExe tailscaleUp) ];
+        # launchd can load this job before the Nix volume is mounted. Start with
+        # the system shell and wait for the actual executable, not a store shebang.
+        ProgramArguments = [
+          "/bin/sh"
+          "-c"
+          "/bin/wait4path ${escapeShellArgs [ (getExe tailscaleUp) ]} && exec ${
+            escapeShellArgs [ (getExe tailscaleUp) ]
+          }"
+        ];
         Label = "org.nixos.tailscale-up";
         RunAtLoad = true;
         StandardOutPath = "/var/log/tailscale-up.log";

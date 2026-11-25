@@ -62,6 +62,8 @@ let
       exec ${lib.getExe python} ${self}/scripts/sing-box-subscription.py "$@" \
         --base ${base} \
         --policy ${profile.singBox.policy} \
+        ${lib.optionalString profile.singBox.ipv4OnlyUplink "--ipv4-only-uplink"} \
+        --private-policy "$CREDENTIALS_DIRECTORY/private-policy.yaml" \
         --converter ${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.sub2singbox} \
         --state "$STATE_DIRECTORY" \
         --credentials "$CREDENTIALS_DIRECTORY" \
@@ -73,6 +75,7 @@ let
     "nodes.yaml:${config.sops.secrets.singbox_subscription_nodes.path}"
     "controller-secret:${config.sops.secrets.singbox_controller_secret.path}"
     "subscription-url:${config.sops.secrets.singbox_subscription_url.path}"
+    "private-policy.yaml:${config.sops.secrets.singbox_service_policy.path}"
   ];
 in
 {
@@ -87,6 +90,11 @@ in
       singbox_controller_secret = {
         sopsFile = secretsFile;
         key = "controller_secret";
+        restartUnits = [ "sing-box.service" ];
+      };
+      singbox_service_policy = {
+        sopsFile = secretsFile;
+        key = "singbox_policy";
         restartUnits = [ "sing-box.service" ];
       };
       singbox_subscription_url = {

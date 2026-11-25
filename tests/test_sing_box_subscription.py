@@ -99,6 +99,85 @@ class SubscriptionTests(unittest.TestCase):
                     subscription.load_policy(path)
                 self.assertNotIn("private-policy-content", str(error.exception))
 
+    def test_private_policy_precedence_and_restricted_group(self):
+        private = {section: [] for section in subscription.POLICY_SECTIONS}
+        private["groups"] = [{"type": "urltest", "tag": "private-group", "outbounds": ["test-node"]}]
+        private["rule_sets"] = [{"type": "inline", "tag": "private-domains", "rules": [{"domain_suffix": ["game.example"]}]}]
+        private["domain_rules"] = [{"rule_set": ["private-domains"], "outbound": "private-group"}]
+        original = copy.deepcopy(self.policy)
+        combined = subscription.merge_service_policy(self.policy, private)
+        config = subscription.make_config(self.base, self.payload([self.node, dict(self.node, name="other-node")]), "secret", combined)
+        group = next(item for item in config["outbounds"] if item["tag"] == "private-group")
+        self.assertEqual(group["outbounds"], ["test-node"])
+        rules = config["route"]["rules"]
+        self.assertLess(rules.index(private["domain_rules"][0]), rules.index(self.policy["domain_rules"][0]))
+        self.assertTrue(any("private-domains" in rule.get("rule_set", []) and rule.get("server") == "fakeip" for rule in config["dns"]["rules"]))
+        self.assertEqual(self.policy, original)
+        self.assertEqual(private["groups"][0]["outbounds"], ["test-node"])
+
+    def test_ipv4_only_uplink_is_opt_in_and_preserves_policy_priority(self):
+        private = {section: [] for section in subscription.POLICY_SECTIONS}
+        private_rule = {"ip_cidr": ["2001:db8:99::/48"], "outbound": "🤖 Claude"}
+        private["ip_rules"] = [private_rule]
+        policy = subscription.merge_service_policy(self.policy, private)
+        ordinary = subscription.make_config(self.base, self.payload(), "secret", policy)
+        config = subscription.make_config(
+            self.base, self.payload(), "secret", policy, ipv4_only_uplink=True
+        )
+        direct = next(o for o in config["outbounds"] if o["tag"] == "direct")
+        self.assertEqual(direct["domain_resolver"], {"server": "localdns", "strategy": "ipv4_only"})
+        self.assertEqual(next(o for o in ordinary["outbounds"] if o["tag"] == "direct")["domain_resolver"], "localdns")
+        rules = config["route"]["rules"]
+        anchor = {"rule_set": ["cn-domain", "cn-ip"], "outbound": "direct"}
+        fallback = rules[rules.index(anchor) - 1]
+        self.assertEqual(fallback["outbound"], "Proxy")
+        self.assertLess(rules.index(private_rule), rules.index(fallback))
+        for rule in self.policy["ip_rules"] + self.policy["domain_rules"]:
+            self.assertLess(rules.index(rule), rules.index(fallback))
+        # Nothing else changes, including all selector defaults and DNS responses.
+        rules.remove(fallback)
+        direct["domain_resolver"] = "localdns"
+        self.assertEqual(config, ordinary)
+        self.assertEqual(next(o for o in self.base["outbounds"] if o["tag"] == "direct")["domain_resolver"], "localdns")
+
+    def test_ipv4_only_uplink_validates_template_and_preserves_resolver_options(self):
+        base = copy.deepcopy(self.base)
+        direct = next(o for o in base["outbounds"] if o["tag"] == "direct")
+        direct["domain_resolver"] = {"server": "localdns", "disable_cache": True}
+        config = subscription.apply_ipv4_only_uplink(base)
+        self.assertTrue(next(o for o in config["outbounds"] if o["tag"] == "direct")["domain_resolver"]["disable_cache"])
+        del direct["domain_resolver"]
+        with self.assertRaises(subscription.ConfigError):
+            subscription.apply_ipv4_only_uplink(base)
+        base = copy.deepcopy(self.base)
+        base["route"]["rules"].pop()
+        with self.assertRaises(subscription.ConfigError):
+            subscription.apply_ipv4_only_uplink(base)
+
+    @unittest.skipUnless(os.environ.get("SING_BOX"), "Set SING_BOX to test the real core")
+    def test_ipv4_only_uplink_literal_match_with_real_core(self):
+        config = subscription.apply_ipv4_only_uplink(self.base)
+        fallback = {k: v for k, v in config["route"]["rules"][-2].items() if k != "outbound"}
+        payload = json.dumps({"version": 3, "rules": [fallback]})
+        for address, expected in {
+            "2001:db8::1": True,
+            "2400::1": True,
+            "2001:2::1": False,
+            "fd7a:115c:a1e0::1": False,
+            "fdfe:dcba:9876::2": False,
+            "fe80::1": False,
+            "ff02::1": False,
+            "1.1.1.1": False,
+            "198.18.0.1": False,
+            "example.invalid": False,
+        }.items():
+            with self.subTest(address=address):
+                result = subprocess.run(
+                    [os.environ["SING_BOX"], "--disable-color", "rule-set", "match", "/dev/stdin", address],
+                    input=payload, text=True, capture_output=True, check=True, timeout=10,
+                )
+                self.assertEqual("match rules.[0]" in result.stderr, expected)
+
     def test_shared_templates_keep_host_values_as_parameters(self):
         native = json.loads((ROOT / "config/sing-box/config.json").read_text())
         self.assertEqual(native["endpoints"][0]["hostname"], "__TAILNET_HOSTNAME__")
@@ -638,6 +717,11 @@ class SubscriptionTests(unittest.TestCase):
             state = root / "state"
             output = root / "runtime.json"
 
+            private_path = credentials / "private-policy.yaml"
+            private = {section: [] for section in subscription.POLICY_SECTIONS}
+            private["domain_rules"] = [{"domain_suffix": ["private.example"], "outbound": "Proxy"}]
+            private_path.write_text(json.dumps(private))
+
             def run(action, policy_path=None):
                 argv = [
                     "script",
@@ -646,6 +730,8 @@ class SubscriptionTests(unittest.TestCase):
                     str(base),
                     "--policy",
                     str(policy_path if policy_path is not None else self.policy_path),
+                    "--private-policy",
+                    str(private_path),
                     "--state",
                     str(state),
                     "--credentials",
@@ -665,12 +751,24 @@ class SubscriptionTests(unittest.TestCase):
 
             run("generate")
             initial_output = output.read_text()
+            self.assertIn("private.example", initial_output)
+            private_path.write_text("groups: [private-sensitive-content")
+            with self.assertRaises(subscription.ConfigError) as error:
+                run("generate")
+            self.assertNotIn("private-sensitive-content", str(error.exception))
+            self.assertEqual(output.read_text(), initial_output)
+            private_path.unlink()
+            with self.assertRaises(OSError):
+                run("generate")
+            self.assertEqual(output.read_text(), initial_output)
+            private_path.write_text(json.dumps(private))
             online = self.payload([dict(self.node, name="online-node")])
             with patch.object(subscription, "download_direct", return_value=online):
                 run("update")
             self.assertEqual(output.read_text(), initial_output)
             run("generate")
             self.assertIn("online-node", output.read_text())
+            self.assertIn("private.example", output.read_text())
             cache_before = (state / "subscription.yaml").read_text()
             output_before = output.read_text()
             with (

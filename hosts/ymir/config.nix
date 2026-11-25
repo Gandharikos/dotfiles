@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  lib,
   self,
   ...
 }:
@@ -29,9 +30,10 @@
     primaryUser = "johnson";
     networking = {
       proxy = {
-        enable = true;
+        # Use the LAN's DHCP-provided gateway/DNS; retain the preset for optional reuse.
+        enable = false;
         backend = "sing-box";
-        autoStart = true;
+        autoStart = false;
         profile = {
           enable = true;
           secretsFile = "${self}/secrets/services/proxy.yml";
@@ -117,6 +119,10 @@
       backend = "keyd";
     };
   };
+
+  # With no local proxy, use the active network's DHCP DNS, not shared public defaults.
+  networking.nameservers = lib.mkForce [ ];
+  services.resolved.settings.Resolve.FallbackDNS = [ ];
 
   nixporn.colorscheme = "solarized-osaka";
 

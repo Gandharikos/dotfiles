@@ -155,6 +155,9 @@ def is_hong_kong(name):
     return HONG_KONG.search(unicodedata.normalize("NFKC", name)) is not None
 
 
+POLICY_SECTIONS = ("groups", "rule_sets", "process_rules", "domain_rules", "ip_rules")
+
+
 def load_policy(path):
     text = path.read_text()
     try:
@@ -165,12 +168,16 @@ def load_policy(path):
             policy = yaml.safe_load(text)
         except yaml.YAMLError:
             raise ConfigError("Invalid service policy YAML") from None
-    sections = ("groups", "rule_sets", "process_rules", "domain_rules", "ip_rules")
     if not isinstance(policy, dict) or any(
-        not isinstance(policy.get(section), list) for section in sections
+        not isinstance(policy.get(section), list) for section in POLICY_SECTIONS
     ):
         raise ConfigError("Service policy must contain all five policy section lists")
     return policy
+
+
+def merge_service_policy(public, private):
+    """Private rules precede public service rules; the core validates references."""
+    return {section: private[section] + public[section] for section in POLICY_SECTIONS}
 
 
 def apply_service_policy(base, policy):
@@ -197,12 +204,46 @@ def apply_service_policy(base, policy):
     return config
 
 
-def make_config(base, text, secret, policy=None, converter=None):
+def apply_ipv4_only_uplink(config):
+    """Keep service policy first; avoid native IPv6 dialing on an IPv4-only uplink."""
+    config = copy.deepcopy(config)
+    direct = next(
+        (o for o in config["outbounds"] if o["tag"] == "direct" and o["type"] == "direct"),
+        None,
+    )
+    if direct is None:
+        raise ConfigError("IPv4-only uplink requires the direct outbound")
+    resolver = direct.get("domain_resolver")
+    if isinstance(resolver, str):
+        resolver = {"server": resolver}
+    if not isinstance(resolver, dict) or not resolver.get("server"):
+        raise ConfigError("IPv4-only uplink requires an explicit direct domain resolver")
+    direct["domain_resolver"] = {**resolver, "strategy": "ipv4_only"}
+    rules = config["route"]["rules"]
+    anchor = {"rule_set": ["cn-domain", "cn-ip"], "outbound": "direct"}
+    if anchor not in rules:
+        raise ConfigError("IPv4-only uplink requires the domestic fallback anchor")
+    rules.insert(rules.index(anchor), {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+            {"ip_cidr": ["2000::/3"]},
+            {"ip_cidr": ["2001:2::/48"], "invert": True},
+            {"domain_regex": [".+"], "invert": True},
+        ],
+        "outbound": "Proxy",
+    })
+    return config
+
+
+def make_config(base, text, secret, policy=None, converter=None, ipv4_only_uplink=False):
     config = (
         apply_service_policy(base, policy)
         if policy is not None
         else copy.deepcopy(base)
     )
+    if ipv4_only_uplink:
+        config = apply_ipv4_only_uplink(config)
     reserved = {
         item["tag"] for item in config["outbounds"] + config.get("endpoints", [])
     }
@@ -321,6 +362,8 @@ def main():
     parser.add_argument("action", choices=("generate", "update"))
     parser.add_argument("--base", type=Path, required=True)
     parser.add_argument("--policy", type=Path, required=True)
+    parser.add_argument("--private-policy", type=Path)
+    parser.add_argument("--ipv4-only-uplink", action="store_true")
     parser.add_argument("--state", type=Path, required=True)
     parser.add_argument("--credentials", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
@@ -333,6 +376,8 @@ def main():
         fcntl.flock(lock, fcntl.LOCK_EX)
         base = json.loads(args.base.read_text())
         policy = load_policy(args.policy)
+        if args.private_policy is not None:
+            policy = merge_service_policy(policy, load_policy(args.private_policy))
         secret = (args.credentials / "controller-secret").read_text()
         seed = (args.credentials / "nodes.yaml").read_text()
         digest = hashlib.sha256(seed.encode()).hexdigest()
@@ -350,7 +395,10 @@ def main():
             text = cache.read_text()
         else:
             text = seed
-        config = make_config(base, text, secret, policy, args.converter)
+        config = make_config(
+            base, text, secret, policy, args.converter,
+            ipv4_only_uplink=args.ipv4_only_uplink,
+        )
         check_config(args.core, args.state, config)
         if args.action == "generate":
             atomic_write(

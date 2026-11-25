@@ -42,7 +42,9 @@ in
     assert !(cfg.systemd.services ? dae-tailnet-webui);
     assert !cfg.services.dae.openFirewall.enable;
     assert !cfg.services.dnsmasq.enable;
-    assert cfg.boot.kernel.sysctl."net.ipv4.ip_forward" == 0;
+    # Native exit forwarding is host-owned, not enabled by the dae backend.
+    assert cfg.dot.networking.tailscale.role == "exit-node";
+    assert cfg.boot.kernel.sysctl."net.ipv4.ip_forward" == 1;
     assert builtins.all (a: a.assertion) cfg.assertions;
     assert builtins.any (
       a: !a.assertion && lib.hasInfix "dae has no Clash controller" a.message

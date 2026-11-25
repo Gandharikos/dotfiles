@@ -75,10 +75,19 @@ Clash nodes -> sub2singbox -> fidelity checks -> policy/groups -> sing-box check
 ```
 
 The encrypted subscription file must contain `subscription_nodes`, `subscription_url`, and
-`controller_secret`. The dedicated rule for `secrets/services/proxy.yml` retains the existing user
-and ymir recipients; its shared path does not grant other hosts access. Authorize additional SOPS
-recipients separately. Never put decrypted values into Nix options, templates, command arguments or
-Git.
+`controller_secret`. The sing-box profile additionally requires `singbox_policy`: a YAML/JSON string
+with the same five policy lists (`groups`, `rule_sets`, `process_rules`, `domain_rules`, `ip_rules`)
+as the public service policy. Use empty lists when no private additions are needed. It is decrypted
+only at runtime and delivered to both generation and subscription refresh through systemd
+`LoadCredential`; do not read its plaintext during Nix evaluation or builds. Private rules precede
+public service rules at the existing insertion anchors. Restricted `urltest` groups retain their
+explicit node membership, while selectors keep the existing all-node expansion behavior.
+Missing/renamed node references fail core validation rather than silently introducing a fallback.
+Invalid/missing private policy fails generation without publishing a replacement; a stopped daemon
+is not guaranteed to restart from last-good output after such a configuration error. The dedicated
+rule for `secrets/services/proxy.yml` retains the existing user and ymir recipients; its shared path
+does not grant other hosts access. Authorize additional SOPS recipients separately. Never put
+decrypted values into Nix options, templates, command arguments or Git.
 
 - The embedded hostname defaults to `<networking.hostName>-singbox` (or `-mihomo` for that backend).
   Override `profile.tailnet.hostname` if needed. Each host keeps its own private embedded Tailscale
@@ -125,6 +134,18 @@ presets, not arbitrary config mergers. The node-only conversion never imports su
 listeners or routing rules. The sing-box policy loader accepts YAML and legacy JSON, and requires
 all five policy section lists; empty or malformed policy files fail without replacing the last valid
 runtime configuration.
+
+`profile.singBox.ipv4OnlyUplink` is an opt-in compatibility preset (default `false`). It makes the
+`direct` outbound's domain resolver use `ipv4_only`, without changing client DNS answers or TUN
+address families. After all existing private/public service rules, immediately before the domestic
+direct fallback, it routes otherwise-unmatched, domainless public IPv6 literals through `Proxy`.
+Fake IPv6, private/Tailnet/link-local destinations, explicit service choices, and Clash
+Direct/Global modes retain their earlier handling. An explicit service selector choosing `direct`
+for a literal IPv6 target still requires native IPv6; the preset does not override that choice. This
+is not NAT64, physical IPv6 enablement, or a guarantee that every subscription node can reach IPv6
+targets. Heimdall tested this preset in generation 17, then withdrew the opt-in after phone
+acceptance failed. It is currently disabled there; consult the operational record before enabling it
+again.
 
 The Mihomo base and policy are YAML mapping fragments concatenated into one document, not an
 override/deep-merge mechanism. Keep `proxy-groups`, `rule-providers`, and `rules` in the policy,

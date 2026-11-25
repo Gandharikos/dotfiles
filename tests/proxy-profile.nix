@@ -13,6 +13,7 @@ let
       ({ lib, ... }: {
         networking.hostName = lib.mkForce "proxy-fixture";
         dot.networking.proxy = {
+          enable = lib.mkForce true;
           backend = lib.mkForce backend;
           autoStart = lib.mkForce false;
           profile = {
@@ -63,6 +64,22 @@ in
   program = builtins.head cfg.systemd.services.${backend}.serviceConfig.ExecStartPre;
   mihomoTemplate = if native then null else cfg.sops.templates."proxy-mihomo.yaml".content;
   checks =
+    assert !cfg.dot.networking.proxy.profile.singBox.ipv4OnlyUplink;
+    assert !native || cfg.sops.secrets.singbox_service_policy.key == "singbox_policy";
+    assert !native || cfg.sops.secrets.singbox_service_policy.mode == "0400";
+    assert
+      !native
+      ||
+        lib.all
+          (
+            service:
+            builtins.elem "private-policy.yaml:${cfg.sops.secrets.singbox_service_policy.path}"
+              cfg.systemd.services.${service}.serviceConfig.LoadCredential
+          )
+          [
+            "sing-box"
+            "sing-box-subscription"
+          ];
     assert !native || lib.all (a: a.assertion) localRules.config.assertions;
     assert !native || lib.any (a: !a.assertion) unknownRules.config.assertions;
     assert

@@ -308,11 +308,18 @@ in
       assert systems.nidhogg.config.wsl.wslConf.network.generateHosts == false;
       assert !(systems.nidhogg.config.wsl.wslConf.network ? gnerateHosts);
       true;
-    ymirDnsAndBypassesPreserved =
-      assert ymir.services.resolved.settings.Resolve.DNS == [ "127.0.0.1:1053" ];
-      assert ymir.services.resolved.settings.Resolve.DNSSEC == false;
+    ymirLanDnsAndNativeTailnet =
+      assert !ymir.dot.networking.proxy.enable && !ymir.dot.networking.proxy.autoStart;
+      assert !ymir.services.sing-box.enable && !ymir.services.mihomo.enable;
+      assert !(ymir.systemd.services ? sing-box);
+      assert !(ymir.systemd.services ? sing-box-tailnet-webui);
+      assert !(ymir.systemd.services ? sing-box-subscription);
+      assert !(ymir.systemd.timers ? sing-box-subscription);
+      assert ymir.networking.nameservers == [ ];
+      assert (ymir.services.resolved.settings.Resolve.DNS or [ ]) == [ ];
       assert ymir.services.resolved.settings.Resolve.FallbackDNS == [ ];
-      assert builtins.elem "interface-name:sb-tun" ymir.networking.networkmanager.unmanaged;
+      assert !(builtins.elem "~." (ymir.services.resolved.settings.Resolve.Domains or [ ]));
+      assert !(builtins.elem "interface-name:sb-tun" ymir.networking.networkmanager.unmanaged);
       assert builtins.elem "interface-name:tailscale*" ymir.networking.networkmanager.unmanaged;
       assert ymir.systemd.network.networks."50-tailscale".linkConfig.Unmanaged;
       assert ymir.dot.networking.tailscale.exitNode == "";

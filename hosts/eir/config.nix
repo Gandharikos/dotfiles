@@ -2,6 +2,8 @@
   dot = {
     primaryUser = "johnson";
     device.type = "laptop";
+    # Heimdall owns general DNS during the scoped IPv4 gateway trial.
+    networking.tailscale.acceptDns = false;
     keyboard = {
       layout = "qwerty";
       backend = "karabiner";
