@@ -142,6 +142,7 @@ in
       # "tencent-lemon" # clean tool
       "surge" # proxy tool
       "telegram-desktop" # IM
+      "terminal-browser" # terminal-based web browser
       "veracrypt" # disk encryption
       "vlc" # video player
       # "karabiner-elements" # keyboard remap
