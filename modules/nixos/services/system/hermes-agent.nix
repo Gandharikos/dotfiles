@@ -60,6 +60,19 @@ in
   config = lib.mkIf cfg.enable {
     services.hermes-agent = {
       enable = true;
+      # Hermes patches patchelf 0.15.2 with a patch targeting 0.19.2.
+      # Its pm tool builders need the unstable version, which already
+      # contains the executable header-overlap fix (upstream #672).
+      package = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default.override (old: {
+        pmPackages = lib.mapAttrs (
+          _name: tool:
+          tool.overrideAttrs (attrs: {
+            nativeBuildInputs = map (
+              input: if (input.pname or "") == "patchelf" then pkgs.patchelfUnstable else input
+            ) (attrs.nativeBuildInputs or [ ]);
+          })
+        ) old.pmPackages;
+      });
       addToSystemPackages = true;
       restart = "always";
       restartSec = 5;
