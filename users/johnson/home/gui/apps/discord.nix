@@ -44,14 +44,12 @@ in
           decor.enable = true;
           fakeNitro.enable = true;
           fixSpotifyEmbeds.enable = true;
-          fixYoutubeEmbeds.enable = true;
           openInApp.enable = true;
           translate = {
             enable = true;
             autoTranslate = true;
           };
           typingIndicator.enable = true;
-          youtubeAdblock.enable = true;
           # hideAttachments.enable = true;
           readAllNotificationsButton.enable = true;
           # clearUrLs.enable = true;
