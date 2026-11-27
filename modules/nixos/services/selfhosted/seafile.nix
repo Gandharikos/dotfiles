@@ -374,7 +374,10 @@ in
           "kanidm.service"
           "seafile-env.service"
         ];
-        serviceConfig.Type = "oneshot";
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+        };
         script = ''
           ${lib.getExe' pkgs.coreutils "install"} -d -m 0750 -o root -g kanidm ${secretDir}
 
