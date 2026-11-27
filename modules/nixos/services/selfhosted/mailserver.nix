@@ -146,7 +146,6 @@ in
 
         inherit (cfg) fqdn;
         domains = [ domain ];
-        localDnsResolver = false;
         hierarchySeparator = "/";
 
         storage = {
@@ -156,13 +155,18 @@ in
           path = cfg.storagePath;
         };
 
-        enableImap = true;
-        enableImapSsl = true;
-        enablePop3 = false;
-        enablePop3Ssl = false;
-        enableSubmission = false;
-        enableSubmissionSsl = true;
-        enableManageSieve = true;
+        listeners = {
+          imap.enable = true;
+          imaps.enable = true;
+          pop3.enable = false;
+          pop3s.enable = false;
+          submission.enable = false;
+          submissions.enable = true;
+          manageSieve = {
+            enable = true;
+            ssl = true;
+          };
+        };
 
         dkim = {
           defaults.keyLength = 4096;
@@ -285,9 +289,7 @@ in
             $config['smtp_host'] = "ssl://${config.mailserver.fqdn}";
             $config['smtp_user'] = "%u";
             $config['smtp_pass'] = "%p";
-            $config['managesieve_host'] = "tls://${config.mailserver.fqdn}";
-            $config['managesieve_port'] = 4190;
-            $config['managesieve_usetls'] = true;
+            $config['managesieve_host'] = "ssl://${config.mailserver.fqdn}:${toString config.mailserver.listeners.manageSieve.port}";
             $config['username_domain'] = "${domain}";
           '';
         };
