@@ -10,6 +10,28 @@ let
   cfg = config.dot.services.karabiner;
   kbCfg = config.dot.keyboard;
   settings = import cfg.configFile { inherit (cfg) devices; };
+  settingsFile = pkgs.writeText "karabiner.json" (builtins.toJSON settings);
+  deployConfig = pkgs.writeShellApplication {
+    name = "deploy-karabiner-config";
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.diffutils
+    ];
+    text = ''
+      directory="$1"
+      target="$directory/karabiner.json"
+      mkdir -p "$directory"
+      if [[ ! -L "$target" && -f "$target" && -w "$target" ]] && cmp -s ${settingsFile} "$target"; then
+        chmod 600 "$target"
+        exit 0
+      fi
+      temporary=$(mktemp "$directory/.karabiner.json.XXXXXXXX")
+      trap 'rm -f "$temporary"' EXIT
+      cp ${settingsFile} "$temporary"
+      chmod 600 "$temporary"
+      mv -f "$temporary" "$target"
+    '';
+  };
 in
 {
   options.dot.services.karabiner = {
@@ -49,7 +71,14 @@ in
 
   config = mkIf cfg.enable {
     homebrew.casks = [ "karabiner-elements" ];
-    dot.users.${config.dot.primaryUser}.home.xdg.configFile."karabiner/karabiner.json".source =
-      pkgs.writeText "karabiner.json" (builtins.toJSON settings);
+    dot.users.${config.dot.primaryUser}.home =
+      { config, ... }:
+      {
+        # Karabiner must be able to atomically replace this file when saving.
+        # Reapply the declarative settings after Home Manager retires old links.
+        home.activation.karabinerConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+          run ${lib.getExe deployConfig} ${lib.escapeShellArg "${config.xdg.configHome}/karabiner"}
+        '';
+      };
   };
 }

@@ -55,6 +55,12 @@ preserve a recovery path before switching a headless host.
 
 ## Karabiner Keyboard Scope
 
+Karabiner requires a writable `~/.config/karabiner/karabiner.json` to save safely. Home Manager
+installs the generated JSON as a regular, user-owned file with mode `0600`, using an atomic
+replacement after link activation, rather than a symlink into the read-only Nix store. GUI edits
+work between rebuilds; each Home Manager activation reapplies the Nix settings. Keep permanent
+mapping changes in Nix. Do not recreate the old `xdg.configFile` declaration for this path.
+
 Karabiner's shared configuration is defined in `modules/darwin/karabiner/config.nix`; the module in
 `modules/darwin/karabiner/default.nix` serializes it to JSON for Home Manager.
 `dot.services.karabiner.configFile` now expects a Nix function accepting `devices`, not a JSON file.
