@@ -39,7 +39,7 @@ in
       managedOnFirstWorkspace =
         appId:
         builtins.any (
-          rule: rule."if".app-id == appId && rule.run == "move-node-to-workspace 1"
+          rule: rule."if".app-id == appId && builtins.elem "move-node-to-workspace 1" (lib.toList rule.run)
         ) settings.on-window-detected;
     in
     assert terminal.default == "rex";
@@ -51,6 +51,15 @@ in
       settings.mode.main.binding."${eirHome.my.gui.desktop.modKey}-enter"
       == "exec-and-forget ${terminal.exec}";
     assert managedOnFirstWorkspace "com.superlogical.rex";
+    assert builtins.any (
+      rule:
+      rule."if".app-id == "com.superlogical.rex"
+      &&
+        rule.run == [
+          "layout tiling"
+          "move-node-to-workspace 1"
+        ]
+    ) settings.on-window-detected;
     assert managedOnFirstWorkspace "com.google.Chrome";
     true;
   tyrGhostty =

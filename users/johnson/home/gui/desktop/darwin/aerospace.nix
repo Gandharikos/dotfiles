@@ -243,7 +243,12 @@ with osConfig.dot.keyboard.keys;
                 "if" = {
                   app-id = "com.superlogical.rex";
                 };
-                run = "move-node-to-workspace 1";
+                # Rex can trigger AeroSpace's dialog heuristic despite exposing
+                # AXStandardWindow; explicitly opt its windows into tiling.
+                run = [
+                  "layout tiling"
+                  "move-node-to-workspace 1"
+                ];
               }
               {
                 "if" = {

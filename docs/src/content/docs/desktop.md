@@ -23,11 +23,14 @@ modules/nixos/gui/desktop/wayland/wms/
 `eir` uses Rex as its terminal launcher and Google Chrome as its browser launcher. Both apps must
 already be installed on macOS; launchers resolve their bundle IDs rather than a version-specific
 application name. AeroSpace's terminal shortcut uses the configured terminal command, and newly
-detected Rex and Chrome windows go to workspace 1. Existing window placements are not changed by
-editing the configuration. `TERMINAL` and `BROWSER` point to launch scripts that forward arguments
-to `open -b`; Rex launch arguments are macOS open targets, not terminal `-e` commands. The Rex CLI
-remains available separately. macOS default-browser associations are not overwritten by this
-configuration; select Chrome in System Settings if needed.
+detected Rex and Chrome windows go to workspace 1. Rex windows are explicitly set to tiling:
+AeroSpace can classify its standard window as a dialog and otherwise leave it floating. Existing
+windows are not changed by editing or reloading the configuration; use
+`aerospace layout --window-id <id> tiling` to restore an existing Rex window. `TERMINAL` and
+`BROWSER` point to launch scripts that forward arguments to `open -b`; Rex launch arguments are
+macOS open targets, not terminal `-e` commands. The Rex CLI remains available separately. macOS
+default-browser associations are not overwritten by this configuration; select Chrome in System
+Settings if needed.
 
 `tyr` keeps Ghostty as its default terminal. On macOS, the terminal command uses
 `/usr/bin/open -n -b com.mitchellh.ghostty` to open the Homebrew app, avoiding the GTK/Wayland build
