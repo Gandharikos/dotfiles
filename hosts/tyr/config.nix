@@ -13,7 +13,9 @@
     };
     keyboard = {
       layout = "qwerty";
-      backend = "kanata";
+      backend = "karabiner";
     };
   };
+
+  nixporn.colorscheme = "tokyonight";
 }

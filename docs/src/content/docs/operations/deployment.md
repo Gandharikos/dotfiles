@@ -29,9 +29,9 @@ activation. Use the Darwin build command above for build-only validation on macO
 
 ## Darwin Host Profiles
 
-`tyr` uses the desktop profile with GUI configuration and Kanata keyboard remapping enabled. The
-minimal profile is disabled, so the full Home Manager defaults and Homebrew package lists, automatic
-upgrades and `zap` cleanup apply on its next activation.
+`tyr` uses the desktop profile with GUI configuration, Karabiner keyboard remapping, and the
+Tokyonight theme. The minimal profile is disabled, so the full Home Manager defaults and Homebrew
+package lists, automatic upgrades and `zap` cleanup apply on its next activation.
 
 For a minimal host, `dot.profiles.minimal.enable = true` omits development environments and optional
 tools. GUI configuration and keyboard remapping are separate settings; macOS itself, Remote Login
