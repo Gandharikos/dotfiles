@@ -9,10 +9,11 @@
 let
   proxy = config.dot.networking.proxy;
   enabled = proxy.enable && proxy.backend == "sing-box";
+  variant = "fakenews-gambling-porn-social";
   seed = pkgs.fetchurl {
-    name = "stevenblack-fakenews-gambling-porn-hosts";
-    url = "https://raw.githubusercontent.com/StevenBlack/hosts/81f6c19b6ae322732879d119e5cbdd8f8bf6c52c/alternates/fakenews-gambling-porn/hosts";
-    hash = "sha256-KBRgcS+FEUIMj32gGOoWw7VI+FUxY2PUnLik6gN28uU=";
+    name = "stevenblack-${variant}-hosts";
+    url = "https://raw.githubusercontent.com/StevenBlack/hosts/81f6c19b6ae322732879d119e5cbdd8f8bf6c52c/alternates/${variant}/hosts";
+    hash = "sha256-fqIR5QtoSRAIE/LzFu3fpWisJMy0eX2IT/KUYtb24DU=";
   };
   chineseSeed = pkgs.fetchurl {
     name = "anti-ad-easylist.txt";
@@ -27,7 +28,7 @@ in
       enable = true;
       usersFile = config.sops.secrets.adguardhome_users.path;
       seedFiles = {
-        "2" = seed;
+        "4" = seed;
         "3" = chineseSeed;
       };
     };
@@ -82,11 +83,11 @@ in
         };
         filters = [
           {
-            # New ID prevents reusing the previous porn-only cached list on upgrade.
-            id = 2;
+            # ID 2's cached variant lacks social domains.
+            id = 4;
             enabled = true;
-            name = "StevenBlack ads, tracking, fakenews, gambling and porn";
-            url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn/hosts";
+            name = "StevenBlack ads, tracking, fakenews, gambling, porn and social";
+            url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/${variant}/hosts";
           }
           {
             id = 3;

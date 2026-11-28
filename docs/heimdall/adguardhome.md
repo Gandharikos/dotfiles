@@ -2,10 +2,10 @@
 
 ## Scope and ownership
 
-Deployed with ads/tracking plus the requested **fakenews, gambling and porn** extensions; social is
-not selected. **Generation 26** was retained at `2026-11-25T22:02:52Z`, adding the requested
-**anti-AD Chinese advertising/tracking DNS list** alongside the existing StevenBlack list.
-Runtime/profile/boot default match:
+The declared StevenBlack list now includes **social**. The deployment recorded below used
+ads/tracking plus **fakenews, gambling and porn**, without social. **Generation 26** was retained at
+`2026-11-25T22:02:52Z`, adding the requested **anti-AD Chinese advertising/tracking DNS list**
+alongside the existing StevenBlack list. Runtime/profile/boot default match:
 `/nix/store/d409zd9f6rq3kh658xac78kjp5i9sjdx-nixos-system-heimdall-26.11.20261111.d4f25a3`. The
 generation-25 short-name repair is retained: it disables system-hosts import and explicitly maps the
 exact short name `heimdall` to `.2`, avoiding export of the gateway's `127.0.0.2` hosts entry. LAN
@@ -70,11 +70,11 @@ activation.
 
 ## Filtering and persistence
 
-- Base subscription (ID 2):
-  <https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn/hosts>.
-  This includes base ads/tracking plus fakenews, gambling and porn; no redundant base list or social
-  extension. `networking.stevenblack` stays disabled: that option manages `/etc/hosts`, not AGH's
-  subscription. Filtering remains owned by AdGuard, before Fake-IP resolution.
+- Base subscription (ID 4):
+  <https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-social/hosts>.
+  This includes base ads/tracking plus fakenews, gambling, porn and social; no redundant base list.
+  `networking.stevenblack` stays disabled: that option manages `/etc/hosts`, not AGH's subscription.
+  Filtering remains owned by AdGuard, before Fake-IP resolution.
 - Chinese supplement (ID 3): <https://anti-ad.net/easylist.txt>, the upstream's **AdGuard Home DNS**
   format, not its browser AdGuard URL-filtering variant. Its offline seed is pinned to anti-AD
   commit `25025b31a086b7d1c6226795966aaf2f9251430c`, hash
@@ -83,10 +83,10 @@ activation.
   under AdGuard's normal precedence. Rule counts overlap and are not unique-domain totals.
 - AdGuard refreshes every 24 hours. The initial file is pinned to commit
   `81f6c19b6ae322732879d119e5cbdd8f8bf6c52c` with a fixed hash in Nix, so cold startup does not need
-  to download its protection list. A fresh-mtime seed is installed only if cache `2.txt` is absent
+  to download its protection list. A fresh-mtime seed is installed only if cache `4.txt` is absent
   or empty; existing downloaded updates are preserved. The helper derives the filename from the
-  configured filter ID. ID 2 deliberately replaces ID 1's porn-only subscription, preventing reuse
-  of its older, narrower cache. Change IDs deliberately when changing subscription variants.
+  configured filter ID. ID 4 deliberately replaces ID 2's subscription without social, preventing
+  reuse of its older, narrower cache. Change IDs deliberately when changing subscription variants.
 - Each declared filter has an independently seeded `<ID>.txt` cache. The helper validates every seed
   mapping before publication, atomically initializes absent/empty caches with fresh mtimes, and
   preserves nonempty caches, including downloaded updates. Both lists can start offline; credentials

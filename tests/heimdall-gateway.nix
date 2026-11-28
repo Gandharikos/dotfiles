@@ -94,10 +94,10 @@ in
     assert c.services.adguardhome.settings.filtering.filtering_enabled;
     assert
       (builtins.head c.services.adguardhome.settings.filters).url
-      == "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn/hosts";
+      == "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-social/hosts";
     assert
       map (f: f.id) c.services.adguardhome.settings.filters == [
-        2
+        4
         3
       ];
     assert
@@ -106,8 +106,8 @@ in
     assert c.dot.networking.adguardhome.seedFile == null;
     assert
       builtins.attrNames c.dot.networking.adguardhome.seedFiles == [
-        "2"
         "3"
+        "4"
       ];
     assert !c.networking.stevenblack.enable;
     assert c.services.adguardhome.settings.filtering.filters_update_interval == 24;
